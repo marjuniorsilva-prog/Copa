@@ -11,11 +11,11 @@
         /* Container principal simulando a tela do celular */
         .app-container { width: 100%; max-width: 420px; background-color: #d1d5db; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 20px;}
         
-        /* Cabeçalho Topo (Continente, Posição, Idade, Valor) */
+        /* Cabeçalho Topo */
         .top-bar { display: flex; justify-content: space-between; background: white; padding: 5px; font-size: 12px; font-weight: bold; border-bottom: 2px solid #ccc; }
         .top-item { background: #f3f4f6; padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd; display: flex; align-items: center; gap: 4px; }
         
-        /* Sub-cabeçalho (Totais da carreira) */
+        /* Sub-cabeçalho (Totais) */
         .totals-bar { display: flex; justify-content: space-between; background: white; padding: 5px; text-align: center; font-size: 11px; font-weight: bold; border-bottom: 2px solid #ccc;}
         .totals-box { border: 1px solid #ccc; border-radius: 4px; padding: 2px 4px; min-width: 45px; }
         
@@ -23,7 +23,7 @@
         .attr-bar { background-color: #6b21a8; color: white; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; font-weight: bold; padding: 4px 0; }
         .attr-vals { background-color: white; color: black; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 14px; font-weight: bold; padding: 4px 0; border-bottom: 2px solid #ccc;}
         
-        /* Corpo Principal (Esquerda: Clubes / Direita: Stats) */
+        /* Corpo Principal */
         .main-body { display: flex; width: 100%; background: #d1d5db; padding: 5px;}
         
         /* Coluna Esquerda */
@@ -42,7 +42,7 @@
         .stats-grid { display: flex; flex-direction: column; gap: 4px; background: #86efac; padding-bottom: 4px; border-radius: 0 0 4px 4px; }
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 12px; font-weight: bold; height: 28px; align-items: center; }
         
-        /* Interação / Botões */
+        /* Botões e Mercado */
         .action-area { padding: 10px; text-align: center; }
         .btn-continue { background: #10b981; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.2); width: 80%; }
         .btn-continue:active { transform: scale(0.95); }
@@ -51,7 +51,7 @@
         .market-title { font-size: 11px; font-weight: bold; color: white; background: #6b21a8; padding: 4px; text-align: center; margin:-10px -10px 10px -10px; border-radius: 6px 6px 0 0;}
         .offer-row { display: flex; justify-content: space-between; border: 1px solid #ccc; margin-bottom: 5px; align-items: center;}
         .offer-club { font-weight: bold; font-size: 12px; padding: 8px; flex-grow: 1; text-align: left; background: white;}
-        .offer-val { background: #fbcfe8; font-weight: bold; font-size: 12px; padding: 8px; border-left: 1px solid #ccc; width: 80px; text-align: center;}
+        .offer-val { background: #fbcfe8; font-weight: bold; font-size: 12px; padding: 8px; border-left: 1px solid #ccc; width: 80px; text-align: center; cursor: pointer;}
         
         /* Seção Inferior (Troféus) */
         .bottom-section { background: #fff; margin: 0 10px; border: 1px solid #ccc; text-align: center; border-radius: 4px; padding-bottom: 5px;}
@@ -59,19 +59,17 @@
         .trophy-grid { display: flex; justify-content: center; gap: 15px; padding-top: 5px; font-size: 18px; font-weight: bold; }
         .trophy-item { display: flex; flex-direction: column; align-items: center; font-size: 14px;}
         
-        /* Empty placeholders */
         .empty-slot { background: #a3a3a3; opacity: 0.3; width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
     <div class="top-bar">
-        <div class="top-item">🌍 S. America</div>
+        <div class="top-item" id="hdr-region">🌍 S. America</div>
         <div class="top-item">🏟️ ST</div>
         <div class="top-item">⏱️ <span id="hdr-age">15</span></div>
-        <div class="top-item">✨ <span id="hdr-prime">70</span></div>
+        <div class="top-item">✨ <span id="hdr-prime">0</span></div>
         <div class="top-item" style="background:#fef08a;">💶 <span id="hdr-value">-</span></div>
     </div>
 
@@ -82,7 +80,7 @@
         <div class="totals-box">⚽<br><span id="tot-gol">0</span></div>
         <div class="totals-box">👟<br><span id="tot-ass">0</span></div>
         <div class="totals-box" style="display:flex; justify-content:center; gap:5px;">
-            <div>🟨<br>0</div><div>🟥<br>0</div>
+            <div>🟨<br><span id="tot-yc">0</span></div><div>🟥<br><span id="tot-rc">0</span></div>
         </div>
     </div>
 
@@ -90,19 +88,14 @@
         <div>OVR</div><div>PAC</div><div>SHO</div><div>PAS</div><div>DRI</div><div>DEF</div><div>PHY</div>
     </div>
     <div class="attr-vals" id="attr-vals">
-        <div>70</div><div>70</div><div>70</div><div>70</div><div>70</div><div>50</div><div>70</div>
-    </div>
+        </div>
 
     <div class="main-body">
-        <div class="col-left" id="col-left">
-            <!-- As linhas serão geradas via JS -->
-        </div>
+        <div class="col-left" id="col-left"></div>
         <div class="col-right">
             <div class="stats-header">Main Stats Per 3 Seasons</div>
             <div class="stats-icons"><div>📝/🏆</div><div>⚽</div><div>👟</div></div>
-            <div class="stats-grid" id="stats-grid">
-                <!-- As linhas serão geradas via JS -->
-            </div>
+            <div class="stats-grid" id="stats-grid"></div>
         </div>
     </div>
 
@@ -124,32 +117,71 @@
             <div class="trophy-item">✨<br><span id="maj-bdor">0</span></div>
         </div>
     </div>
-
 </div>
 
 <script>
-    // Configuração inicial do jogador
+    // BANCO DE DADOS DE CLUBES
+    const baseClubs = [
+        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Atlético-MG 🇧🇷", "Grêmio 🇧🇷", "Fluminense 🇧🇷", "Botafogo 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "Peñarol 🇺🇾", "Nacional 🇺🇾", "Colo-Colo 🇨🇱", "Atlético Nacional 🇨🇴", "LDU 🇪🇨",
+        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Real Sociedad 🇪🇸", "Betis 🇪🇸", "Athletic Bilbao 🇪🇸", "Sevilla 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Fiorentina 🇮🇹", "Atalanta 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City 🇺🇸", "Seattle Sounders 🇺🇸", "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Cruz Azul 🇲🇽", "Pachuca 🇲🇽",
+        "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al Ain 🇦🇪", "Al-Sadd 🇶🇦", "Al-Duhail 🇶🇦", "Vissel Kobe 🇯🇵", "Kawasaki Frontale 🇯🇵", "Urawa Reds 🇯🇵", "Yokohama F. Marinos 🇯🇵", "Ulsan Hyundai 🇰🇷", "Jeonbuk Motors 🇰🇷",
+        "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Wydad Casablanca 🇲🇦", "Raja Casablanca 🇲🇦", "Mamelodi Sundowns 🇿🇦", "Orlando Pirates 🇿🇦", "Espérance de Tunis 🇹🇳"
+    ];
+
+    const eliteClubs = [
+        "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", 
+        "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
+        "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", 
+        "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "Napoli 🇮🇹", 
+        "PSG 🇫🇷", "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦", "Al-Ittihad 🇸🇦"
+    ];
+
+    // Status do Jogador
     let p = {
-        age: 15, ovr: 68, pac: 72, sho: 69, pas: 60, dri: 71, def: 35, phy: 65, prime: 68,
-        club: "Academy", transferFee: "",
-        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0 }
+        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0,
+        club: "", transferFee: "", isProdigy: false,
+        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
     const ages = ["A", 18, 21, 24, 27, 30, 33, 36, 39, "R", "M"];
-    let currentStep = 0; // Aponta para o array 'ages'
+    let currentStep = 0;
+
+    function initPlayer() {
+        // Lógica do Prodígio (15% de chance de já nascer muito acima da média)
+        p.isProdigy = Math.random() > 0.85; 
+        
+        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 5) + 74 : Math.floor(Math.random() * 8) + 60;
+        
+        p.ovr = baseOvr;
+        p.prime = baseOvr;
+        p.pac = baseOvr + Math.floor(Math.random() * 8);
+        p.sho = baseOvr + Math.floor(Math.random() * 6);
+        p.pas = baseOvr - Math.floor(Math.random() * 5);
+        p.dri = baseOvr + Math.floor(Math.random() * 7);
+        p.def = 30 + Math.floor(Math.random() * 20);
+        p.phy = baseOvr - Math.floor(Math.random() * 5);
+
+        // Se for prodígio, pode começar direto em um time melhor
+        let pool = p.isProdigy ? [...baseClubs, ...eliteClubs] : baseClubs;
+        p.club = pool[Math.floor(Math.random() * pool.length)];
+
+        // Identifica região pelo ícone do clube
+        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿")) document.getElementById('hdr-region').innerText = "🌍 Europe";
+        else if(p.club.includes("🇸🇦") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷")) document.getElementById('hdr-region').innerText = "🌍 Asia";
+        else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽")) document.getElementById('hdr-region').innerText = "🌍 N. America";
+        else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦") || p.club.includes("🇿🇦") || p.club.includes("🇹🇳")) document.getElementById('hdr-region').innerText = "🌍 Africa";
+        else document.getElementById('hdr-region').innerText = "🌍 S. America";
+    }
     
-    // Bancos de dados
-    const baseClubs = ["Palmeiras 🇧🇷", "Flamengo 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Benfica 🇵🇹", "Ajax 🇳🇱"];
-    const eliteClubs = ["Real Madrid 🇪🇸", "Man. City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bayern 🇩🇪", "PSG 🇫🇷", "Barcelona 🇪🇸", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿"];
-    
-    // Inicializar Grade Visual Vazia
     function initGrid() {
+        initPlayer();
+        
         const left = document.getElementById('col-left');
         const right = document.getElementById('stats-grid');
         left.innerHTML = ''; right.innerHTML = '';
         
         ages.forEach((a, index) => {
-            // Coluna Esquerda
             let boxClass = "age-box";
             if (a === "A") boxClass += " academy";
             if (a === "R" || a === "M") boxClass += " retire";
@@ -160,20 +192,17 @@
                     <div class="club-box" id="club-box-${index}"><div class="empty-slot"></div></div>
                 </div>`;
                 
-            // Coluna Direita (Não renderiza R e M nas stats)
             if(a !== "R" && a !== "M" && a !== "A") {
-                right.innerHTML += `
-                    <div class="stats-row" id="row-right-${index}">
-                        <div>-</div><div>-</div><div>-</div>
-                    </div>`;
+                right.innerHTML += `<div class="stats-row" id="row-right-${index}"><div>-</div><div>-</div><div>-</div></div>`;
             } else if (a === "A") {
                 right.innerHTML += `<div class="stats-row" id="row-right-0" style="background:#fef08a; border-bottom:1px solid #16a34a;"><div>-</div><div>-</div><div>-</div></div>`;
             }
         });
         
-        // Seta o Academy
-        document.getElementById(`club-box-0`).innerHTML = baseClubs[Math.floor(Math.random() * baseClubs.length)];
-        p.club = document.getElementById(`club-box-0`).innerText;
+        let prodigyTag = p.isProdigy ? "✨ " : "";
+        document.getElementById(`club-box-0`).innerHTML = prodigyTag + p.club;
+        atualizarAtributos();
+        atualizarTopo();
     }
 
     function atualizarTopo() {
@@ -182,13 +211,17 @@
         document.getElementById('hdr-prime').innerText = p.prime;
         
         let valBase = (p.ovr > 85) ? Math.floor(Math.random() * 100) + 50 : Math.floor(Math.random() * 40) + 5;
+        if(p.isProdigy && p.age < 22) valBase *= 2; // Inflação de prodígio
         if(p.age > 33) valBase = Math.floor(valBase * 0.3);
+        
         let valStr = "€" + valBase + "m";
         document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : valStr;
         return valStr;
     }
 
     function atualizarAtributos() {
+        // Cap em 99
+        ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
         document.getElementById('attr-vals').innerHTML = `
             <div>${p.ovr}</div><div>${p.pac}</div><div>${p.sho}</div>
             <div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>
@@ -201,6 +234,8 @@
         document.getElementById('tot-app').innerText = p.totals.app;
         document.getElementById('tot-gol').innerText = p.totals.gol;
         document.getElementById('tot-ass').innerText = p.totals.ass;
+        document.getElementById('tot-yc').innerText = p.totals.yc;
+        document.getElementById('tot-rc').innerText = p.totals.rc;
         
         document.getElementById('maj-cont').innerText = p.totals.cont;
         document.getElementById('maj-wc').innerText = p.totals.wc;
@@ -212,61 +247,51 @@
         
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else {
-            if (p.age >= 39) {
-                finalizarCarreira();
-                return;
-            }
-            p.age += 3;
-            currentStep++;
+            if (p.age >= 39) { finalizarCarreira(); return; }
+            p.age += 3; currentStep++;
         }
         
-        // Simular Matemática Realista
-        let isPrime = (p.age > 23 && p.age <= 30);
-        let isOld = (p.age > 33);
+        let isPrime = (p.age >= 24 && p.age <= 30);
+        let isOld = (p.age >= 33);
         
-        // Evolução de OVR
+        // Evolução de OVR (Prodígios evoluem mais rápido)
         if (p.age <= 27) {
-            let ganho = Math.floor(Math.random() * 5) + 1;
-            p.ovr += ganho; p.sho += ganho; p.pac += (Math.random()>0.5?1:0); p.pas += 2; p.dri += ganho;
+            let ganho = Math.floor(Math.random() * (p.isProdigy ? 6 : 4)) + 1;
+            p.ovr += ganho; p.sho += ganho; p.dri += ganho; p.pac += 1;
         } else if (isOld) {
-            let perda = Math.floor(Math.random() * 4) + 1;
-            p.ovr -= perda; p.pac -= (perda+2); p.phy -= perda;
+            let perda = Math.floor(Math.random() * 5) + 1;
+            p.ovr -= Math.floor(perda/2); p.pac -= (perda+2); p.phy -= perda;
         }
         
-        // Stats
         let apps = 90 + Math.floor(Math.random() * 30);
-        let fatorGol = p.sho / 100;
-        let gol = Math.floor(apps * fatorGol * (Math.random() * 0.6 + 0.3));
-        let ass = Math.floor(apps * (p.pas/100) * 0.3);
+        let gol = Math.floor(apps * (p.sho / 100) * (Math.random() * 0.6 + 0.3));
+        let ass = Math.floor(apps * (p.pas / 100) * 0.4);
+        let yc = Math.floor(Math.random() * 10);
+        let rc = Math.floor(Math.random() * 2);
         
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
+        p.totals.yc += yc; p.totals.rc += rc;
         
-        // Títulos (Glórias do Triênio)
         let tDom = 0, tInt = 0;
-        if(p.ovr > 80 && Math.random() > 0.4) { tDom = Math.floor(Math.random() * 3); p.totals.dom += tDom; }
-        if(p.ovr > 85 && Math.random() > 0.6) { tInt = Math.floor(Math.random() * 2); p.totals.int += tInt; }
+        if(p.ovr > 78 && Math.random() > 0.4) { tDom = Math.floor(Math.random() * 3); p.totals.dom += tDom; }
+        if(p.ovr > 84 && Math.random() > 0.6) { tInt = Math.floor(Math.random() * 2); p.totals.int += tInt; }
         
-        // Major Trophies
         if(p.ovr > 86 && Math.random() > 0.7) p.totals.cont++;
-        if(p.age % 4 === 0 && p.ovr > 88 && Math.random() > 0.8) p.totals.wc++;
-        if(p.ovr >= 91 && gol > 60 && Math.random() > 0.5) p.totals.bdor++;
+        if(p.age % 4 === 0 && p.ovr > 87 && Math.random() > 0.8) p.totals.wc++;
+        if(p.ovr >= 91 && gol > 60 && Math.random() > 0.6) p.totals.bdor++;
 
-        // Preencher Visual (Clube na Esquerda)
         let transferTag = p.transferFee ? `<div class="transfer-fee">🔁 ${p.transferFee}</div>` : "";
         document.getElementById(`club-box-${currentStep}`).innerHTML = `${p.club} ${transferTag}`;
         
-        // Preencher Visual (Stats na Direita)
         document.getElementById(`row-right-${currentStep}`).innerHTML = `
             <div>${tDom} <span style="color:#6b7280; font-size:10px;">/</span> ${tInt}</div>
-            <div>${gol}</div>
-            <div>${ass}</div>
+            <div>${gol}</div><div>${ass}</div>
         `;
 
         atualizarTopo();
         atualizarAtributos();
         atualizarTotais();
 
-        // Mercado de Transferência
         if (p.age < 39) abirMercado();
         else finalizarCarreira();
     }
@@ -278,12 +303,11 @@
         let list = document.getElementById('offer-list');
         list.innerHTML = "";
         
-        // Define pool de times baseado no OVR
-        let pool = (p.ovr > 84) ? eliteClubs : baseClubs;
+        let pool = (p.ovr >= 85) ? eliteClubs : baseClubs;
         
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
-            let val = (p.ovr > 85) ? Math.floor(Math.random()*90)+40 : Math.floor(Math.random()*30)+5;
+            let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
             if(p.age > 33) val = Math.floor(val * 0.4);
             
             list.innerHTML += `
@@ -295,29 +319,16 @@
         }
     }
 
-    function aceitarOferta(clube, valor) {
-        p.club = clube;
-        p.transferFee = valor;
-        fecharMercado();
-    }
-
-    function ficarNoTime() {
-        p.transferFee = "";
-        fecharMercado();
-    }
-
-    function fecharMercado() {
-        document.getElementById('market-panel').style.display = 'none';
-        document.getElementById('action-area').style.display = 'block';
-    }
+    function aceitarOferta(clube, valor) { p.club = clube; p.transferFee = valor; fecharMercado(); }
+    function ficarNoTime() { p.transferFee = ""; fecharMercado(); }
+    function fecharMercado() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
 
     function finalizarCarreira() {
-        document.getElementById(`club-box-${ages.length-2}`).innerHTML = p.club; // R (Retirement)
-        document.getElementById(`club-box-${ages.length-1}`).innerHTML = "Manager"; // M (Management)
+        document.getElementById(`club-box-${ages.length-2}`).innerHTML = p.club;
+        document.getElementById(`club-box-${ages.length-1}`).innerHTML = (p.ovr > 85) ? eliteClubs[Math.floor(Math.random()*eliteClubs.length)] : "Manager";
         document.getElementById('action-area').innerHTML = `<button class="btn-continue" style="background:#ef4444;" onclick="location.reload()">RESTART</button>`;
     }
 
-    // Inicia a grade vazia assim que carregar
     initGrid();
 </script>
 </body>
