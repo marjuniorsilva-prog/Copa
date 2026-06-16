@@ -2,114 +2,68 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador de Carreira - Versão Definitiva</title>
+    <title>Simulador Carreira - OVR Realista</title>
     <style>
-        body { background: #121212; color: #fff; font-family: sans-serif; display: flex; justify-content: center; padding: 10px; }
-        .container { width: 100%; max-width: 800px; background: #1e1e1e; border-radius: 10px; padding: 15px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 10px 0; }
-        .stat-box { background: #3c3c3c; text-align: center; padding: 5px; border-radius: 4px; font-size: 11px; }
-        .stat-value { font-size: 16px; font-weight: bold; color: #00ff88; }
-        .history-table { width: 100%; border-collapse: collapse; background: #2d5a27; font-size: 12px; }
-        .history-table th { background: #006400; padding: 8px; color: white; }
-        .history-table td { padding: 6px; border: 1px solid #4a8a44; text-align: center; }
-        .row-age { background: #2c3e50; color: white; font-weight: bold; }
-        .btn { background: #ff3e3e; color: white; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        #transfer-market { display: none; background: #333; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        body { background: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 10px; }
+        .container { width: 100%; max-width: 850px; background: #1e1e1e; border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 20px; }
+        .stat-box { background: #311b92; padding: 8px; text-align: center; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        .stat-value { font-size: 18px; color: #00ff88; margin-top: 5px; }
+        .history-table { width: 100%; border-collapse: collapse; background: #2d5a27; font-size: 13px; text-align: center; }
+        .history-table th { background: #006400; padding: 10px; }
+        .history-table td { padding: 8px; border: 1px solid #4a8a44; }
+        .row-age { background: #311b92; font-weight: bold; }
+        .btn { background: #ff3e3e; color: white; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; font-size: 16px; }
     </style>
 </head>
 <body>
-
-<div class="container" id="game-container">
-    <div id="start-screen">
-        <h1>Simulador Lenda ⚽</h1>
-        <button class="btn" onclick="iniciarCarreira()">Iniciar Carreira</button>
+<div class="container">
+    <h2 id="header">Iniciando Carreira...</h2>
+    <div class="stats-grid">
+        <div class="stat-box">OVR<div class="stat-value" id="s-ovr">0</div></div>
+        <div class="stat-box">PAC<div class="stat-value" id="s-pac">0</div></div>
+        <div class="stat-box">SHO<div class="stat-value" id="s-sho">0</div></div>
+        <div class="stat-box">PAS<div class="stat-value" id="s-pas">0</div></div>
+        <div class="stat-box">DRI<div class="stat-value" id="s-dri">0</div></div>
+        <div class="stat-box">PHY<div class="stat-value" id="s-phy">0</div></div>
     </div>
-
-    <div id="main-screen" style="display: none;">
-        <div class="stats-grid">
-            <div class="stat-box">OVR<div class="stat-value" id="stat-ovr">70</div></div>
-            <div class="stat-box">PAC<div class="stat-value" id="stat-pac">0</div></div>
-            <div class="stat-box">SHO<div class="stat-value" id="stat-sho">0</div></div>
-            <div class="stat-box">PAS<div class="stat-value" id="stat-pas">0</div></div>
-            <div class="stat-box">DRI<div class="stat-value" id="stat-dri">0</div></div>
-            <div class="stat-box">PHY<div class="stat-value" id="stat-phy">0</div></div>
-        </div>
-
-        <table class="history-table">
-            <thead>
-                <tr><th>Idd</th><th>Clube</th><th>🏟️</th><th>⚽</th><th>👟</th><th>Glórias</th></tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-        </table>
-
-        <div id="action-area" style="margin-top: 15px;">
-            <button class="btn" onclick="simular()">Simular 3 Anos ⏩</button>
-        </div>
-
-        <div id="transfer-market">
-            <h3 id="market-msg">Propostas Recebidas:</h3>
-            <div id="offers-list"></div>
-        </div>
-    </div>
+    <table class="history-table">
+        <thead><tr><th>Idd</th><th>Clube (3 Anos)</th><th>🏟️</th><th>⚽</th><th>👟</th><th>Glórias</th></tr></thead>
+        <tbody id="history-body"></tbody>
+    </table>
+    <button class="btn" style="margin-top:20px;" onclick="simular()">Simular 3 Anos ⏩</button>
 </div>
 
 <script>
-    let jogador = { idade: 15, clube: null, attr: {}, titulos: 0 };
-    let clubes = [
-        {nome: "Real Madrid", tier: 1}, {nome: "Man City", tier: 1}, {nome: "Flamengo", tier: 3}, 
-        {nome: "Boca", tier: 3}, {nome: "Juventus", tier: 2}, {nome: "River Plate", tier: 3}
-    ];
-
-    function iniciarCarreira() {
-        jogador.attr = {ovr: 65, pac: 60, sho: 60, pas: 60, dri: 60, phy: 60, pot: aleatorio(80, 95)};
-        jogador.clube = clubes[aleatorio(0, clubes.length-1)];
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('main-screen').style.display = 'block';
-        atualizarTela();
-    }
-
-    function simular() {
-        for(let i=0; i<3; i++) {
-            jogador.idade++;
-            // Lógica de evolução: Se jovem, cresce rápido. Se veterano, perde pouco.
-            if(jogador.idade < 30) {
-                jogador.attr.sho += aleatorio(1, 3); jogador.attr.pas += aleatorio(1, 2);
-                jogador.attr.pac += aleatorio(0, 2);
-            } else {
-                jogador.attr.pac -= aleatorio(1, 2); jogador.attr.phy -= aleatorio(1, 2);
-                // Técnica se mantém!
-            }
-            // Calcula OVR médio
-            jogador.attr.ovr = Math.floor((jogador.attr.pac + jogador.attr.sho + jogador.attr.pas + jogador.attr.dri + jogador.attr.phy)/5);
-        }
-        renderizarLinha();
-        atualizarTela();
-        abrirMercado();
-    }
-
-    function renderizarLinha() {
-        let gols = Math.floor(jogador.attr.sho * 0.8 + aleatorio(-10, 10));
-        let body = document.getElementById('history-body');
-        body.innerHTML = `<tr><td class="row-age">${jogador.idade}</td><td>${jogador.clube.nome}</td><td>40</td><td>${gols}</td><td>15</td><td>✨</td></tr>` + body.innerHTML;
-    }
-
-    function atualizarTela() {
-        document.getElementById('stat-ovr').innerText = jogador.attr.ovr;
-        document.getElementById('stat-pac').innerText = jogador.attr.pac;
-        document.getElementById('stat-sho').innerText = jogador.attr.sho;
-        document.getElementById('stat-pas').innerText = jogador.attr.pas;
-        document.getElementById('stat-dri').innerText = jogador.attr.dri;
-        document.getElementById('stat-phy').innerText = jogador.attr.phy;
-    }
-
-    function abrirMercado() {
-        document.getElementById('action-area').style.display = 'none';
-        document.getElementById('transfer-market').style.display = 'block';
-    }
+    let j = {idade: 18, ovr: 70, pac: 70, sho: 70, pas: 70, dri: 70, phy: 70, felicidade: 50, clube: "Clube Base"};
     
-    function rejeitarOfertas() { 
-        document.getElementById('transfer-market').style.display = 'none';
-        document.getElementById('action-area').style.display = 'block';
+    function simular() {
+        // 1. Simular Desempenho Realista
+        let jogos = aleatorio(30, 50);
+        // OVR influencia diretamente gols e assistências
+        let gols = Math.floor((j.ovr / 100) * jogos * (0.8 + Math.random() * 0.4));
+        let assists = Math.floor((j.pas / 100) * jogos * 0.3);
+
+        // 2. Sistema de Felicidade / Evolução
+        if (gols > 15) j.felicidade += 10;
+        if (j.felicidade > 80) j.ovr += aleatorio(1, 2); // Evolução rápida se feliz
+        else if (j.felicidade < 30) j.ovr -= 1; // Queda se infeliz
+
+        // 3. Atualizar Tabela
+        let body = document.getElementById('history-body');
+        body.innerHTML = `<tr><td class="row-age">${j.idade}</td><td>${j.clube}</td><td>${jogos}</td><td>${gols}</td><td>${assists}</td><td>✨</td></tr>` + body.innerHTML;
+        
+        j.idade += 3;
+        atualizarStats();
+    }
+
+    function atualizarStats() {
+        document.getElementById('s-ovr').innerText = j.ovr;
+        document.getElementById('s-pac').innerText = j.pac;
+        document.getElementById('s-sho').innerText = j.sho;
+        document.getElementById('s-pas').innerText = j.pas;
+        document.getElementById('s-dri').innerText = j.dri;
+        document.getElementById('s-phy').innerText = j.phy;
     }
 
     function aleatorio(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
