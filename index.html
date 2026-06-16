@@ -2,23 +2,23 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador Carreira - OVR Realista</title>
+    <title>Simulador Carreira - Realismo Máximo</title>
     <style>
-        body { background: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 10px; }
-        .container { width: 100%; max-width: 850px; background: #1e1e1e; border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
-        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 20px; }
-        .stat-box { background: #311b92; padding: 8px; text-align: center; border-radius: 5px; font-size: 12px; font-weight: bold; }
-        .stat-value { font-size: 18px; color: #00ff88; margin-top: 5px; }
-        .history-table { width: 100%; border-collapse: collapse; background: #2d5a27; font-size: 13px; text-align: center; }
+        body { background: #121212; color: #fff; font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: #1e1e1e; padding: 20px; border-radius: 10px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #2a2a2a; text-align: center; padding: 10px; border-radius: 5px; }
+        .stat-value { font-size: 20px; font-weight: bold; color: #00ff88; }
+        .history-table { width: 100%; border-collapse: collapse; background: #2d5a27; font-size: 13px; }
         .history-table th { background: #006400; padding: 10px; }
-        .history-table td { padding: 8px; border: 1px solid #4a8a44; }
-        .row-age { background: #311b92; font-weight: bold; }
-        .btn { background: #ff3e3e; color: white; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; font-size: 16px; }
+        .history-table td { padding: 8px; border: 1px solid #4a8a44; text-align: center; }
+        .btn { background: #ff3e3e; color: white; padding: 15px; width: 100%; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        #market { display: none; background: #333; padding: 20px; margin-top: 20px; border-radius: 8px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2 id="header">Iniciando Carreira...</h2>
+    <h2 id="club-display">Iniciando Carreira...</h2>
     <div class="stats-grid">
         <div class="stat-box">OVR<div class="stat-value" id="s-ovr">0</div></div>
         <div class="stat-box">PAC<div class="stat-value" id="s-pac">0</div></div>
@@ -28,36 +28,72 @@
         <div class="stat-box">PHY<div class="stat-value" id="s-phy">0</div></div>
     </div>
     <table class="history-table">
-        <thead><tr><th>Idd</th><th>Clube (3 Anos)</th><th>🏟️</th><th>⚽</th><th>👟</th><th>Glórias</th></tr></thead>
+        <thead><tr><th>Idd</th><th>Clube</th><th>🏟️</th><th>⚽</th><th>👟</th></tr></thead>
         <tbody id="history-body"></tbody>
     </table>
     <button class="btn" style="margin-top:20px;" onclick="simular()">Simular 3 Anos ⏩</button>
+    <div id="market">
+        <h3>Propostas de Transferência:</h3>
+        <div id="offers"></div>
+    </div>
 </div>
 
 <script>
-    let j = {idade: 18, ovr: 70, pac: 70, sho: 70, pas: 70, dri: 70, phy: 70, felicidade: 50, clube: "Clube Base"};
-    
+    let j = { idade: 15, ovr: 65, pac: 60, sho: 60, pas: 60, dri: 60, phy: 60, clube: "Clube Base" };
+    let clubes = [
+        {nome: "Real Madrid", tier: 1}, {nome: "Man City", tier: 1}, {nome: "Bayern", tier: 1},
+        {nome: "Flamengo", tier: 3}, {nome: "Boca", tier: 3}, {nome: "River", tier: 3},
+        {nome: "Al-Hilal", tier: 2}, {nome: "Inter Miami", tier: 3}, {nome: "Al Ahly", tier: 4}
+    ];
+
     function simular() {
-        // 1. Simular Desempenho Realista
-        let jogos = aleatorio(30, 50);
-        // OVR influencia diretamente gols e assistências
-        let gols = Math.floor((j.ovr / 100) * jogos * (0.8 + Math.random() * 0.4));
-        let assists = Math.floor((j.pas / 100) * jogos * 0.3);
-
-        // 2. Sistema de Felicidade / Evolução
-        if (gols > 15) j.felicidade += 10;
-        if (j.felicidade > 80) j.ovr += aleatorio(1, 2); // Evolução rápida se feliz
-        else if (j.felicidade < 30) j.ovr -= 1; // Queda se infeliz
-
-        // 3. Atualizar Tabela
-        let body = document.getElementById('history-body');
-        body.innerHTML = `<tr><td class="row-age">${j.idade}</td><td>${j.clube}</td><td>${jogos}</td><td>${gols}</td><td>${assists}</td><td>✨</td></tr>` + body.innerHTML;
+        if (j.idade >= 39) { alert("Aposentado!"); location.reload(); return; }
         
-        j.idade += 3;
-        atualizarStats();
+        let totalGols = 0, totalAssists = 0;
+        for(let i=0; i<3; i++) {
+            j.idade++;
+            // Evolução/Declínio
+            if(j.idade < 30) j.ovr += aleatorio(1, 3);
+            else j.ovr -= aleatorio(1, 2);
+            
+            totalGols += Math.floor((j.ovr/100) * 40 * Math.random());
+            totalAssists += Math.floor((j.ovr/100) * 15 * Math.random());
+        }
+        
+        let body = document.getElementById('history-body');
+        body.innerHTML = `<tr><td class="row-age">${j.idade}</td><td>${j.clube.nome}</td><td>120</td><td>${totalGols}</td><td>${totalAssists}</td></tr>` + body.innerHTML;
+        
+        atualizarTela();
+        abrirMercado(totalGols);
     }
 
-    function atualizarStats() {
+    function abrirMercado(gols) {
+        let market = document.getElementById('market');
+        let offers = document.getElementById('offers');
+        offers.innerHTML = '';
+        
+        // Regra: Jogador ruim (OVR < 70) ou que fez poucos gols recebe 0 ou 1 proposta
+        // Jogador artilheiro recebe até 3
+        let numOfertas = gols > 20 ? aleatorio(1, 3) : aleatorio(0, 1);
+        
+        if(numOfertas === 0) {
+            offers.innerHTML = "<p>Nenhuma proposta recebida.</p>";
+        } else {
+            for(let i=0; i<numOfertas; i++) {
+                let time = clubes[aleatorio(0, clubes.length-1)];
+                offers.innerHTML += `<button class="btn" style="margin-bottom:5px;" onclick="transferir('${time.nome}', ${time.tier})">${time.nome} (€${aleatorio(10, 100)}M)</button>`;
+            }
+        }
+        market.style.display = 'block';
+    }
+
+    function transferir(nome, tier) {
+        j.clube = {nome: nome, tier: tier};
+        document.getElementById('club-display').innerText = nome;
+        document.getElementById('market').style.display = 'none';
+    }
+
+    function atualizarTela() {
         document.getElementById('s-ovr').innerText = j.ovr;
         document.getElementById('s-pac').innerText = j.pac;
         document.getElementById('s-sho').innerText = j.sho;
