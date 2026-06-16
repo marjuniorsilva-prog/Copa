@@ -1,79 +1,96 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Minha Carreira Profissional</title>
+    <title>Carreira PRO Realista</title>
     <style>
-        body { background: #0f172a; color: #f1f5f9; font-family: sans-serif; display: flex; justify-content: center; padding: 20px; }
-        .container { width: 100%; max-width: 800px; background: #1e293b; padding: 20px; border-radius: 12px; }
+        body { background: #0f172a; color: #f1f5f9; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .container { width: 100%; max-width: 900px; background: #1e293b; padding: 20px; border-radius: 12px; }
         .grid-stats { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 20px 0; }
-        .stat-card { background: #334155; text-align: center; padding: 10px; border-radius: 6px; font-size: 11px; }
-        .stat-val { font-size: 16px; color: #22c55e; font-weight: bold; }
+        .stat-card { background: #334155; text-align: center; padding: 10px; border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; background: #020617; }
         th, td { padding: 10px; border: 1px solid #334155; text-align: center; }
-        .btn { background: #ef4444; color: white; padding: 15px; border: none; width: 100%; cursor: pointer; font-weight: bold; border-radius: 6px; }
-        .offer { background: #15803d; margin: 5px 0; padding: 10px; border-radius: 5px; cursor: pointer; }
+        .btn { background: #ef4444; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; }
+        .offer-btn { background: #22c55e; color: white; border: none; padding: 8px; margin: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h2 id="titulo-carreira">Carreira: Iniciante</h2>
+    <h2 id="titulo">Carreira: Iniciando...</h2>
     <div class="grid-stats" id="stats-area"></div>
-    
     <table>
         <thead><tr><th>Idd</th><th>Clube</th><th>🏟️</th><th>⚽</th><th>👟</th><th>Glórias</th></tr></thead>
-        <tbody id="historia"></tbody>
+        <tbody id="history-body"></tbody>
     </table>
-
-    <button class="btn" onclick="simular()">AVANÇAR 3 ANOS ⏩</button>
-    <div id="mercado" style="display:none; margin-top:20px;"></div>
+    <button class="btn" onclick="simular()">SIMULAR 3 ANOS ⏩</button>
+    <div id="mercado" style="display:none; margin-top:20px;">
+        <h3>Escolha seu destino (Transferência):</h3>
+        <div id="offer-list"></div>
+    </div>
 </div>
 
 <script>
-    let p = { age: 15, ovr: 70, pac: 70, sho: 70, pas: 70, dri: 70, def: 60, phy: 70, club: "Clube Base", totalG: 0, totalA: 0 };
-    const ligas = ["Real Madrid", "Man City", "PSG", "Bayern", "Flamengo", "Al-Hilal", "Inter Miami"];
+    let p = { age: 15, ovr: 70, pac: 70, sho: 70, pas: 70, dri: 70, def: 50, phy: 70, club: "Benfica", totalG: 0, totalA: 0 };
+    const allClubs = [
+        "Real Madrid", "Man. City", "Bayern", "PSG", "Flamengo", "Palmeiras", "Boca Juniors", 
+        "River Plate", "Al-Nassr", "Al-Hilal", "Milan", "Inter", "Chelsea", "Arsenal", 
+        "Sevilla", "Borussia Dortmund", "Ajax", "Benfica", "Porto", "Inter Miami"
+    ];
 
     function simular() {
-        if(p.age >= 39) { alert("Aposentado!"); return; }
+        if(p.age >= 39) return;
         p.age += 3;
         
-        // Performance
-        let gols = Math.floor((p.ovr/80) * 40 + Math.random() * 20);
-        let pass = Math.floor((p.pas/80) * 15 + Math.random() * 10);
-        p.totalG += gols; p.totalA += pass;
+        // Performance aleatória baseada no OVR
+        let jogos = aleatorio(40, 110);
+        let gols = Math.floor((p.ovr/80) * jogos * (Math.random() * 0.8));
+        let ass = Math.floor((p.pas/80) * jogos * 0.3);
+        p.totalG += gols; p.totalA += ass;
 
-        // Glórias
-        let gloria = "";
-        if(gols > 30) gloria = "🏆 Liga";
-        if(gols > 45) gloria = "🏆 Champions";
-        if(p.age % 4 === 0 && p.ovr > 88) gloria = "🌍 Copa do Mundo + ⚽ Bola de Ouro";
+        // Títulos (Aleatórios mas condicionados)
+        let glorias = [];
+        if(gols > 30) glorias.push("🏆 Liga");
+        if(gols > 60) glorias.push("🏆 Champions");
+        if(p.age % 4 === 0 && p.ovr > 85) glorias.push("🥇 Copa do Mundo");
+        if(p.ovr > 92 && Math.random() > 0.7) glorias.push("✨ Bola de Ouro");
 
-        document.getElementById('historia').innerHTML = `<tr><td>${p.age}</td><td>${p.club}</td><td>110</td><td>${p.totalG}</td><td>${p.totalA}</td><td>${gloria}</td></tr>` + document.getElementById('historia').innerHTML;
+        document.getElementById('history-body').innerHTML = `<tr><td>${p.age}</td><td>${p.club}</td><td>${jogos}</td><td>${gols}</td><td>${ass}</td><td>${glorias.join(" + ")}</td></tr>` + document.getElementById('history-body').innerHTML;
 
         // Evolução
-        if(p.age < 30) p.ovr += 1; else p.ovr -= 1;
+        p.ovr += (p.age < 30) ? aleatorio(-1, 3) : aleatorio(-2, 1);
         updateUI();
         gerarMercado();
     }
 
     function gerarMercado() {
         let m = document.getElementById('mercado');
+        let list = document.getElementById('offer-list');
+        list.innerHTML = "";
+        
+        // Aleatoriedade de 0 a 3 ofertas
+        let numOfertas = aleatorio(0, 3);
+        if(numOfertas === 0) { m.style.display = 'none'; return; }
+        
         m.style.display = 'block';
-        m.innerHTML = "<h3>Propostas:</h3>";
-        for(let i=0; i<3; i++) {
-            let c = ligas[Math.floor(Math.random()*ligas.length)];
-            m.innerHTML += `<div class='offer' onclick="trans('${c}')">${c} - Valor: €${Math.floor(Math.random()*150)}M</div>`;
+        for(let i=0; i<numOfertas; i++) {
+            let c = allClubs[aleatorio(0, allClubs.length-1)];
+            list.innerHTML += `<button class='offer-btn' onclick="mudarClube('${c}')">${c} (€${aleatorio(20, 200)}M)</button>`;
         }
     }
 
-    function trans(c) { p.club = c; document.getElementById('titulo-carreira').innerText = "Carreira: " + c; }
+    function mudarClube(c) {
+        p.club = c;
+        document.getElementById('titulo').innerText = "Carreira: " + c;
+        document.getElementById('mercado').style.display = 'none';
+    }
 
     function updateUI() {
         document.getElementById('stats-area').innerHTML = `
             ${['OVR','PAC','SHO','PAS','DRI','DEF','PHY'].map(s => `<div class='stat-card'>${s}<div class='stat-val'>${p[s.toLowerCase()]}</div></div>`).join('')}
         `;
     }
+
+    function aleatorio(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
     updateUI();
 </script>
 </body>
