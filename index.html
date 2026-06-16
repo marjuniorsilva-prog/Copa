@@ -23,7 +23,7 @@
             justify-content: center;
         }
         .container {
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
             background: var(--panel-bg);
             border-radius: 15px;
@@ -40,8 +40,8 @@
         .stat-box { background: #311b92; padding: 10px 5px; border-radius: 5px; text-align: center; font-size: 14px; font-weight: bold; }
         .stat-value { font-size: 20px; background: white; color: black; border-radius: 3px; margin-top: 5px; }
         
-        .trophy-cabinet { background: #f4f4f4; color: black; display: flex; justify-content: space-around; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 15px; }
-        .trophy-item { text-align: center; font-size: 18px; }
+        .trophy-cabinet { background: #f4f4f4; color: black; display: flex; justify-content: space-around; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 15px; flex-wrap: wrap;}
+        .trophy-item { text-align: center; font-size: 16px; margin: 5px; }
         
         .dashboard { display: flex; gap: 15px; margin-bottom: 20px; }
         .col-left { flex: 2; }
@@ -51,6 +51,7 @@
         .history-table th { background: #008f39; color: white; padding: 8px; }
         .history-table td { padding: 6px; border-bottom: 1px solid #6eb881; }
         .row-age { background: #311b92; color: white; font-size: 16px;}
+        .glorias-col { font-size: 14px; letter-spacing: 2px; }
         
         .transfer-log { font-size: 12px; margin-bottom: 5px; padding: 5px; background: #111; border-left: 3px solid var(--transfer-color); }
         
@@ -87,7 +88,8 @@
 
         <div class="trophy-cabinet">
             <div class="trophy-item">🏆 Liga<br><span id="t-liga">0</span></div>
-            <div class="trophy-item">🌎 Cont<br><span id="t-cont">0</span></div>
+            <div class="trophy-item">🌎 Clubes<br><span id="t-cont">0</span></div>
+            <div class="trophy-item">🗺️ Seleção<br><span id="t-sel">0</span></div>
             <div class="trophy-item">🥇 Copa<br><span id="t-copa">0</span></div>
             <div class="trophy-item">✨ B.Ouro<br><span id="t-bdor">0</span></div>
         </div>
@@ -107,10 +109,11 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">Idd</th>
-                            <th style="width: 45%;">Clube (3 Anos)</th>
+                            <th style="width: 35%;">Clube (3 Anos)</th>
                             <th title="Jogos">🏟️</th>
                             <th title="Gols">⚽</th>
                             <th title="Assistências">👟</th>
+                            <th style="width: 25%;">Glórias</th>
                         </tr>
                     </thead>
                     <tbody id="history-body"></tbody>
@@ -136,6 +139,9 @@
 </div>
 
 <script>
+    // --- VARIÁVEIS GLOBAIS SEGURAS ---
+    let propostasAtuais = [];
+    
     let clubesMundo = [
         // AMÉRICA DO SUL
         { nome: "Flamengo", pais: "🇧🇷", tier: 3, reg: "SA" }, { nome: "Palmeiras", pais: "🇧🇷", tier: 3, reg: "SA" }, { nome: "São Paulo", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Corinthians", pais: "🇧🇷", tier: 4, reg: "SA" }, 
@@ -148,23 +154,23 @@
         { nome: "Bayern", pais: "🇩🇪", tier: 1, reg: "EU" }, { nome: "Dortmund", pais: "🇩🇪", tier: 2, reg: "EU" }, { nome: "Leverkusen", pais: "🇩🇪", tier: 2, reg: "EU" },
         { nome: "Inter", pais: "🇮🇹", tier: 1, reg: "EU" }, { nome: "Juventus", pais: "🇮🇹", tier: 2, reg: "EU" }, { nome: "Milan", pais: "🇮🇹", tier: 2, reg: "EU" },
         { nome: "PSG", pais: "🇫🇷", tier: 1, reg: "EU" }, { nome: "Lyon", pais: "🇫🇷", tier: 3, reg: "EU" },
-        { nome: "Benfica", pais: "🇵🇹", tier: 2, reg: "EU" }, { nome: "Porto", pais: "🇵🇹", tier: 2, reg: "EU" }, { nome: "Ajax", pais: "🇳🇱", tier: 3, reg: "EU" }, { nome: "Celtic", pais: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", tier: 3, reg: "EU" }, { nome: "Galatasaray", pais: "🇹🇷", tier: 3, reg: "EU" }, { nome: "Dinamo Zagreb", pais: "🇭🇷", tier: 5, reg: "EU" },
+        { nome: "Benfica", pais: "🇵🇹", tier: 2, reg: "EU" }, { nome: "Porto", pais: "🇵🇹", tier: 2, reg: "EU" }, { nome: "Ajax", pais: "🇳🇱", tier: 3, reg: "EU" }, { nome: "Galatasaray", pais: "🇹🇷", tier: 3, reg: "EU" },
 
         // AMÉRICA DO NORTE
         { nome: "Inter Miami", pais: "🇺🇸", tier: 3, reg: "NA" }, { nome: "LA Galaxy", pais: "🇺🇸", tier: 4, reg: "NA" }, { nome: "Club América", pais: "🇲🇽", tier: 3, reg: "NA" }, { nome: "Monterrey", pais: "🇲🇽", tier: 4, reg: "NA" },
 
         // ÁSIA
         { nome: "Al-Hilal", pais: "🇸🇦", tier: "Arabia", reg: "AS" }, { nome: "Al-Nassr", pais: "🇸🇦", tier: "Arabia", reg: "AS" }, { nome: "Al-Ittihad", pais: "🇸🇦", tier: "Arabia", reg: "AS" },
-        { nome: "Kawasaki Fron.", pais: "🇯🇵", tier: 5, reg: "AS" }, { nome: "Al Ain", pais: "🇦🇪", tier: 4, reg: "AS" }, { Jeonbuk: "Jeonbuk", pais: "🇰🇷", tier: 5, reg: "AS" },
+        { nome: "Kawasaki Fron.", pais: "🇯🇵", tier: 5, reg: "AS" }, { nome: "Al Ain", pais: "🇦🇪", tier: 4, reg: "AS" },
 
         // ÁFRICA
-        { nome: "Al Ahly", pais: "🇪🇬", tier: 4, reg: "AF" }, { nome: "Zamalek", pais: "🇪🇬", tier: 5, reg: "AF" }, { nome: "Mamelodi", pais: "🇿🇦", tier: 4, reg: "AF" }, { nome: "Wydad", pais: "🇲🇦", tier: 4, reg: "AF" }
+        { nome: "Al Ahly", pais: "🇪🇬", tier: 4, reg: "AF" }, { nome: "Mamelodi", pais: "🇿🇦", tier: 4, reg: "AF" }, { nome: "Wydad", pais: "🇲🇦", tier: 4, reg: "AF" }
     ];
 
     let jogador = {
         idade: 15, clubeAtual: null, valorMercado: 0,
         atributos: { ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, phy: 0 },
-        titulos: { ligas: 0, continentais: 0, copasMundo: 0, bolasDeOuro: 0 }
+        titulos: { ligas: 0, continentais: 0, selecao: 0, copasMundo: 0, bolasDeOuro: 0 }
     };
 
     function aleatorio(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -173,35 +179,37 @@
         let ovr = jogador.atributos.ovr;
         let base = 0;
         
-        // Fórmula Exponencial Realista
         if (ovr >= 90) base = aleatorio(80, 150);
         else if (ovr >= 85) base = aleatorio(40, 75);
         else if (ovr >= 80) base = aleatorio(15, 35);
         else if (ovr >= 75) base = aleatorio(5, 12);
         else if (ovr >= 70) base = aleatorio(1, 4);
-        else base = (Math.random() * 0.8 + 0.1); // Menos de 1 milhão para jogadores ruins
+        else base = (Math.random() * 0.8 + 0.1);
 
-        if (jogador.idade <= 22) base *= 1.4; // Taxa de Promessa
-        if (jogador.idade > 31) base *= 0.5; // Taxa de Idoso
+        if (jogador.idade <= 22) base *= 1.4; 
+        if (jogador.idade > 31) base *= 0.5; 
 
         jogador.valorMercado = parseFloat(base.toFixed(1));
         document.getElementById('player-value').innerText = jogador.valorMercado;
     }
 
     function iniciarCarreira(continenteInicial) {
-        let base = aleatorio(55, 74); // Pode nascer MUITO ruim agora
+        // SISTEMA DE PRODÍGIOS: 15% de chance de nascer craque
+        let isProdigy = Math.random() > 0.85;
+        let base = isProdigy ? aleatorio(72, 82) : aleatorio(55, 68); 
+
         jogador.atributos = {
-            ovr: base, pac: base + aleatorio(-5, 15), sho: base + aleatorio(-10, 10),
-            pas: base + aleatorio(-10, 10), dri: base + aleatorio(-5, 12), phy: base + aleatorio(-10, 15)
+            ovr: base, pac: base + aleatorio(-5, 18), sho: base + aleatorio(-10, 12),
+            pas: base + aleatorio(-10, 10), dri: base + aleatorio(-5, 15), phy: base + aleatorio(-10, 15)
         };
         recalcularOVR();
 
         let timesIniciais = clubesMundo.filter(c => c.reg === continenteInicial && (c.tier >= 4 || c.tier === 3));
-        if(timesIniciais.length === 0) timesIniciais = clubesMundo.filter(c => c.reg === continenteInicial); // Fallback
+        if(timesIniciais.length === 0) timesIniciais = clubesMundo.filter(c => c.reg === continenteInicial); 
         
         jogador.clubeAtual = timesIniciais[aleatorio(0, timesIniciais.length - 1)];
         
-        registrarTransferencia("Base (" + continenteInicial + ")", jogador.clubeAtual, 0);
+        registrarTransferencia(isProdigy ? "Prodígio da Base" : "Base comum", jogador.clubeAtual, 0);
 
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('main-screen').style.display = 'block';
@@ -219,6 +227,7 @@
     function simularTemporadasBloco() {
         let attr = jogador.atributos;
         let totalJogos = 0, totalGols = 0, totalAssists = 0;
+        let gloriasDoBloco = ""; // Guarda os emojis das conquistas dos 3 anos
 
         for(let ano = 0; ano < 3; ano++) {
             let maxJogos = 55;
@@ -226,10 +235,9 @@
             if (attr.phy < 75 && Math.random() > 0.25) jogosPerdidos = aleatorio(5, 35); 
             let jogosAno = maxJogos - jogosPerdidos;
             
-            // Se o jogador for muito ruim para a liga, ele fica no banco!
             let fatorLiga = typeof jogador.clubeAtual.tier === 'number' ? jogador.clubeAtual.tier : 3;
-            if (attr.ovr < 75 && fatorLiga <= 2) jogosAno = Math.floor(jogosAno * 0.3); // Banco na Europa
-            if (attr.ovr < 65 && fatorLiga <= 4) jogosAno = Math.floor(jogosAno * 0.5); // Banco em time médio
+            if (attr.ovr < 75 && fatorLiga <= 2) jogosAno = Math.floor(jogosAno * 0.3); 
+            if (attr.ovr < 65 && fatorLiga <= 4) jogosAno = Math.floor(jogosAno * 0.5); 
             
             totalJogos += jogosAno;
 
@@ -245,22 +253,33 @@
             totalGols += golsAno;
             totalAssists += assistsAno;
 
+            // TÍTULOS E GLÓRIAS
             let forcaEquipe = (typeof jogador.clubeAtual.tier === 'number' ? (6 - jogador.clubeAtual.tier) * 15 : 60) + (attr.ovr * 0.5);
-            let tCont = false, tCopa = false;
+            let tCont = false, tCopa = false, tSel = false;
 
             if (Math.random() * 150 < forcaEquipe && jogosAno > 10) jogador.titulos.ligas++; 
-            if (Math.random() * 250 < forcaEquipe && jogosAno > 10) { tCont = true; jogador.titulos.continentais++; }
-            if ((jogador.idade + ano) % 4 === 0 && attr.ovr > 86 && Math.random() > 0.94) { tCopa = true; jogador.titulos.copasMundo++; }
-            if (golsAno >= 45 && attr.ovr >= 92 && (tCont || tCopa) && Math.random() > 0.5) jogador.titulos.bolasDeOuro++;
+            if (Math.random() * 250 < forcaEquipe && jogosAno > 10) { tCont = true; jogador.titulos.continentais++; gloriasDoBloco += "🌎"; }
+            
+            // Copa do Mundo (A cada 4 anos)
+            if ((jogador.idade + ano) % 4 === 0 && attr.ovr > 84 && Math.random() > 0.85) { tCopa = true; jogador.titulos.copasMundo++; gloriasDoBloco += "🥇"; }
+            
+            // Copa Continental de Seleções (Euro / Copa América - intercalado)
+            if ((jogador.idade + ano) % 4 === 2 && attr.ovr > 80 && Math.random() > 0.75) { tSel = true; jogador.titulos.selecao++; gloriasDoBloco += "🗺️"; }
 
+            // Bola de Ouro
+            if (golsAno >= 40 && attr.ovr >= 90 && (tCont || tCopa || tSel) && Math.random() > 0.5) { jogador.titulos.bolasDeOuro++; gloriasDoBloco += "✨"; }
+
+            // EVOLUÇÃO MAIS VOLÁTIL E RÁPIDA
             if ((jogador.idade + ano) <= 28) {
-                // Se for ruim e não jogar, não evolui
-                if(jogosAno > 20) {
-                    attr.pac += aleatorio(0, 1); attr.sho += aleatorio(1, 2); attr.pas += aleatorio(0, 2);
-                    attr.dri += aleatorio(0, 2); attr.phy += aleatorio(0, 1);
+                if(jogosAno > 15) {
+                    let burst = Math.random() > 0.75 ? aleatorio(2, 6) : aleatorio(0, 2); // Pode estourar do nada
+                    attr.pac += aleatorio(0, burst); attr.sho += aleatorio(0, burst + 1); attr.pas += aleatorio(0, burst);
+                    attr.dri += aleatorio(0, burst); attr.phy += aleatorio(0, burst);
                 }
             } else if ((jogador.idade + ano) > 31) {
-                attr.pac -= aleatorio(1, 3); attr.phy -= aleatorio(1, 2); attr.sho -= aleatorio(0, 1);
+                // Declínio mais severo após os 31
+                let queda = Math.random() > 0.7 ? aleatorio(2, 5) : aleatorio(0, 2);
+                attr.pac -= queda; attr.phy -= queda; attr.sho -= aleatorio(0, 2);
             }
             recalcularOVR();
         }
@@ -275,13 +294,16 @@
             <td>${totalJogos}</td>
             <td>${totalGols}</td>
             <td>${totalAssists}</td>
+            <td class="glorias-col">${gloriasDoBloco}</td>
         </tr>`;
         tabela.innerHTML = linha + tabela.innerHTML;
 
         atualizarTela();
 
-        if (jogador.idade > aleatorio(36, 41) || (attr.ovr < 55 && jogador.idade > 25)) {
-            document.getElementById('action-area').innerHTML = `<button class='btn' style='background: red;' onclick='location.reload()'>Carreira Encerrada! Jogar Novamente</button>`;
+        // APOSENTADORIA EXATAMENTE AOS 39 ANOS
+        if (jogador.idade >= 39) {
+            document.getElementById('action-area').innerHTML = `<h2 style="color:var(--gold);">FIM DE CARREIRA AOS 39 ANOS!</h2><button class='btn' style='background: #b71c1c;' onclick='location.reload()'>Iniciar Nova Lenda</button>`;
+            document.getElementById('transfer-market').style.display = 'none'; // Impede mercado
             return;
         }
 
@@ -303,7 +325,6 @@
             if (c.nome === jogador.clubeAtual.nome) return;
             let interessa = false;
             
-            // Lógica Rigorosa de Interesse baseada em OVR
             if (ovr >= 88 && c.tier === 1) interessa = true; 
             if (ovr >= 80 && ovr <= 92 && c.tier === 2) interessa = true; 
             if (ovr >= 72 && ovr <= 85 && c.tier === 3) interessa = true; 
@@ -311,18 +332,14 @@
             if (ovr < 70 && c.tier === 5) interessa = true; 
             
             if (jogador.idade >= 30 && ovr >= 82 && c.tier === "Arabia") interessa = true;
-
-            // O Milagre do Empresário Forte: 2% de chance de um time Tier 2 ou 3 apostar num bagre
             if (ovr < 75 && (c.tier === 2 || c.tier === 3) && Math.random() > 0.98) interessa = true;
-
-            // Times ruins não tem dinheiro para craques
-            if(ovr >= 85 && c.tier >= 4) interessa = false;
+            if (ovr >= 85 && c.tier >= 4) interessa = false;
 
             if (interessa && Math.random() > 0.75) propostas.push(c);
         });
 
         propostas = propostas.sort(() => 0.5 - Math.random()).slice(0, 3);
-        window.propostasAtuais = [];
+        propostasAtuais = []; // Reseta as globais
 
         if (propostas.length === 0) { 
             msg.innerText = "Sua temporada não atraiu olhares. Nenhuma proposta oficial.";
@@ -332,17 +349,16 @@
             document.getElementById('btn-stay').innerText = "Recusar Ofertas";
             
             propostas.forEach((clube, index) => {
-                // Variação de -10% a +30% em cima do valor de mercado
                 let variacao = (Math.random() * 0.4) - 0.1;
                 let valorOferta = jogador.valorMercado * (1 + variacao);
-                
-                if (clube.tier === "Arabia") valorOferta *= 2.5; // Inflação árabe
+                if (clube.tier === "Arabia") valorOferta *= 2.5; 
 
                 valorOferta = parseFloat(valorOferta.toFixed(1));
                 if (valorOferta < 0.1) valorOferta = 0.1;
 
-                window.propostasAtuais.push({ clube: clube, valor: valorOferta });
+                propostasAtuais.push({ clube: clube, valor: valorOferta });
 
+                // O bug ocorria porque o DOM recriava o HTML. Chamar onclick direto na variável global com o ID correto garante o clique.
                 offersList.innerHTML += `<button class="btn btn-market" onclick="aceitarTransferencia(${index})">
                     ${clube.nome} ${clube.pais} (€${valorOferta}M)
                 </button>`;
@@ -352,13 +368,14 @@
 
     function registrarTransferencia(origem, destino, valor) {
         let logDiv = document.getElementById('transfer-history-log');
-        let textoOrigem = origem.includes("Base") ? origem : origem.nome;
-        let taxa = valor > 0 ? `€${valor}M` : "Contrato/Base";
+        let textoOrigem = typeof origem === 'string' ? origem : origem.nome;
+        let taxa = valor > 0 ? `€${valor}M` : "Custo Zero";
         logDiv.innerHTML = `<div class="transfer-log">Idd ${jogador.idade}: ${textoOrigem} ➔ ${destino.nome} ${destino.pais}<br><span style="color:#00ff88;">${taxa}</span></div>` + logDiv.innerHTML;
     }
 
+    // A função agora pega da variável global propostasAtuais garantidamente
     function aceitarTransferencia(index) {
-        let proposta = window.propostasAtuais[index];
+        let proposta = propostasAtuais[index];
         registrarTransferencia(jogador.clubeAtual, proposta.clube, proposta.valor);
         jogador.clubeAtual = proposta.clube;
         fecharMercado();
@@ -384,6 +401,7 @@
 
         document.getElementById('t-liga').innerText = jogador.titulos.ligas;
         document.getElementById('t-cont').innerText = jogador.titulos.continentais;
+        document.getElementById('t-sel').innerText = jogador.titulos.selecao;
         document.getElementById('t-copa').innerText = jogador.titulos.copasMundo;
         document.getElementById('t-bdor').innerText = jogador.titulos.bolasDeOuro;
     }
