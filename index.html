@@ -6,12 +6,13 @@
     <title>Simulador de Carreira - Realismo Máximo</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --panel-bg: #1e1e1e;
+            --bg-color: #1a1a1a;
+            --panel-bg: #2d2d2d;
             --primary: #00ff88;
             --text-light: #ffffff;
             --gold: #ffd700;
             --transfer-color: #ff0055;
+            --alert-color: #ff3333;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,42 +27,47 @@
             max-width: 850px;
             width: 100%;
             background: var(--panel-bg);
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.9);
         }
         h1, h2, h3 { text-align: center; margin-top: 0; }
         
         .player-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; }
-        .player-info h2 { margin: 0; color: var(--primary); }
-        .market-value { font-size: 24px; font-weight: bold; color: #00e676; background: #003300; padding: 5px 10px; border-radius: 8px; border: 1px solid #00ff88;}
+        .player-info h2 { margin: 0; color: var(--primary); font-size: 22px; }
+        .auge-tag { font-size: 12px; color: var(--gold); display: block; margin-top: 2px; }
+        .market-value { font-size: 22px; font-weight: bold; color: #00e676; background: #003300; padding: 5px 10px; border-radius: 8px; border: 1px solid #00ff88;}
         
         .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 15px; }
-        .stat-box { background: #311b92; padding: 10px 5px; border-radius: 5px; text-align: center; font-size: 14px; font-weight: bold; }
-        .stat-value { font-size: 20px; background: white; color: black; border-radius: 3px; margin-top: 5px; }
+        .stat-box { background: #311b92; padding: 8px 4px; border-radius: 5px; text-align: center; font-size: 13px; font-weight: bold; }
+        .stat-box.ovr-box { background: #b71c1c; }
+        .stat-value { font-size: 18px; background: white; color: black; border-radius: 3px; margin-top: 5px; padding: 2px 0;}
         
         .trophy-cabinet { background: #f4f4f4; color: black; display: flex; justify-content: space-around; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 15px; flex-wrap: wrap;}
-        .trophy-item { text-align: center; font-size: 16px; margin: 5px; }
+        .trophy-item { text-align: center; font-size: 15px; margin: 5px; }
         
         .dashboard { display: flex; gap: 15px; margin-bottom: 20px; }
         .col-left { flex: 2; }
-        .col-right { flex: 1; background: #2a2a2a; border-radius: 8px; padding: 10px; max-height: 400px; overflow-y: auto; }
+        .col-right { flex: 1; background: #222; border-radius: 8px; padding: 10px; max-height: 400px; overflow-y: auto; }
         
-        .history-table { width: 100%; border-collapse: collapse; background: #88c999; color: black; font-weight: bold; text-align: center; border-radius: 8px; overflow: hidden; font-size: 13px;}
+        .history-table { width: 100%; border-collapse: collapse; background: #88c999; color: black; font-weight: bold; text-align: center; border-radius: 8px; overflow: hidden; font-size: 12px;}
         .history-table th { background: #008f39; color: white; padding: 8px; }
         .history-table td { padding: 6px; border-bottom: 1px solid #6eb881; }
-        .row-age { background: #311b92; color: white; font-size: 16px;}
-        .glorias-col { font-size: 14px; letter-spacing: 2px; }
+        .row-age { background: #311b92; color: white; font-size: 15px;}
+        .glorias-col { font-size: 13px; letter-spacing: 1px; }
         
-        .transfer-log { font-size: 12px; margin-bottom: 5px; padding: 5px; background: #111; border-left: 3px solid var(--transfer-color); }
+        .transfer-log { font-size: 11px; margin-bottom: 5px; padding: 5px; background: #111; border-left: 3px solid var(--transfer-color); }
+        .transfer-log.dispensa { border-left: 3px solid var(--alert-color); }
         
-        .btn { background: var(--transfer-color); color: white; border: none; padding: 12px; width: 100%; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
+        .btn { background: var(--transfer-color); color: white; border: none; padding: 12px; width: 100%; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
         .btn:hover { filter: brightness(1.2); }
         .btn-continent { background: #311b92; margin-bottom: 8px; }
         .btn-market { background: #0055ff; }
         .btn-stay { background: #555; }
+        .btn-stay:disabled { background: #333; color: #777; cursor: not-allowed; }
         
         #transfer-market { display: none; background: #111; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid var(--primary); }
+        #alert-msg { color: var(--alert-color); font-weight: bold; font-size: 14px; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -81,7 +87,8 @@
         <div class="player-header">
             <div class="player-info">
                 <h2>OVR: <span id="header-ovr">70</span> | Atacante (ST)</h2>
-                <div id="player-club-title" style="font-size: 18px;">Clube Atual</div>
+                <span class="auge-tag">Auge (Prime): <span id="header-auge">70</span></span>
+                <div id="player-club-title" style="font-size: 18px; margin-top: 5px;">Clube Atual</div>
             </div>
             <div class="market-value" title="Valor de Mercado">€<span id="player-value">10</span>m</div>
         </div>
@@ -95,7 +102,7 @@
         </div>
 
         <div class="stats-grid">
-            <div class="stat-box" style="background:#b71c1c">OVR<div class="stat-value" id="stat-ovr">70</div></div>
+            <div class="stat-box ovr-box">OVR<div class="stat-value" id="stat-ovr">70</div></div>
             <div class="stat-box">PAC<div class="stat-value" id="stat-pac">70</div></div>
             <div class="stat-box">SHO<div class="stat-value" id="stat-sho">70</div></div>
             <div class="stat-box">PAS<div class="stat-value" id="stat-pas">70</div></div>
@@ -120,7 +127,7 @@
                 </table>
             </div>
             <div class="col-right">
-                <h3 style="color: var(--primary); font-size: 14px; border-bottom: 1px solid #555; padding-bottom: 5px;">📜 Transferências</h3>
+                <h3 style="color: var(--primary); font-size: 14px; border-bottom: 1px solid #555; padding-bottom: 5px; margin-top: 0;">📜 Transferências</h3>
                 <div id="transfer-history-log"></div>
             </div>
         </div>
@@ -130,8 +137,9 @@
         </div>
 
         <div id="transfer-market">
-            <h3 style="color: var(--primary);">MERCADO DE TRANSFERÊNCIAS 🤝</h3>
-            <p id="market-msg" style="font-size: 14px; color: #ccc;">Avaliando propostas...</p>
+            <h3 style="color: var(--primary); margin-top: 0;">MERCADO 🤝</h3>
+            <div id="alert-msg"></div>
+            <p id="market-msg" style="font-size: 13px; color: #ccc;">Avaliando propostas...</p>
             <div id="offers-list"></div>
             <button class="btn btn-stay" id="btn-stay" onclick="rejeitarOfertas()">Ficar no Clube</button>
         </div>
@@ -141,7 +149,9 @@
 <script>
     let propostasAtuais = [];
     let desempenhoRecente = { jogos: 0, gols: 0 }; 
+    let forcaTransferencia = false; 
     
+    // BANCO DE DADOS
     let clubesMundo = [
         // AMÉRICA DO SUL
         { nome: "Flamengo", pais: "🇧🇷", tier: 3, reg: "SA" }, { nome: "Palmeiras", pais: "🇧🇷", tier: 3, reg: "SA" }, { nome: "São Paulo", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Corinthians", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Atlético-MG", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Botafogo", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Cruzeiro", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Vasco", pais: "🇧🇷", tier: 5, reg: "SA" }, { nome: "Internacional", pais: "🇧🇷", tier: 4, reg: "SA" }, { nome: "Grêmio", pais: "🇧🇷", tier: 4, reg: "SA" },
@@ -168,7 +178,7 @@
     ];
 
     let jogador = {
-        idade: 15, clubeAtual: null, valorMercado: 0,
+        idade: 15, clubeAtual: null, valorMercado: 0, augeOVR: 0,
         atributos: { ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, phy: 0, potencial: 0 },
         titulos: { ligas: 0, continentais: 0, selecao: 0, copasMundo: 0, bolasDeOuro: 0 }
     };
@@ -187,7 +197,7 @@
         else base = (Math.random() * 0.8 + 0.1);
 
         if (jogador.idade <= 22) base *= 1.5; 
-        if (jogador.idade > 31) base *= 0.5; 
+        if (jogador.idade > 31) base *= 0.4; 
 
         jogador.valorMercado = parseFloat(base.toFixed(1));
         document.getElementById('player-value').innerText = jogador.valorMercado;
@@ -199,13 +209,9 @@
         let teto = isProdigy ? aleatorio(88, 96) : aleatorio(72, 86); 
 
         jogador.atributos = {
-            ovr: base, 
-            potencial: teto,
-            pac: base + aleatorio(-5, 15), 
-            sho: base + aleatorio(-10, 10),
-            pas: base + aleatorio(-10, 10), 
-            dri: base + aleatorio(-5, 12), 
-            phy: base + aleatorio(-10, 15)
+            ovr: base, potencial: teto,
+            pac: base + aleatorio(-5, 15), sho: base + aleatorio(-10, 10),
+            pas: base + aleatorio(-10, 10), dri: base + aleatorio(-5, 12), phy: base + aleatorio(-10, 15)
         };
         recalcularOVR();
 
@@ -214,7 +220,7 @@
         
         jogador.clubeAtual = timesIniciais[aleatorio(0, timesIniciais.length - 1)];
         
-        registrarTransferencia(isProdigy ? "Craque da Base" : "Base Comum", jogador.clubeAtual, 0);
+        registrarTransferencia(isProdigy ? "Craque da Base" : "Base Comum", jogador.clubeAtual, 0, false);
 
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('main-screen').style.display = 'block';
@@ -226,7 +232,11 @@
         let a = jogador.atributos;
         a.ovr = Math.floor((a.pac * 0.2) + (a.sho * 0.35) + (a.pas * 0.15) + (a.dri * 0.2) + (a.phy * 0.1));
         for(let key in a) { if(a[key] > 99 && key !== 'potencial') a[key] = 99; if(a[key] < 30 && key !== 'potencial') a[key] = 30; }
+        
+        if (a.ovr > jogador.augeOVR) jogador.augeOVR = a.ovr;
+        
         document.getElementById('header-ovr').innerText = a.ovr;
+        document.getElementById('header-auge').innerText = jogador.augeOVR;
     }
 
     function simularTemporadasBloco() {
@@ -238,16 +248,15 @@
             let idadeAtual = jogador.idade + ano;
             
             let fatorLiga = typeof jogador.clubeAtual.tier === 'number' ? jogador.clubeAtual.tier : 3;
-            let ovrNecessario = 92 - (fatorLiga * 7); 
+            let ovrNecessario = 90 - (fatorLiga * 6); 
             
             let jogosAno = 0;
-            if (attr.ovr < ovrNecessario - 10) jogosAno = aleatorio(0, 8); 
-            else if (attr.ovr < ovrNecessario - 3) jogosAno = aleatorio(10, 25); 
-            else jogosAno = aleatorio(35, 50); 
+            if (attr.ovr < ovrNecessario - 6) jogosAno = aleatorio(0, 5); 
+            else if (attr.ovr < ovrNecessario - 2) jogosAno = aleatorio(8, 20); 
+            else jogosAno = aleatorio(30, 50); 
 
             if (attr.phy < 72 && Math.random() > 0.3) jogosAno -= aleatorio(5, 20); 
             if (jogosAno < 0) jogosAno = 0;
-            
             totalJogos += jogosAno;
 
             let chanceGol = ((attr.sho * 0.6) + (attr.pac * 0.2) + (attr.dri * 0.2)) / 100;
@@ -255,27 +264,24 @@
             if (fatorLiga === 1) multiplicadorGol = 0.65; 
             if (jogador.clubeAtual.tier === "Arabia") multiplicadorGol = 1.6; 
             
+            if (fatorLiga <= 2 && (attr.pac < 65 || attr.phy < 60)) {
+                multiplicadorGol *= 0.4; 
+            }
+            
             let golsAno = Math.floor(jogosAno * chanceGol * multiplicadorGol * (Math.random() * 0.4 + 0.6));
             let assistsAno = Math.floor(jogosAno * (attr.pas / 100) * 0.4 * (Math.random() * 0.4 + 0.6));
 
             totalGols += golsAno;
             totalAssists += assistsAno;
 
-            // SISTEMA DE DIFICULDADE DE TÍTULOS CORRIGIDO
             let baseForcaEquipe = (typeof jogador.clubeAtual.tier === 'number' ? (6 - jogador.clubeAtual.tier) * 12 : 30);
-            let forcaEquipe = baseForcaEquipe + (attr.ovr * 0.3); // OVR pesa menos para impedir 100% de vitória
+            let forcaEquipe = baseForcaEquipe + (attr.ovr * 0.3); 
             
             let tCont = false, tCopa = false, tSel = false;
-
-            // Sorteio das Ligas agora vai até 300 (muito mais difícil)
-            if (Math.random() * 300 < forcaEquipe && jogosAno > 5) jogador.titulos.ligas++; 
-            
-            // Sorteio Continental vai até 450 (raríssimo)
-            if (Math.random() * 450 < forcaEquipe && jogosAno > 5) { tCont = true; jogador.titulos.continentais++; gloriasDoBloco += "🌎"; }
-            
+            if (Math.random() * 300 < forcaEquipe && jogosAno > 8) jogador.titulos.ligas++; 
+            if (Math.random() * 450 < forcaEquipe && jogosAno > 8) { tCont = true; jogador.titulos.continentais++; gloriasDoBloco += "🌎"; }
             if (idadeAtual % 4 === 0 && attr.ovr >= 85 && Math.random() > 0.88) { tCopa = true; jogador.titulos.copasMundo++; gloriasDoBloco += "🥇"; }
             if (idadeAtual % 4 === 2 && attr.ovr >= 80 && Math.random() > 0.75) { tSel = true; jogador.titulos.selecao++; gloriasDoBloco += "🗺️"; }
-
             if (golsAno >= 35 && attr.ovr >= 88 && (tCont || tCopa || tSel) && Math.random() > 0.5) { jogador.titulos.bolasDeOuro++; gloriasDoBloco += "✨"; }
 
             if (idadeAtual <= 27) {
@@ -287,16 +293,15 @@
                     attr.sho += aleatorio(0, 1);
                 }
             } else if (idadeAtual > 31) {
-                let quedaGrave = aleatorio(2, 5);
+                let quedaGrave = aleatorio(2, 6);
                 attr.pac -= quedaGrave; 
                 attr.phy -= quedaGrave; 
-                attr.sho -= aleatorio(0, 1); 
+                attr.sho -= aleatorio(0, 2); 
             }
             recalcularOVR();
         }
 
         desempenhoRecente = { jogos: totalJogos, gols: totalGols };
-
         jogador.idade += 3;
         calcularValorMercado();
 
@@ -327,30 +332,44 @@
         let market = document.getElementById('transfer-market');
         let offersList = document.getElementById('offers-list');
         let msg = document.getElementById('market-msg');
+        let alertMsg = document.getElementById('alert-msg');
+        let btnStay = document.getElementById('btn-stay');
+        
         offersList.innerHTML = '';
+        alertMsg.style.display = 'none';
+        btnStay.disabled = false;
         market.style.display = 'block';
         
         let ovr = jogador.atributos.ovr;
-        let propostas = [];
+        let fatorLigaAtual = typeof jogador.clubeAtual.tier === 'number' ? jogador.clubeAtual.tier : 3;
+        let ovrMinimoClube = 88 - (fatorLigaAtual * 6);
+        forcaTransferencia = false;
 
-        let maxOfertas = 1;
-        if (desempenhoRecente.jogos > 60 && desempenhoRecente.gols > 30) maxOfertas = 2; 
-        if (desempenhoRecente.jogos > 90 && desempenhoRecente.gols > 60) maxOfertas = 3; 
-        if (desempenhoRecente.jogos < 20) maxOfertas = aleatorio(0, 1); 
-        else maxOfertas = aleatorio(0, maxOfertas); 
+        if (ovr < ovrMinimoClube - 5) {
+            forcaTransferencia = true;
+            alertMsg.style.display = 'block';
+            alertMsg.innerText = `FIM DE CONTRATO! O ${jogador.clubeAtual.nome} não renovou com você pelo seu baixo desempenho. Você é obrigado a aceitar uma nova oferta.`;
+            btnStay.disabled = true;
+            btnStay.innerText = "Forçado a Sair";
+        } else {
+            btnStay.innerText = "Recusar Ofertas (Ficar no Clube)";
+        }
+
+        let propostas = [];
+        let maxOfertas = forcaTransferencia ? 3 : (desempenhoRecente.jogos > 60 ? 3 : (desempenhoRecente.jogos < 20 ? 1 : 2)); 
 
         clubesMundo.forEach(c => {
             if (c.nome === jogador.clubeAtual.nome) return;
             let interessa = false;
             
-            if (ovr >= 87 && c.tier === 1) interessa = true; 
-            if (ovr >= 80 && ovr <= 92 && c.tier === 2) interessa = true; 
-            if (ovr >= 72 && ovr <= 85 && c.tier === 3) interessa = true; 
-            if (ovr >= 60 && ovr <= 78 && c.tier === 4) interessa = true; 
-            if (ovr < 72 && c.tier === 5) interessa = true; 
+            if (ovr >= 85 && c.tier === 1) interessa = true; 
+            if (ovr >= 78 && ovr <= 88 && c.tier === 2) interessa = true; 
+            if (ovr >= 70 && ovr <= 82 && c.tier === 3) interessa = true; 
+            if (ovr >= 60 && ovr <= 76 && c.tier === 4) interessa = true; 
+            if (ovr < 70 && c.tier === 5) interessa = true; 
             
-            if (jogador.idade >= 30 && ovr >= 82 && c.tier === "Arabia") interessa = true;
-            if (ovr < 75 && (c.tier === 2 || c.tier === 3) && Math.random() > 0.98) interessa = true;
+            if (jogador.idade >= 30 && c.tier === "Arabia" && ovr > 70) interessa = true;
+            if (jogador.idade >= 32 && c.tier >= 3 && c.reg === "NA") interessa = true; 
 
             if (interessa && Math.random() > 0.6) propostas.push(c);
         });
@@ -358,48 +377,58 @@
         propostas = propostas.sort(() => 0.5 - Math.random()).slice(0, maxOfertas);
         propostasAtuais = []; 
 
-        if (propostas.length === 0) { 
-            msg.innerText = "Sua temporada não atraiu olhares ou você jogou muito pouco. Nenhuma proposta recebida.";
-            document.getElementById('btn-stay').innerText = "Continuar no Clube";
-        } else {
-            msg.innerText = `Seu desempenho atraiu ${propostas.length} clube(s)!`;
-            document.getElementById('btn-stay').innerText = "Recusar Ofertas";
-            
-            propostas.forEach((clube, index) => {
-                let variacao = (Math.random() * 0.6) - 0.3; 
-                if (desempenhoRecente.gols > 60) variacao += 0.2; 
-                if (desempenhoRecente.jogos < 30) variacao -= 0.3; 
-
-                let valorOferta = jogador.valorMercado * (1 + variacao);
-                if (clube.tier === "Arabia") valorOferta *= aleatorio(18, 30) / 10; 
-
-                valorOferta = parseFloat(valorOferta.toFixed(1));
-                if (valorOferta < 0.1) valorOferta = 0.1;
-
-                propostasAtuais.push({ clube: clube, valor: valorOferta });
-
-                offersList.innerHTML += `<button class="btn btn-market" onclick="aceitarTransferencia(${index})">
-                    ${clube.nome} ${clube.pais} (€${valorOferta}M)
-                </button>`;
-            });
+        if (propostas.length === 0) {
+            if (forcaTransferencia) {
+                let timesRuins = clubesMundo.filter(c => c.tier === 5 || c.tier === 4);
+                propostas.push(timesRuins[aleatorio(0, timesRuins.length - 1)]);
+            } else {
+                msg.innerText = "Sua temporada não atraiu olhares ou você jogou muito pouco. Nenhuma proposta recebida.";
+                return;
+            }
         }
+
+        msg.innerText = `Você tem ${propostas.length} proposta(s) na mesa:`;
+        
+        propostas.forEach((clube, index) => {
+            let variacao = (Math.random() * 0.4) - 0.2; 
+            if (desempenhoRecente.gols > 50) variacao += 0.2; 
+            if (forcaTransferencia) variacao -= 0.3; 
+
+            let valorOferta = jogador.valorMercado * (1 + variacao);
+            if (clube.tier === "Arabia") valorOferta *= aleatorio(18, 30) / 10; 
+
+            valorOferta = parseFloat(valorOferta.toFixed(1));
+            if (valorOferta < 0.1) valorOferta = 0.1;
+
+            propostasAtuais.push({ clube: clube, valor: valorOferta });
+
+            offersList.innerHTML += `<button class="btn btn-market" onclick="aceitarTransferencia(${index})">
+                ${clube.nome} ${clube.pais} (€${valorOferta}M)
+            </button>`;
+        });
     }
 
-    function registrarTransferencia(origem, destino, valor) {
+    function registrarTransferencia(origem, destino, valor, foiDispensado) {
         let logDiv = document.getElementById('transfer-history-log');
         let textoOrigem = typeof origem === 'string' ? origem : origem.nome;
         let taxa = valor > 0 ? `€${valor}M` : "Custo Zero";
-        logDiv.innerHTML = `<div class="transfer-log">Idd ${jogador.idade}: ${textoOrigem} ➔ ${destino.nome} ${destino.pais}<br><span style="color:#00ff88;">${taxa}</span></div>` + logDiv.innerHTML;
+        let classeExtra = foiDispensado ? "dispensa" : "";
+        let textoAviso = foiDispensado ? `<br><span style="color:var(--alert-color);font-weight:bold;">[DISPENSADO]</span>` : "";
+        
+        logDiv.innerHTML = `<div class="transfer-log ${classeExtra}">Idd ${jogador.idade}: ${textoOrigem} ➔ ${destino.nome} ${destino.pais}${textoAviso}<br><span style="color:#00ff88;">${taxa}</span></div>` + logDiv.innerHTML;
     }
 
     function aceitarTransferencia(index) {
         let proposta = propostasAtuais[index];
-        registrarTransferencia(jogador.clubeAtual, proposta.clube, proposta.valor);
+        registrarTransferencia(jogador.clubeAtual, proposta.clube, proposta.valor, forcaTransferencia);
         jogador.clubeAtual = proposta.clube;
         fecharMercado();
     }
 
-    function rejeitarOfertas() { fecharMercado(); }
+    function rejeitarOfertas() { 
+        if(forcaTransferencia) return; 
+        fecharMercado(); 
+    }
 
     function fecharMercado() {
         document.getElementById('transfer-market').style.display = 'none';
@@ -411,6 +440,7 @@
         document.getElementById('player-club-title').innerText = jogador.clubeAtual.nome + " " + jogador.clubeAtual.pais;
         
         let a = jogador.atributos;
+        document.getElementById('stat-ovr').innerText = a.ovr; 
         document.getElementById('stat-pac').innerText = a.pac;
         document.getElementById('stat-sho').innerText = a.sho;
         document.getElementById('stat-pas').innerText = a.pas;
