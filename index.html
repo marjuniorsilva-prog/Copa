@@ -2,90 +2,102 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador de Carreira - Estável</title>
+    <title>Carreira PRO Simulador</title>
     <style>
-        body { background: #0f172a; color: #f8fafc; font-family: sans-serif; display: flex; justify-content: center; padding: 20px; }
-        .container { width: 100%; max-width: 900px; background: #1e293b; border-radius: 15px; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; background: #0f172a; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #334155; text-align: center; }
-        .btn { background: #ef4444; color: white; border: none; padding: 12px; cursor: pointer; width: 100%; font-weight: bold; }
-        .offer-btn { background: #22c55e; margin: 5px; width: auto; }
+        body { background: #0f172a; color: #e2e8f0; font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 900px; background: #1e293b; padding: 20px; border-radius: 12px; }
+        .stats-bar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin: 20px 0; }
+        .stat-item { background: #334155; padding: 10px; text-align: center; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; background: #0f172a; }
+        th, td { padding: 10px; border: 1px solid #334155; text-align: center; }
+        .btn-main { background: #ef4444; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; }
+        .offer-btn { background: #22c55e; color: white; border: none; padding: 10px; margin: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Carreira: <span id="club-name">Real Madrid</span></h2>
-    <div id="stats-display">OVR: 70 | Gols: 0</div>
-    
+    <h2 id="carreira-title">Carreira: Carregando...</h2>
+    <div class="stats-bar" id="stats-ui">
+        <!-- OVR, PAC, SHO, PAS, DRI, DEF, PHY -->
+    </div>
+
     <table>
         <thead><tr><th>Idd</th><th>Clube</th><th>🏟️</th><th>⚽</th><th>👟</th><th>Glórias</th></tr></thead>
         <tbody id="history-body"></tbody>
     </table>
 
-    <button class="btn" onclick="simular()">SIMULAR 3 ANOS ⏩</button>
-    <div id="offers-area" style="display:none; margin-top:20px;">
+    <button class="btn-main" onclick="simularCiclo()">SIMULAR 3 ANOS ⏩</button>
+    
+    <div id="market-area" style="display:none; margin-top:20px;">
         <h3>Escolha seu destino:</h3>
         <div id="offer-list"></div>
     </div>
 </div>
 
 <script>
-    let p = { age: 15, ovr: 70, club: "Real Madrid", history: [] };
-    const allClubs = ["Chelsea", "Juventus", "Flamengo", "Man City", "River Plate", "PSG", "Al-Nassr"];
+    let p = { age: 15, ovr: 70, pac: 70, sho: 70, pas: 70, dri: 70, def: 60, phy: 70, club: "Real Madrid", stats: {g:0, a:0} };
+    const clubs = ["Man City", "Flamengo", "PSG", "Al-Nassr", "Barcelona", "Liverpool", "Juventus"];
 
-    function simular() {
-        if(p.age >= 39) { alert("Aposentado!"); return; }
-        
+    function simularCiclo() {
+        if(p.age >= 39) return;
         p.age += 3;
-        // Evolução dinâmica
-        if(p.age < 30) p.ovr += aleatorio(1, 4);
-        else p.ovr -= 1;
-        
-        let gols = Math.floor((p.ovr/80) * 40 + aleatorio(-5, 20));
-        let assists = Math.floor((p.ovr/90) * 15);
-        
-        // Títulos (Realismo)
-        let titulo = "";
-        if(gols > 30) { p.titles++; titulo = "🏆 Liga"; }
-        if(gols > 50) { p.titles += 2; titulo = "🏆 Liga + 🌎 Champions"; }
 
-        // Renderizar
-        let tbody = document.getElementById('history-body');
-        tbody.innerHTML = `<tr><td>${p.age}</td><td>${p.club}</td><td>100</td><td>${gols}</td><td>${assists}</td><td>${titulo}</td></tr>` + tbody.innerHTML;
+        // Lógica de performance e títulos
+        let jogos = 100;
+        let gols = Math.floor((p.ovr/80) * 45 + aleatorio(-10, 20));
+        let pass = Math.floor((p.pas/80) * 15 + aleatorio(-5, 5));
+        p.stats.g += gols; p.stats.a += pass;
+
+        // Lógica de Títulos
+        let glorias = [];
+        if(gols > 30) glorias.push("Liga");
+        if(gols > 50) glorias.push("Champions");
+        if(p.age % 4 === 0 && p.ovr > 85) glorias.push("🏆 Copa do Mundo");
         
-        document.getElementById('stats-display').innerText = `OVR: ${p.ovr} | Gols: ${gols}`;
-        gerarOfertas();
+        let gloriaText = glorias.join(" + ");
+
+        let tbody = document.getElementById('history-body');
+        tbody.innerHTML = `<tr><td>${p.age}</td><td>${p.club}</td><td>${jogos}</td><td>${gols}</td><td>${pass}</td><td>${gloriaText}</td></tr>` + tbody.innerHTML;
+
+        // Atualizar Stats
+        p.ovr += aleatorio(-1, 2);
+        updateUI();
+        mostrarOfertas();
     }
 
-    function gerarOfertas() {
-        let area = document.getElementById('offers-area');
+    function mostrarOfertas() {
+        let area = document.getElementById('market-area');
         let list = document.getElementById('offer-list');
         list.innerHTML = "";
+        let num = aleatorio(1, 3);
         
-        // Gera de 0 a 3 ofertas
-        let num = aleatorio(0, 3);
-        
-        if(num === 0) {
-            area.style.display = 'block';
-            list.innerHTML = "<p>Nenhuma oferta nesta janela. Permanecendo no clube.</p>";
-            setTimeout(() => { area.style.display = 'none'; }, 2000);
-        } else {
-            area.style.display = 'block';
-            for(let i=0; i<num; i++) {
-                let c = allClubs[aleatorio(0, allClubs.length-1)];
-                list.innerHTML += `<button class="btn offer-btn" onclick="mudarClube('${c}')">${c}</button>`;
-            }
+        for(let i=0; i<num; i++) {
+            let c = clubs[aleatorio(0, clubs.length-1)];
+            let val = aleatorio(50, 200);
+            list.innerHTML += `<button class='offer-btn' onclick="mudarClube('${c}')">${c} (€${val}m)</button>`;
         }
+        area.style.display = 'block';
     }
 
     function mudarClube(nome) {
         p.club = nome;
-        document.getElementById('club-name').innerText = nome;
-        document.getElementById('offers-area').style.display = 'none';
+        document.getElementById('carreira-title').innerText = "Carreira: " + nome;
+        document.getElementById('market-area').style.display = 'none';
+    }
+
+    function updateUI() {
+        document.getElementById('carreira-title').innerText = "Carreira: " + p.club;
+        document.getElementById('stats-ui').innerHTML = `
+            <div class='stat-item'>OVR<br>${p.ovr}</div><div class='stat-item'>PAC<br>${p.pac}</div>
+            <div class='stat-item'>SHO<br>${p.sho}</div><div class='stat-item'>PAS<br>${p.pas}</div>
+            <div class='stat-item'>DRI<br>${p.dri}</div><div class='stat-item'>DEF<br>${p.def}</div>
+            <div class='stat-item'>PHY<br>${p.phy}</div>
+        `;
     }
 
     function aleatorio(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    updateUI();
 </script>
 </body>
 </html>
