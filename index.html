@@ -3,61 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Football Career - Brasil</title>
+    <title>My Football Career - Completo</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #222; display: flex; justify-content: center; padding: 10px; }
         
-        /* Container principal simulando a tela do celular */
-        .app-container { width: 100%; max-width: 420px; background-color: #d1d5db; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 20px;}
+        .app-container { width: 100%; max-width: 420px; background-color: #d1d5db; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 15px;}
         
-        /* Cabeçalho Topo */
         .top-bar { display: flex; justify-content: space-between; background: white; padding: 5px; font-size: 12px; font-weight: bold; border-bottom: 2px solid #ccc; }
-        .top-item { background: #f3f4f6; padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd; display: flex; align-items: center; gap: 4px; }
+        .top-item { background: #f3f4f6; padding: 4px 6px; border-radius: 4px; border: 1px solid #ddd; display: flex; align-items: center; gap: 4px; }
         
-        /* Sub-cabeçalho (Totais) */
         .totals-bar { display: flex; justify-content: space-between; background: white; padding: 5px; text-align: center; font-size: 11px; font-weight: bold; border-bottom: 2px solid #ccc;}
-        .totals-box { border: 1px solid #ccc; border-radius: 4px; padding: 2px 4px; min-width: 45px; }
+        .totals-box { border: 1px solid #ccc; border-radius: 4px; padding: 2px 4px; min-width: 40px; }
         
-        /* Barra de Atributos Roxa */
         .attr-bar { background-color: #6b21a8; color: white; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; font-weight: bold; padding: 4px 0; }
         .attr-vals { background-color: white; color: black; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 14px; font-weight: bold; padding: 4px 0; border-bottom: 2px solid #ccc;}
         
-        /* Corpo Principal */
         .main-body { display: flex; width: 100%; background: #d1d5db; padding: 5px;}
         
-        /* Coluna Esquerda */
         .col-left { width: 45%; display: flex; flex-direction: column; gap: 4px; }
         .age-row { display: flex; align-items: center; height: 28px; }
         .age-box { width: 30px; height: 28px; background: #9ca3af; color: white; font-weight: bold; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-size: 12px; flex-shrink: 0;}
         .age-box.academy { background: #fde047; color: black; }
         .age-box.retire, .age-box.manager { background: #fbbf24; color: black; }
-        .club-box { background: white; flex-grow: 1; height: 100%; display: flex; align-items: center; padding: 0 5px; font-size: 10px; font-weight: bold; border: 1px solid #ccc; border-left: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; position: relative;}
+        .club-box { background: white; flex-grow: 1; height: 100%; display: flex; align-items: center; padding: 0 5px; font-size: 10px; font-weight: bold; border: 1px solid #ccc; border-left: none; position: relative;}
         .transfer-fee { background: #fbcfe8; color: black; font-size: 9px; position: absolute; right: 0; top: 0; bottom: 0; padding: 0 4px; display: flex; align-items: center; font-weight: bold; border-left: 1px solid #ccc;}
         
-        /* Coluna Direita */
         .col-right { width: 55%; padding-left: 5px; display: flex; flex-direction: column; gap: 4px; }
         .stats-header { background: #16a34a; color: white; font-size: 10px; font-weight: bold; text-align: center; padding: 2px; border-radius: 4px 4px 0 0; }
         .stats-icons { display: grid; grid-template-columns: repeat(3, 1fr); background: #86efac; text-align: center; font-size: 12px; padding: 2px 0; border-bottom: 1px solid #16a34a;}
         .stats-grid { display: flex; flex-direction: column; gap: 4px; background: #86efac; padding-bottom: 4px; border-radius: 0 0 4px 4px; }
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 12px; font-weight: bold; height: 28px; align-items: center; }
         
-        /* Botões e Mercado */
         .action-area { padding: 10px; text-align: center; }
         .btn-continue { background: #10b981; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.2); width: 80%; }
-        .btn-continue:active { transform: scale(0.95); }
         
         .market-panel { background: #fff; border: 2px solid #6b21a8; padding: 10px; border-radius: 8px; margin: 10px; display: none; }
         .market-title { font-size: 11px; font-weight: bold; color: white; background: #6b21a8; padding: 4px; text-align: center; margin:-10px -10px 10px -10px; border-radius: 6px 6px 0 0;}
         .offer-row { display: flex; justify-content: space-between; border: 1px solid #ccc; margin-bottom: 5px; align-items: center;}
-        .offer-club { font-weight: bold; font-size: 12px; padding: 8px; flex-grow: 1; text-align: left; background: white;}
-        .offer-val { background: #fbcfe8; font-weight: bold; font-size: 12px; padding: 8px; border-left: 1px solid #ccc; width: 80px; text-align: center; cursor: pointer;}
+        .offer-club { font-weight: bold; font-size: 12px; padding: 8px; flex-grow: 1; background: white;}
+        .offer-val { background: #fbcfe8; font-weight: bold; font-size: 12px; padding: 8px; border-left: 1px solid #ccc; text-align: center; cursor: pointer;}
         
-        /* Seção Inferior (Troféus) */
-        .bottom-section { background: #fff; margin: 0 10px; border: 1px solid #ccc; text-align: center; border-radius: 4px; padding-bottom: 5px;}
+        /* Novas Seções: Troféus e Estilo de Vida */
+        .bottom-section { background: #fff; margin: 0 10px; border: 1px solid #ccc; text-align: center; border-radius: 4px; padding-bottom: 5px; margin-bottom: 10px;}
         .bottom-title { background: #6b21a8; color: white; font-size: 11px; font-weight: bold; padding: 2px; }
-        .trophy-grid { display: flex; justify-content: center; gap: 15px; padding-top: 5px; font-size: 18px; font-weight: bold; }
-        .trophy-item { display: flex; flex-direction: column; align-items: center; font-size: 14px;}
+        .trophy-grid { display: flex; justify-content: space-around; padding-top: 5px; font-size: 18px; font-weight: bold; }
+        
+        .lifestyle-section { display: flex; gap: 10px; margin: 0 10px; }
+        .life-box { flex: 1; background: white; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        .life-title { background: #6b21a8; color: white; font-size: 11px; font-weight: bold; padding: 2px; }
+        .life-content { padding: 8px; font-size: 12px; font-weight: bold; }
         
         .empty-slot { background: #a3a3a3; opacity: 0.3; width: 100%; height: 100%; }
     </style>
@@ -79,7 +74,7 @@
         <div class="totals-box">👕<br><span id="tot-app">0</span></div>
         <div class="totals-box">⚽<br><span id="tot-gol">0</span></div>
         <div class="totals-box">👟<br><span id="tot-ass">0</span></div>
-        <div class="totals-box" style="display:flex; justify-content:center; gap:5px;">
+        <div class="totals-box" style="display:flex; gap:5px; background: #fee2e2; border-color: #fca5a5;">
             <div>🟨<br><span id="tot-yc">0</span></div><div>🟥<br><span id="tot-rc">0</span></div>
         </div>
     </div>
@@ -87,8 +82,7 @@
     <div class="attr-bar">
         <div>OVR</div><div>PAC</div><div>SHO</div><div>PAS</div><div>DRI</div><div>DEF</div><div>PHY</div>
     </div>
-    <div class="attr-vals" id="attr-vals">
-        </div>
+    <div class="attr-vals" id="attr-vals"></div>
 
     <div class="main-body">
         <div class="col-left" id="col-left"></div>
@@ -112,35 +106,52 @@
     <div class="bottom-section">
         <div class="bottom-title">MAJOR TROPHIES</div>
         <div class="trophy-grid">
-            <div class="trophy-item">🌍<br><span id="maj-cont">0</span></div>
-            <div class="trophy-item">🥇<br><span id="maj-wc">0</span></div>
-            <div class="trophy-item">✨<br><span id="maj-bdor">0</span></div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span id="icone-continente" style="font-size:14px;">🏆</span>
+                <span id="maj-cont">0</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span style="font-size:14px;">🥇</span>
+                <span id="maj-wc">0</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span style="font-size:14px;">✨</span>
+                <span id="maj-bdor">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="lifestyle-section">
+        <div class="life-box">
+            <div class="life-title">HOUSE</div>
+            <div class="life-content" id="life-house">🏠<br>Casa dos Pais</div>
+        </div>
+        <div class="life-box">
+            <div class="life-title">CAR</div>
+            <div class="life-content" id="life-car">🚲<br>Bicicleta</div>
         </div>
     </div>
 </div>
 
 <script>
-    // BANCO DE DADOS DE CLUBES
+    // BANCO DE DADOS
     const baseClubs = [
-        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Atlético-MG 🇧🇷", "Grêmio 🇧🇷", "Fluminense 🇧🇷", "Botafogo 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "Peñarol 🇺🇾", "Nacional 🇺🇾", "Colo-Colo 🇨🇱", "Atlético Nacional 🇨🇴", "LDU 🇪🇨",
-        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Real Sociedad 🇪🇸", "Betis 🇪🇸", "Athletic Bilbao 🇪🇸", "Sevilla 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Fiorentina 🇮🇹", "Atalanta 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City 🇺🇸", "Seattle Sounders 🇺🇸", "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Cruz Azul 🇲🇽", "Pachuca 🇲🇽",
-        "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al Ain 🇦🇪", "Al-Sadd 🇶🇦", "Al-Duhail 🇶🇦", "Vissel Kobe 🇯🇵", "Kawasaki Frontale 🇯🇵", "Urawa Reds 🇯🇵", "Yokohama F. Marinos 🇯🇵", "Ulsan Hyundai 🇰🇷", "Jeonbuk Motors 🇰🇷",
-        "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Wydad Casablanca 🇲🇦", "Raja Casablanca 🇲🇦", "Mamelodi Sundowns 🇿🇦", "Orlando Pirates 🇿🇦", "Espérance de Tunis 🇹🇳"
+        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Peñarol 🇺🇾", "Atlético Nacional 🇨🇴",
+        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Betis 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Bayer Leverkusen 🇩🇪", "Lyon 🇫🇷", "Benfica 🇵🇹", "Porto 🇵🇹", "Ajax 🇳🇱", "Galatasaray 🇹🇷",
+        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Club América 🇲🇽", "Monterrey 🇲🇽",
+        "Al-Ahli 🇸🇦", "Kawasaki Frontale 🇯🇵", "Jeonbuk Motors 🇰🇷", "Al Ahly 🇪🇬"
     ];
 
     const eliteClubs = [
-        "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", 
-        "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
-        "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", 
-        "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "Napoli 🇮🇹", 
-        "PSG 🇫🇷", "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦", "Al-Ittihad 🇸🇦"
+        "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético Madrid 🇪🇸", 
+        "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Man United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
+        "Bayern Munique 🇩🇪", "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "PSG 🇫🇷", 
+        "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦"
     ];
 
-    // Status do Jogador
     let p = {
-        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0,
-        club: "", transferFee: "", isProdigy: false,
+        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, wealth: 0,
+        club: "", transferFee: "", isProdigy: false, origin: "",
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
@@ -148,181 +159,141 @@
     let currentStep = 0;
 
     function initPlayer() {
-        // Lógica do Prodígio (15% de chance de já nascer muito acima da média)
         p.isProdigy = Math.random() > 0.85; 
-        
         let baseOvr = p.isProdigy ? Math.floor(Math.random() * 5) + 74 : Math.floor(Math.random() * 8) + 60;
         
-        p.ovr = baseOvr;
-        p.prime = baseOvr;
-        p.pac = baseOvr + Math.floor(Math.random() * 8);
-        p.sho = baseOvr + Math.floor(Math.random() * 6);
-        p.pas = baseOvr - Math.floor(Math.random() * 5);
-        p.dri = baseOvr + Math.floor(Math.random() * 7);
-        p.def = 30 + Math.floor(Math.random() * 20);
-        p.phy = baseOvr - Math.floor(Math.random() * 5);
+        p.ovr = baseOvr; p.prime = baseOvr;
+        p.pac = baseOvr + Math.floor(Math.random()*8); p.sho = baseOvr + Math.floor(Math.random()*6);
+        p.pas = baseOvr - Math.floor(Math.random()*5); p.dri = baseOvr + Math.floor(Math.random()*7);
+        p.def = 30 + Math.floor(Math.random()*20); p.phy = baseOvr - Math.floor(Math.random()*5);
 
-        // Se for prodígio, pode começar direto em um time melhor
         let pool = p.isProdigy ? [...baseClubs, ...eliteClubs] : baseClubs;
         p.club = pool[Math.floor(Math.random() * pool.length)];
 
-        // Identifica região pelo ícone do clube
-        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿")) document.getElementById('hdr-region').innerText = "🌍 Europe";
-        else if(p.club.includes("🇸🇦") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷")) document.getElementById('hdr-region').innerText = "🌍 Asia";
-        else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽")) document.getElementById('hdr-region').innerText = "🌍 N. America";
-        else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦") || p.club.includes("🇿🇦") || p.club.includes("🇹🇳")) document.getElementById('hdr-region').innerText = "🌍 Africa";
-        else document.getElementById('hdr-region').innerText = "🌍 S. America";
+        // Define o continente para os Títulos
+        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷")) {
+            p.origin = "Europe"; document.getElementById('icone-continente').innerText = "🏆 Euro";
+        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷")) {
+            p.origin = "Asia"; document.getElementById('icone-continente').innerText = "🏆 Copa Ásia";
+        } else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽")) {
+            p.origin = "N. America"; document.getElementById('icone-continente').innerText = "🏆 Copa Ouro";
+        } else if(p.club.includes("🇪🇬")) {
+            p.origin = "Africa"; document.getElementById('icone-continente').innerText = "🏆 CANA";
+        } else {
+            p.origin = "S. America"; document.getElementById('icone-continente').innerText = "🏆 C. América";
+        }
+        document.getElementById('hdr-region').innerText = `🌍 ${p.origin}`;
     }
     
     function initGrid() {
         initPlayer();
-        
         const left = document.getElementById('col-left');
         const right = document.getElementById('stats-grid');
         left.innerHTML = ''; right.innerHTML = '';
         
         ages.forEach((a, index) => {
-            let boxClass = "age-box";
-            if (a === "A") boxClass += " academy";
-            if (a === "R" || a === "M") boxClass += " retire";
-            
-            left.innerHTML += `
-                <div class="age-row" id="row-left-${index}">
-                    <div class="${boxClass}">${a}</div>
-                    <div class="club-box" id="club-box-${index}"><div class="empty-slot"></div></div>
-                </div>`;
-                
-            if(a !== "R" && a !== "M" && a !== "A") {
-                right.innerHTML += `<div class="stats-row" id="row-right-${index}"><div>-</div><div>-</div><div>-</div></div>`;
-            } else if (a === "A") {
-                right.innerHTML += `<div class="stats-row" id="row-right-0" style="background:#fef08a; border-bottom:1px solid #16a34a;"><div>-</div><div>-</div><div>-</div></div>`;
-            }
+            let boxClass = "age-box" + (a === "A" ? " academy" : "") + ((a === "R" || a === "M") ? " retire" : "");
+            left.innerHTML += `<div class="age-row"><div class="${boxClass}">${a}</div><div class="club-box" id="club-box-${index}"><div class="empty-slot"></div></div></div>`;
+            if(a !== "R" && a !== "M" && a !== "A") right.innerHTML += `<div class="stats-row" id="row-right-${index}"><div>-</div><div>-</div><div>-</div></div>`;
+            else if (a === "A") right.innerHTML += `<div class="stats-row" id="row-right-0" style="background:#fef08a; border-bottom:1px solid #16a34a;"><div>-</div><div>-</div><div>-</div></div>`;
         });
         
-        let prodigyTag = p.isProdigy ? "✨ " : "";
-        document.getElementById(`club-box-0`).innerHTML = prodigyTag + p.club;
-        atualizarAtributos();
-        atualizarTopo();
+        document.getElementById(`club-box-0`).innerHTML = (p.isProdigy ? "✨ " : "") + p.club;
+        atualizarUI();
     }
 
-    function atualizarTopo() {
+    function atualizarUI() {
+        // Atributos
+        ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
+        document.getElementById('attr-vals').innerHTML = `<div>${p.ovr}</div><div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
+        
+        // Topo
         document.getElementById('hdr-age').innerText = (p.age === 15) ? "15" : p.age;
         if(p.ovr > p.prime) p.prime = p.ovr;
         document.getElementById('hdr-prime').innerText = p.prime;
         
-        let valBase = (p.ovr > 85) ? Math.floor(Math.random() * 100) + 50 : Math.floor(Math.random() * 40) + 5;
-        if(p.isProdigy && p.age < 22) valBase *= 2; // Inflação de prodígio
+        let valBase = (p.ovr > 85) ? Math.floor(Math.random()*100)+50 : Math.floor(Math.random()*40)+5;
         if(p.age > 33) valBase = Math.floor(valBase * 0.3);
+        document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : "€" + valBase + "m";
         
-        let valStr = "€" + valBase + "m";
-        document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : valStr;
-        return valStr;
-    }
-
-    function atualizarAtributos() {
-        // Cap em 99
-        ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
-        document.getElementById('attr-vals').innerHTML = `
-            <div>${p.ovr}</div><div>${p.pac}</div><div>${p.sho}</div>
-            <div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>
-        `;
-    }
-
-    function atualizarTotais() {
-        document.getElementById('tot-dom').innerText = p.totals.dom;
-        document.getElementById('tot-int').innerText = p.totals.int;
-        document.getElementById('tot-app').innerText = p.totals.app;
-        document.getElementById('tot-gol').innerText = p.totals.gol;
+        // Totais e Cartões
+        document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
+        document.getElementById('tot-app').innerText = p.totals.app; document.getElementById('tot-gol').innerText = p.totals.gol;
         document.getElementById('tot-ass').innerText = p.totals.ass;
-        document.getElementById('tot-yc').innerText = p.totals.yc;
-        document.getElementById('tot-rc').innerText = p.totals.rc;
+        document.getElementById('tot-yc').innerText = p.totals.yc;   document.getElementById('tot-rc').innerText = p.totals.rc;
         
-        document.getElementById('maj-cont').innerText = p.totals.cont;
-        document.getElementById('maj-wc').innerText = p.totals.wc;
-        document.getElementById('maj-bdor').innerText = p.totals.bdor;
+        document.getElementById('maj-cont').innerText = p.totals.cont; document.getElementById('maj-wc').innerText = p.totals.wc; document.getElementById('maj-bdor').innerText = p.totals.bdor;
+        
+        // Estilo de Vida (House & Car baseados no nível e sucesso)
+        p.wealth = p.prime + (p.totals.gol * 0.1) + (p.totals.app * 0.05);
+        let h = "🏠<br>Casa Simples", c = "🚲<br>Bicicleta";
+        if(p.wealth > 75) { h = "🏠<br>Apartamento"; c = "🚗<br>Carro Popular"; }
+        if(p.wealth > 85) { h = "🏡<br>Casa de Luxo"; c = "🚙<br>SUV Importado"; }
+        if(p.wealth > 95) { h = "🏰<br>Mansão"; c = "🏎️<br>Porsche"; }
+        if(p.wealth > 105){ h = "🏝️<br>Palácio"; c = "🏎️<br>Frota de Supercarros"; }
+        document.getElementById('life-house').innerHTML = h; document.getElementById('life-car').innerHTML = c;
     }
 
     function avancarCarreira() {
         document.getElementById('btn-main').innerText = "CONTINUE";
-        
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
-        else {
-            if (p.age >= 39) { finalizarCarreira(); return; }
-            p.age += 3; currentStep++;
-        }
+        else { if (p.age >= 39) { finalizarCarreira(); return; } p.age += 3; currentStep++; }
         
-        let isPrime = (p.age >= 24 && p.age <= 30);
-        let isOld = (p.age >= 33);
-        
-        // Evolução de OVR (Prodígios evoluem mais rápido)
+        // Evolução
         if (p.age <= 27) {
-            let ganho = Math.floor(Math.random() * (p.isProdigy ? 6 : 4)) + 1;
-            p.ovr += ganho; p.sho += ganho; p.dri += ganho; p.pac += 1;
-        } else if (isOld) {
-            let perda = Math.floor(Math.random() * 5) + 1;
-            p.ovr -= Math.floor(perda/2); p.pac -= (perda+2); p.phy -= perda;
+            let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 4)) + 1;
+            p.ovr += g; p.sho += g; p.dri += g; p.pac += 1;
+        } else if (p.age >= 33) {
+            let d = Math.floor(Math.random() * 5) + 1;
+            p.ovr -= Math.floor(d/2); p.pac -= (d+2); p.phy -= d;
         }
         
+        // Stats de Campo e Cartões Realistas
         let apps = 90 + Math.floor(Math.random() * 30);
         let gol = Math.floor(apps * (p.sho / 100) * (Math.random() * 0.6 + 0.3));
         let ass = Math.floor(apps * (p.pas / 100) * 0.4);
-        let yc = Math.floor(Math.random() * 10);
-        let rc = Math.floor(Math.random() * 2);
+        
+        // Simulação de Cartões (Atacantes tomam poucos vermelhos, mas amarelos acontecem)
+        let yc = Math.floor(Math.random() * 12); // 0 a 11 cartões amarelos em 3 anos
+        let rc = Math.random() > 0.8 ? 1 : 0; // 20% de chance de tomar 1 vermelho
         
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         p.totals.yc += yc; p.totals.rc += rc;
         
+        // Títulos
         let tDom = 0, tInt = 0;
-        if(p.ovr > 78 && Math.random() > 0.4) { tDom = Math.floor(Math.random() * 3); p.totals.dom += tDom; }
-        if(p.ovr > 84 && Math.random() > 0.6) { tInt = Math.floor(Math.random() * 2); p.totals.int += tInt; }
+        if(p.ovr > 78 && Math.random() > 0.4) { tDom = Math.floor(Math.random()*3); p.totals.dom += tDom; }
+        if(p.ovr > 84 && Math.random() > 0.6) { tInt = Math.floor(Math.random()*2); p.totals.int += tInt; }
         
         if(p.ovr > 86 && Math.random() > 0.7) p.totals.cont++;
         if(p.age % 4 === 0 && p.ovr > 87 && Math.random() > 0.8) p.totals.wc++;
         if(p.ovr >= 91 && gol > 60 && Math.random() > 0.6) p.totals.bdor++;
 
-        let transferTag = p.transferFee ? `<div class="transfer-fee">🔁 ${p.transferFee}</div>` : "";
-        document.getElementById(`club-box-${currentStep}`).innerHTML = `${p.club} ${transferTag}`;
-        
-        document.getElementById(`row-right-${currentStep}`).innerHTML = `
-            <div>${tDom} <span style="color:#6b7280; font-size:10px;">/</span> ${tInt}</div>
-            <div>${gol}</div><div>${ass}</div>
-        `;
+        // Atualizar Linha
+        let tag = p.transferFee ? `<div class="transfer-fee">🔁 ${p.transferFee}</div>` : "";
+        document.getElementById(`club-box-${currentStep}`).innerHTML = `${p.club} ${tag}`;
+        document.getElementById(`row-right-${currentStep}`).innerHTML = `<div>${tDom} <span style="color:#6b7280; font-size:10px;">/</span> ${tInt}</div><div>${gol}</div><div>${ass}</div>`;
 
-        atualizarTopo();
-        atualizarAtributos();
-        atualizarTotais();
-
-        if (p.age < 39) abirMercado();
-        else finalizarCarreira();
+        atualizarUI();
+        if (p.age < 39) abirMercado(); else finalizarCarreira();
     }
 
     function abirMercado() {
-        document.getElementById('action-area').style.display = 'none';
-        document.getElementById('market-panel').style.display = 'block';
-        
-        let list = document.getElementById('offer-list');
-        list.innerHTML = "";
-        
+        document.getElementById('action-area').style.display = 'none'; document.getElementById('market-panel').style.display = 'block';
+        let list = document.getElementById('offer-list'); list.innerHTML = "";
         let pool = (p.ovr >= 85) ? eliteClubs : baseClubs;
         
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
             let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
             if(p.age > 33) val = Math.floor(val * 0.4);
-            
-            list.innerHTML += `
-                <div class="offer-row">
-                    <div class="offer-club">${c}</div>
-                    <div class="offer-val" onclick="aceitarOferta('${c}', '€${val}m')">🤝 €${val}m</div>
-                </div>
-            `;
+            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-val" onclick="aceitar('${c}', '€${val}m')">🤝 €${val}m</div></div>`;
         }
     }
 
-    function aceitarOferta(clube, valor) { p.club = clube; p.transferFee = valor; fecharMercado(); }
-    function ficarNoTime() { p.transferFee = ""; fecharMercado(); }
-    function fecharMercado() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
-
+    function aceitar(c, v) { p.club = c; p.transferFee = v; fechar(); }
+    function ficarNoTime() { p.transferFee = ""; fechar(); }
+    function fechar() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
     function finalizarCarreira() {
         document.getElementById(`club-box-${ages.length-2}`).innerHTML = p.club;
         document.getElementById(`club-box-${ages.length-1}`).innerHTML = (p.ovr > 85) ? eliteClubs[Math.floor(Math.random()*eliteClubs.length)] : "Manager";
