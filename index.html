@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Simulador de Carreira</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --panel-bg: #1e1e1e;
+            --primary: #00ff88;
+            --text-light: #ffffff;
+            --text-dim: #aaaaaa;
+            --gold: #ffd700;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--panel-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1, h2, h3 { margin-top: 0; text-align: center; }
+        .header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #2a2a2a; padding: 10px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 24px; font-weight: bold; color: var(--primary); }
+        .career-totals { display: flex; justify-content: space-around; background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .btn { background: var(--primary); color: #000; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
+        .btn:hover { background: #00cc6a; transform: scale(1.02); }
+        .btn-secondary { background: #444; color: #fff; }
+        .btn-secondary:hover { background: #555; }
+        .log-area { max-height: 250px; overflow-y: auto; background: #000; padding: 15px; border-radius: 8px; font-family: monospace; color: #00ff00; }
+        .log-entry { margin-bottom: 10px; border-bottom: 1px dashed #333; padding-bottom: 5px; }
+        #transfer-market { display: none; margin-top: 20px; }
+        .trophy-cabinet { text-align: center; color: var(--gold); font-size: 20px; margin-bottom: 20px;}
+    </style>
+</head>
+<body>
+
+<div class="container" id="game-container">
+    <div id="start-screen">
+        <h1>Simulador de Carreira ⚽</h1>
+        <p style="text-align: center;">Inicie sua jornada na América do Sul.</p>
+        <button class="btn" onclick="iniciarCarreira()">Criar Jogador e Começar</button>
+    </div>
+
+    <div id="main-screen" style="display: none;">
+        <div class="header">
+            <h2 id="player-name">Jogador</h2>
+            <p><span id="player-age">17</span> Anos | Clube Atual: <strong id="player-club" style="color: var(--primary);">Nenhum</strong></p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">OVR <div class="stat-value" id="stat-ovr">70</div></div>
+            <div class="stat-box">PAC (Ritmo) <div class="stat-value" id="stat-pac">70</div></div>
+            <div class="stat-box">SHO (Chute) <div class="stat-value" id="stat-sho">70</div></div>
+            <div class="stat-box">PAS (Passe) <div class="stat-value" id="stat-pas">70</div></div>
+            <div class="stat-box">DRI (Drible) <div class="stat-value" id="stat-dri">70</div></div>
+            <div class="stat-box">PHY (Físico) <div class="stat-value" id="stat-phy">70</div></div>
+        </div>
+
+        <div class="career-totals">
+            <div>⚽ Gols: <strong id="total-goals">0</strong></div>
+            <div>👟 Assist: <strong id="total-assists">0</strong></div>
+        </div>
+
+        <div class="trophy-cabinet">
+            🏆 Ligas: <span id="t-liga">0</span> | 
+            🌎 Cont: <span id="t-cont">0</span> | 
+            🥇 Mundo: <span id="t-copa">0</span> | 
+            ✨ Bola de Ouro: <span id="t-bdor">0</span>
+        </div>
+
+        <div id="action-area">
+            <button class="btn" onclick="simularTemporada()">Simular Temporada (1 Ano)</button>
+        </div>
+
+        <div id="transfer-market">
+            <h3>Mercado de Transferências 🤝</h3>
+            <p>Você recebeu propostas para a próxima temporada!</p>
+            <div id="offers-list"></div>
+            <button class="btn btn-secondary" onclick="rejeitarOfertas()">Ficar no Clube Atual</button>
+        </div>
+
+        <h3>Histórico da Carreira</h3>
+        <div class="log-area" id="game-log"></div>
+    </div>
+</div>
+
+<script>
+    // --- BANCO DE DADOS DE CLUBES ---
+    const clubes = [
+        // América do Sul (Tier 3 e 4)
+        { nome: "Flamengo", tier: 3, regiao: "SA" }, { nome: "Palmeiras", tier: 3, regiao: "SA" }, 
+        { nome: "Boca Juniors", tier: 3, regiao: "SA" }, { nome: "River Plate", tier: 3, regiao: "SA" },
+        { nome: "Atlético Nacional", tier: 4, regiao: "SA" }, { nome: "Peñarol", tier: 4, regiao: "SA" },
+        { nome: "Colo-Colo", tier: 4, regiao: "SA" }, { nome: "Santos", tier: 4, regiao: "SA" },
+        // Europa (Tier 1 e 2)
+        { nome: "Real Madrid", tier: 1, regiao: "EU" }, { nome: "Manchester City", tier: 1, regiao: "EU" },
+        { nome: "Bayern de Munique", tier: 1, regiao: "EU" }, { nome: "Barcelona", tier: 1, regiao: "EU" },
+        { nome: "Liverpool", tier: 1, regiao: "EU" }, { nome: "PSG", tier: 1, regiao: "EU" },
+        { nome: "Borussia Dortmund", tier: 2, regiao: "EU" }, { nome: "Juventus", tier: 2, regiao: "EU" },
+        { nome: "Milan", tier: 2, regiao: "EU" }, { nome: "Benfica", tier: 2, regiao: "EU" },
+        { nome: "Ajax", tier: 2, regiao: "EU" }, { nome: "Porto", tier: 2, regiao: "EU" }
+    ];
+
+    // --- ESTADO DO JOGADOR ---
+    let jogador = {
+        idade: 17,
+        clubeAtual: null,
+        atributos: { ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, phy: 0 },
+        totais: { gols: 0, assistencias: 0 },
+        titulos: { ligas: 0, continentais: 0, copasMundo: 0, bolasDeOuro: 0 }
+    };
+
+    // --- FUNÇÕES DO JOGO ---
+    function aleatorio(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function iniciarCarreira() {
+        // Gerar status de promessa (OVR entre 65 e 76)
+        let base = aleatorio(65, 76);
+        jogador.atributos = {
+            ovr: base,
+            pac: base + aleatorio(-5, 15),
+            sho: base + aleatorio(-10, 10),
+            pas: base + aleatorio(-10, 10),
+            dri: base + aleatorio(-5, 12),
+            phy: base + aleatorio(-10, 5)
+        };
+        recalcularOVR();
+
+        // Escolher primeiro clube (América do Sul Tier 4)
+        let clubesIniciais = clubes.filter(c => c.regiao === "SA" && c.tier === 4);
+        jogador.clubeAtual = clubesIniciais[aleatorio(0, clubesIniciais.length - 1)];
+
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('main-screen').style.display = 'block';
+        
+        log(`Carreira iniciada! Você foi revelado pelo ${jogador.clubeAtual.nome}.`);
+        atualizarTela();
+    }
+
+    function recalcularOVR() {
+        let a = jogador.atributos;
+        // OVR é uma média ponderada dos atributos
+        a.ovr = Math.floor((a.pac * 0.2) + (a.sho * 0.3) + (a.pas * 0.2) + (a.dri * 0.2) + (a.phy * 0.1));
+        // Limite máximo 99
+        for(let key in a) { if(a[key] > 99) a[key] = 99; }
+    }
+
+    function evoluirAtributos() {
+        let a = jogador.atributos;
+        if (jogador.idade < 27) {
+            // Crescimento
+            a.pac += aleatorio(0, 2); a.sho += aleatorio(1, 4);
+            a.pas += aleatorio(1, 3); a.dri += aleatorio(1, 3); a.phy += aleatorio(0, 2);
+        } else if (jogador.idade > 32) {
+            // Declínio físico
+            a.pac -= aleatorio(1, 3); a.phy -= aleatorio(1, 2);
+            // Experiência compensa
+            a.pas += aleatorio(0, 1);
+        }
+        recalcularOVR();
+    }
+
+    function simularTemporada() {
+        jogador.idade++;
+        evoluirAtributos();
+
+        let attr = jogador.atributos;
+        
+        // 1. Calcular Lesões (Baseado no Físico)
+        let jogosPerdidos = 0;
+        if (attr.phy < 70 && Math.random() > 0.5) jogosPerdidos = aleatorio(5, 20);
+
+        // 2. Calcular Gols (Peso fortíssimo no Chute e Ritmo)
+        let multiplicadorGol = (attr.sho * 0.6) + (attr.pac * 0.2) + (attr.dri * 0.2);
+        let golsTemporada = Math.floor((multiplicadorGol / 2.5) * (Math.random() * 0.5 + 0.5));
+        if (jogosPerdidos > 10) golsTemporada = Math.floor(golsTemporada * 0.6); // Punição por lesão
+        
+        // 3. Calcular Assistências (Peso no Passe)
+        let assistTemporada = Math.floor((attr.pas / 3) * (Math.random() * 0.5 + 0.5));
+
+        jogador.totais.gols += golsTemporada;
+        jogador.totais.assistencias += assistTemporada;
+
+        // 4. Calcular Títulos (Depende do Tier do Clube e OVR do Jogador)
+        let ganhouLiga = false, ganhouContinental = false, ganhouCopa = false, ganhouBolaDeOuro = false;
+        
+        let forcaEquipe = (5 - jogador.clubeAtual.tier) * 20 + attr.ovr; // Max ~180
+
+        // Liga Nacional
+        if (Math.random() * 200 < forcaEquipe) { ganhouLiga = true; jogador.titulos.ligas++; }
+        
+        // Continental (Libertadores/Champions)
+        if (jogador.clubeAtual.tier <= 3 && Math.random() * 250 < forcaEquipe) { 
+            ganhouContinental = true; jogador.titulos.continentais++; 
+        }
+
+        // Copa do Mundo (A cada 4 anos)
+        if (jogador.idade % 4 === 0 && Math.random() > 0.85 && attr.ovr > 80) {
+            ganhouCopa = true; jogador.titulos.copasMundo++;
+        }
+
+        // Bola de Ouro (Precisa de muitos gols e título grande)
+        if (golsTemporada > 40 && attr.ovr > 88 && (ganhouContinental || ganhouCopa)) {
+            ganhouBolaDeOuro = true; jogador.titulos.bolasDeOuro++;
+        }
+
+        // Montar Log
+        let msg = `[${jogador.idade} Anos | ${jogador.clubeAtual.nome}] Fez ${golsTemporada} ⚽ e ${assistTemporada} 👟.`;
+        if(jogosPerdidos > 0) msg += ` (Lesionado por ${jogosPerdidos} jogos).`;
+        if(ganhouLiga) msg += " Campeão da Liga! 🏆";
+        if(ganhouContinental) msg += " Campeão Continental! 🌎";
+        if(ganhouCopa) msg += " CAMPEÃO DA COPA DO MUNDO! 🥇";
+        if(ganhouBolaDeOuro) msg += " ELEITO BOLA DE OURO! ✨";
+
+        log(msg);
+        atualizarTela();
+
+        // Verificar Aposentadoria
+        if (jogador.idade >= aleatorio(36, 40) || attr.ovr < 60) {
+            log(`[APOSENTADORIA] Você pendurou as chuteiras aos ${jogador.idade} anos! Carreira encerrada.`);
+            document.getElementById('action-area').innerHTML = "<button class='btn' onclick='location.reload()'>Jogar Novamente</button>";
+            return;
+        }
+
+        // Chamar o Mercado de Transferências
+        abrirMercado();
+    }
+
+    function abrirMercado() {
+        document.getElementById('action-area').style.display = 'none';
+        let market = document.getElementById('transfer-market');
+        let offersList = document.getElementById('offers-list');
+        offersList.innerHTML = '';
+        market.style.display = 'block';
+
+        let ovr = jogador.atributos.ovr;
+        let propostas = [];
+
+        // Lógica de interesse dos clubes baseada no OVR
+        clubes.forEach(clube => {
+            if (clube.nome === jogador.clubeAtual.nome) return;
+            
+            let temInteresse = false;
+            if (ovr >= 88 && clube.tier === 1) temInteresse = true;
+            if (ovr >= 80 && ovr < 90 && clube.tier === 2) temInteresse = true;
+            if (ovr >= 70 && ovr < 82 && clube.tier === 3) temInteresse = true;
+            if (ovr < 75 && clube.tier === 4) temInteresse = true;
+
+            if (temInteresse && Math.random() > 0.6) propostas.push(clube);
+        });
+
+        // Limitar a 3 propostas
+        propostas = propostas.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+        if (propostas.length === 0) {
+            rejeitarOfertas(); // Ninguém fez proposta
+            return;
+        }
+
+        propostas.forEach((clube, index) => {
+            let valor = Math.floor((ovr * ovr) / 100) + aleatorio(-5, 15); // Cálculo fictício de preço
+            offersList.innerHTML += `
+                <button class="btn" style="background: #0055ff; color: #fff; margin-bottom: 5px;" 
+                onclick="aceitarTransferencia(${index})">
+                    Assinar com ${clube.nome} (Proposta: €${valor}M)
+                </button>
+            `;
+        });
+
+        // Salvar propostas temporariamente
+        window.propostasAtuais = propostas;
+    }
+
+    function aceitarTransferencia(index) {
+        let novoClube = window.propostasAtuais[index];
+        log(`[TRANSFERÊNCIA] Você assinou com o ${novoClube.nome}!`);
+        jogador.clubeAtual = novoClube;
+        fecharMercado();
+    }
+
+    function rejeitarOfertas() {
+        log(`[MERCADO] Você decidiu continuar no ${jogador.clubeAtual.nome}.`);
+        fecharMercado();
+    }
+
+    function fecharMercado() {
+        document.getElementById('transfer-market').style.display = 'none';
+        document.getElementById('action-area').style.display = 'block';
+        atualizarTela();
+    }
+
+    function atualizarTela() {
+        document.getElementById('player-age').innerText = jogador.idade;
+        document.getElementById('player-club').innerText = jogador.clubeAtual ? jogador.clubeAtual.nome : "-";
+        
+        let a = jogador.atributos;
+        document.getElementById('stat-ovr').innerText = a.ovr;
+        document.getElementById('stat-pac').innerText = a.pac;
+        document.getElementById('stat-sho').innerText = a.sho;
+        document.getElementById('stat-pas').innerText = a.pas;
+        document.getElementById('stat-dri').innerText = a.dri;
+        document.getElementById('stat-phy').innerText = a.phy;
+
+        document.getElementById('total-goals').innerText = jogador.totais.gols;
+        document.getElementById('total-assists').innerText = jogador.totais.assistencias;
+
+        document.getElementById('t-liga').innerText = jogador.titulos.ligas;
+        document.getElementById('t-cont').innerText = jogador.titulos.continentais;
+        document.getElementById('t-copa').innerText = jogador.titulos.copasMundo;
+        document.getElementById('t-bdor').innerText = jogador.titulos.bolasDeOuro;
+    }
+
+    function log(texto) {
+        let area = document.getElementById('game-log');
+        area.innerHTML = `<div class="log-entry">> ${texto}</div>` + area.innerHTML;
+    }
+</script>
+
+</body>
+</html>
