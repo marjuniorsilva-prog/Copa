@@ -158,8 +158,8 @@
 
     function initPlayer() {
         p.isProdigy = Math.random() > 0.85; 
-        // OVR Inicial ajustado para padrão de primeira divisão
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 66;
+        // OVR Inicial levemente maior para evitar ficar travado no 70 para sempre
+        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 68;
         
         p.ovr = baseOvr; p.prime = baseOvr;
         p.pac = baseOvr + Math.floor(Math.random()*8); p.sho = baseOvr + Math.floor(Math.random()*6);
@@ -233,15 +233,15 @@
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { if (p.age >= 39) { finalizarCarreira(); return; } p.age += 3; currentStep++; }
         
-        // Evolução Acelerada e Balanceada
+        // Boost de OVR mais generoso para bater 90+ mais vezes
         if (p.age <= 21) {
-            let g = Math.floor(Math.random() * (p.isProdigy ? 5 : 4)) + 4; // Salto enorme na juventude (4 a 8 pontos)
+            let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
         } else if (p.age <= 27) {
-            let g = Math.floor(Math.random() * 3) + 2; // Refinamento de craque (2 a 4 pontos)
+            let g = Math.floor(Math.random() * 4) + 2;
             p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
-            let d = Math.floor(Math.random() * 4) + 2; // Queda pós-auge (2 a 5 pontos)
+            let d = Math.floor(Math.random() * 4) + 2;
             p.ovr -= d; p.pac -= (d+3); p.phy -= d;
         }
         
@@ -255,20 +255,51 @@
         }
 
         let ass = Math.floor(apps * (p.pas / 100) * (Math.random() * 0.3 + 0.2));
-        
         let yc = Math.floor(Math.random() * 12);
         let rc = Math.random() > 0.8 ? 1 : 0;
         
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         p.totals.yc += yc; p.totals.rc += rc;
         
+        // SISTEMA DE TÍTULOS CORRIGIDO
+        let isElite = eliteClubs.includes(p.club.replace(" ✨", ""));
         let tDom = 0, tInt = 0;
-        if(p.ovr > 78 && Math.random() > 0.4) { tDom = Math.floor(Math.random()*3); p.totals.dom += tDom; }
-        if(p.ovr > 84 && Math.random() > 0.6) { tInt = Math.floor(Math.random()*2); p.totals.int += tInt; }
+
+        // Títulos Nacionais (Ligas/Copas)
+        if (isElite || p.ovr > 84) {
+            // Alta chance de ganhar de 1 a 3 títulos se estiver em time top
+            if (Math.random() > 0.25) tDom = Math.floor(Math.random() * 3) + 1; 
+        } else if (p.ovr > 76) {
+            // Chance moderada de ganhar 1 ou 2
+            if (Math.random() > 0.4) tDom = Math.floor(Math.random() * 2) + 1;
+        }
+
+        // Títulos Internacionais (Champions/Libertadores)
+        if (isElite || p.ovr > 86) {
+            // Fim do bug do zero: se passar no sorteio de 40%, ganha 1 ou 2.
+            if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1;
+        } else if (p.ovr > 80) {
+            // Zebras acontecem (30% de chance de beliscar 1)
+            if (Math.random() > 0.7) tInt = 1;
+        }
+
+        p.totals.dom += tDom; p.totals.int += tInt;
+
+        // MAJOR TROPHIES CORRIGIDOS
+        if(p.ovr > 84 && Math.random() > 0.5) p.totals.cont++;
         
-        if(p.ovr > 86 && Math.random() > 0.7) p.totals.cont++;
-        if(p.age % 4 === 0 && p.ovr > 87 && Math.random() > 0.8) p.totals.wc++;
-        if(p.ovr >= 91 && gol > 60 && Math.random() > 0.6) p.totals.bdor++;
+        // Copa do Mundo: Se o OVR for monstro, tem 25% de chance de ganhar por ciclo
+        if(p.ovr >= 86 && Math.random() > 0.75) p.totals.wc++;
+        
+        // Bola de Ouro baseada puramente em GOLS e DESEMPENHO ABSURDO
+        if (gol >= 90) {
+            // Fez chover, Bola de Ouro garantida (pode até ganhar 2)
+            p.totals.bdor += Math.floor(Math.random() * 2) + 1;
+        } else if (gol >= 65 && p.ovr >= 88 && Math.random() > 0.3) {
+            p.totals.bdor += 1;
+        } else if (gol >= 50 && p.ovr >= 90 && Math.random() > 0.6) {
+            p.totals.bdor += 1;
+        }
 
         let tag = p.transferFee ? `<div class="transfer-fee">🔁 ${p.transferFee}</div>` : "";
         document.getElementById(`club-box-${currentStep}`).innerHTML = `${p.club} ${tag}`;
