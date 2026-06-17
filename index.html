@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Football Career - Edição Global FM</title>
+    <title>My Football Career - Mercado Realista</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #222; display: flex; justify-content: center; padding: 10px; }
@@ -172,71 +172,32 @@
 </div>
 
 <script>
-    // MEGABANCO DE DADOS (Centenas de clubes da Primeira Divisão Mundial)
-    const baseClubs = [
-        // 🇧🇷 BRASIL (Série A Completa + Extras)
-        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Vasco 🇧🇷", "Bahia 🇧🇷", "Athletico-PR 🇧🇷", "Fortaleza 🇧🇷", "Bragantino 🇧🇷", "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Santos 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷",
-        
-        // 🇦🇷 ARGENTINA (Principais)
-        "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "San Lorenzo 🇦🇷", "Estudiantes 🇦🇷", "Vélez Sarsfield 🇦🇷", "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Lanús 🇦🇷", "Defensa y Justicia 🇦🇷",
-        
-        // 🇺🇾🇨🇱🇨🇴🇪🇨🇵🇾🇵🇪🇧🇴🇻🇪 RESTO DA AMÉRICA DO SUL
-        "Peñarol 🇺🇾", "Nacional 🇺🇾", "Defensor 🇺🇾", "Atlético Nacional 🇨🇴", "Millonarios 🇨🇴", "América de Cali 🇨🇴", "Junior Barranquilla 🇨🇴", "Colo-Colo 🇨🇱", "U. de Chile 🇨🇱", "U. Católica 🇨🇱", "LDU 🇪🇨", "Indep. del Valle 🇪🇨", "Barcelona SC 🇪🇨", "Olimpia 🇵🇾", "Cerro Porteño 🇵🇾", "Libertad 🇵🇾", "Alianza Lima 🇵🇪", "Universitario 🇵🇪", "Sporting Cristal 🇵🇪", "Bolívar 🇧🇴", "The Strongest 🇧🇴", "Caracas FC 🇻🇪", "Deportivo Táchira 🇻🇪",
-        
-        // 🏴󠁧󠁢󠁥󠁮󠁧󠁿 INGLATERRA (Premier League)
-        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Southampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-        
-        // 🇪🇸 ESPANHA (La Liga)
-        "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸", "Mallorca 🇪🇸", "Alavés 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Las Palmas 🇪🇸", "Leganés 🇪🇸", "Valladolid 🇪🇸",
-        
-        // 🇮🇹 ITÁLIA (Serie A)
-        "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹", "Genoa 🇮🇹", "Monza 🇮🇹", "Lecce 🇮🇹", "Hellas Verona 🇮🇹", "Cagliari 🇮🇹", "Empoli 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹",
-        
-        // 🇩🇪 ALEMANHA (Bundesliga)
-        "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪", "Hoffenheim 🇩🇪", "Heidenheim 🇩🇪", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Bochum 🇩🇪", "St. Pauli 🇩🇪",
-        
-        // 🇫🇷 FRANÇA (Ligue 1)
-        "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷", "Reims 🇫🇷", "Toulouse 🇫🇷", "Strasbourg 🇫🇷", "Montpellier 🇫🇷", "Nantes 🇫🇷", "Brest 🇫🇷", "Auxerre 🇫🇷",
-        
-        // 🇵🇹 PORTUGAL & 🇳🇱 HOLANDA
-        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Famalicão 🇵🇹", "Boavista 🇵🇹", "Rio Ave 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱", "Utrecht 🇳🇱", "Heerenveen 🇳🇱",
-        
-        // 🏴󠁧󠁢󠁳󠁣󠁴󠁿 ESCÓCIA, 🇮🇪 IRLANDA & 🏴󠁧󠁢󠁷󠁬󠁳󠁿 PAÍS DE GALES
-        "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hibernian 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Dundee United 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Shamrock Rovers 🇮🇪", "Shelbourne 🇮🇪", "Bohemians 🇮🇪", "TNS 🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Bala Town 🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-        
-        // 🇧🇪 BÉLGICA, 🇨🇭 SUÍÇA & 🇦🇹 ÁUSTRIA
-        "Club Brugge 🇧🇪", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Standard Liège 🇧🇪", "Antwerp 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭", "Lugano 🇨🇭", "Zürich 🇨🇭", "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Rapid Wien 🇦🇹", "Austria Wien 🇦🇹",
-        
-        // 🇹🇷 TURQUIA & 🇬🇷 GRÉCIA
-        "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Başakşehir 🇹🇷", "Adana Demirspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷", "Aris 🇬🇷",
-        
-        // 🇨🇿 TCHÉQUIA, 🇭🇺 HUNGRIA, 🇵🇱 POLÔNIA & 🇸🇰 ESLOVÁQUIA
-        "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Baník Ostrava 🇨🇿", "Ferencváros 🇭🇺", "Puskás Akadémia 🇭🇺", "Fehérvár 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱", "Jagiellonia 🇵🇱", "Slovan Bratislava 🇸🇰", "Spartak Trnava 🇸🇰",
-        
-        // 🇫🇮 FINLÂNDIA, 🇸🇪 SUÉCIA, 🇳🇴 NORUEGA, 🇩🇰 DINAMARCA & 🇮🇸 ISLÂNDIA
-        "HJK Helsinki 🇫🇮", "KuPS 🇫🇮", "Ilves 🇫🇮", "SJK 🇫🇮", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "AIK 🇸🇪", "Hammarby 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "Brann 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰", "Nordsjælland 🇩🇰", "Víkingur 🇮🇸", "Valur 🇮🇸",
-        
-        // 🇭🇷 CROÁCIA, 🇷🇸 SÉRVIA, 🇷🇴 ROMÊNIA, 🇧🇬 BULGÁRIA, 🇺🇦 UCRÂNIA & 🇸🇮 ESLOVÊNIA
-        "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Rijeka 🇭🇷", "Osijek 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "TSC 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Universitatea Craiova 🇷🇴", "Ludogorets 🇧🇬", "CSKA Sofia 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦", "Zorya Luhansk 🇺🇦", "Olimpija Ljubljana 🇸🇮", "Maribor 🇸🇮", "Celje 🇸🇮", "Zrinjski 🇧🇦", "Sarajevo 🇧🇦", "Maccabi Tel Aviv 🇮🇱", "Maccabi Haifa 🇮🇱", "APOEL 🇨🇾", "Omonia 🇨🇾",
-        
-        // 🇺🇸🇲🇽🇨🇦 CONCACAF (América do Norte e Central)
-        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City FC 🇺🇸", "Columbus Crew 🇺🇸", "Seattle Sounders 🇺🇸", "Toronto FC 🇨🇦", "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Chivas Guadalajara 🇲🇽", "Saprissa 🇨🇷", "Alajuelense 🇨🇷", "Olimpia 🇭🇳",
-        
-        // 🇸🇦🇯🇵🇰🇷🇨🇳🇦🇺 ÁSIA & OCEANIA
-        "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al-Ettifaq 🇸🇦", "Al Ain 🇦🇪", "Al-Jazira 🇦🇪", "Al-Sadd 🇶🇦", "Al-Duhail 🇶🇦", "Kawasaki Frontale 🇯🇵", "Vissel Kobe 🇯🇵", "Yokohama F. Marinos 🇯🇵", "Urawa Red Diamonds 🇯🇵", "Jeonbuk Motors 🇰🇷", "Ulsan Hyundai 🇰🇷", "FC Seoul 🇰🇷", "Shanghai Port 🇨🇳", "Beijing Guoan 🇨🇳", "Shandong Taishan 🇨🇳", "Sydney FC 🇦🇺", "Melbourne City 🇦🇺", "Persepolis 🇮🇷", "Esteghlal 🇮🇷",
-        
-        // 🇪🇬🇲🇦🇿🇦 ÁFRICA
-        "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Pyramids 🇪🇬", "Wydad Casablanca 🇲🇦", "Raja Casablanca 🇲🇦", "RS Berkane 🇲🇦", "Mamelodi Sundowns 🇿🇦", "Orlando Pirates 🇿🇦", "Kaizer Chiefs 🇿🇦", "Espérance de Tunis 🇹🇳", "CR Belouizdad 🇩🇿"
+    // PRATELEIRA 1: Times Menores, Zebras e Ligas Alternativas (OVR < 77)
+    const tierBronze = [
+        "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷",
+        "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Defensa y Justicia 🇦🇷", "Defensor 🇺🇾", "América de Cali 🇨🇴", "U. Católica 🇨🇱", "Barcelona SC 🇪🇨", "Alianza Lima 🇵🇪", "Universitario 🇵🇪", "Sporting Cristal 🇵🇪", "Bolívar 🇧🇴", "The Strongest 🇧🇴", "Caracas FC 🇻🇪", "Deportivo Táchira 🇻🇪",
+        "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Southampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mallorca 🇪🇸", "Alavés 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Las Palmas 🇪🇸", "Leganés 🇪🇸", "Valladolid 🇪🇸", "Genoa 🇮🇹", "Monza 🇮🇹", "Lecce 🇮🇹", "Hellas Verona 🇮🇹", "Cagliari 🇮🇹", "Empoli 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹", "Heidenheim 🇩🇪", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Bochum 🇩🇪", "St. Pauli 🇩🇪", "Reims 🇫🇷", "Toulouse 🇫🇷", "Strasbourg 🇫🇷", "Montpellier 🇫🇷", "Nantes 🇫🇷", "Brest 🇫🇷", "Auxerre 🇫🇷",
+        "Famalicão 🇵🇹", "Boavista 🇵🇹", "Rio Ave 🇵🇹", "Utrecht 🇳🇱", "Heerenveen 🇳🇱", "Hibernian 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Dundee United 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Shamrock Rovers 🇮🇪", "Shelbourne 🇮🇪", "Bohemians 🇮🇪", "TNS 🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Bala Town 🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Standard Liège 🇧🇪", "Antwerp 🇧🇪", "Lugano 🇨🇭", "Zürich 🇨🇭", "Rapid Wien 🇦🇹", "Austria Wien 🇦🇹", "Başakşehir 🇹🇷", "Adana Demirspor 🇹🇷", "Aris 🇬🇷", "Baník Ostrava 🇨🇿", "Puskás Akadémia 🇭🇺", "Fehérvár 🇭🇺", "Jagiellonia 🇵🇱", "Slovan Bratislava 🇸🇰", "Spartak Trnava 🇸🇰",
+        "HJK Helsinki 🇫🇮", "KuPS 🇫🇮", "Ilves 🇫🇮", "SJK 🇫🇮", "AIK 🇸🇪", "Hammarby 🇸🇪", "Brann 🇳🇴", "Nordsjælland 🇩🇰", "Víkingur 🇮🇸", "Valur 🇮🇸", "Rijeka 🇭🇷", "Osijek 🇭🇷", "TSC 🇷🇸", "Universitatea Craiova 🇷🇴", "CSKA Sofia 🇧🇬", "Zorya Luhansk 🇺🇦", "Olimpija Ljubljana 🇸🇮", "Maribor 🇸🇮", "Celje 🇸🇮", "Zrinjski 🇧🇦", "Sarajevo 🇧🇦", "Maccabi Tel Aviv 🇮🇱", "Maccabi Haifa 🇮🇱", "APOEL 🇨🇾", "Omonia 🇨🇾",
+        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City FC 🇺🇸", "Columbus Crew 🇺🇸", "Seattle Sounders 🇺🇸", "Toronto FC 🇨🇦", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Chivas Guadalajara 🇲🇽", "Saprissa 🇨🇷", "Alajuelense 🇨🇷", "Olimpia 🇭🇳",
+        "Al-Ettifaq 🇸🇦", "Al-Jazira 🇦🇪", "Al-Duhail 🇶🇦", "FC Seoul 🇰🇷", "Shanghai Port 🇨🇳", "Beijing Guoan 🇨🇳", "Shandong Taishan 🇨🇳", "Sydney FC 🇦🇺", "Melbourne City 🇦🇺", "Persepolis 🇮🇷", "Esteghlal 🇮🇷", "Pyramids 🇪🇬", "RS Berkane 🇲🇦", "Kaizer Chiefs 🇿🇦", "CR Belouizdad 🇩🇿"
     ];
 
+    // PRATELEIRA 2: Gigantes Locais e Times Médios/Fortes da Europa (OVR 77 a 85)
+    const tierPrata = [
+        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Vasco 🇧🇷", "Bahia 🇧🇷", "Athletico-PR 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "San Lorenzo 🇦🇷", "Estudiantes 🇦🇷", "Vélez Sarsfield 🇦🇷", "Lanús 🇦🇷", "Peñarol 🇺🇾", "Nacional 🇺🇾", "Atlético Nacional 🇨🇴", "Millonarios 🇨🇴", "Junior Barranquilla 🇨🇴", "Colo-Colo 🇨🇱", "U. de Chile 🇨🇱", "LDU 🇪🇨", "Indep. del Valle 🇪🇨", "Olimpia 🇵🇾", "Cerro Porteño 🇵🇾", "Libertad 🇵🇾",
+        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪", "Hoffenheim 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷",
+        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭", "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷", "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Ferencváros 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰", "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Ludogorets 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦",
+        "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al Ain 🇦🇪", "Al-Sadd 🇶🇦", "Kawasaki Frontale 🇯🇵", "Vissel Kobe 🇯🇵", "Yokohama F. Marinos 🇯🇵", "Urawa Red Diamonds 🇯🇵", "Jeonbuk Motors 🇰🇷", "Ulsan Hyundai 🇰🇷", "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Wydad Casablanca 🇲🇦", "Raja Casablanca 🇲🇦", "Mamelodi Sundowns 🇿🇦", "Orlando Pirates 🇿🇦", "Espérance de Tunis 🇹🇳"
+    ];
+
+    // PRATELEIRA 3: A Elite Absoluta (OVR 86+)
     const eliteClubs = [
-        // A Elite Absoluta Européia (Somente os Gigantes Reais)
         "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", 
         "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
         "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", 
         "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "Napoli 🇮🇹", 
         "PSG 🇫🇷", 
-        // Gigantes Árabes (Poder Financeiro Absurdo)
         "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦", "Al-Ittihad 🇸🇦"
     ];
 
@@ -249,13 +210,8 @@
     const ages = ["A", 18, 21, 24, 27, 30, 33, 36, 39, "R", "M"];
     let currentStep = 0;
 
-    // SISTEMA DE RANKING (LOCAL STORAGE)
     let records = JSON.parse(localStorage.getItem('mfc_records')) || {
-        ovr: { val: 0, name: "-" },
-        gol: { val: 0, name: "-" },
-        bdor: { val: 0, name: "-" },
-        wc: { val: 0, name: "-" },
-        fee: { val: 0, str: "€0m", name: "-" }
+        ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" }
     };
 
     function atualizarDadosRanking() {
@@ -269,36 +225,30 @@
     function checarRecordes() {
         let playerID = `${document.getElementById('hdr-region').innerText} ST`;
         let updated = false;
-
         if(p.prime > records.ovr.val) { records.ovr = { val: p.prime, name: playerID }; updated = true; }
         if(p.totals.gol > records.gol.val) { records.gol = { val: p.totals.gol, name: playerID }; updated = true; }
         if(p.totals.bdor > records.bdor.val) { records.bdor = { val: p.totals.bdor, name: playerID }; updated = true; }
         if(p.totals.wc > records.wc.val) { records.wc = { val: p.totals.wc, name: playerID }; updated = true; }
         if(p.maxFeeNum > records.fee.val) { records.fee = { val: p.maxFeeNum, str: p.maxFeeStr, name: playerID }; updated = true; }
-
-        if(updated) {
-            localStorage.setItem('mfc_records', JSON.stringify(records));
-            atualizarDadosRanking();
-        }
+        if(updated) { localStorage.setItem('mfc_records', JSON.stringify(records)); atualizarDadosRanking(); }
     }
 
     function abrirRanking() { atualizarDadosRanking(); document.getElementById('modal-rank').style.display = 'flex'; }
     function fecharRanking() { document.getElementById('modal-rank').style.display = 'none'; }
 
-    // MOTOR PRINCIPAL DO JOGO
     function initPlayer() {
         p.isProdigy = Math.random() > 0.85; 
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 68;
+        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 65;
         
         p.ovr = baseOvr; p.prime = baseOvr;
         p.pac = baseOvr + Math.floor(Math.random()*8); p.sho = baseOvr + Math.floor(Math.random()*6);
         p.pas = baseOvr - Math.floor(Math.random()*5); p.dri = baseOvr + Math.floor(Math.random()*7);
         p.def = 30 + Math.floor(Math.random()*20); p.phy = baseOvr - Math.floor(Math.random()*5);
 
-        let pool = p.isProdigy ? [...baseClubs, ...eliteClubs] : baseClubs;
+        // Prodígios começam direto em times medianos. Jogadores normais começam na base dos times pequenos.
+        let pool = p.isProdigy ? tierPrata : tierBronze;
         p.club = pool[Math.floor(Math.random() * pool.length)];
 
-        // IA para reconhecer os continentes baseada nas bandeiras
         if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿") || p.club.includes("🇧🇪") || p.club.includes("🇨🇭") || p.club.includes("🇬🇷") || p.club.includes("🇦🇹") || p.club.includes("🇨🇿") || p.club.includes("🇭🇺") || p.club.includes("🇵🇱") || p.club.includes("🇫🇮") || p.club.includes("🇸🇪") || p.club.includes("🇳🇴") || p.club.includes("🇩🇰") || p.club.includes("🇭🇷") || p.club.includes("🇷🇸") || p.club.includes("🇷🇴") || p.club.includes("🇧🇬") || p.club.includes("🇺🇦") || p.club.includes("🇮🇪") || p.club.includes("🇮🇸") || p.club.includes("🇨🇾") || p.club.includes("🇮🇱") || p.club.includes("🇸🇰") || p.club.includes("🇸🇮") || p.club.includes("🇧🇦") || p.club.includes("🏴󠁧󠁢󠁷󠁬󠁳󠁿")) {
             p.origin = "Europe"; document.getElementById('icone-continente').innerText = "🏆 Euro";
         } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦") || p.club.includes("🇨🇳") || p.club.includes("🇦🇺") || p.club.includes("🇮🇷")) {
@@ -429,7 +379,16 @@
     function abirMercado() {
         document.getElementById('action-area').style.display = 'none'; document.getElementById('market-panel').style.display = 'block';
         let list = document.getElementById('offer-list'); list.innerHTML = "";
-        let pool = (p.ovr >= 85) ? eliteClubs : baseClubs;
+        
+        // SISTEMA DE TIERS (A Grande Mudança)
+        let pool = [];
+        if (p.ovr >= 86) {
+            pool = eliteClubs; // OVR Alto -> Só propostas de Gigantes
+        } else if (p.ovr >= 77) {
+            pool = tierPrata; // OVR Médio -> Propostas de times bons e médios
+        } else {
+            pool = tierBronze; // OVR Baixo -> Propostas de times menores
+        }
         
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
