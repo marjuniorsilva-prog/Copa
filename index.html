@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Football Career - Completo</title>
+    <title>My Football Career - Edição Definitiva</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #222; display: flex; justify-content: center; padding: 10px; }
@@ -26,7 +26,7 @@
         .age-box { width: 30px; height: 28px; background: #9ca3af; color: white; font-weight: bold; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-size: 12px; flex-shrink: 0;}
         .age-box.academy { background: #fde047; color: black; }
         .age-box.retire, .age-box.manager { background: #fbbf24; color: black; }
-        .club-box { background: white; flex-grow: 1; height: 100%; display: flex; align-items: center; padding: 0 5px; font-size: 10px; font-weight: bold; border: 1px solid #ccc; border-left: none; position: relative;}
+        .club-box { background: white; flex-grow: 1; height: 100%; display: flex; align-items: center; padding: 0 5px; font-size: 10px; font-weight: bold; border: 1px solid #ccc; border-left: none; position: relative; overflow: hidden; white-space: nowrap;}
         .transfer-fee { background: #fbcfe8; color: black; font-size: 9px; position: absolute; right: 0; top: 0; bottom: 0; padding: 0 4px; display: flex; align-items: center; font-weight: bold; border-left: 1px solid #ccc;}
         
         .col-right { width: 55%; padding-left: 5px; display: flex; flex-direction: column; gap: 4px; }
@@ -48,12 +48,23 @@
         .bottom-title { background: #6b21a8; color: white; font-size: 11px; font-weight: bold; padding: 2px; }
         .trophy-grid { display: flex; justify-content: space-around; padding-top: 5px; font-size: 18px; font-weight: bold; }
         
-        .lifestyle-section { display: flex; gap: 10px; margin: 0 10px; }
+        .lifestyle-section { display: flex; gap: 10px; margin: 0 10px 10px 10px; }
         .life-box { flex: 1; background: white; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
         .life-title { background: #6b21a8; color: white; font-size: 11px; font-weight: bold; padding: 2px; }
         .life-content { padding: 8px; font-size: 12px; font-weight: bold; }
         
         .empty-slot { background: #a3a3a3; opacity: 0.3; width: 100%; height: 100%; }
+
+        /* Estilos do Ranking */
+        .btn-rank { background: #fbbf24; color: black; border: none; padding: 10px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; width: calc(100% - 20px); margin: 0 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 12px; padding: 15px; border: 3px solid #fbbf24; }
+        .rank-title { text-align: center; font-size: 18px; font-weight: bold; color: #6b21a8; margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;}
+        .rank-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 8px 0; }
+        .rank-label { font-size: 12px; font-weight: bold; color: #555; display: flex; align-items: center; gap: 5px;}
+        .rank-val { font-size: 14px; font-weight: bold; color: #16a34a; text-align: right; }
+        .rank-player { font-size: 10px; color: #888; display: block; }
+        .btn-close { background: #ef4444; color: white; border: none; padding: 10px; width: 100%; font-weight: bold; border-radius: 8px; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -130,25 +141,71 @@
             <div class="life-content" id="life-car">🚲<br>Bicicleta</div>
         </div>
     </div>
+
+    <button class="btn-rank" onclick="abrirRanking()">🏆 HALL DA FAMA</button>
+
+    <div class="modal" id="modal-rank">
+        <div class="modal-content">
+            <div class="rank-title">🏆 HALL DA FAMA OFICIAL</div>
+            
+            <div class="rank-row">
+                <div class="rank-label">👑 Maior OVR Prime</div>
+                <div class="rank-val"><span id="rk-ovr-val">0</span> <span class="rank-player" id="rk-ovr-name">-</span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label">⚽ A Máquina (Gols)</div>
+                <div class="rank-val"><span id="rk-gol-val">0</span> <span class="rank-player" id="rk-gol-name">-</span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label">✨ Rei da Bola de Ouro</div>
+                <div class="rank-val"><span id="rk-bdor-val">0</span> <span class="rank-player" id="rk-bdor-name">-</span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label">🥇 Copas do Mundo</div>
+                <div class="rank-val"><span id="rk-wc-val">0</span> <span class="rank-player" id="rk-wc-name">-</span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label">💸 Maior Transferência</div>
+                <div class="rank-val"><span id="rk-fee-val">€0m</span> <span class="rank-player" id="rk-fee-name">-</span></div>
+            </div>
+
+            <button class="btn-close" onclick="fecharRanking()">FECHAR</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
+    // BANCO DE DADOS GLOBAL MÁXIMO - FOCO UEFA E MUNDO
     const baseClubs = [
-        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Peñarol 🇺🇾", "Atlético Nacional 🇨🇴",
-        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Betis 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Bayer Leverkusen 🇩🇪", "Lyon 🇫🇷", "Benfica 🇵🇹", "Porto 🇵🇹", "Ajax 🇳🇱", "Galatasaray 🇹🇷",
-        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Club América 🇲🇽", "Monterrey 🇲🇽",
-        "Al-Ahli 🇸🇦", "Kawasaki Frontale 🇯🇵", "Jeonbuk Motors 🇰🇷", "Al Ahly 🇪🇬"
+        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Vasco 🇧🇷", "Bahia 🇧🇷", "Athletico-PR 🇧🇷", "Fortaleza 🇧🇷",
+        "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "San Lorenzo 🇦🇷", "Peñarol 🇺🇾", "Nacional 🇺🇾", "Atlético Nacional 🇨🇴", "Colo-Colo 🇨🇱", "LDU 🇪🇨", "Independiente del Valle 🇪🇨", "Olimpia 🇵🇾",
+        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸",
+        "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹",
+        "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪",
+        "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷",
+        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱",
+        "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭",
+        "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷",
+        "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Ferencváros 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱",
+        "HJK Helsinki 🇫🇮", "KuPS 🇫🇮", "Ilves 🇫🇮", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰",
+        "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Ludogorets 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦",
+        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City FC 🇺🇸", "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Pachuca 🇲🇽",
+        "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al Ain 🇦🇪", "Al-Sadd 🇶🇦", "Kawasaki Frontale 🇯🇵", "Vissel Kobe 🇯🇵", "Jeonbuk Motors 🇰🇷", "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Wydad Casablanca 🇲🇦", "Mamelodi Sundowns 🇿🇦"
     ];
 
     const eliteClubs = [
-        "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético Madrid 🇪🇸", 
-        "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Man United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
-        "Bayern Munique 🇩🇪", "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "PSG 🇫🇷", 
-        "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦"
+        "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", 
+        "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
+        "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", 
+        "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "Napoli 🇮🇹", 
+        "PSG 🇫🇷", 
+        "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦", "Al-Ittihad 🇸🇦"
     ];
 
     let p = {
-        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, wealth: 0,
+        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, wealth: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "",
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
@@ -156,6 +213,43 @@
     const ages = ["A", 18, 21, 24, 27, 30, 33, 36, 39, "R", "M"];
     let currentStep = 0;
 
+    // SISTEMA DE RANKING (LOCAL STORAGE)
+    let records = JSON.parse(localStorage.getItem('mfc_records')) || {
+        ovr: { val: 0, name: "-" },
+        gol: { val: 0, name: "-" },
+        bdor: { val: 0, name: "-" },
+        wc: { val: 0, name: "-" },
+        fee: { val: 0, str: "€0m", name: "-" }
+    };
+
+    function atualizarDadosRanking() {
+        document.getElementById('rk-ovr-val').innerText = records.ovr.val; document.getElementById('rk-ovr-name').innerText = records.ovr.name;
+        document.getElementById('rk-gol-val').innerText = records.gol.val; document.getElementById('rk-gol-name').innerText = records.gol.name;
+        document.getElementById('rk-bdor-val').innerText = records.bdor.val; document.getElementById('rk-bdor-name').innerText = records.bdor.name;
+        document.getElementById('rk-wc-val').innerText = records.wc.val; document.getElementById('rk-wc-name').innerText = records.wc.name;
+        document.getElementById('rk-fee-val').innerText = records.fee.str; document.getElementById('rk-fee-name').innerText = records.fee.name;
+    }
+
+    function checarRecordes() {
+        let playerID = `${document.getElementById('hdr-region').innerText} ST`;
+        let updated = false;
+
+        if(p.prime > records.ovr.val) { records.ovr = { val: p.prime, name: playerID }; updated = true; }
+        if(p.totals.gol > records.gol.val) { records.gol = { val: p.totals.gol, name: playerID }; updated = true; }
+        if(p.totals.bdor > records.bdor.val) { records.bdor = { val: p.totals.bdor, name: playerID }; updated = true; }
+        if(p.totals.wc > records.wc.val) { records.wc = { val: p.totals.wc, name: playerID }; updated = true; }
+        if(p.maxFeeNum > records.fee.val) { records.fee = { val: p.maxFeeNum, str: p.maxFeeStr, name: playerID }; updated = true; }
+
+        if(updated) {
+            localStorage.setItem('mfc_records', JSON.stringify(records));
+            atualizarDadosRanking();
+        }
+    }
+
+    function abrirRanking() { atualizarDadosRanking(); document.getElementById('modal-rank').style.display = 'flex'; }
+    function fecharRanking() { document.getElementById('modal-rank').style.display = 'none'; }
+
+    // MOTOR PRINCIPAL DO JOGO
     function initPlayer() {
         p.isProdigy = Math.random() > 0.85; 
         let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 68;
@@ -168,13 +262,13 @@
         let pool = p.isProdigy ? [...baseClubs, ...eliteClubs] : baseClubs;
         p.club = pool[Math.floor(Math.random() * pool.length)];
 
-        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷")) {
+        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿") || p.club.includes("🇧🇪") || p.club.includes("🇨🇭") || p.club.includes("🇬🇷") || p.club.includes("🇦🇹") || p.club.includes("🇨🇿") || p.club.includes("🇭🇺") || p.club.includes("🇵🇱") || p.club.includes("🇫🇮") || p.club.includes("🇸🇪") || p.club.includes("🇳🇴") || p.club.includes("🇩🇰") || p.club.includes("🇭🇷") || p.club.includes("🇷🇸") || p.club.includes("🇷🇴") || p.club.includes("🇧🇬") || p.club.includes("🇺🇦")) {
             p.origin = "Europe"; document.getElementById('icone-continente').innerText = "🏆 Euro";
-        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷")) {
+        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦")) {
             p.origin = "Asia"; document.getElementById('icone-continente').innerText = "🏆 Copa Ásia";
         } else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽")) {
             p.origin = "N. America"; document.getElementById('icone-continente').innerText = "🏆 Copa Ouro";
-        } else if(p.club.includes("🇪🇬")) {
+        } else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦") || p.club.includes("🇿🇦") || p.club.includes("🇹🇳")) {
             p.origin = "Africa"; document.getElementById('icone-continente').innerText = "🏆 CANA";
         } else {
             p.origin = "S. America"; document.getElementById('icone-continente').innerText = "🏆 C. América";
@@ -279,9 +373,7 @@
         if(p.ovr > 85 && Math.random() > 0.5) p.totals.cont++;
         if(p.ovr >= 87 && Math.random() > 0.8) p.totals.wc++;
         
-        // NOVA LÓGICA DA BOLA DE OURO (Bem mais difícil)
         if (gol >= 110 && p.ovr >= 90) {
-            // Temporada absurda: a maioria ganha 1, raramente ganha 2
             p.totals.bdor += (Math.random() > 0.85) ? 2 : 1;
         } else if (gol >= 80 && p.ovr >= 88 && Math.random() > 0.4) {
             p.totals.bdor += 1;
@@ -306,20 +398,28 @@
             let c = pool[Math.floor(Math.random() * pool.length)];
             let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
             if(p.age > 33) val = Math.floor(val * 0.4);
-            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-val" onclick="aceitar('${c}', '€${val}m')">🤝 €${val}m</div></div>`;
+            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-val" onclick="aceitar('${c}', '€${val}m', ${val})">🤝 €${val}m</div></div>`;
         }
     }
 
-    function aceitar(c, v) { p.club = c; p.transferFee = v; fechar(); }
+    function aceitar(c, strVal, numVal) { 
+        p.club = c; 
+        p.transferFee = strVal; 
+        if(numVal > p.maxFeeNum) { p.maxFeeNum = numVal; p.maxFeeStr = strVal; }
+        fechar(); 
+    }
     function ficarNoTime() { p.transferFee = ""; fechar(); }
     function fechar() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
+    
     function finalizarCarreira() {
         document.getElementById(`club-box-${ages.length-2}`).innerHTML = p.club;
         document.getElementById(`club-box-${ages.length-1}`).innerHTML = (p.ovr > 85) ? eliteClubs[Math.floor(Math.random()*eliteClubs.length)] : "Manager";
         document.getElementById('action-area').innerHTML = `<button class="btn-continue" style="background:#ef4444;" onclick="location.reload()">RESTART</button>`;
+        checarRecordes();
     }
 
     initGrid();
+    atualizarDadosRanking();
 </script>
 </body>
 </html>
