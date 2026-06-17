@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Football Career - Edição Definitiva</title>
+    <title>My Football Career - Edição Global FM</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #222; display: flex; justify-content: center; padding: 10px; }
@@ -55,7 +55,6 @@
         
         .empty-slot { background: #a3a3a3; opacity: 0.3; width: 100%; height: 100%; }
 
-        /* Estilos do Ranking */
         .btn-rank { background: #fbbf24; color: black; border: none; padding: 10px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; width: calc(100% - 20px); margin: 0 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
         .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 12px; padding: 15px; border: 3px solid #fbbf24; }
@@ -147,7 +146,6 @@
     <div class="modal" id="modal-rank">
         <div class="modal-content">
             <div class="rank-title">🏆 HALL DA FAMA OFICIAL</div>
-            
             <div class="rank-row">
                 <div class="rank-label">👑 Maior OVR Prime</div>
                 <div class="rank-val"><span id="rk-ovr-val">0</span> <span class="rank-player" id="rk-ovr-name">-</span></div>
@@ -168,39 +166,77 @@
                 <div class="rank-label">💸 Maior Transferência</div>
                 <div class="rank-val"><span id="rk-fee-val">€0m</span> <span class="rank-player" id="rk-fee-name">-</span></div>
             </div>
-
             <button class="btn-close" onclick="fecharRanking()">FECHAR</button>
         </div>
     </div>
-
 </div>
 
 <script>
-    // BANCO DE DADOS GLOBAL MÁXIMO - FOCO UEFA E MUNDO
+    // MEGABANCO DE DADOS (Centenas de clubes da Primeira Divisão Mundial)
     const baseClubs = [
-        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Vasco 🇧🇷", "Bahia 🇧🇷", "Athletico-PR 🇧🇷", "Fortaleza 🇧🇷",
-        "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "San Lorenzo 🇦🇷", "Peñarol 🇺🇾", "Nacional 🇺🇾", "Atlético Nacional 🇨🇴", "Colo-Colo 🇨🇱", "LDU 🇪🇨", "Independiente del Valle 🇪🇨", "Olimpia 🇵🇾",
-        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-        "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸",
-        "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹",
-        "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪",
-        "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷",
-        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱",
-        "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭",
-        "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷",
-        "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Ferencváros 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱",
-        "HJK Helsinki 🇫🇮", "KuPS 🇫🇮", "Ilves 🇫🇮", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰",
-        "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Ludogorets 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦",
-        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City FC 🇺🇸", "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Pachuca 🇲🇽",
-        "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al Ain 🇦🇪", "Al-Sadd 🇶🇦", "Kawasaki Frontale 🇯🇵", "Vissel Kobe 🇯🇵", "Jeonbuk Motors 🇰🇷", "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Wydad Casablanca 🇲🇦", "Mamelodi Sundowns 🇿🇦"
+        // 🇧🇷 BRASIL (Série A Completa + Extras)
+        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Vasco 🇧🇷", "Bahia 🇧🇷", "Athletico-PR 🇧🇷", "Fortaleza 🇧🇷", "Bragantino 🇧🇷", "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Santos 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷",
+        
+        // 🇦🇷 ARGENTINA (Principais)
+        "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "San Lorenzo 🇦🇷", "Estudiantes 🇦🇷", "Vélez Sarsfield 🇦🇷", "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Lanús 🇦🇷", "Defensa y Justicia 🇦🇷",
+        
+        // 🇺🇾🇨🇱🇨🇴🇪🇨🇵🇾🇵🇪🇧🇴🇻🇪 RESTO DA AMÉRICA DO SUL
+        "Peñarol 🇺🇾", "Nacional 🇺🇾", "Defensor 🇺🇾", "Atlético Nacional 🇨🇴", "Millonarios 🇨🇴", "América de Cali 🇨🇴", "Junior Barranquilla 🇨🇴", "Colo-Colo 🇨🇱", "U. de Chile 🇨🇱", "U. Católica 🇨🇱", "LDU 🇪🇨", "Indep. del Valle 🇪🇨", "Barcelona SC 🇪🇨", "Olimpia 🇵🇾", "Cerro Porteño 🇵🇾", "Libertad 🇵🇾", "Alianza Lima 🇵🇪", "Universitario 🇵🇪", "Sporting Cristal 🇵🇪", "Bolívar 🇧🇴", "The Strongest 🇧🇴", "Caracas FC 🇻🇪", "Deportivo Táchira 🇻🇪",
+        
+        // 🏴󠁧󠁢󠁥󠁮󠁧󠁿 INGLATERRA (Premier League)
+        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Southampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        
+        // 🇪🇸 ESPANHA (La Liga)
+        "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸", "Mallorca 🇪🇸", "Alavés 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Las Palmas 🇪🇸", "Leganés 🇪🇸", "Valladolid 🇪🇸",
+        
+        // 🇮🇹 ITÁLIA (Serie A)
+        "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹", "Genoa 🇮🇹", "Monza 🇮🇹", "Lecce 🇮🇹", "Hellas Verona 🇮🇹", "Cagliari 🇮🇹", "Empoli 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹",
+        
+        // 🇩🇪 ALEMANHA (Bundesliga)
+        "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪", "Hoffenheim 🇩🇪", "Heidenheim 🇩🇪", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Bochum 🇩🇪", "St. Pauli 🇩🇪",
+        
+        // 🇫🇷 FRANÇA (Ligue 1)
+        "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷", "Reims 🇫🇷", "Toulouse 🇫🇷", "Strasbourg 🇫🇷", "Montpellier 🇫🇷", "Nantes 🇫🇷", "Brest 🇫🇷", "Auxerre 🇫🇷",
+        
+        // 🇵🇹 PORTUGAL & 🇳🇱 HOLANDA
+        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Famalicão 🇵🇹", "Boavista 🇵🇹", "Rio Ave 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱", "Utrecht 🇳🇱", "Heerenveen 🇳🇱",
+        
+        // 🏴󠁧󠁢󠁳󠁣󠁴󠁿 ESCÓCIA, 🇮🇪 IRLANDA & 🏴󠁧󠁢󠁷󠁬󠁳󠁿 PAÍS DE GALES
+        "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hibernian 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Dundee United 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Shamrock Rovers 🇮🇪", "Shelbourne 🇮🇪", "Bohemians 🇮🇪", "TNS 🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Bala Town 🏴󠁧󠁢󠁷󠁬󠁳󠁿",
+        
+        // 🇧🇪 BÉLGICA, 🇨🇭 SUÍÇA & 🇦🇹 ÁUSTRIA
+        "Club Brugge 🇧🇪", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Standard Liège 🇧🇪", "Antwerp 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭", "Lugano 🇨🇭", "Zürich 🇨🇭", "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Rapid Wien 🇦🇹", "Austria Wien 🇦🇹",
+        
+        // 🇹🇷 TURQUIA & 🇬🇷 GRÉCIA
+        "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Başakşehir 🇹🇷", "Adana Demirspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷", "Aris 🇬🇷",
+        
+        // 🇨🇿 TCHÉQUIA, 🇭🇺 HUNGRIA, 🇵🇱 POLÔNIA & 🇸🇰 ESLOVÁQUIA
+        "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Baník Ostrava 🇨🇿", "Ferencváros 🇭🇺", "Puskás Akadémia 🇭🇺", "Fehérvár 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱", "Jagiellonia 🇵🇱", "Slovan Bratislava 🇸🇰", "Spartak Trnava 🇸🇰",
+        
+        // 🇫🇮 FINLÂNDIA, 🇸🇪 SUÉCIA, 🇳🇴 NORUEGA, 🇩🇰 DINAMARCA & 🇮🇸 ISLÂNDIA
+        "HJK Helsinki 🇫🇮", "KuPS 🇫🇮", "Ilves 🇫🇮", "SJK 🇫🇮", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "AIK 🇸🇪", "Hammarby 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "Brann 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰", "Nordsjælland 🇩🇰", "Víkingur 🇮🇸", "Valur 🇮🇸",
+        
+        // 🇭🇷 CROÁCIA, 🇷🇸 SÉRVIA, 🇷🇴 ROMÊNIA, 🇧🇬 BULGÁRIA, 🇺🇦 UCRÂNIA & 🇸🇮 ESLOVÊNIA
+        "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Rijeka 🇭🇷", "Osijek 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "TSC 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Universitatea Craiova 🇷🇴", "Ludogorets 🇧🇬", "CSKA Sofia 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦", "Zorya Luhansk 🇺🇦", "Olimpija Ljubljana 🇸🇮", "Maribor 🇸🇮", "Celje 🇸🇮", "Zrinjski 🇧🇦", "Sarajevo 🇧🇦", "Maccabi Tel Aviv 🇮🇱", "Maccabi Haifa 🇮🇱", "APOEL 🇨🇾", "Omonia 🇨🇾",
+        
+        // 🇺🇸🇲🇽🇨🇦 CONCACAF (América do Norte e Central)
+        "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "LAFC 🇺🇸", "New York City FC 🇺🇸", "Columbus Crew 🇺🇸", "Seattle Sounders 🇺🇸", "Toronto FC 🇨🇦", "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Chivas Guadalajara 🇲🇽", "Saprissa 🇨🇷", "Alajuelense 🇨🇷", "Olimpia 🇭🇳",
+        
+        // 🇸🇦🇯🇵🇰🇷🇨🇳🇦🇺 ÁSIA & OCEANIA
+        "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al-Ettifaq 🇸🇦", "Al Ain 🇦🇪", "Al-Jazira 🇦🇪", "Al-Sadd 🇶🇦", "Al-Duhail 🇶🇦", "Kawasaki Frontale 🇯🇵", "Vissel Kobe 🇯🇵", "Yokohama F. Marinos 🇯🇵", "Urawa Red Diamonds 🇯🇵", "Jeonbuk Motors 🇰🇷", "Ulsan Hyundai 🇰🇷", "FC Seoul 🇰🇷", "Shanghai Port 🇨🇳", "Beijing Guoan 🇨🇳", "Shandong Taishan 🇨🇳", "Sydney FC 🇦🇺", "Melbourne City 🇦🇺", "Persepolis 🇮🇷", "Esteghlal 🇮🇷",
+        
+        // 🇪🇬🇲🇦🇿🇦 ÁFRICA
+        "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Pyramids 🇪🇬", "Wydad Casablanca 🇲🇦", "Raja Casablanca 🇲🇦", "RS Berkane 🇲🇦", "Mamelodi Sundowns 🇿🇦", "Orlando Pirates 🇿🇦", "Kaizer Chiefs 🇿🇦", "Espérance de Tunis 🇹🇳", "CR Belouizdad 🇩🇿"
     ];
 
     const eliteClubs = [
+        // A Elite Absoluta Européia (Somente os Gigantes Reais)
         "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", 
         "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
         "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", 
         "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "Napoli 🇮🇹", 
         "PSG 🇫🇷", 
+        // Gigantes Árabes (Poder Financeiro Absurdo)
         "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦", "Al-Ittihad 🇸🇦"
     ];
 
@@ -262,13 +298,14 @@
         let pool = p.isProdigy ? [...baseClubs, ...eliteClubs] : baseClubs;
         p.club = pool[Math.floor(Math.random() * pool.length)];
 
-        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿") || p.club.includes("🇧🇪") || p.club.includes("🇨🇭") || p.club.includes("🇬🇷") || p.club.includes("🇦🇹") || p.club.includes("🇨🇿") || p.club.includes("🇭🇺") || p.club.includes("🇵🇱") || p.club.includes("🇫🇮") || p.club.includes("🇸🇪") || p.club.includes("🇳🇴") || p.club.includes("🇩🇰") || p.club.includes("🇭🇷") || p.club.includes("🇷🇸") || p.club.includes("🇷🇴") || p.club.includes("🇧🇬") || p.club.includes("🇺🇦")) {
+        // IA para reconhecer os continentes baseada nas bandeiras
+        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿") || p.club.includes("🇧🇪") || p.club.includes("🇨🇭") || p.club.includes("🇬🇷") || p.club.includes("🇦🇹") || p.club.includes("🇨🇿") || p.club.includes("🇭🇺") || p.club.includes("🇵🇱") || p.club.includes("🇫🇮") || p.club.includes("🇸🇪") || p.club.includes("🇳🇴") || p.club.includes("🇩🇰") || p.club.includes("🇭🇷") || p.club.includes("🇷🇸") || p.club.includes("🇷🇴") || p.club.includes("🇧🇬") || p.club.includes("🇺🇦") || p.club.includes("🇮🇪") || p.club.includes("🇮🇸") || p.club.includes("🇨🇾") || p.club.includes("🇮🇱") || p.club.includes("🇸🇰") || p.club.includes("🇸🇮") || p.club.includes("🇧🇦") || p.club.includes("🏴󠁧󠁢󠁷󠁬󠁳󠁿")) {
             p.origin = "Europe"; document.getElementById('icone-continente').innerText = "🏆 Euro";
-        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦")) {
+        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦") || p.club.includes("🇨🇳") || p.club.includes("🇦🇺") || p.club.includes("🇮🇷")) {
             p.origin = "Asia"; document.getElementById('icone-continente').innerText = "🏆 Copa Ásia";
-        } else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽")) {
+        } else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽") || p.club.includes("🇨🇷") || p.club.includes("🇭🇳") || p.club.includes("🇨🇦")) {
             p.origin = "N. America"; document.getElementById('icone-continente').innerText = "🏆 Copa Ouro";
-        } else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦") || p.club.includes("🇿🇦") || p.club.includes("🇹🇳")) {
+        } else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦") || p.club.includes("🇿🇦") || p.club.includes("🇹🇳") || p.club.includes("🇩🇿")) {
             p.origin = "Africa"; document.getElementById('icone-continente').innerText = "🏆 CANA";
         } else {
             p.origin = "S. America"; document.getElementById('icone-continente').innerText = "🏆 C. América";
