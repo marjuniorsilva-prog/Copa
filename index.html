@@ -44,7 +44,6 @@
         .offer-club { font-weight: bold; font-size: 12px; padding: 8px; flex-grow: 1; background: white;}
         .offer-val { background: #fbcfe8; font-weight: bold; font-size: 12px; padding: 8px; border-left: 1px solid #ccc; text-align: center; cursor: pointer;}
         
-        /* Novas Seções: Troféus e Estilo de Vida */
         .bottom-section { background: #fff; margin: 0 10px; border: 1px solid #ccc; text-align: center; border-radius: 4px; padding-bottom: 5px; margin-bottom: 10px;}
         .bottom-title { background: #6b21a8; color: white; font-size: 11px; font-weight: bold; padding: 2px; }
         .trophy-grid { display: flex; justify-content: space-around; padding-top: 5px; font-size: 18px; font-weight: bold; }
@@ -134,7 +133,6 @@
 </div>
 
 <script>
-    // BANCO DE DADOS
     const baseClubs = [
         "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Peñarol 🇺🇾", "Atlético Nacional 🇨🇴",
         "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Betis 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Bayer Leverkusen 🇩🇪", "Lyon 🇫🇷", "Benfica 🇵🇹", "Porto 🇵🇹", "Ajax 🇳🇱", "Galatasaray 🇹🇷",
@@ -160,7 +158,8 @@
 
     function initPlayer() {
         p.isProdigy = Math.random() > 0.85; 
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 5) + 74 : Math.floor(Math.random() * 8) + 60;
+        // OVR Inicial ajustado para padrão de primeira divisão
+        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 66;
         
         p.ovr = baseOvr; p.prime = baseOvr;
         p.pac = baseOvr + Math.floor(Math.random()*8); p.sho = baseOvr + Math.floor(Math.random()*6);
@@ -170,7 +169,6 @@
         let pool = p.isProdigy ? [...baseClubs, ...eliteClubs] : baseClubs;
         p.club = pool[Math.floor(Math.random() * pool.length)];
 
-        // Define o continente para os Títulos
         if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷")) {
             p.origin = "Europe"; document.getElementById('icone-continente').innerText = "🏆 Euro";
         } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷")) {
@@ -203,11 +201,9 @@
     }
 
     function atualizarUI() {
-        // Atributos
         ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
         document.getElementById('attr-vals').innerHTML = `<div>${p.ovr}</div><div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
         
-        // Topo
         document.getElementById('hdr-age').innerText = (p.age === 15) ? "15" : p.age;
         if(p.ovr > p.prime) p.prime = p.ovr;
         document.getElementById('hdr-prime').innerText = p.prime;
@@ -216,7 +212,6 @@
         if(p.age > 33) valBase = Math.floor(valBase * 0.3);
         document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : "€" + valBase + "m";
         
-        // Totais e Cartões
         document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
         document.getElementById('tot-app').innerText = p.totals.app; document.getElementById('tot-gol').innerText = p.totals.gol;
         document.getElementById('tot-ass').innerText = p.totals.ass;
@@ -224,13 +219,12 @@
         
         document.getElementById('maj-cont').innerText = p.totals.cont; document.getElementById('maj-wc').innerText = p.totals.wc; document.getElementById('maj-bdor').innerText = p.totals.bdor;
         
-        // Estilo de Vida (House & Car baseados no nível e sucesso)
         p.wealth = p.prime + (p.totals.gol * 0.1) + (p.totals.app * 0.05);
         let h = "🏠<br>Casa Simples", c = "🚲<br>Bicicleta";
         if(p.wealth > 75) { h = "🏠<br>Apartamento"; c = "🚗<br>Carro Popular"; }
         if(p.wealth > 85) { h = "🏡<br>Casa de Luxo"; c = "🚙<br>SUV Importado"; }
         if(p.wealth > 95) { h = "🏰<br>Mansão"; c = "🏎️<br>Porsche"; }
-        if(p.wealth > 105){ h = "🏝️<br>Palácio"; c = "🏎️<br>Frota de Supercarros"; }
+        if(p.wealth > 105){ h = "🏝️<br>Palácio"; c = "🏎️<br>Frota Supercarros"; }
         document.getElementById('life-house').innerHTML = h; document.getElementById('life-car').innerHTML = c;
     }
 
@@ -239,28 +233,35 @@
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { if (p.age >= 39) { finalizarCarreira(); return; } p.age += 3; currentStep++; }
         
-        // Evolução
-        if (p.age <= 27) {
-            let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 4)) + 1;
-            p.ovr += g; p.sho += g; p.dri += g; p.pac += 1;
+        // Evolução Acelerada e Balanceada
+        if (p.age <= 21) {
+            let g = Math.floor(Math.random() * (p.isProdigy ? 5 : 4)) + 4; // Salto enorme na juventude (4 a 8 pontos)
+            p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
+        } else if (p.age <= 27) {
+            let g = Math.floor(Math.random() * 3) + 2; // Refinamento de craque (2 a 4 pontos)
+            p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
-            let d = Math.floor(Math.random() * 5) + 1;
-            p.ovr -= Math.floor(d/2); p.pac -= (d+2); p.phy -= d;
+            let d = Math.floor(Math.random() * 4) + 2; // Queda pós-auge (2 a 5 pontos)
+            p.ovr -= d; p.pac -= (d+3); p.phy -= d;
         }
         
-        // Stats de Campo e Cartões Realistas
-        let apps = 90 + Math.floor(Math.random() * 30);
-        let gol = Math.floor(apps * (p.sho / 100) * (Math.random() * 0.6 + 0.3));
-        let ass = Math.floor(apps * (p.pas / 100) * 0.4);
+        let apps = 100 + Math.floor(Math.random() * 45);
+        let formGols = Math.random() * 0.6 + 0.5;
+        let shootFactor = Math.pow(p.sho / 100, 2);
+        let gol = Math.floor(apps * shootFactor * formGols);
         
-        // Simulação de Cartões (Atacantes tomam poucos vermelhos, mas amarelos acontecem)
-        let yc = Math.floor(Math.random() * 12); // 0 a 11 cartões amarelos em 3 anos
-        let rc = Math.random() > 0.8 ? 1 : 0; // 20% de chance de tomar 1 vermelho
+        if (p.sho >= 90 && Math.random() > 0.4) {
+            gol += Math.floor(Math.random() * 30) + 10;
+        }
+
+        let ass = Math.floor(apps * (p.pas / 100) * (Math.random() * 0.3 + 0.2));
+        
+        let yc = Math.floor(Math.random() * 12);
+        let rc = Math.random() > 0.8 ? 1 : 0;
         
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         p.totals.yc += yc; p.totals.rc += rc;
         
-        // Títulos
         let tDom = 0, tInt = 0;
         if(p.ovr > 78 && Math.random() > 0.4) { tDom = Math.floor(Math.random()*3); p.totals.dom += tDom; }
         if(p.ovr > 84 && Math.random() > 0.6) { tInt = Math.floor(Math.random()*2); p.totals.int += tInt; }
@@ -269,7 +270,6 @@
         if(p.age % 4 === 0 && p.ovr > 87 && Math.random() > 0.8) p.totals.wc++;
         if(p.ovr >= 91 && gol > 60 && Math.random() > 0.6) p.totals.bdor++;
 
-        // Atualizar Linha
         let tag = p.transferFee ? `<div class="transfer-fee">🔁 ${p.transferFee}</div>` : "";
         document.getElementById(`club-box-${currentStep}`).innerHTML = `${p.club} ${tag}`;
         document.getElementById(`row-right-${currentStep}`).innerHTML = `<div>${tDom} <span style="color:#6b7280; font-size:10px;">/</span> ${tInt}</div><div>${gol}</div><div>${ass}</div>`;
