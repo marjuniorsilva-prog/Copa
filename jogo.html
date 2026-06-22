@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Penalty Simulator Pro: Edição Compacta</title>
+    <title>Penalty Simulator Pro: Arena Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
 
@@ -16,21 +16,20 @@
         .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; padding: 20px; text-align: center; }
         h1 { margin-bottom: 10px; font-size: 32px; color: #f59e0b; text-shadow: 0 4px 10px rgba(245,158,11,0.3); letter-spacing: 2px; }
         button.action-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 12px 35px; font-size: 20px; font-weight: bold; border-radius: 40px; cursor: pointer; margin-top: 20px; box-shadow: 0 6px 20px rgba(29,78,216,0.4); transition: all 0.2s; text-transform: uppercase; }
-        button.action-btn:hover { transform: scale(1.05); }
 
-        /* PLACAR AJUSTADO (MAIS COMPACTO) */
-        .scoreboard { background: rgba(15, 23, 42, 0.95); padding: 8px 12px; z-index: 10; border-bottom: 3px solid #f59e0b; display: flex; flex-direction: column; align-items: center; }
+        /* PLACAR ULTRA COMPACTO */
+        .scoreboard { background: rgba(15, 23, 42, 0.95); padding: 6px 12px; z-index: 10; border-bottom: 2px solid #f59e0b; display: flex; flex-direction: column; align-items: center; }
         .teams-row { display: flex; justify-content: space-between; width: 100%; align-items: center; }
-        .team-info { display: flex; flex-direction: column; align-items: center; width: 40%; }
-        .team-name { font-size: 14px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; }
+        .team-info { display: flex; flex-direction: column; align-items: center; width: 38%; }
+        .team-name { font-size: 13px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; }
         
-        .kicks-tracker { display: flex; gap: 4px; margin-top: 4px; }
-        .kick-circle { width: 16px; height: 16px; border-radius: 50%; background: #334155; border: 1.5px solid #475569; display: flex; justify-content: center; align-items: center; font-size: 9px; font-weight: bold; }
-        .kick-hit { background: #10b981; border-color: #34d399; box-shadow: 0 0 6px #10b981; }
-        .kick-miss { background: #ef4444; border-color: #f87171; box-shadow: 0 0 6px #ef4444; }
-        .score-number { font-size: 32px; font-weight: bold; color: #f59e0b; margin: 0 15px; line-height: 1; }
+        .kicks-tracker { display: flex; gap: 3px; margin-top: 2px; }
+        .kick-circle { width: 13px; height: 13px; border-radius: 50%; background: #334155; border: 1px solid #475569; display: flex; justify-content: center; align-items: center; font-size: 0px; }
+        .kick-hit { background: #10b981; border-color: #34d399; box-shadow: 0 0 5px #10b981; }
+        .kick-miss { background: #ef4444; border-color: #f87171; box-shadow: 0 0 5px #ef4444; }
+        .score-number { font-size: 28px; font-weight: bold; color: #f59e0b; margin: 0 12px; line-height: 1; }
 
-        .turn-banner { width: 100%; text-align: center; padding: 6px; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; z-index: 9; }
+        .turn-banner { width: 100%; text-align: center; padding: 5px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; z-index: 9; }
         .turn-kicking { background: #2563eb; }
         .turn-defending { background: #d97706; }
 
@@ -44,14 +43,14 @@
         .net-shake { animation: shakeNet 0.5s ease-in-out; }
         @keyframes shakeNet {
             0% { transform: scaleY(1); }
-            20% { transform: scaleY(1.08) scaleX(1.02); background-color: rgba(255,255,255,0.25); }
+            20% { transform: scaleY(1.08) scaleX(1.02); }
             100% { transform: scaleY(1); }
         }
 
-        /* Zonas de Clique Ativas */
-        .click-zones { position: absolute; width: 100%; height: 100%; display: flex; z-index: 10; }
-        .zone { flex: 1; height: 100%; cursor: pointer; display: flex; justify-content: center; align-items: center; pointer-events: auto; }
-        .zone-indicator { font-size: 24px; opacity: 0; transition: opacity 0.2s; color: #f59e0b; }
+        /* Zonas de Clique do Gol */
+        .click-zones { position: absolute; width: 100%; height: 100%; display: flex; z-index: 15; }
+        .zone { flex: 1; height: 100%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .zone-indicator { font-size: 22px; opacity: 0; transition: opacity 0.2s; color: #f59e0b; }
         .zone:hover .zone-indicator { opacity: 0.6; }
 
         /* GOLEIRO */
@@ -78,19 +77,19 @@
         .impact-container { width: 100%; height: 20px; background: linear-gradient(to right, #ef4444 0%, #22c55e 45%, #22c55e 55%, #ef4444 100%); border-radius: 12px; position: relative; border: 1px solid #475569; }
         .impact-marker { position: absolute; top: 0; left: 0%; width: 6px; height: 100%; background: #ffffff; border: 1px solid black; box-shadow: 0 0 6px #fff; }
 
-        /* MENSAGEM */
-        .message-overlay { position: absolute; top: 40%; left: 0; width: 100%; text-align: center; font-size: 40px; font-weight: bold; text-transform: uppercase; z-index: 40; opacity: 0; transform: scale(0.3); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
+        /* MENSAGEM OVERLAY */
+        .message-overlay { position: absolute; top: 40%; left: 0; width: 100%; text-align: center; font-size: 38px; font-weight: bold; text-transform: uppercase; z-index: 40; opacity: 0; transform: scale(0.3); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
         .show-msg { opacity: 1; transform: scale(1); text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
 
-<div class="container" id="mainContainer">
+<div class="container">
     
     <div id="startScreen" class="overlay-screen">
         <div style="font-size: 60px; margin-bottom: 10px;">⚽</div>
         <h1>DISPUTA DE PÊNALTIS PRO</h1>
-        <p style="font-size: 14px; color: #94a3b8; max-width: 80%;">Calibre a força e o ponto de impacto. Clique no gol para interagir nos dois turnos!</p>
+        <p style="font-size: 14px; color: #94a3b8; max-width: 80%;">Calibre a força e o ponto de impacto. Clique no gol para acionar as jogadas!</p>
         <button class="action-btn" onclick="startGame()">JOGAR</button>
     </div>
 
@@ -109,7 +108,7 @@
             </div>
             <div style="display: flex; align-items: center;">
                 <span class="score-number" id="p1Score">0</span>
-                <span style="color: #64748b; font-weight: bold; font-size: 18px;">x</span>
+                <span style="color: #64748b; font-weight: bold; font-size: 16px;">x</span>
                 <span class="score-number" id="aiScore">0</span>
             </div>
             <div class="team-info">
@@ -158,7 +157,7 @@
 </div>
 
 <script>
-    // --- SINTETIZADOR DE ÁUDIO ---
+    // --- ÁUDIO ---
     const AudioEngine = {
         ctx: null,
         init() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -197,7 +196,7 @@
         }
     };
 
-    // --- VARIÁVEIS DE JOGO ---
+    // --- LOGICA ---
     let score = { player: 0, ai: 0 }, kicksTaken = { player: 0, ai: 0 }, history = { player: [], ai: [] };
     let isPlayerTurnToShoot = true, actionInProgress = false, isSuddenDeath = false;
     const maxRegularKicks = 5;
@@ -210,3 +209,314 @@
     let hudAnimFrame = null;
 
     const gkBox = document.getElementById('gkBox'); const gkBody = document.getElementById('gkBody');
+    const ball = document.getElementById('ball'); const ballShadow = document.getElementById('ballShadow');
+    const net = document.getElementById('net'); const resultMsg = document.getElementById('resultMsg');
+    const turnBanner = document.getElementById('turnBanner');
+    const playerKicksDiv = document.getElementById('playerKicks'); const aiKicksDiv = document.getElementById('aiKicks');
+    const calibrationHud = document.getElementById('calibrationHud');
+    const powerFill = document.getElementById('powerFill'); const powerMarker = document.getElementById('powerMarker');
+    const impactMarker = document.getElementById('impactMarker'); const hudTitle = document.getElementById('hudTitle');
+
+    const positionsX = { 'left': '22%', 'center': '50%', 'right': '78%' };
+
+    function startGame() {
+        AudioEngine.init();
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('gameScoreboard').style.display = 'flex';
+        document.getElementById('turnBanner').style.display = 'block';
+        document.getElementById('gameArea').style.display = 'block';
+        
+        // CORREÇÃO CRUCIAL: O clique global no campo SÓ escuta se o mini-game de chutar estiver ativo
+        document.getElementById('gameArea').addEventListener('click', function() {
+            if (calibrationActive) handleCalibrationClick();
+        });
+        
+        renderKicksTracker();
+        updateUI();
+    }
+
+    function renderKicksTracker() {
+        playerKicksDiv.innerHTML = ''; aiKicksDiv.innerHTML = '';
+        let displayCount = Math.max(maxRegularKicks, history.player.length + (isPlayerTurnToShoot ? 1 : 0));
+        if (isSuddenDeath) displayCount = history.player.length + 1;
+        for(let i = 0; i < displayCount; i++) {
+            playerKicksDiv.innerHTML += getCircleHtml(history.player[i]);
+            aiKicksDiv.innerHTML += getCircleHtml(history.ai[i]);
+        }
+    }
+
+    function getCircleHtml(result) {
+        if (result === true) return '<div class="kick-circle kick-hit"></div>';
+        if (result === false) return '<div class="kick-circle kick-miss"></div>';
+        return '<div class="kick-circle"></div>';
+    }
+
+    // Clique nas Zonas do Gol (Interação Principal)
+    function selectZone(zone, event) {
+        event.stopPropagation(); // Evita interferência com cliques externos
+        if (actionInProgress || calibrationActive) return;
+        
+        if (isPlayerTurnToShoot) {
+            selectedZone = zone;
+            startCalibration();
+        } else {
+            // MÁQUINA DISPARA O CHUTE IMEDIATAMENTE AQUI
+            playAiKick(zone);
+        }
+    }
+
+    function startCalibration() {
+        calibrationActive = true;
+        calibrationStep = 1;
+        powerVal = 0; impactVal = 0; 
+        hudTitle.innerText = "1. CLIQUE NA TELA PARA TRAVAR A FORÇA";
+        calibrationHud.style.display = 'flex';
+        updateCalibrationLoop();
+    }
+
+    function updateCalibrationLoop() {
+        if (!calibrationActive) return;
+
+        if (calibrationStep === 1) {
+            powerVal += powerDir;
+            if (powerVal >= 100 || powerVal <= 0) powerDir *= -1;
+            powerFill.style.width = powerVal + '%';
+            powerMarker.style.left = powerVal + '%';
+        } else if (calibrationStep === 2) {
+            impactVal += impactDir;
+            if (impactVal >= 100 || impactVal <= 0) impactDir *= -1;
+            impactMarker.style.left = impactVal + '%';
+        }
+
+        hudAnimFrame = requestAnimationFrame(updateCalibrationLoop);
+    }
+
+    function handleCalibrationClick() {
+        if (calibrationStep === 1) {
+            calibrationStep = 2;
+            hudTitle.innerText = "2. CLIQUE NA TELA PARA TRAVAR O IMPACTO";
+        } else if (calibrationStep === 2) {
+            calibrationActive = false;
+            cancelAnimationFrame(hudAnimFrame);
+            calibrationHud.style.display = 'none';
+            executePlayerKick();
+        }
+    }
+
+    function executePlayerKick() {
+        actionInProgress = true;
+        AudioEngine.playKick();
+
+        const options = ['left', 'center', 'right'];
+        const aiChoice = options[Math.floor(Math.random() * options.length)];
+
+        let ballTargetX = positionsX[selectedZone];
+        let ballTargetY = '68%'; 
+        let kickResult = "normal"; 
+
+        if (powerVal > 85) {
+            kickResult = "isolou";
+            ballTargetY = '4%'; 
+        } else if (powerVal < 25) {
+            kickResult = "grama";
+            ballTargetY = '88%'; 
+        }
+
+        if (kickResult === "normal") {
+            if (impactVal < 22) {
+                kickResult = "torto-esquerda";
+                ballTargetX = '2%'; 
+            } else if (impactVal > 78) {
+                kickResult = "torto-direita";
+                ballTargetX = '98%'; 
+            }
+        }
+
+        ball.classList.add('ball-spin');
+        ball.style.left = ballTargetX;
+        ball.style.bottom = ballTargetY;
+        ball.style.transform = 'translateX(-50%) scale(0.35)';
+
+        ballShadow.style.left = ballTargetX;
+        ballShadow.style.bottom = '42%'; 
+        ballShadow.style.opacity = '0.1';
+
+        gkBody.innerText = '🧤';
+        if (aiChoice === 'left') gkBox.classList.add('gk-dive-left');
+        else if (aiChoice === 'right') gkBox.classList.add('gk-dive-right');
+        else gkBox.classList.add('gk-jump-center');
+
+        setTimeout(() => {
+            ball.classList.remove('ball-spin');
+            if (kickResult === "isolou") {
+                resultMsg.innerText = "ISOLOU! 🚀 PRA CIMA!";
+                resultMsg.style.color = "#ef4444";
+                AudioEngine.playCrowd(false);
+                history.player.push(false);
+            } else if (kickResult === "grama") {
+                resultMsg.innerText = "CHUTOU A GRAMA! 🍂 FRACO!";
+                resultMsg.style.color = "#eab308";
+                AudioEngine.playSave();
+                history.player.push(false);
+                ball.style.bottom = '85%'; 
+            } else if (kickResult === "torto-esquerda" || kickResult === "torto-direita") {
+                resultMsg.innerText = "PEGOU TORTO! ↪️ PARA FORA!";
+                resultMsg.style.color = "#ef4444";
+                AudioEngine.playCrowd(false);
+                history.player.push(false);
+            } else {
+                if (selectedZone !== aiChoice) {
+                    net.classList.add('net-shake');
+                    resultMsg.innerText = "GOOOOOL! ⚽ PERFEITO!";
+                    resultMsg.style.color = "#10b981";
+                    AudioEngine.playCrowd(true);
+                    score.player++;
+                    history.player.push(true);
+                } else {
+                    AudioEngine.playSave();
+                    resultMsg.innerText = "DEFENDEU O GOLEIRO! 🧤";
+                    resultMsg.style.color = "#ef4444";
+                    history.player.push(false);
+                    ball.style.bottom = '55%'; ball.style.left = (selectedZone === 'left') ? '35%' : '65%';
+                }
+            }
+
+            kicksTaken.player++;
+            document.getElementById('p1Score').innerText = score.player;
+            renderKicksTracker();
+            resultMsg.classList.add('show-msg');
+            setTimeout(() => { resetRound(); }, 1800);
+        }, 400);
+    }
+
+    // DISPARO SEGURO DA MÁQUINA CHUTAR
+    function playAiKick(playerGkChoice) {
+        actionInProgress = true;
+        AudioEngine.playKick();
+
+        const options = ['left', 'center', 'right'];
+        const aiTarget = options[Math.floor(Math.random() * options.length)];
+        const aiQuality = Math.random(); 
+
+        let ballTargetX = positionsX[aiTarget];
+        let ballTargetY = '68%';
+        let aiErro = false;
+
+        if (aiQuality > 0.90) {
+            aiErro = true;
+            ballTargetY = '4%'; 
+        } else if (aiQuality < 0.08) {
+            aiErro = true;
+            ballTargetX = '2%'; 
+        }
+
+        gkBody.innerText = '🧤';
+        if (playerGkChoice === 'left') gkBox.classList.add('gk-dive-left');
+        else if (playerGkChoice === 'right') gkBox.classList.add('gk-dive-right');
+        else gkBox.classList.add('gk-jump-center');
+
+        ball.classList.add('ball-spin');
+        ball.style.left = ballTargetX;
+        ball.style.bottom = ballTargetY;
+        ball.style.transform = 'translateX(-50%) scale(0.35)';
+
+        setTimeout(() => {
+            ball.classList.remove('ball-spin');
+
+            if (aiErro) {
+                resultMsg.innerText = "A MÁQUINA MANDOU PARA FORA! 💨";
+                resultMsg.style.color = "#10b981";
+                history.ai.push(false);
+            } else if (aiTarget === playerGkChoice) {
+                AudioEngine.playSave();
+                resultMsg.innerText = "DEFENDEU! LINDA PONTE! 🧤";
+                resultMsg.style.color = "#10b981";
+                history.ai.push(false);
+                ball.style.bottom = '55%';
+            } else {
+                net.classList.add('net-shake');
+                AudioEngine.playCrowd(true);
+                resultMsg.innerText = "GOL DA MÁQUINA! ⚽";
+                resultMsg.style.color = "#ef4444";
+                score.ai++;
+                history.ai.push(true);
+            }
+
+            kicksTaken.ai++;
+            document.getElementById('aiScore').innerText = score.ai;
+            renderKicksTracker();
+            resultMsg.classList.add('show-msg');
+
+            setTimeout(() => { resetRound(); }, 1800);
+        }, 400);
+    }
+
+    function resetRound() {
+        resultMsg.classList.remove('show-msg');
+        net.classList.remove('net-shake');
+        
+        ball.style.transition = 'none'; ballShadow.style.transition = 'none'; gkBox.style.transition = 'none';
+        ball.style.left = '50%'; ball.style.bottom = '8%'; ball.style.transform = 'translateX(-50%) scale(1)';
+        ballShadow.style.left = '50%'; ballShadow.style.bottom = '6%'; ballShadow.style.transform = 'translateX(-50%) scale(1)'; ballShadow.style.opacity = '0.5';
+        
+        gkBody.innerText = '🧍‍♂️'; gkBox.className = 'goalkeeper-box';
+
+        setTimeout(() => {
+            ball.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            ballShadow.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            gkBox.style.transition = 'all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            checkMatchStatus();
+        }, 50);
+    }
+
+    function checkMatchStatus() {
+        let pRem = maxRegularKicks - kicksTaken.player;
+        let aiRem = maxRegularKicks - kicksTaken.ai;
+
+        if (!isSuddenDeath && kicksTaken.player <= maxRegularKicks && kicksTaken.ai <= maxRegularKicks) {
+            if (score.player > score.ai + aiRem) endGame("🏆 CAMPEÃO!", "Você dominou as traves e levou o título!");
+            else if (score.ai > score.player + pRem) endGame("❌ ELIMINADO!", "A máquina levou a melhor na disputa.");
+            else if (kicksTaken.player === maxRegularKicks && kicksTaken.ai === maxRegularKicks) {
+                if (score.player === score.ai) { isSuddenDeath = true; nextTurn(); }
+            } else { nextTurn(); }
+        } 
+        else if (isSuddenDeath) {
+            if (kicksTaken.player === kicksTaken.ai) {
+                if (score.player > score.ai) endGame("🏆 VITÓRIA NAS ALTERNADAS!", "Que frieza! Você é o campeão!");
+                else if (score.ai > score.player) endGame("❌ FIM DE DRAMA!", "Você perdeu na morte súbita.");
+                else nextTurn();
+            } else { nextTurn(); }
+        }
+    }
+
+    function nextTurn() {
+        isPlayerTurnToShoot = !isPlayerTurnToShoot;
+        updateUI();
+        if (isSuddenDeath) renderKicksTracker();
+        actionInProgress = false;
+    }
+
+    function updateUI() {
+        if (isPlayerTurnToShoot) {
+            turnBanner.innerText = isSuddenDeath ? "☠️ MORTE SÚBITA: CALIBRE E CHUTE" : "⚽ SUA VEZ: MIRE NO GOL E CALIBRE O CHUTE";
+            turnBanner.className = "turn-banner turn-kicking";
+        } else {
+            turnBanner.innerText = isSuddenDeath ? "☠️ MORTE SÚBITA: ESCOLHA O CANTO DO GOL!" : "🧤 SUA VEZ DE DEFENDER: ESCOLHA O CANTO DO GOL!";
+            turnBanner.className = "turn-banner turn-defending";
+        }
+    }
+
+    function endGame(title, subtitle) {
+        document.getElementById('endScreen').style.display = 'flex';
+        document.getElementById('endTitle').innerText = title;
+        document.getElementById('endSubtitle').innerText = subtitle;
+        if(title.includes("CAMPEÃO") || title.includes("VITÓRIA")) {
+            document.getElementById('endIcon').innerText = "🥇"; document.getElementById('endTitle').style.color = "#10b981";
+        } else {
+            document.getElementById('endIcon').innerText = "😭"; document.getElementById('endTitle').style.color = "#ef4444";
+        }
+    }
+</script>
+
+</body>
+</html>
