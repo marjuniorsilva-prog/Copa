@@ -106,7 +106,6 @@
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
         osc.start(); osc.stop(audioCtx.currentTime + 0.1);
 
-        // Ruído de impacto nas luvas
         let bufferSize = audioCtx.sampleRate * 0.08;
         let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         let data = buffer.getChannelData(0);
@@ -124,7 +123,6 @@
 
     function playPostSound() {
         if (!audioCtx) return;
-        // Som metálico estridente da trave
         let freqs = [650, 900, 1200];
         freqs.forEach(f => {
             let osc = audioCtx.createOscillator();
@@ -136,7 +134,6 @@
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start(); osc.stop(audioCtx.currentTime + 0.45);
         });
-        // Impacto grave do poste
         let thud = audioCtx.createOscillator();
         let thudGain = audioCtx.createGain();
         thud.frequency.setValueAtTime(180, audioCtx.currentTime);
@@ -155,7 +152,7 @@
         let lastOut = 0.0;
         for (let i = 0; i < bufferSize; i++) {
             let white = Math.random() * 2 - 1;
-            data[i] = (lastOut + (0.02 * white)) / 1.02; // Filtro de calor humano
+            data[i] = (lastOut + (0.02 * white)) / 1.02;
             lastOut = data[i];
             data[i] *= 3.8; 
         }
@@ -192,7 +189,7 @@
         let filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
         filter.frequency.setValueAtTime(340, audioCtx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(170, audioCtx.currentTime + 0.5); // Frequência cai (gemido coletivo)
+        filter.frequency.exponentialRampToValueAtTime(170, audioCtx.currentTime + 0.5);
         
         let gain = audioCtx.createGain();
         gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
@@ -321,7 +318,7 @@
             ball.targetX = chosen.x; ball.targetY = chosen.y;
             ball.speed = 14 + Math.random() * 9;
             
-            playKickSound(); // SOM DE CHUTE DA IA
+            playKickSound(); 
             gameState = 'BALL_FLYING';
 
             if(gk.targetX === 425) {
@@ -334,7 +331,7 @@
 
     window.addEventListener('mousedown', (event) => {
         if (canvas.style.display === 'none') return;
-        initAudio(); // Forçar ativação do áudio no clique
+        initAudio(); 
         
         if (turn === 'PLAYER') {
             if (gameState === 'AIMING_ARROW') {
@@ -350,7 +347,7 @@
                 gk.targetY = 170 + Math.random() * 60;
                 gk.state = 'DIVING';
                 
-                playKickSound(); // SOM DE CHUTE DO JOGADOR
+                playKickSound(); 
                 gameState = 'BALL_FLYING';
             }
         } else if (turn === 'AI' && gameState === 'AI_SHOOTING') {
@@ -407,20 +404,19 @@
                     if (turn === 'PLAYER') { matchData.playerGoals++; matchData.playerHistory.push('GOAL'); }
                     else { matchData.aiGoals++; matchData.aiHistory.push('GOAL'); }
                     
-                    playCheerSound(); // TORCIDA COMEMORA
+                    playCheerSound(); 
                 } else if (isGoal && distanceToGk < saveDistance) {
                     resultText = "DEFENDEU!"; resultColor = "#facc15";
                     if (turn === 'PLAYER') matchData.playerHistory.push('MISS');
                     else matchData.aiHistory.push('MISS');
                     
-                    playSaveSound();  // GOLEIRO DEFENDE
-                    playLamentSound(); // TORCIDA LAMENTA
+                    playSaveSound();  
+                    playLamentSound(); 
                 } else {
-                    // Chance de acertar a trave nas finalizações erradas
                     let hitPost = Math.random() < 0.35;
                     if (hitPost) {
                         resultText = "NA TRAVE!!!"; resultColor = "#ef4444";
-                        playPostSound(); // BOLA NA TRAVE
+                        playPostSound(); 
                     } else {
                         resultText = "PARA FORA!"; resultColor = "#ef4444";
                     }
@@ -428,7 +424,7 @@
                     if (turn === 'PLAYER') matchData.playerHistory.push('MISS');
                     else matchData.aiHistory.push('MISS');
                     
-                    playLamentSound(); // TORCIDA LAMENTA
+                    playLamentSound(); 
                 }
 
                 if(turn === 'PLAYER') matchData.playerShots++; else matchData.aiShots++;
@@ -493,17 +489,14 @@
         if (canvas.style.display === 'none') return;
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        // Cenário: Estádio e Torcida
         ctx.fillStyle = '#090d16'; ctx.fillRect(0, 0, canvas.width, 100);
         ctx.fillStyle = '#111827'; ctx.fillRect(0, 40, canvas.width, 60);
         crowd.forEach(p => { ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); });
 
-        // Outdoor
         ctx.fillStyle = '#f97316'; ctx.fillRect(0, 100, canvas.width, 25);
         ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Ubuntu';
         ctx.fillText("FASE DE GRUPOS    -    PENALTY CHALLENGE PRO    -    RODADA " + currentRound, 40, 117);
 
-        // Gramado em Perspectiva
         let currentY = 125;
         for (let i = 0; i < 8; i++) {
             let stripeHeight = 15 + (i * 6);
@@ -512,11 +505,9 @@
             currentY += stripeHeight;
         }
 
-        // Linhas brancas
         ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 3;
         ctx.strokeRect(70, 270, 710, 210);
 
-        // Trave e Rede
         ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 7;
         ctx.strokeRect(goal.x, goal.y, goal.width, goal.height);
         ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
@@ -524,7 +515,6 @@
             ctx.beginPath(); ctx.moveTo(x, goal.y); ctx.lineTo(x, goal.y + goal.height); ctx.stroke();
         }
 
-        // Indicadores das 5 Cobranças
         let totalDots = Math.max(5, matchData.playerShots, matchData.aiShots);
         for(let i=0; i<totalDots; i++) {
             ctx.fillStyle = '#4b5563'; 
@@ -538,7 +528,6 @@
             ctx.beginPath(); ctx.arc(goal.x + goal.width - 30 - (i * 24), goal.y - 25, 8, 0, Math.PI*2); ctx.fill();
         }
 
-        // Elementos de Mira
         if (turn === 'PLAYER' && gameState === 'AIMING_ARROW') {
             ctx.save(); ctx.translate(ballOrigin.x, ballOrigin.y); ctx.rotate(arrowAngle);
             ctx.fillStyle = '#eab308'; ctx.beginPath();
@@ -552,7 +541,6 @@
             ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 14, 0, Math.PI*2); ctx.fill();
         }
 
-        // Goleiro
         ctx.fillStyle = turn === 'PLAYER' ? '#06b6d4' : '#ec4899';
         ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 25);
         ctx.fillStyle = '#111827'; ctx.fillRect(gk.x - gk.width/2, gk.y - 25, gk.width, 25);
@@ -561,7 +549,6 @@
         ctx.fillRect(gk.x - gk.width - 8, gk.y - gk.height + 15, 15, 15);
         ctx.fillRect(gk.x + gk.width - 7, gk.y - gk.height + 15, 15, 15);
 
-        // Jogador de costas
         if (turn === 'PLAYER') {
             ctx.fillStyle = '#2563eb'; 
             ctx.fillRect(player.x, player.y, 50, 40);
@@ -572,15 +559,13 @@
             ctx.fillRect(player.x + 32, player.y + 60, 10, 25);
         }
 
-        // Bola
         if (gameState !== 'START') {
             ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath();
             ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); stroke();
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke(); // CORRIGIDO AQUI!
         }
 
-        // Barra de Força Lateral
         if (gameState === 'AIMING_POWER') {
             ctx.fillStyle = '#1e293b'; ctx.fillRect(35, 180, 25, 180);
             let pColor = '#10b981';
@@ -589,7 +574,6 @@
             ctx.fillStyle = pColor; ctx.fillRect(35, 360, 25, -powerBar * 1.8);
         }
 
-        // Placar HUD
         ctx.fillStyle = 'rgba(15, 23, 42, 0.9)'; ctx.fillRect(canvas.width - 240, canvas.height - 95, 215, 75);
         ctx.lineWidth = 2; ctx.strokeStyle = '#eab308'; ctx.strokeRect(canvas.width - 240, canvas.height - 95, 215, 75);
         ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu';
@@ -599,7 +583,6 @@
         ctx.fillText(matchData.playerGoals, canvas.width - 55, canvas.height - 63);
         ctx.fillText(matchData.aiGoals, canvas.width - 55, canvas.height - 33);
 
-        // Banner de Instruções
         ctx.fillStyle = matchData.suddenDeath ? '#b91c1c' : (turn === 'PLAYER' ? '#1e3a8a' : '#c2410c');
         ctx.fillRect(0, 0, canvas.width, 40);
         ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu'; ctx.textAlign = 'center';
@@ -607,7 +590,6 @@
         statusMsg += turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE" : "SUA VEZ DE DEFENDER! CLIQUE NOS CANTOS DO GOL";
         ctx.fillText(statusMsg, canvas.width/2, 25); ctx.textAlign = 'left';
 
-        // Resultado temporário
         if (gameState === 'RESULT') {
             ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.fillRect(0, 200, canvas.width, 90);
             ctx.font = 'bold 42px Ubuntu'; ctx.fillStyle = resultColor; ctx.textAlign = 'center';
