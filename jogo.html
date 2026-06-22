@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minigame: Artilheiro Sniper</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { background-color: #87CEEB; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Oswald', sans-serif; }
+        
+        /* Container Principal do Jogo */
+        .game-area { width: 100%; max-width: 500px; height: 100vh; max-height: 800px; position: relative; background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 50%, #4ade80 50%, #15803d 100%); overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5);}
+
+        /* Placar superior */
+        .scoreboard { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; z-index: 10; display: flex; justify-content: space-around; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);}
+        .score-box { background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px; border: 2px solid white;}
+        .score-box span { font-size: 24px; color: #fbbf24; }
+
+        /* O Gol (Traves e Rede) */
+        .goal { position: absolute; top: 20%; left: 10%; width: 80%; height: 30%; border: 8px solid white; border-bottom: none; background: repeating-linear-gradient( 45deg, transparent, transparent 10px, rgba(255,255,255,0.3) 10px, rgba(255,255,255,0.3) 12px ), repeating-linear-gradient( -45deg, transparent, transparent 10px, rgba(255,255,255,0.3) 10px, rgba(255,255,255,0.3) 12px ); background-color: rgba(0, 0, 0, 0.1); z-index: 1;}
+
+        /* Alvo que se move */
+        .target { position: absolute; top: 10px; left: 0; width: 40px; height: 40px; background: red; border: 4px solid white; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 2; transition: left 0.1s linear;}
+        .target::after { content: ''; position: absolute; top: 10px; left: 10px; width: 12px; height: 12px; background: white; border-radius: 50%;}
+
+        /* A Bola */
+        .ball { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-size: 60px; z-index: 5; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.5));}
+
+        /* Mensagens na tela (GOL, TRAVE, etc) */
+        .message { position: absolute; top: 40%; left: 0; width: 100%; text-align: center; font-size: 60px; color: white; font-weight: bold; text-transform: uppercase; z-index: 20; opacity: 0; text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; transform: scale(0.5); transition: all 0.3s ease;}
+        .show-message { opacity: 1; transform: scale(1); }
+
+        /* Instrução inicial */
+        .instruction { position: absolute; bottom: 30%; left: 0; width: 100%; text-align: center; color: white; font-size: 18px; z-index: 10; background: rgba(0,0,0,0.6); padding: 10px; animation: piscar 1.5s infinite;}
+        @keyframes piscar { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
+</head>
+<body>
+
+<div class="game-area" id="gameArea">
+    <div class="scoreboard">
+        <div class="score-box">GOLS: <br><span id="score">0</span></div>
+        <div class="score-box">CHUTES: <br><span id="shots">0</span></div>
+    </div>
+
+    <div class="goal" id="goalBox">
+        <div class="target" id="target"></div>
+    </div>
+
+    <div class="instruction" id="instruction">TOQUE NO GOL PARA CHUTAR!</div>
+
+    <div class="message" id="msgGool">GOOOOOL! ⚽</div>
+    <div class="message" id="msgMiss">ISOLOU! ❌</div>
+
+    <div class="ball" id="ball">⚽</div>
+</div>
+
+<script>
+    const ball = document.getElementById('ball');
+    const target = document.getElementById('target');
+    const gameArea = document.getElementById('gameArea');
+    const msgGool = document.getElementById('msgGool');
+    const msgMiss = document.getElementById('msgMiss');
+    const scoreDisplay = document.getElementById('score');
+    const shotsDisplay = document.getElementById('shots');
+    const instruction = document.getElementById('instruction');
+
+    let gols = 0;
+    let chutes = 0;
+    let isKicking = false;
+    
+    // Variáveis do Alvo
+    let targetX = 0;
+    let targetDirection = 1; // 1 para direita, -1 para esquerda
+    let targetSpeed = 3;
+    let targetWidth = 40;
+    let goalWidth = 0;
+
+    // Função para mover o alvo de um lado para o outro
+    function moveTarget() {
+        goalWidth = document.getElementById('goalBox').offsetWidth;
+        targetX += targetSpeed * targetDirection;
+
+        // Bateu nas traves, inverte a direção
+        if (targetX >= goalWidth - targetWidth) {
+            targetX = goalWidth - targetWidth;
+            targetDirection = -1;
+        } else if (targetX <= 0) {
+            targetX = 0;
+            targetDirection = 1;
+        }
+
+        target.style.left = targetX + 'px';
+        requestAnimationFrame(moveTarget);
+    }
+
+    // Inicia o movimento do alvo
+    moveTarget();
+
+    // Evento de toque/clique para chutar a bola
+    gameArea.addEventListener('pointerdown', (e) => {
+        if (isKicking) return; // Impede chutar duas vezes seguidas
+        
+        isKicking = true;
+        instruction.style.display = 'none'; // Some o texto de instrução
+        chutes++;
+        shotsDisplay.innerText = chutes;
+
+        // Pega as coordenadas do clique
+        const rect = gameArea.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        // Animação da bola voando até o ponto clicado
+        ball.style.left = clickX + 'px';
+        ball.style.top = clickY + 'px';
+        ball.style.transform = 'translateX(-50%) scale(0.3)'; // Bola diminui simulando distância
+
+        // Espera o tempo da animação (500ms) para checar a colisão
+        setTimeout(() => {
+            checkCollision();
+        }, 500);
+    });
+
+    function checkCollision() {
+        const ballRect = ball.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+
+        // Checa se o centro da bola está dentro do alvo
+        const ballCenterX = ballRect.left + ballRect.width / 2;
+        const ballCenterY = ballRect.top + ballRect.height / 2;
+
+        const isHit = ballCenterX >= targetRect.left && 
+                      ballCenterX <= targetRect.right && 
+                      ballCenterY >= targetRect.top && 
+                      ballCenterY <= targetRect.bottom;
+
+        if (isHit) {
+            // GOOOOL
+            gols++;
+            scoreDisplay.innerText = gols;
+            msgGool.classList.add('show-message');
+            targetSpeed += 0.5; // Aumenta a dificuldade deixando o alvo mais rápido!
+            
+            // Efeito de tremer a tela
+            gameArea.style.transform = 'translate(5px, 5px)';
+            setTimeout(() => gameArea.style.transform = 'translate(0, 0)', 100);
+
+        } else {
+            // ERROU
+            msgMiss.classList.add('show-message');
+        }
+
+        // Reseta a bola para o próximo chute após 1.5 segundos
+        setTimeout(() => {
+            msgGool.classList.remove('show-message');
+            msgMiss.classList.remove('show-message');
+            
+            ball.style.transition = 'none'; // Tira animação para voltar instantaneamente
+            ball.style.left = '50%';
+            ball.style.top = 'auto';
+            ball.style.bottom = '10%';
+            ball.style.transform = 'translateX(-50%) scale(1)';
+            
+            // Restaura a transição para o próximo chute
+            setTimeout(() => {
+                ball.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                isKicking = false;
+            }, 50);
+
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
