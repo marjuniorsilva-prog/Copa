@@ -72,14 +72,25 @@
     canvas.width = 850;
     canvas.height = 480;
 
-    // --- SINTETIZADOR DE ÁUDIO NATIVO (WEB AUDIO API) ---
+    // --- SINTETIZADOR DE ÁUDIO NATIVO OTMIZADO (WEB AUDIO API) ---
     let audioCtx = null;
+    let sharedNoiseBuffer = null;
+
     function initAudio() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume();
+        }
+        // Pré-cacheia o buffer de ruído uma vez para evitar lag em tempo de jogo
+        if (audioCtx && !sharedNoiseBuffer) {
+            let bufferSize = audioCtx.sampleRate * 0.5; 
+            sharedNoiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            let data = sharedNoiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
         }
     }
 
@@ -88,116 +99,98 @@
         let osc = audioCtx.createOscillator();
         let gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.frequency.setValueAtTime(160, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.12);
-        gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.12);
-    }
-
-    function playSaveSound() {
-        if (!audioCtx) return;
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(55, audioCtx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.1);
         gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
         osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    }
 
-        let bufferSize = audioCtx.sampleRate * 0.08;
-        let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        let data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    function playSaveSound() {
+        if (!audioCtx || !sharedNoiseBuffer) return;
+        // Impacto sordo (luvas)
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+
+        // Tapinha de ruído
         let noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
+        noise.buffer = sharedNoiseBuffer;
         let filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass'; filter.frequency.setValueAtTime(500, audioCtx.currentTime);
+        filter.type = 'lowpass'; filter.frequency.setValueAtTime(400, audioCtx.currentTime);
         let noiseGain = audioCtx.createGain();
-        noiseGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        noiseGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
         noise.connect(filter); filter.connect(noiseGain); noiseGain.connect(audioCtx.destination);
-        noise.start();
+        noise.start(); noise.stop(audioCtx.currentTime + 0.06);
     }
 
     function playPostSound() {
         if (!audioCtx) return;
-        let freqs = [650, 900, 1200];
+        let freqs = [600, 850, 1100];
         freqs.forEach(f => {
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
             osc.type = 'sine';
             osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
             osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.45);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
         });
         let thud = audioCtx.createOscillator();
         let thudGain = audioCtx.createGain();
-        thud.frequency.setValueAtTime(180, audioCtx.currentTime);
-        thud.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.15);
-        thudGain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        thudGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        thud.frequency.setValueAtTime(170, audioCtx.currentTime);
+        thud.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.12);
+        thudGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        thudGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
         thud.connect(thudGain); thudGain.connect(audioCtx.destination);
-        thud.start(); thud.stop(audioCtx.currentTime + 0.15);
+        thud.start(); thud.stop(audioCtx.currentTime + 0.12);
     }
 
     function playCheerSound() {
-        if (!audioCtx) return;
-        let bufferSize = audioCtx.sampleRate * 2.5;
-        let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        let data = buffer.getChannelData(0);
-        let lastOut = 0.0;
-        for (let i = 0; i < bufferSize; i++) {
-            let white = Math.random() * 2 - 1;
-            data[i] = (lastOut + (0.02 * white)) / 1.02;
-            lastOut = data[i];
-            data[i] *= 3.8; 
-        }
+        if (!audioCtx || !sharedNoiseBuffer) return;
         let noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
+        noise.buffer = sharedNoiseBuffer;
+        noise.loop = true;
+
         let filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(380, audioCtx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.25);
+        filter.frequency.setValueAtTime(350, audioCtx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.2);
         
         let gain = audioCtx.createGain();
         gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.65, audioCtx.currentTime + 0.15);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.4);
+        gain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.0);
         
         noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-        noise.start();
+        noise.start(); noise.stop(audioCtx.currentTime + 2.0);
     }
 
     function playLamentSound() {
-        if (!audioCtx) return;
-        let bufferSize = audioCtx.sampleRate * 1.8;
-        let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        let data = buffer.getChannelData(0);
-        let lastOut = 0.0;
-        for (let i = 0; i < bufferSize; i++) {
-            let white = Math.random() * 2 - 1;
-            data[i] = (lastOut + (0.04 * white)) / 1.04;
-            lastOut = data[i];
-            data[i] *= 2.8;
-        }
+        if (!audioCtx || !sharedNoiseBuffer) return;
         let noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
+        noise.buffer = sharedNoiseBuffer;
+        noise.loop = true;
+
         let filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(340, audioCtx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(170, audioCtx.currentTime + 0.5);
+        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+        filter.frequency.linearRampToValueAtTime(160, audioCtx.currentTime + 0.4);
         
         let gain = audioCtx.createGain();
         gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.45, audioCtx.currentTime + 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.7);
+        gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
         
         noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-        noise.start();
+        noise.start(); noise.stop(audioCtx.currentTime + 1.5);
     }
 
     // --- BANCO DE DADOS DO CAMPEONATO ---
@@ -321,7 +314,8 @@
             playKickSound(); 
             gameState = 'BALL_FLYING';
 
-            if(gk.targetX === 425) {
+            // Só escolhe um canto se o jogador se manteve parado/não tomou decisão
+            if(gk.state === 'IDLE') {
                 const moves = [250, 425, 600];
                 gk.targetX = moves[Math.floor(Math.random()*3)];
                 gk.targetY = 200; gk.state = 'DIVING';
@@ -563,7 +557,7 @@
             ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath();
             ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke(); // CORRIGIDO AQUI!
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke(); 
         }
 
         if (gameState === 'AIMING_POWER') {
