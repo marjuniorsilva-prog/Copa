@@ -3,174 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Minigame: Artilheiro Sniper</title>
+    <title>Pênaltis: Herói ou Vilão</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { background-color: #87CEEB; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Oswald', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Oswald', sans-serif; }
+        body { background-color: #1e293b; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
         
-        /* Container Principal do Jogo */
-        .game-area { width: 100%; max-width: 500px; height: 100vh; max-height: 800px; position: relative; background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 50%, #4ade80 50%, #15803d 100%); overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5);}
+        .container { width: 100%; max-width: 500px; height: 100vh; max-height: 800px; position: relative; background: linear-gradient(to bottom, #38bdf8 0%, #38bdf8 40%, #22c55e 40%, #166534 100%); overflow: hidden; display: flex; flex-direction: column; }
 
-        /* Placar superior */
-        .scoreboard { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; z-index: 10; display: flex; justify-content: space-around; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);}
-        .score-box { background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px; border: 2px solid white;}
-        .score-box span { font-size: 24px; color: #fbbf24; }
+        /* TELA DE SELEÇÃO */
+        #selectionScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; padding: 20px; text-align: center; }
+        h1 { margin-bottom: 30px; font-size: 32px; color: #fbbf24; }
+        .select-group { margin-bottom: 20px; width: 100%; }
+        select { width: 100%; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 8px; border: 2px solid #38bdf8; background: #1e293b; color: white; outline: none; }
+        button.start-btn { background: #22c55e; color: white; border: none; padding: 15px 40px; font-size: 22px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 0 #166534; transition: all 0.1s; }
+        button.start-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #166534; }
 
-        /* O Gol (Traves e Rede) */
-        .goal { position: absolute; top: 20%; left: 10%; width: 80%; height: 30%; border: 8px solid white; border-bottom: none; background: repeating-linear-gradient( 45deg, transparent, transparent 10px, rgba(255,255,255,0.3) 10px, rgba(255,255,255,0.3) 12px ), repeating-linear-gradient( -45deg, transparent, transparent 10px, rgba(255,255,255,0.3) 10px, rgba(255,255,255,0.3) 12px ); background-color: rgba(0, 0, 0, 0.1); z-index: 1;}
+        /* PLACAR */
+        .scoreboard { background: rgba(0,0,0,0.7); padding: 10px; display: flex; justify-content: space-between; align-items: center; z-index: 10; border-bottom: 2px solid white; }
+        .team-score { text-align: center; width: 40%; }
+        .team-name { font-size: 16px; color: #cbd5e1; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .score-number { font-size: 36px; font-weight: bold; color: #fbbf24; line-height: 1; }
+        .turn-indicator { font-size: 14px; background: #ef4444; padding: 5px 10px; border-radius: 20px; font-weight: bold; text-align: center; }
 
-        /* Alvo que se move */
-        .target { position: absolute; top: 10px; left: 0; width: 40px; height: 40px; background: red; border: 4px solid white; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 2; transition: left 0.1s linear;}
-        .target::after { content: ''; position: absolute; top: 10px; left: 10px; width: 12px; height: 12px; background: white; border-radius: 50%;}
+        /* ÁREA DE JOGO */
+        .game-area { flex: 1; position: relative; }
+        
+        /* O GOL */
+        .goal { position: absolute; top: 20%; left: 10%; width: 80%; height: 35%; border: 8px solid white; border-bottom: none; display: flex; z-index: 1; background: rgba(255,255,255,0.1); }
+        
+        /* ZONAS DE CLIQUE */
+        .zone { flex: 1; height: 100%; border-right: 1px dashed rgba(255,255,255,0.2); cursor: pointer; position: relative; display: flex; justify-content: center; align-items: center; }
+        .zone:last-child { border-right: none; }
+        .zone:hover { background: rgba(255,255,255,0.2); }
+        .zone-label { font-size: 24px; opacity: 0.5; pointer-events: none; }
 
-        /* A Bola */
-        .ball { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-size: 60px; z-index: 5; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.5));}
+        /* GOLEIRO E BOLA */
+        .goalkeeper { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 80px; z-index: 3; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .ball { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-size: 50px; z-index: 5; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        /* Mensagens na tela (GOL, TRAVE, etc) */
-        .message { position: absolute; top: 40%; left: 0; width: 100%; text-align: center; font-size: 60px; color: white; font-weight: bold; text-transform: uppercase; z-index: 20; opacity: 0; text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; transform: scale(0.5); transition: all 0.3s ease;}
-        .show-message { opacity: 1; transform: scale(1); }
+        /* MENSAGENS */
+        .message-overlay { position: absolute; top: 40%; left: 0; width: 100%; text-align: center; font-size: 50px; font-weight: bold; text-transform: uppercase; z-index: 20; opacity: 0; text-shadow: 3px 3px 0 #000; transform: scale(0.5); pointer-events: none; transition: all 0.3s ease; }
+        .show-msg { opacity: 1; transform: scale(1); }
 
-        /* Instrução inicial */
-        .instruction { position: absolute; bottom: 30%; left: 0; width: 100%; text-align: center; color: white; font-size: 18px; z-index: 10; background: rgba(0,0,0,0.6); padding: 10px; animation: piscar 1.5s infinite;}
-        @keyframes piscar { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
-<div class="game-area" id="gameArea">
-    <div class="scoreboard">
-        <div class="score-box">GOLS: <br><span id="score">0</span></div>
-        <div class="score-box">CHUTES: <br><span id="shots">0</span></div>
+<div class="container">
+    
+    <!-- Tela Inicial -->
+    <div id="selectionScreen">
+        <h1>FUTEBOL PENALTY 3D</h1>
+        <div class="select-group">
+            <label>Seu Time:</label>
+            <select id="playerTeam">
+                <option value="Brasil">Brasil</option>
+                <option value="Argentina">Argentina</option>
+                <option value="França">França</option>
+                <option value="Inglaterra">Inglaterra</option>
+                <option value="Real Madrid">Real Madrid</option>
+                <option value="Barcelona">Barcelona</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label>Adversário (Máquina):</label>
+            <select id="aiTeam">
+                <option value="Alemanha">Alemanha</option>
+                <option value="Itália">Itália</option>
+                <option value="Espanha">Espanha</option>
+                <option value="Uruguai">Uruguai</option>
+                <option value="Manchester City">Manchester City</option>
+                <option value="Bayern">Bayern</option>
+            </select>
+        </div>
+        <button class="start-btn" onclick="startGame()">BORA JOGAR</button>
     </div>
 
-    <div class="goal" id="goalBox">
-        <div class="target" id="target"></div>
+    <!-- Tela de Jogo -->
+    <div class="scoreboard" id="gameScoreboard" style="display: none;">
+        <div class="team-score">
+            <div class="team-name" id="p1Name">Player</div>
+            <div class="score-number" id="p1Score">0</div>
+        </div>
+        <div class="turn-indicator" id="turnInfo">Sua vez de CHUTAR</div>
+        <div class="team-score">
+            <div class="team-name" id="aiName">Máquina</div>
+            <div class="score-number" id="aiScore">0</div>
+        </div>
     </div>
 
-    <div class="instruction" id="instruction">TOQUE NO GOL PARA CHUTAR!</div>
+    <div class="game-area" id="gameArea" style="display: none;">
+        <div class="goal" id="goal">
+            <div class="zone" onclick="playAction('left')"><span class="zone-label">👈</span></div>
+            <div class="zone" onclick="playAction('center')"><span class="zone-label">☝️</span></div>
+            <div class="zone" onclick="playAction('right')"><span class="zone-label">👉</span></div>
+            <div class="goalkeeper" id="gk">🧤</div>
+        </div>
+        <div class="ball" id="ball">⚽</div>
+        <div class="message-overlay" id="resultMsg"></div>
+    </div>
 
-    <div class="message" id="msgGool">GOOOOOL! ⚽</div>
-    <div class="message" id="msgMiss">ISOLOU! ❌</div>
-
-    <div class="ball" id="ball">⚽</div>
 </div>
 
 <script>
+    // Variáveis de Estado do Jogo
+    let playerScore = 0;
+    let aiScore = 0;
+    let isPlayerTurnToShoot = true; 
+    let actionInProgress = false;
+
+    // Elementos DOM
+    const gk = document.getElementById('gk');
     const ball = document.getElementById('ball');
-    const target = document.getElementById('target');
-    const gameArea = document.getElementById('gameArea');
-    const msgGool = document.getElementById('msgGool');
-    const msgMiss = document.getElementById('msgMiss');
-    const scoreDisplay = document.getElementById('score');
-    const shotsDisplay = document.getElementById('shots');
-    const instruction = document.getElementById('instruction');
+    const resultMsg = document.getElementById('resultMsg');
+    const turnInfo = document.getElementById('turnInfo');
 
-    let gols = 0;
-    let chutes = 0;
-    let isKicking = false;
-    
-    // Variáveis do Alvo
-    let targetX = 0;
-    let targetDirection = 1; // 1 para direita, -1 para esquerda
-    let targetSpeed = 3;
-    let targetWidth = 40;
-    let goalWidth = 0;
+    // Posições no eixo X para animação (Esquerda, Centro, Direita)
+    const positions = {
+        'left': '15%',
+        'center': '50%',
+        'right': '85%'
+    };
 
-    // Função para mover o alvo de um lado para o outro
-    function moveTarget() {
-        goalWidth = document.getElementById('goalBox').offsetWidth;
-        targetX += targetSpeed * targetDirection;
-
-        // Bateu nas traves, inverte a direção
-        if (targetX >= goalWidth - targetWidth) {
-            targetX = goalWidth - targetWidth;
-            targetDirection = -1;
-        } else if (targetX <= 0) {
-            targetX = 0;
-            targetDirection = 1;
-        }
-
-        target.style.left = targetX + 'px';
-        requestAnimationFrame(moveTarget);
+    function startGame() {
+        document.getElementById('p1Name').innerText = document.getElementById('playerTeam').value;
+        document.getElementById('aiName').innerText = document.getElementById('aiTeam').value;
+        
+        document.getElementById('selectionScreen').style.display = 'none';
+        document.getElementById('gameScoreboard').style.display = 'flex';
+        document.getElementById('gameArea').style.display = 'block';
+        
+        updateUI();
     }
 
-    // Inicia o movimento do alvo
-    moveTarget();
+    function playAction(playerChoice) {
+        if (actionInProgress) return;
+        actionInProgress = true;
 
-    // Evento de toque/clique para chutar a bola
-    gameArea.addEventListener('pointerdown', (e) => {
-        if (isKicking) return; // Impede chutar duas vezes seguidas
-        
-        isKicking = true;
-        instruction.style.display = 'none'; // Some o texto de instrução
-        chutes++;
-        shotsDisplay.innerText = chutes;
+        // Máquina escolhe aleatoriamente entre esquerda, centro ou direita
+        const options = ['left', 'center', 'right'];
+        const aiChoice = options[Math.floor(Math.random() * options.length)];
 
-        // Pega as coordenadas do clique
-        const rect = gameArea.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+        let ballTarget = '';
+        let gkTarget = '';
 
-        // Animação da bola voando até o ponto clicado
-        ball.style.left = clickX + 'px';
-        ball.style.top = clickY + 'px';
-        ball.style.transform = 'translateX(-50%) scale(0.3)'; // Bola diminui simulando distância
-
-        // Espera o tempo da animação (500ms) para checar a colisão
-        setTimeout(() => {
-            checkCollision();
-        }, 500);
-    });
-
-    function checkCollision() {
-        const ballRect = ball.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-
-        // Checa se o centro da bola está dentro do alvo
-        const ballCenterX = ballRect.left + ballRect.width / 2;
-        const ballCenterY = ballRect.top + ballRect.height / 2;
-
-        const isHit = ballCenterX >= targetRect.left && 
-                      ballCenterX <= targetRect.right && 
-                      ballCenterY >= targetRect.top && 
-                      ballCenterY <= targetRect.bottom;
-
-        if (isHit) {
-            // GOOOOL
-            gols++;
-            scoreDisplay.innerText = gols;
-            msgGool.classList.add('show-message');
-            targetSpeed += 0.5; // Aumenta a dificuldade deixando o alvo mais rápido!
-            
-            // Efeito de tremer a tela
-            gameArea.style.transform = 'translate(5px, 5px)';
-            setTimeout(() => gameArea.style.transform = 'translate(0, 0)', 100);
-
+        if (isPlayerTurnToShoot) {
+            // Jogador Chuta, Máquina Defende
+            ballTarget = playerChoice;
+            gkTarget = aiChoice;
         } else {
-            // ERROU
-            msgMiss.classList.add('show-message');
+            // Jogador Defende, Máquina Chuta
+            gkTarget = playerChoice;
+            ballTarget = aiChoice;
         }
 
-        // Reseta a bola para o próximo chute após 1.5 segundos
-        setTimeout(() => {
-            msgGool.classList.remove('show-message');
-            msgMiss.classList.remove('show-message');
-            
-            ball.style.transition = 'none'; // Tira animação para voltar instantaneamente
-            ball.style.left = '50%';
-            ball.style.top = 'auto';
-            ball.style.bottom = '10%';
-            ball.style.transform = 'translateX(-50%) scale(1)';
-            
-            // Restaura a transição para o próximo chute
-            setTimeout(() => {
-                ball.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-                isKicking = false;
-            }, 50);
+        // Executa as animações
+        animatePlay(ballTarget, gkTarget);
+    }
 
+    function animatePlay(ballTarget, gkTarget) {
+        // Move o Goleiro
+        gk.style.left = positions[gkTarget];
+        
+        // Efeito de queda do goleiro (rotação)
+        if (gkTarget === 'left') gk.style.transform = 'translateX(-50%) rotate(-45deg)';
+        else if (gkTarget === 'right') gk.style.transform = 'translateX(-50%) rotate(45deg)';
+        else gk.style.transform = 'translateX(-50%) rotate(0deg)';
+
+        // Move a Bola
+        ball.style.left = positions[ballTarget];
+        ball.style.top = '30%'; // Bola sobe em direção ao gol
+        ball.style.transform = 'translateX(-50%) scale(0.4)'; // Bola diminui simulando profundidade
+
+        // Checa o resultado após a animação (400ms)
+        setTimeout(() => {
+            const isGoal = (ballTarget !== gkTarget);
+            showResult(isGoal);
+        }, 400);
+    }
+
+    function showResult(isGoal) {
+        if (isGoal) {
+            resultMsg.innerText = "GOOOOOL! ⚽";
+            resultMsg.style.color = "#4ade80";
+            if (isPlayerTurnToShoot) playerScore++;
+            else aiScore++;
+        } else {
+            resultMsg.innerText = "DEFENDEU! 🧤";
+            resultMsg.style.color = "#f87171";
+        }
+
+        resultMsg.classList.add('show-msg');
+        document.getElementById('p1Score').innerText = playerScore;
+        document.getElementById('aiScore').innerText = aiScore;
+
+        // Prepara próxima rodada após 1.5s
+        setTimeout(() => {
+            resetPositions();
+            isPlayerTurnToShoot = !isPlayerTurnToShoot; // Alterna os turnos
+            updateUI();
+            actionInProgress = false;
         }, 1500);
+    }
+
+    function resetPositions() {
+        resultMsg.classList.remove('show-msg');
+        
+        // Retira transição para voltar instantaneamente
+        ball.style.transition = 'none';
+        gk.style.transition = 'none';
+        
+        // Posição inicial
+        ball.style.left = '50%';
+        ball.style.top = 'auto';
+        ball.style.bottom = '10%';
+        ball.style.transform = 'translateX(-50%) scale(1)';
+        
+        gk.style.left = '50%';
+        gk.style.transform = 'translateX(-50%) rotate(0deg)';
+
+        // Devolve transição
+        setTimeout(() => {
+            ball.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+            gk.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+        }, 50);
+    }
+
+    function updateUI() {
+        if (isPlayerTurnToShoot) {
+            turnInfo.innerText = "Sua vez de CHUTAR";
+            turnInfo.style.background = "#22c55e"; // Verde
+        } else {
+            turnInfo.innerText = "Sua vez de DEFENDER";
+            turnInfo.style.background = "#ef4444"; // Vermelho
+        }
     }
 </script>
 
