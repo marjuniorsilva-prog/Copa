@@ -72,7 +72,7 @@
     canvas.width = 850;
     canvas.height = 480;
 
-    // Banco de Dados do Campeonato (Igual aos seus conceitos)
+    // Banco de Dados do Campeonato
     let teams = [
         { name: "LEÃO AZUL", p: 0, w: 0, l: 0, gd: 0, isPlayer: true },
         { name: "DESCALÇO", p: 0, w: 0, l: 0, gd: 0 },
@@ -84,15 +84,15 @@
 
     // Configurações da Partida de Pênaltis
     let gameState = 'START'; 
-    let turn = 'PLAYER'; // PLAYER (chuta) ou AI (defende)
+    let turn = 'PLAYER'; // PLAYER ou AI
+    let isLoopRunning = false;
     
-    // Controle estrito das 5 cobranças oficiais + Alternados
     let matchData = {
         playerGoals: 0, aiGoals: 0,
         playerShots: 0, aiShots: 0,
-        playerHistory: [], // 'GOAL' ou 'MISS'
+        playerHistory: [], 
         aiHistory: [],
-        currentKickNumber: 1, // Contador visual de 1 a 5
+        currentKickNumber: 1, 
         suddenDeath: false
     };
 
@@ -118,10 +118,9 @@
         document.getElementById('gameCanvas').style.display = 'none';
         document.getElementById('tournamentScreen').style.display = 'flex';
         
-        // Definir o oponente baseado na rodada do campeonato
-        if (currentRound === 1) currentOpponent = teams[1]; // Descalço
-        else if (currentRound === 2) currentOpponent = teams[2]; // Real Matismo
-        else if (currentRound === 3) currentOpponent = teams[3]; // Penaltêros
+        if (currentRound === 1) currentOpponent = teams.find(t => t.name === "DESCALÇO");
+        else if (currentRound === 2) currentOpponent = teams.find(t => t.name === "REAL MATISMO");
+        else if (currentRound === 3) currentOpponent = teams.find(t => t.name === "PENALTÊROS");
         else {
             endChampionship();
             return;
@@ -132,7 +131,6 @@
     }
 
     function updateTableUI() {
-        // Ordenar tabela por Pontos, depois por Saldo de Gols
         teams.sort((a,b) => b.p - a.p || b.gd - a.gd);
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
@@ -156,7 +154,6 @@
         document.getElementById('tournamentScreen').style.display = 'none';
         canvas.style.display = 'block';
         
-        // Inicializar dados limpos da disputa de 5 penaltis
         matchData = {
             playerGoals: 0, aiGoals: 0,
             playerShots: 0, aiShots: 0,
@@ -165,8 +162,11 @@
         };
         
         setupPlayerTurn();
-        gameState = 'PLAYING';
-        gameLoop();
+        
+        if (!isLoopRunning) {
+            isLoopRunning = true;
+            gameLoop();
+        }
     }
 
     function setupPlayerTurn() {
@@ -185,7 +185,6 @@
         
         setTimeout(() => {
             if (gameState !== 'AI_SHOOTING') return;
-            // IA escolhe cantos e varia a força
             const spots = [
                 {x: 200 + Math.random()*90, y: 120 + Math.random()*80},
                 {x: 550 + Math.random()*90, y: 120 + Math.random()*80},
@@ -204,13 +203,16 @@
         }, 1500);
     }
 
-    window.addEventListener('mousedown', () => {
-        if (document.getElementById('tournamentScreen').style.display === 'flex') return;
+    // ADICIONADO PARAMETRO (event) PARA FUNCIONAR CORRETAMENTE
+    window.addEventListener('mousedown', (event) => {
+        if (canvas.style.display === 'none') return;
         
         if (turn === 'PLAYER') {
-            if (gameState === 'AIMING_ARROW') gameState = 'AIMING_TARGET';
-            else if (gameState === 'AIMING_TARGET') gameState = 'AIMING_POWER';
-            else if (gameState === 'AIMING_POWER') {
+            if (gameState === 'AIMING_ARROW') {
+                gameState = 'AIMING_TARGET';
+            } else if (gameState === 'AIMING_TARGET') {
+                gameState = 'AIMING_POWER';
+            } else if (gameState === 'AIMING_POWER') {
                 ball.targetX = targetCircle.x; ball.targetY = targetCircle.y;
                 ball.speed = 11 + (powerBar * 0.16);
                 
@@ -231,13 +233,14 @@
     });
 
     function gameLoop() {
-        if (canvas.style.display === 'none') return;
         update();
         render();
         requestAnimationFrame(gameLoop);
     }
 
     function update() {
+        if (canvas.style.display === 'none') return;
+
         if (gameState === 'AIMING_ARROW') {
             arrowAngle += arrowDir;
             if (arrowAngle > 0.65 || arrowAngle < -0.65) arrowDir *= -1;
@@ -264,7 +267,7 @@
             if (ball.progress >= 1) {
                 gameState = 'RESULT';
                 let distanceToGk = Math.hypot(ball.x - gk.x, ball.y - (gk.y - 25));
-                let saveDistance = ball.speed > 22 ? 45 : 75; // Chute forte diminui área de defesa do goleiro
+                let saveDistance = ball.speed > 22 ? 45 : 75;
 
                 let isGoal = (ball.x >= goal.x && ball.x <= goal.x + goal.width && ball.y >= goal.y && ball.y <= goal.y + goal.height);
 
@@ -284,28 +287,24 @@
 
                 if(turn === 'PLAYER') matchData.playerShots++; else matchData.aiShots++;
 
-                // Processar lógica de turnos e verificar fim da partida
                 setTimeout(checkMatchProgression, 2000);
             }
         }
     }
 
     function checkMatchProgression() {
-        // Se ambos completaram a cobrança da rodada atual
         if (matchData.playerShots === matchData.aiShots) {
             let shots = matchData.playerShots;
             
-            // 1. Validação dos 5 Pênaltis Iniciais
             if (shots >= 5) {
                 if (matchData.playerGoals !== matchData.aiGoals) {
                     endPenaltyMatch();
                     return;
                 } else {
-                    matchData.suddenDeath = true; // Empate nos 5 primeiros -> Ativa Alternados!
+                    matchData.suddenDeath = true; 
                 }
             }
             
-            // 2. Validação na Morte Súbita (Pênaltis Alternados)
             if (matchData.suddenDeath && shots > 5) {
                 if (matchData.playerGoals !== matchData.aiGoals) {
                     endPenaltyMatch();
@@ -316,33 +315,27 @@
             matchData.currentKickNumber++;
             setupPlayerTurn();
         } else {
-            // Se o jogador acabou de bater, agora é a IA que cobra
             setupAiTurn();
         }
     }
 
     function endPenaltyMatch() {
-        // Calcular saldo final do jogo
         let pGoals = matchData.playerGoals;
         let aGoals = matchData.aiGoals;
         let playerWin = pGoals > aGoals;
 
-        // Atualizar dados do jogador (Leão Azul)
         let playerTeam = teams.find(t => t.isPlayer);
         playerTeam.gd += (pGoals - aGoals);
         if(playerWin) { playerTeam.p += 3; playerTeam.w += 1; } else { playerTeam.l += 1; }
 
-        // Simular resultado do outro jogo do grupo por inteligência básica
         let otherTeams = teams.filter(t => !t.isPlayer && t !== currentOpponent);
-        let winOther = Math.random() > 0.5;
         let g1 = Math.floor(Math.random()*4); let g2 = Math.floor(Math.random()*4);
-        if(g1 === g2) g1++; // Evitar empates absolutos nos pênaltis simulados
+        if(g1 === g2) g1++; 
         otherTeams[0].gd += (g1 - g2);
         otherTeams[1].gd += (g2 - g1);
         if(g1 > g2) { otherTeams[0].p += 3; otherTeams[0].w += 1; otherTeams[1].l += 1; } 
         else { otherTeams[1].p += 3; otherTeams[1].w += 1; otherTeams[0].l += 1; }
 
-        // Atualizar oponente atual
         currentOpponent.gd += (aGoals - pGoals);
         if(!playerWin) { currentOpponent.p += 3; currentOpponent.w += 1; } else { currentOpponent.l += 1; }
 
@@ -351,19 +344,20 @@
     }
 
     function render() {
+        if (canvas.style.display === 'none') return;
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        // Cenário: Estádio e Torcida Viva
+        // Cenário: Estádio e Torcida
         ctx.fillStyle = '#090d16'; ctx.fillRect(0, 0, canvas.width, 100);
         ctx.fillStyle = '#111827'; ctx.fillRect(0, 40, canvas.width, 60);
         crowd.forEach(p => { ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); });
 
-        // Outdoor publicitário
+        // Outdoor
         ctx.fillStyle = '#f97316'; ctx.fillRect(0, 100, canvas.width, 25);
         ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Ubuntu';
-        ctx.fillText("FASE DE GRUPOS    -    PENALTY CHALLENGE PRO 2026    -    RODADA " + currentRound, 40, 117);
+        ctx.fillText("FASE DE GRUPOS    -    PENALTY CHALLENGE PRO    -    RODADA " + currentRound, 40, 117);
 
-        // Gramado Realista em Perspectiva
+        // Gramado em Perspectiva
         let currentY = 125;
         for (let i = 0; i < 8; i++) {
             let stripeHeight = 15 + (i * 6);
@@ -372,11 +366,11 @@
             currentY += stripeHeight;
         }
 
-        // Linhas brancas do campo
+        // Linhas brancas
         ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 3;
         ctx.strokeRect(70, 270, 710, 210);
 
-        // Desenhar Trave e Rede
+        // Trave e Rede
         ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 7;
         ctx.strokeRect(goal.x, goal.y, goal.width, goal.height);
         ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
@@ -384,16 +378,14 @@
             ctx.beginPath(); ctx.moveTo(x, goal.y); ctx.lineTo(x, goal.y + goal.height); ctx.stroke();
         }
 
-        // Indicadores Visuais das 5 Cobranças (Círculos no topo do Gol)
+        // Indicadores das 5 Cobranças
         let totalDots = Math.max(5, matchData.playerShots, matchData.aiShots);
         for(let i=0; i<totalDots; i++) {
-            // Bolinhas do Jogador (Esquerda)
-            ctx.fillStyle = '#4b5563'; // Neutro
-            if(matchData.playerHistory[i] === 'GOAL') ctx.fillStyle = '#10b981'; // Verde
-            if(matchData.playerHistory[i] === 'MISS') ctx.fillStyle = '#ef4444'; // Vermelho
+            ctx.fillStyle = '#4b5563'; 
+            if(matchData.playerHistory[i] === 'GOAL') ctx.fillStyle = '#10b981'; 
+            if(matchData.playerHistory[i] === 'MISS') ctx.fillStyle = '#ef4444'; 
             ctx.beginPath(); ctx.arc(goal.x + 30 + (i * 24), goal.y - 25, 8, 0, Math.PI*2); ctx.fill();
 
-            // Bolinhas da Máquina (Direita)
             ctx.fillStyle = '#4b5563';
             if(matchData.aiHistory[i] === 'GOAL') ctx.fillStyle = '#10b981';
             if(matchData.aiHistory[i] === 'MISS') ctx.fillStyle = '#ef4444';
@@ -414,18 +406,18 @@
             ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 14, 0, Math.PI*2); ctx.fill();
         }
 
-        // Goleiro Dinâmico
+        // Goleiro
         ctx.fillStyle = turn === 'PLAYER' ? '#06b6d4' : '#ec4899';
         ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 25);
         ctx.fillStyle = '#111827'; ctx.fillRect(gk.x - gk.width/2, gk.y - 25, gk.width, 25);
         ctx.fillStyle = '#fbcfe8'; ctx.beginPath(); ctx.arc(gk.x, gk.y - gk.height - 12, 12, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = '#ffffff'; // Luvas
+        ctx.fillStyle = '#ffffff'; 
         ctx.fillRect(gk.x - gk.width - 8, gk.y - gk.height + 15, 15, 15);
         ctx.fillRect(gk.x + gk.width - 7, gk.y - gk.height + 15, 15, 15);
 
-        // Jogador de costas com camisa Número 3
+        // Jogador de costas
         if (turn === 'PLAYER') {
-            ctx.fillStyle = '#2563eb'; // Camisa Azul do Leão Azul
+            ctx.fillStyle = '#2563eb'; 
             ctx.fillRect(player.x, player.y, 50, 40);
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 22px Ubuntu';
             ctx.fillText("3", player.x + 18, player.y + 28);
@@ -434,7 +426,7 @@
             ctx.fillRect(player.x + 32, player.y + 60, 10, 25);
         }
 
-        // Bola com sombra
+        // Bola
         if (gameState !== 'START') {
             ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath();
             ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill();
@@ -451,7 +443,7 @@
             ctx.fillStyle = pColor; ctx.fillRect(35, 360, 25, -powerBar * 1.8);
         }
 
-        // Placar HUD da Partida Atual
+        // Placar HUD
         ctx.fillStyle = 'rgba(15, 23, 42, 0.9)'; ctx.fillRect(canvas.width - 240, canvas.height - 95, 215, 75);
         ctx.lineWidth = 2; ctx.strokeStyle = '#eab308'; ctx.strokeRect(canvas.width - 240, canvas.height - 95, 215, 75);
         ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu';
@@ -461,7 +453,7 @@
         ctx.fillText(matchData.playerGoals, canvas.width - 55, canvas.height - 63);
         ctx.fillText(matchData.aiGoals, canvas.width - 55, canvas.height - 33);
 
-        // Banner de Instruções e Modo de Jogo
+        // Banner de Instruções
         ctx.fillStyle = matchData.suddenDeath ? '#b91c1c' : (turn === 'PLAYER' ? '#1e3a8a' : '#c2410c');
         ctx.fillRect(0, 0, canvas.width, 40);
         ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu'; ctx.textAlign = 'center';
@@ -469,7 +461,7 @@
         statusMsg += turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE" : "SUA VEZ DE DEFENDER! CLIQUE NOS CANTOS DO GOL";
         ctx.fillText(statusMsg, canvas.width/2, 25); ctx.textAlign = 'left';
 
-        // Cartaz de Resultado temporário
+        // Resultado temporário
         if (gameState === 'RESULT') {
             ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.fillRect(0, 200, canvas.width, 90);
             ctx.font = 'bold 42px Ubuntu'; ctx.fillStyle = resultColor; ctx.textAlign = 'center';
@@ -481,7 +473,6 @@
         document.getElementById('gameCanvas').style.display = 'none';
         document.getElementById('tournamentScreen').style.display = 'none';
         
-        // Verificar quem ficou em primeiro após as 3 rodadas
         teams.sort((a,b) => b.p - a.p || b.gd - a.gd);
         let champion = teams[0];
 
