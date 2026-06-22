@@ -2,520 +2,76 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Penalty Simulator Pro: Arena Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penalty Simulator PRO</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
-
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Oswald', sans-serif; }
-        body { background-color: #0b0f19; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
+        body { margin: 0; background: #0b0f19; font-family: sans-serif; overflow: hidden; }
         
-        .container { width: 100%; max-width: 600px; height: 100vh; max-height: 800px; position: relative; background: linear-gradient(to bottom, #020617 0%, #1e1b4b 30%, #115e59 50%, #064e3b 100%); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
-
-        /* TELAS ADICIONAIS */
-        .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; padding: 20px; text-align: center; }
-        h1 { margin-bottom: 10px; font-size: 32px; color: #f59e0b; text-shadow: 0 4px 10px rgba(245,158,11,0.3); letter-spacing: 2px; }
-        button.action-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 12px 35px; font-size: 20px; font-weight: bold; border-radius: 40px; cursor: pointer; margin-top: 20px; box-shadow: 0 6px 20px rgba(29,78,216,0.4); transition: all 0.2s; text-transform: uppercase; }
-
-        /* PLACAR ULTRA COMPACTO */
-        .scoreboard { background: rgba(15, 23, 42, 0.95); padding: 6px 12px; z-index: 10; border-bottom: 2px solid #f59e0b; display: flex; flex-direction: column; align-items: center; }
-        .teams-row { display: flex; justify-content: space-between; width: 100%; align-items: center; }
-        .team-info { display: flex; flex-direction: column; align-items: center; width: 38%; }
-        .team-name { font-size: 13px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; }
-        
-        .kicks-tracker { display: flex; gap: 3px; margin-top: 2px; }
-        .kick-circle { width: 13px; height: 13px; border-radius: 50%; background: #334155; border: 1px solid #475569; display: flex; justify-content: center; align-items: center; font-size: 0px; }
-        .kick-hit { background: #10b981; border-color: #34d399; box-shadow: 0 0 5px #10b981; }
-        .kick-miss { background: #ef4444; border-color: #f87171; box-shadow: 0 0 5px #ef4444; }
-        .score-number { font-size: 28px; font-weight: bold; color: #f59e0b; margin: 0 12px; line-height: 1; }
-
-        .turn-banner { width: 100%; text-align: center; padding: 5px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; z-index: 9; }
-        .turn-kicking { background: #2563eb; }
-        .turn-defending { background: #d97706; }
-
-        /* CAMPO DE JOGO */
-        .game-area { flex: 1; position: relative; background: radial-gradient(circle at bottom, transparent 30%, rgba(0,0,0,0.4)), repeating-linear-gradient(90deg, #14532d, #14532d 40px, #166534 40px, #166534 80px); }
-        
-        /* GOL E REDE */
-        .goal-container { position: absolute; top: 18%; left: 8%; width: 84%; height: 38%; z-index: 5; }
-        .goal-frame { position: absolute; width: 100%; height: 100%; border: 10px solid #f8fafc; border-bottom: none; z-index: 7; pointer-events: none; }
-        .net { position: absolute; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.15) 8px, rgba(255,255,255,0.15) 10px), repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(255,255,255,0.15) 8px, rgba(255,255,255,0.15) 10px); z-index: 1; }
-        .net-shake { animation: shakeNet 0.5s ease-in-out; }
-        @keyframes shakeNet {
-            0% { transform: scaleY(1); }
-            20% { transform: scaleY(1.08) scaleX(1.02); }
-            100% { transform: scaleY(1); }
+        /* PLACAR COMPACTO NO TOPO */
+        #scoreboard { 
+            position: absolute; top: 10px; width: 100%; display: flex; 
+            justify-content: center; gap: 20px; color: white; 
+            font-size: 18px; font-weight: bold; z-index: 10;
         }
 
-        /* Zonas de Clique do Gol */
-        .click-zones { position: absolute; width: 100%; height: 100%; display: flex; z-index: 15; }
-        .zone { flex: 1; height: 100%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .zone-indicator { font-size: 22px; opacity: 0; transition: opacity 0.2s; color: #f59e0b; }
-        .zone:hover .zone-indicator { opacity: 0.6; }
+        /* CAMPO COM PERSPECTIVA MELHOR */
+        #gameArea { 
+            width: 100vw; height: 100vh; position: relative; 
+            background: linear-gradient(to bottom, #14532d, #064e3b);
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+
+        /* GOL COM VISÃO MELHORADA */
+        #goal { 
+            width: 70%; height: 35%; border: 8px solid white; 
+            margin-bottom: 20px; position: relative;
+        }
 
         /* GOLEIRO */
-        .goalkeeper-box { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70px; height: 90px; z-index: 6; transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: flex-end; flex-direction: column; align-items: center; pointer-events: none; }
-        .gk-body { font-size: 65px; line-height: 1; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.6)); }
-        .gk-dive-left { transform: translate(-110px, -25px) rotate(-70deg) scaleX(-1); }
-        .gk-dive-right { transform: translate(110px, -25px) rotate(70deg); }
-        .gk-jump-center { transform: translate(0, -45px) scale(1.1); }
+        #goalkeeper {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 50px; height: 70px; background: orange; transition: 0.3s;
+        }
 
         /* BOLA */
-        .ball-shadow { position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); width: 45px; height: 12px; background: rgba(0,0,0,0.5); border-radius: 50%; z-index: 4; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .ball { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); font-size: 52px; z-index: 8; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
-        .ball-spin { animation: spin 0.4s linear infinite; }
-        @keyframes spin { 100% { transform: translateX(-50%) rotate(360deg); } }
-
-        /* HUD DE CALIBRAÇÃO */
-        .calibration-hud { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 340px; background: rgba(15, 23, 42, 0.98); border: 2px solid #334155; border-radius: 16px; padding: 15px; z-index: 50; display: none; flex-direction: column; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
-        .hud-title { text-align: center; font-size: 13px; letter-spacing: 1px; color: #94a3b8; font-weight: bold; text-transform: uppercase; }
-        
-        .bar-container { width: 100%; height: 18px; background: #1e293b; border-radius: 10px; position: relative; overflow: hidden; border: 1px solid #475569; }
-        .power-fill { height: 100%; width: 0%; background: linear-gradient(to right, #22c55e 0%, #eab308 60%, #ef4444 85%); }
-        .marker { position: absolute; top: 0; width: 4px; height: 100%; background: white; box-shadow: 0 0 8px #fff; }
-        
-        .impact-container { width: 100%; height: 20px; background: linear-gradient(to right, #ef4444 0%, #22c55e 45%, #22c55e 55%, #ef4444 100%); border-radius: 12px; position: relative; border: 1px solid #475569; }
-        .impact-marker { position: absolute; top: 0; left: 0%; width: 6px; height: 100%; background: #ffffff; border: 1px solid black; box-shadow: 0 0 6px #fff; }
-
-        /* MENSAGEM OVERLAY */
-        .message-overlay { position: absolute; top: 40%; left: 0; width: 100%; text-align: center; font-size: 38px; font-weight: bold; text-transform: uppercase; z-index: 40; opacity: 0; transform: scale(0.3); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
-        .show-msg { opacity: 1; transform: scale(1); text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        #ball {
+            position: absolute; bottom: 5%; left: 50%; width: 30px; height: 30px;
+            background: white; border-radius: 50%; transition: 0.5s;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <div id="startScreen" class="overlay-screen">
-        <div style="font-size: 60px; margin-bottom: 10px;">⚽</div>
-        <h1>DISPUTA DE PÊNALTIS PRO</h1>
-        <p style="font-size: 14px; color: #94a3b8; max-width: 80%;">Calibre a força e o ponto de impacto. Clique no gol para acionar as jogadas!</p>
-        <button class="action-btn" onclick="startGame()">JOGAR</button>
+<div id="scoreboard">
+    <span>VOCÊ: <span id="scoreUser">0</span></span>
+    <span>MÁQUINA: <span id="scoreAi">0</span></span>
+</div>
+
+<div id="gameArea">
+    <div id="goal">
+        <div id="goalkeeper"></div>
     </div>
-
-    <div id="endScreen" class="overlay-screen" style="display: none;">
-        <div id="endIcon" style="font-size: 70px; margin-bottom: 10px;">🥇</div>
-        <h1 id="endTitle">FIM DE JOGO</h1>
-        <p id="endSubtitle" style="font-size: 18px; margin-bottom: 20px;"></p>
-        <button class="action-btn" onclick="location.reload()">NOVA PARTIDA</button>
-    </div>
-
-    <div class="scoreboard" id="gameScoreboard" style="display: none;">
-        <div class="teams-row">
-            <div class="team-info">
-                <div class="team-name">VOCÊ</div>
-                <div class="kicks-tracker" id="playerKicks"></div>
-            </div>
-            <div style="display: flex; align-items: center;">
-                <span class="score-number" id="p1Score">0</span>
-                <span style="color: #64748b; font-weight: bold; font-size: 16px;">x</span>
-                <span class="score-number" id="aiScore">0</span>
-            </div>
-            <div class="team-info">
-                <div class="team-name">MÁQUINA</div>
-                <div class="kicks-tracker" id="aiKicks"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="turn-banner turn-kicking" id="turnBanner" style="display: none;">
-        SUA VEZ DE CHUTAR
-    </div>
-
-    <div class="game-area" id="gameArea" style="display: none;">
-        <div class="goal-container">
-            <div class="net" id="net"></div>
-            <div class="click-zones">
-                <div class="zone" onclick="selectZone('left', event)"><span class="zone-indicator">🎯</span></div>
-                <div class="zone" onclick="selectZone('center', event)"><span class="zone-indicator">🎯</span></div>
-                <div class="zone" onclick="selectZone('right', event)"><span class="zone-indicator">🎯</span></div>
-            </div>
-            <div class="goal-frame"></div>
-            <div class="goalkeeper-box" id="gkBox">
-                <div class="gk-body" id="gkBody">🧍‍♂️</div>
-            </div>
-        </div>
-
-        <div class="ball-shadow" id="ballShadow"></div>
-        <div class="ball" id="ball">⚽</div>
-        
-        <div class="calibration-hud" id="calibrationHud">
-            <div class="hud-title" id="hudTitle">1. CLIQUE NO CAMPO PARA TRAVAR A FORÇA</div>
-            <div class="bar-container">
-                <div class="power-fill" id="powerFill"></div>
-                <div class="marker" id="powerMarker" style="left: 0%;"></div>
-            </div>
-            <div class="hud-title">2. PONTO DE IMPACTO (CENTRO = IDEAL)</div>
-            <div class="impact-container">
-                <div class="impact-marker" id="impactMarker"></div>
-            </div>
-        </div>
-
-        <div class="message-overlay" id="resultMsg"></div>
-    </div>
-
+    <div id="ball"></div>
 </div>
 
 <script>
-    // --- ÁUDIO ---
-    const AudioEngine = {
-        ctx: null,
-        init() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
-        playKick() {
-            if(!this.ctx) return;
-            let osc = this.ctx.createOscillator(); let gain = this.ctx.createGain();
-            osc.connect(gain); gain.connect(this.ctx.destination);
-            osc.frequency.setValueAtTime(170, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.1);
-            gain.gain.setValueAtTime(1, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-            osc.start(); osc.stop(this.ctx.currentTime + 0.1);
-        },
-        playSave() {
-            if(!this.ctx) return;
-            let bufferSize = this.ctx.sampleRate * 0.12; let buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-            let data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-            let noise = this.ctx.createBufferSource(); noise.buffer = buffer;
-            let filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 350;
-            let gain = this.ctx.createGain(); gain.gain.setValueAtTime(1, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
-            noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
-            noise.start();
-        },
-        playCrowd(isGoal) {
-            if(!this.ctx) return;
-            let bufferSize = this.ctx.sampleRate * 1.5; let buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-            let data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-            let noise = this.ctx.createBufferSource(); noise.buffer = buffer;
-            let filter = this.ctx.createBiquadFilter(); filter.type = isGoal ? 'lowpass' : 'hipass'; filter.frequency.value = 400;
-            let gain = this.ctx.createGain(); gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(isGoal ? 0.5 : 0.2, this.ctx.currentTime + 0.15);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 1.5);
-            noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
-            noise.start();
-        }
-    };
-
-    // --- LOGICA ---
-    let score = { player: 0, ai: 0 }, kicksTaken = { player: 0, ai: 0 }, history = { player: [], ai: [] };
-    let isPlayerTurnToShoot = true, actionInProgress = false, isSuddenDeath = false;
-    const maxRegularKicks = 5;
-
-    let selectedZone = null;
-    let calibrationActive = false;
-    let calibrationStep = 0; 
-    let powerVal = 0, powerDir = 3.5;
-    let impactVal = 0, impactDir = 3;
-    let hudAnimFrame = null;
-
-    const gkBox = document.getElementById('gkBox'); const gkBody = document.getElementById('gkBody');
-    const ball = document.getElementById('ball'); const ballShadow = document.getElementById('ballShadow');
-    const net = document.getElementById('net'); const resultMsg = document.getElementById('resultMsg');
-    const turnBanner = document.getElementById('turnBanner');
-    const playerKicksDiv = document.getElementById('playerKicks'); const aiKicksDiv = document.getElementById('aiKicks');
-    const calibrationHud = document.getElementById('calibrationHud');
-    const powerFill = document.getElementById('powerFill'); const powerMarker = document.getElementById('powerMarker');
-    const impactMarker = document.getElementById('impactMarker'); const hudTitle = document.getElementById('hudTitle');
-
-    const positionsX = { 'left': '22%', 'center': '50%', 'right': '78%' };
-
-    function startGame() {
-        AudioEngine.init();
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementById('gameScoreboard').style.display = 'flex';
-        document.getElementById('turnBanner').style.display = 'block';
-        document.getElementById('gameArea').style.display = 'block';
-        
-        // CORREÇÃO CRUCIAL: O clique global no campo SÓ escuta se o mini-game de chutar estiver ativo
-        document.getElementById('gameArea').addEventListener('click', function() {
-            if (calibrationActive) handleCalibrationClick();
-        });
-        
-        renderKicksTracker();
-        updateUI();
+    const gk = document.getElementById('goalkeeper');
+    
+    // Lógica para o goleiro se mover
+    function moverGoleiro(direcao) {
+        if(direcao === 'left') gk.style.left = '10%';
+        else if(direcao === 'right') gk.style.left = '90%';
+        else gk.style.left = '50%';
     }
 
-    function renderKicksTracker() {
-        playerKicksDiv.innerHTML = ''; aiKicksDiv.innerHTML = '';
-        let displayCount = Math.max(maxRegularKicks, history.player.length + (isPlayerTurnToShoot ? 1 : 0));
-        if (isSuddenDeath) displayCount = history.player.length + 1;
-        for(let i = 0; i < displayCount; i++) {
-            playerKicksDiv.innerHTML += getCircleHtml(history.player[i]);
-            aiKicksDiv.innerHTML += getCircleHtml(history.ai[i]);
-        }
-    }
-
-    function getCircleHtml(result) {
-        if (result === true) return '<div class="kick-circle kick-hit"></div>';
-        if (result === false) return '<div class="kick-circle kick-miss"></div>';
-        return '<div class="kick-circle"></div>';
-    }
-
-    // Clique nas Zonas do Gol (Interação Principal)
-    function selectZone(zone, event) {
-        event.stopPropagation(); // Evita interferência com cliques externos
-        if (actionInProgress || calibrationActive) return;
-        
-        if (isPlayerTurnToShoot) {
-            selectedZone = zone;
-            startCalibration();
-        } else {
-            // MÁQUINA DISPARA O CHUTE IMEDIATAMENTE AQUI
-            playAiKick(zone);
-        }
-    }
-
-    function startCalibration() {
-        calibrationActive = true;
-        calibrationStep = 1;
-        powerVal = 0; impactVal = 0; 
-        hudTitle.innerText = "1. CLIQUE NA TELA PARA TRAVAR A FORÇA";
-        calibrationHud.style.display = 'flex';
-        updateCalibrationLoop();
-    }
-
-    function updateCalibrationLoop() {
-        if (!calibrationActive) return;
-
-        if (calibrationStep === 1) {
-            powerVal += powerDir;
-            if (powerVal >= 100 || powerVal <= 0) powerDir *= -1;
-            powerFill.style.width = powerVal + '%';
-            powerMarker.style.left = powerVal + '%';
-        } else if (calibrationStep === 2) {
-            impactVal += impactDir;
-            if (impactVal >= 100 || impactVal <= 0) impactDir *= -1;
-            impactMarker.style.left = impactVal + '%';
-        }
-
-        hudAnimFrame = requestAnimationFrame(updateCalibrationLoop);
-    }
-
-    function handleCalibrationClick() {
-        if (calibrationStep === 1) {
-            calibrationStep = 2;
-            hudTitle.innerText = "2. CLIQUE NA TELA PARA TRAVAR O IMPACTO";
-        } else if (calibrationStep === 2) {
-            calibrationActive = false;
-            cancelAnimationFrame(hudAnimFrame);
-            calibrationHud.style.display = 'none';
-            executePlayerKick();
-        }
-    }
-
-    function executePlayerKick() {
-        actionInProgress = true;
-        AudioEngine.playKick();
-
-        const options = ['left', 'center', 'right'];
-        const aiChoice = options[Math.floor(Math.random() * options.length)];
-
-        let ballTargetX = positionsX[selectedZone];
-        let ballTargetY = '68%'; 
-        let kickResult = "normal"; 
-
-        if (powerVal > 85) {
-            kickResult = "isolou";
-            ballTargetY = '4%'; 
-        } else if (powerVal < 25) {
-            kickResult = "grama";
-            ballTargetY = '88%'; 
-        }
-
-        if (kickResult === "normal") {
-            if (impactVal < 22) {
-                kickResult = "torto-esquerda";
-                ballTargetX = '2%'; 
-            } else if (impactVal > 78) {
-                kickResult = "torto-direita";
-                ballTargetX = '98%'; 
-            }
-        }
-
-        ball.classList.add('ball-spin');
-        ball.style.left = ballTargetX;
-        ball.style.bottom = ballTargetY;
-        ball.style.transform = 'translateX(-50%) scale(0.35)';
-
-        ballShadow.style.left = ballTargetX;
-        ballShadow.style.bottom = '42%'; 
-        ballShadow.style.opacity = '0.1';
-
-        gkBody.innerText = '🧤';
-        if (aiChoice === 'left') gkBox.classList.add('gk-dive-left');
-        else if (aiChoice === 'right') gkBox.classList.add('gk-dive-right');
-        else gkBox.classList.add('gk-jump-center');
-
-        setTimeout(() => {
-            ball.classList.remove('ball-spin');
-            if (kickResult === "isolou") {
-                resultMsg.innerText = "ISOLOU! 🚀 PRA CIMA!";
-                resultMsg.style.color = "#ef4444";
-                AudioEngine.playCrowd(false);
-                history.player.push(false);
-            } else if (kickResult === "grama") {
-                resultMsg.innerText = "CHUTOU A GRAMA! 🍂 FRACO!";
-                resultMsg.style.color = "#eab308";
-                AudioEngine.playSave();
-                history.player.push(false);
-                ball.style.bottom = '85%'; 
-            } else if (kickResult === "torto-esquerda" || kickResult === "torto-direita") {
-                resultMsg.innerText = "PEGOU TORTO! ↪️ PARA FORA!";
-                resultMsg.style.color = "#ef4444";
-                AudioEngine.playCrowd(false);
-                history.player.push(false);
-            } else {
-                if (selectedZone !== aiChoice) {
-                    net.classList.add('net-shake');
-                    resultMsg.innerText = "GOOOOOL! ⚽ PERFEITO!";
-                    resultMsg.style.color = "#10b981";
-                    AudioEngine.playCrowd(true);
-                    score.player++;
-                    history.player.push(true);
-                } else {
-                    AudioEngine.playSave();
-                    resultMsg.innerText = "DEFENDEU O GOLEIRO! 🧤";
-                    resultMsg.style.color = "#ef4444";
-                    history.player.push(false);
-                    ball.style.bottom = '55%'; ball.style.left = (selectedZone === 'left') ? '35%' : '65%';
-                }
-            }
-
-            kicksTaken.player++;
-            document.getElementById('p1Score').innerText = score.player;
-            renderKicksTracker();
-            resultMsg.classList.add('show-msg');
-            setTimeout(() => { resetRound(); }, 1800);
-        }, 400);
-    }
-
-    // DISPARO SEGURO DA MÁQUINA CHUTAR
-    function playAiKick(playerGkChoice) {
-        actionInProgress = true;
-        AudioEngine.playKick();
-
-        const options = ['left', 'center', 'right'];
-        const aiTarget = options[Math.floor(Math.random() * options.length)];
-        const aiQuality = Math.random(); 
-
-        let ballTargetX = positionsX[aiTarget];
-        let ballTargetY = '68%';
-        let aiErro = false;
-
-        if (aiQuality > 0.90) {
-            aiErro = true;
-            ballTargetY = '4%'; 
-        } else if (aiQuality < 0.08) {
-            aiErro = true;
-            ballTargetX = '2%'; 
-        }
-
-        gkBody.innerText = '🧤';
-        if (playerGkChoice === 'left') gkBox.classList.add('gk-dive-left');
-        else if (playerGkChoice === 'right') gkBox.classList.add('gk-dive-right');
-        else gkBox.classList.add('gk-jump-center');
-
-        ball.classList.add('ball-spin');
-        ball.style.left = ballTargetX;
-        ball.style.bottom = ballTargetY;
-        ball.style.transform = 'translateX(-50%) scale(0.35)';
-
-        setTimeout(() => {
-            ball.classList.remove('ball-spin');
-
-            if (aiErro) {
-                resultMsg.innerText = "A MÁQUINA MANDOU PARA FORA! 💨";
-                resultMsg.style.color = "#10b981";
-                history.ai.push(false);
-            } else if (aiTarget === playerGkChoice) {
-                AudioEngine.playSave();
-                resultMsg.innerText = "DEFENDEU! LINDA PONTE! 🧤";
-                resultMsg.style.color = "#10b981";
-                history.ai.push(false);
-                ball.style.bottom = '55%';
-            } else {
-                net.classList.add('net-shake');
-                AudioEngine.playCrowd(true);
-                resultMsg.innerText = "GOL DA MÁQUINA! ⚽";
-                resultMsg.style.color = "#ef4444";
-                score.ai++;
-                history.ai.push(true);
-            }
-
-            kicksTaken.ai++;
-            document.getElementById('aiScore').innerText = score.ai;
-            renderKicksTracker();
-            resultMsg.classList.add('show-msg');
-
-            setTimeout(() => { resetRound(); }, 1800);
-        }, 400);
-    }
-
-    function resetRound() {
-        resultMsg.classList.remove('show-msg');
-        net.classList.remove('net-shake');
-        
-        ball.style.transition = 'none'; ballShadow.style.transition = 'none'; gkBox.style.transition = 'none';
-        ball.style.left = '50%'; ball.style.bottom = '8%'; ball.style.transform = 'translateX(-50%) scale(1)';
-        ballShadow.style.left = '50%'; ballShadow.style.bottom = '6%'; ballShadow.style.transform = 'translateX(-50%) scale(1)'; ballShadow.style.opacity = '0.5';
-        
-        gkBody.innerText = '🧍‍♂️'; gkBox.className = 'goalkeeper-box';
-
-        setTimeout(() => {
-            ball.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
-            ballShadow.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
-            gkBox.style.transition = 'all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            checkMatchStatus();
-        }, 50);
-    }
-
-    function checkMatchStatus() {
-        let pRem = maxRegularKicks - kicksTaken.player;
-        let aiRem = maxRegularKicks - kicksTaken.ai;
-
-        if (!isSuddenDeath && kicksTaken.player <= maxRegularKicks && kicksTaken.ai <= maxRegularKicks) {
-            if (score.player > score.ai + aiRem) endGame("🏆 CAMPEÃO!", "Você dominou as traves e levou o título!");
-            else if (score.ai > score.player + pRem) endGame("❌ ELIMINADO!", "A máquina levou a melhor na disputa.");
-            else if (kicksTaken.player === maxRegularKicks && kicksTaken.ai === maxRegularKicks) {
-                if (score.player === score.ai) { isSuddenDeath = true; nextTurn(); }
-            } else { nextTurn(); }
-        } 
-        else if (isSuddenDeath) {
-            if (kicksTaken.player === kicksTaken.ai) {
-                if (score.player > score.ai) endGame("🏆 VITÓRIA NAS ALTERNADAS!", "Que frieza! Você é o campeão!");
-                else if (score.ai > score.player) endGame("❌ FIM DE DRAMA!", "Você perdeu na morte súbita.");
-                else nextTurn();
-            } else { nextTurn(); }
-        }
-    }
-
-    function nextTurn() {
-        isPlayerTurnToShoot = !isPlayerTurnToShoot;
-        updateUI();
-        if (isSuddenDeath) renderKicksTracker();
-        actionInProgress = false;
-    }
-
-    function updateUI() {
-        if (isPlayerTurnToShoot) {
-            turnBanner.innerText = isSuddenDeath ? "☠️ MORTE SÚBITA: CALIBRE E CHUTE" : "⚽ SUA VEZ: MIRE NO GOL E CALIBRE O CHUTE";
-            turnBanner.className = "turn-banner turn-kicking";
-        } else {
-            turnBanner.innerText = isSuddenDeath ? "☠️ MORTE SÚBITA: ESCOLHA O CANTO DO GOL!" : "🧤 SUA VEZ DE DEFENDER: ESCOLHA O CANTO DO GOL!";
-            turnBanner.className = "turn-banner turn-defending";
-        }
-    }
-
-    function endGame(title, subtitle) {
-        document.getElementById('endScreen').style.display = 'flex';
-        document.getElementById('endTitle').innerText = title;
-        document.getElementById('endSubtitle').innerText = subtitle;
-        if(title.includes("CAMPEÃO") || title.includes("VITÓRIA")) {
-            document.getElementById('endIcon').innerText = "🥇"; document.getElementById('endTitle').style.color = "#10b981";
-        } else {
-            document.getElementById('endIcon').innerText = "😭"; document.getElementById('endTitle').style.color = "#ef4444";
-        }
-    }
+    // Exemplo de interação (clique no gol para mover o goleiro)
+    document.getElementById('goal').addEventListener('click', (e) => {
+        const rect = e.target.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        if (x < rect.width / 3) moverGoleiro('left');
+        else if (x > (rect.width / 3) * 2) moverGoleiro('right');
+        else moverGoleiro('center');
+    });
 </script>
 
 </body>
