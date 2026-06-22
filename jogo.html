@@ -252,26 +252,31 @@
         return '<div class="kick-circle"></div>';
     }
 
-    // --- PASSO 1: SELEÇÃO DE CANTO (BATEDOR) ---
+    // --- CORREÇÃO AQUI: GERENCIADOR DE TOQUE DO GOL ---
     function selectZone(zone, event) {
-        if (actionInProgress || !isPlayerTurnToShoot || calibrationActive) return;
-        event.stopPropagation(); // Evita cliques fantasmas no fundo
+        if (actionInProgress || calibrationActive) return;
+        event.stopPropagation(); 
         
-        selectedZone = zone;
-        startCalibration();
+        if (isPlayerTurnToShoot) {
+            // Se for sua vez de chutar, abre o mini-game de calibrar
+            selectedZone = zone;
+            startCalibration();
+        } else {
+            // Se for a vez da máquina chutar, você ativa o goleiro clicando no canto!
+            playAction(zone);
+        }
     }
 
-    // --- PASSO 2: INICIAR MINI-GAME DE CALIBRAÇÃO ---
+    // --- INICIAR MINI-GAME DE CALIBRAÇÃO ---
     function startCalibration() {
         calibrationActive = true;
         calibrationStep = 1;
-        powerVal = 0; powerDir = 3; // Velocidade da barra
+        powerVal = 0; powerDir = 3; 
         impactVal = 0; impactDir = 2.5;
         
         hudTitle.innerText = "1. CLIQUE PARA TRAVAR A FORÇA";
         calibrationHud.style.display = 'flex';
         
-        // Loop da animação das barras
         updateCalibrationLoop();
     }
 
@@ -279,13 +284,11 @@
         if (!calibrationActive) return;
 
         if (calibrationStep === 1) {
-            // Movimento da Força (Sobe e Desce)
             powerVal += powerDir;
             if (powerVal >= 100 || powerVal <= 0) powerDir *= -1;
             powerFill.style.width = powerVal + '%';
             powerMarker.style.left = powerVal + '%';
         } else if (calibrationStep === 2) {
-            // Movimento do Impacto (Esquerda para Direita)
             impactVal += impactDir;
             if (impactVal >= 100 || impactVal <= 0) impactDir *= -1;
             impactMarker.style.left = impactVal + '%';
@@ -299,11 +302,9 @@
         if (!calibrationActive) return;
 
         if (calibrationStep === 1) {
-            // Travou a Força! Passa para o Ponto de Impacto
             calibrationStep = 2;
             hudTitle.innerText = "2. CLIQUE PARA TRAVAR O IMPACTO";
         } else if (calibrationStep === 2) {
-            // Travou o Impacto! Finaliza calibração e chuta
             calibrationActive = false;
             cancelAnimationFrame(hudAnimFrame);
             calibrationHud.style.display = 'none';
@@ -312,7 +313,7 @@
         }
     }
 
-    // --- PASSO 3: PROCESSAR O CHUTE BASEADO NA CALIBRAÇÃO ---
+    // --- PROCESSAR CHUTE DO JOGADOR BASEADO NA CALIBRAÇÃO ---
     function executePlayerKick() {
         actionInProgress = true;
         AudioEngine.playKick();
@@ -321,26 +322,26 @@
         const aiChoice = options[Math.floor(Math.random() * options.length)];
 
         let ballTargetX = positionsX[selectedZone];
-        let ballTargetY = '68%'; // Altura padrão do gol
-        let kickResult = "normal"; // normal, isolou, grama, torto
+        let ballTargetY = '68%'; 
+        let kickResult = "normal"; 
 
         // Lógica de Força
         if (powerVal > 85) {
             kickResult = "isolou";
-            ballTargetY = '5%'; // Sobe demais (vai para a arquibancada)
+            ballTargetY = '5%'; 
         } else if (powerVal < 30) {
             kickResult = "grama";
-            ballTargetY = '88%'; // Rola fraco no chão (chutou a grama)
+            ballTargetY = '88%'; 
         }
 
-        // Lógica de Ponto de Impacto (Centro perfeito é 50%. Margem aceitável: 35% a 65%)
+        // Lógica de Ponto de Impacto
         if (kickResult === "normal") {
             if (impactVal < 25) {
                 kickResult = "torto-esquerda";
-                ballTargetX = '2%'; // Pega de trivela torta para a esquerda
+                ballTargetX = '2%'; 
             } else if (impactVal > 75) {
                 kickResult = "torto-direita";
-                ballTargetX = '98%'; // Vai muito torto para a direita
+                ballTargetX = '98%'; 
             }
         }
 
@@ -351,7 +352,7 @@
         ball.style.transform = 'translateX(-50%) scale(0.35)';
 
         ballShadow.style.left = ballTargetX;
-        ballShadow.style.bottom = (kickResult === "isolou") ? '42%' : '42%'; 
+        ballShadow.style.bottom = '42%'; 
         ballShadow.style.opacity = '0.1';
 
         // Goleiro da máquina pula
@@ -379,14 +380,13 @@
             resultMsg.style.color = "#eab308";
             AudioEngine.playSave();
             history.player.push(false);
-            ball.style.bottom = '85%'; // Fica murcha na mão do goleiro
+            ball.style.bottom = '85%'; 
         } else if (kickResult === "torto-esquerda" || kickResult === "torto-direita") {
             resultMsg.innerText = "PEGOU TORTO! ↪️ PARA FORA!";
             resultMsg.style.color = "#ef4444";
             AudioEngine.playCrowd(false);
             history.player.push(false);
         } else {
-            // Chute bem calibrado: testa contra o goleiro da máquina
             if (selectedZone !== aiChoice) {
                 isGoal = true;
                 net.classList.add('net-shake');
@@ -413,16 +413,14 @@
     }
 
     // --- QUANDO A MÁQUINA CHUTA (VOCÊ É O GOLEIRO) ---
-    // A máquina chuta direto e você escolhe onde defender clicando nas zonas
     function playAction(playerChoice) {
         if (actionInProgress || isPlayerTurnToShoot) return;
         actionInProgress = true;
         AudioEngine.playKick();
 
         const options = ['left', 'center', 'right'];
-        // Máquina também erra ou chuta bem
         const aiTarget = options[Math.floor(Math.random() * options.length)];
-        const aiQuality = Math.random(); // Chance de erro da máquina
+        const aiQuality = Math.random(); 
 
         let ballTargetX = positionsX[aiTarget];
         let ballTargetY = '68%';
@@ -430,10 +428,10 @@
 
         if (aiQuality > 0.88) {
             aiErro = true;
-            ballTargetY = '5%'; // Máquina isola
+            ballTargetY = '5%'; 
         } else if (aiQuality < 0.1) {
             aiErro = true;
-            ballTargetX = '2%'; // Máquina joga para fora
+            ballTargetX = '2%'; 
         }
 
         // Animação do seu Goleiro
@@ -450,21 +448,18 @@
 
         setTimeout(() => {
             ball.classList.remove('ball-spin');
-            let isGoal = false;
 
             if (aiErro) {
                 resultMsg.innerText = "A MÁQUINA MANDOU PARA FORA! 💨";
                 resultMsg.style.color = "#10b981";
                 history.ai.push(false);
             } else if (aiTarget === playerChoice) {
-                // Você defendeu!
                 AudioEngine.playSave();
                 resultMsg.innerText = "DEFENDEU! LINDA PONTE! 🧤";
                 resultMsg.style.color = "#10b981";
                 history.ai.push(false);
                 ball.style.bottom = '55%';
             } else {
-                // Gol da máquina
                 net.classList.add('net-shake');
                 AudioEngine.playCrowd(true);
                 resultMsg.innerText = "GOL DA MÁQUINA! ⚽";
@@ -482,7 +477,7 @@
         }, 400);
     }
 
-    // --- REINICIAR POSIÇÕES E CHECAR CAMPEÃO ---
+    // --- REINICIAR POSIÇÕES ---
     function resetRound() {
         resultMsg.classList.remove('show-msg');
         net.classList.remove('net-shake');
