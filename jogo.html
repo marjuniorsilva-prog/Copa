@@ -3,78 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Penalty Shooters - Edição Realista</title>
+    <title>Penalty Shooters - Modo Campeonato</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@700;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { background: #05070f; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Ubuntu', sans-serif; }
         
         #gameContainer { position: relative; width: 100%; max-width: 850px; aspect-ratio: 16/9; background: #000; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 4px solid #1e293b; border-radius: 8px; }
         canvas { width: 100%; height: 100%; display: block; }
 
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(5, 7, 15, 0.95); color: white; z-index: 100; }
-        h1 { font-size: 46px; color: #facc15; margin-bottom: 25px; text-shadow: 0 4px 12px rgba(0,0,0,0.8); letter-spacing: 2px; }
-        .play-btn { background: linear-gradient(to bottom, #facc15, #eab308); color: #000; border: none; padding: 16px 50px; font-size: 24px; font-weight: bold; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 20px rgba(234,179,8,0.4); transition: 0.1s; text-transform: uppercase; }
+        /* Interface das Telas */
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(10, 15, 30, 0.98); color: white; z-index: 100; padding: 20px; }
+        h1 { font-size: 38px; color: #facc15; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.9); text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* Tabela do Grupo */
+        .tournament-table { width: 90%; border-collapse: collapse; margin-bottom: 25px; background: #111827; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .tournament-table th, .tournament-table td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #1f2937; }
+        .tournament-table th { background: #1f2937; color: #facc15; font-size: 14px; text-transform: uppercase; }
+        .tournament-table tr.player-row { background: rgba(37, 99, 235, 0.25); border-left: 5px solid #2563eb; }
+        .tournament-table td.team-name { text-align: left; font-weight: bold; }
+
+        .play-btn { background: linear-gradient(to bottom, #facc15, #eab308); color: #000; border: none; padding: 15px 45px; font-size: 20px; font-weight: 900; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 20px rgba(234,179,8,0.4); transition: transform 0.1s; text-transform: uppercase; }
         .play-btn:active { transform: scale(0.96); }
+        .next-match-card { background: #1e293b; padding: 15px; border-radius: 8px; width: 90%; text-align: center; margin-bottom: 20px; border: 1px solid #334155; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div id="gameContainer">
     <div id="startScreen" class="screen">
-        <h1>PENALTY CHALLENGE</h1>
-        <button class="play-btn" onclick="startGame()">Jogar</button>
+        <h1>PENALTY CHAMPIONSHIP</h1>
+        <button class="play-btn" onclick="showTournament()">Iniciar Torneio</button>
+    </div>
+
+    <div id="tournamentScreen" class="screen" style="display: none;">
+        <h1>FASE DE GRUPOS - GRUPO A</h1>
+        <table class="tournament-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="text-align: left;">TIME</th>
+                    <th>P</th>
+                    <th>W</th>
+                    <th>L</th>
+                    <th>GD</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+        <div class="next-match-card" id="nextMatchInfo">
+            Próximo confronto: LEÃO AZUL vs DESCALÇO
+        </div>
+        <button class="play-btn" id="btnNextMatch" onclick="startPenaltyMatch()">Jogar Partida</button>
     </div>
 
     <div id="endScreen" class="screen" style="display: none;">
-        <h1 id="endTitle">Fim de Jogo</h1>
+        <h1 id="endTitle">Fim do Torneio</h1>
         <button class="play-btn" onclick="location.reload()">Jogar Novamente</button>
     </div>
 
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" style="display: none;"></canvas>
 </div>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    
     canvas.width = 850;
     canvas.height = 480;
 
+    // Banco de Dados do Campeonato (Igual aos seus conceitos)
+    let teams = [
+        { name: "LEÃO AZUL", p: 0, w: 0, l: 0, gd: 0, isPlayer: true },
+        { name: "DESCALÇO", p: 0, w: 0, l: 0, gd: 0 },
+        { name: "REAL MATISMO", p: 0, w: 0, l: 0, gd: 0 },
+        { name: "PENALTÊROS", p: 0, w: 0, l: 0, gd: 0 }
+    ];
+    let currentRound = 1;
+    let currentOpponent = null;
+
+    // Configurações da Partida de Pênaltis
     let gameState = 'START'; 
-    let turn = 'PLAYER'; // PLAYER ou AI
-    let score = { player: 0, ai: 0 };
+    let turn = 'PLAYER'; // PLAYER (chuta) ou AI (defende)
     
-    // Configurações do Cenário baseado nos prints
+    // Controle estrito das 5 cobranças oficiais + Alternados
+    let matchData = {
+        playerGoals: 0, aiGoals: 0,
+        playerShots: 0, aiShots: 0,
+        playerHistory: [], // 'GOAL' ou 'MISS'
+        aiHistory: [],
+        currentKickNumber: 1, // Contador visual de 1 a 5
+        suddenDeath: false
+    };
+
     const goal = { x: 175, y: 100, width: 500, height: 170 };
     const ballOrigin = { x: 425, y: 410 };
     let ball = { x: 425, y: 410, radius: 14, targetX: 0, targetY: 0, speed: 18, progress: 0 };
-    
     let gk = { x: 425, y: 255, targetX: 425, targetY: 255, width: 45, height: 80, speed: 10, state: 'IDLE' };
-    let player = { x: 330, y: 440, frame: 0 }; // Nosso batedor visto de costas
+    let player = { x: 330, y: 440 };
 
-    // Elementos de Mira e Força (Idênticos aos prints)
-    let arrowAngle = -0.6;
-    let arrowDir = 0.025;
-    let targetCircle = { x: 425, y: 185, dirX: 4, dirY: 2 };
-    let powerBar = 0;
-    let powerDir = 4.5;
-    let resultText = '';
-    let resultColor = '#fff';
+    let arrowAngle = -0.6; let arrowDir = 0.03;
+    let targetCircle = { x: 425, y: 185, dirX: 4, dirY: 2.5 };
+    let powerBar = 0; let powerDir = 5;
+    let resultText = ''; let resultColor = '#fff';
 
-    // Gerador de Torcida de fundo fixo para realismo
-    const crowdParticles = [];
-    for(let i=0; i<1200; i++) {
-        crowdParticles.push({
-            x: Math.random() * canvas.width,
-            y: 40 + Math.random() * 60,
-            color: ['#3b82f6', '#ef4444', '#eab308', '#10b981', '#a855f7', '#64748b'][Math.floor(Math.random()*6)]
+    // Gerador de Torcida de Fundo
+    const crowd = [];
+    for(let i=0; i<1000; i++) {
+        crowd.push({ x: Math.random()*canvas.width, y: 40+Math.random()*60, color: ['#3b82f6','#ef4444','#eab308','#10b981'][Math.floor(Math.random()*4)] });
+    }
+
+    function showTournament() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('gameCanvas').style.display = 'none';
+        document.getElementById('tournamentScreen').style.display = 'flex';
+        
+        // Definir o oponente baseado na rodada do campeonato
+        if (currentRound === 1) currentOpponent = teams[1]; // Descalço
+        else if (currentRound === 2) currentOpponent = teams[2]; // Real Matismo
+        else if (currentRound === 3) currentOpponent = teams[3]; // Penaltêros
+        else {
+            endChampionship();
+            return;
+        }
+
+        document.getElementById('nextMatchInfo').innerText = `RODADA ${currentRound} de 3: LEÃO AZUL vs ${currentOpponent.name}`;
+        updateTableUI();
+    }
+
+    function updateTableUI() {
+        // Ordenar tabela por Pontos, depois por Saldo de Gols
+        teams.sort((a,b) => b.p - a.p || b.gd - a.gd);
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        
+        teams.forEach((team, index) => {
+            const tr = document.createElement('tr');
+            if(team.isPlayer) tr.className = 'player-row';
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td class="team-name">${team.name}</td>
+                <td><strong>${team.p}</strong></td>
+                <td>${team.w}</td>
+                <td>${team.l}</td>
+                <td>${team.gd}</td>
+            `;
+            tbody.appendChild(tr);
         });
     }
 
-    function startGame() {
-        document.getElementById('startScreen').style.display = 'none';
+    function startPenaltyMatch() {
+        document.getElementById('tournamentScreen').style.display = 'none';
+        canvas.style.display = 'block';
+        
+        // Inicializar dados limpos da disputa de 5 penaltis
+        matchData = {
+            playerGoals: 0, aiGoals: 0,
+            playerShots: 0, aiShots: 0,
+            playerHistory: [], aiHistory: [],
+            currentKickNumber: 1, suddenDeath: false
+        };
+        
         setupPlayerTurn();
+        gameState = 'PLAYING';
         gameLoop();
     }
 
@@ -94,16 +185,15 @@
         
         setTimeout(() => {
             if (gameState !== 'AI_SHOOTING') return;
-            // IA escolhe cantos difíceis
+            // IA escolhe cantos e varia a força
             const spots = [
-                {x: 210 + Math.random()*80, y: 120 + Math.random()*80},
-                {x: 560 + Math.random()*80, y: 120 + Math.random()*80},
-                {x: 425 + (Math.random()*60 - 30), y: 130}
+                {x: 200 + Math.random()*90, y: 120 + Math.random()*80},
+                {x: 550 + Math.random()*90, y: 120 + Math.random()*80},
+                {x: 425 + (Math.random()*40 - 20), y: 120}
             ];
             const chosen = spots[Math.floor(Math.random() * spots.length)];
-            ball.targetX = chosen.x;
-            ball.targetY = chosen.y;
-            ball.speed = 13 + Math.random() * 10;
+            ball.targetX = chosen.x; ball.targetY = chosen.y;
+            ball.speed = 14 + Math.random() * 9;
             gameState = 'BALL_FLYING';
 
             if(gk.targetX === 425) {
@@ -111,30 +201,26 @@
                 gk.targetX = moves[Math.floor(Math.random()*3)];
                 gk.targetY = 200; gk.state = 'DIVING';
             }
-        }, 1600);
+        }, 1500);
     }
 
     window.addEventListener('mousedown', () => {
+        if (document.getElementById('tournamentScreen').style.display === 'flex') return;
+        
         if (turn === 'PLAYER') {
-            if (gameState === 'AIMING_ARROW') {
-                gameState = 'AIMING_TARGET';
-            } else if (gameState === 'AIMING_TARGET') {
-                gameState = 'AIMING_POWER';
-            } else if (gameState === 'AIMING_POWER') {
-                // Chute disparado!
-                ball.targetX = targetCircle.x;
-                ball.targetY = targetCircle.y;
-                ball.speed = 12 + (powerBar * 0.16); // Quanto mais força, mais rápido
-
-                // Goleiro da máquina escolhe um lado para pular
+            if (gameState === 'AIMING_ARROW') gameState = 'AIMING_TARGET';
+            else if (gameState === 'AIMING_TARGET') gameState = 'AIMING_POWER';
+            else if (gameState === 'AIMING_POWER') {
+                ball.targetX = targetCircle.x; ball.targetY = targetCircle.y;
+                ball.speed = 11 + (powerBar * 0.16);
+                
                 const aiMoves = [250, 425, 600];
                 gk.targetX = aiMoves[Math.floor(Math.random() * aiMoves.length)];
-                gk.targetY = 180 + Math.random() * 50;
+                gk.targetY = 170 + Math.random() * 60;
                 gk.state = 'DIVING';
                 gameState = 'BALL_FLYING';
             }
         } else if (turn === 'AI' && gameState === 'AI_SHOOTING') {
-            // Defesa do jogador usando cliques esquerdo/centro/direito do gol
             const rect = canvas.getBoundingClientRect();
             const mouseX = ((event.clientX - rect.left) / rect.width) * canvas.width;
             if (mouseX < 340) { gk.targetX = 250; gk.targetY = 200; }
@@ -145,37 +231,32 @@
     });
 
     function gameLoop() {
+        if (canvas.style.display === 'none') return;
         update();
         render();
         requestAnimationFrame(gameLoop);
     }
 
     function update() {
-        // Movimento do alvo e indicadores
         if (gameState === 'AIMING_ARROW') {
             arrowAngle += arrowDir;
-            if (arrowAngle > 0.6 || arrowAngle < -0.6) arrowDir *= -1;
+            if (arrowAngle > 0.65 || arrowAngle < -0.65) arrowDir *= -1;
         }
         if (gameState === 'AIMING_TARGET') {
-            targetCircle.x += targetCircle.dirX;
-            targetCircle.y += targetCircle.dirY;
-            if(targetCircle.x < goal.x + 30 || targetCircle.x > goal.x + goal.width - 30) targetCircle.dirX *= -1;
-            if(targetCircle.y < goal.y + 30 || targetCircle.y > goal.y + goal.height - 30) targetCircle.dirY *= -1;
+            targetCircle.x += targetCircle.dirX; targetCircle.y += targetCircle.dirY;
+            if(targetCircle.x < goal.x + 25 || targetCircle.x > goal.x + goal.width - 25) targetCircle.dirX *= -1;
+            if(targetCircle.y < goal.y + 25 || targetCircle.y > goal.y + goal.height - 25) targetCircle.dirY *= -1;
         }
         if (gameState === 'AIMING_POWER') {
             powerBar += powerDir;
             if (powerBar > 100 || powerBar < 0) powerDir *= -1;
         }
-
-        // Movimento do Goleiro
         if (gk.state === 'DIVING') {
-            gk.x += (gk.targetX - gk.x) * 0.16;
-            gk.y += (gk.targetY - gk.y) * 0.16;
+            gk.x += (gk.targetX - gk.x) * 0.18; gk.y += (gk.targetY - gk.y) * 0.18;
         }
 
-        // Movimento da Bola
         if (gameState === 'BALL_FLYING') {
-            ball.progress += 0.035;
+            ball.progress += 0.038;
             ball.x = ballOrigin.x + (ball.targetX - ballOrigin.x) * ball.progress;
             ball.y = ballOrigin.y + (ball.targetY - ballOrigin.y) * ball.progress;
             ball.radius = 15 - (7 * ball.progress);
@@ -183,129 +264,185 @@
             if (ball.progress >= 1) {
                 gameState = 'RESULT';
                 let distanceToGk = Math.hypot(ball.x - gk.x, ball.y - (gk.y - 25));
-                let saveDistance = ball.speed > 22 ? 45 : 75; // Bola muito forte reduz o alcance do goleiro
+                let saveDistance = ball.speed > 22 ? 45 : 75; // Chute forte diminui área de defesa do goleiro
 
                 let isGoal = (ball.x >= goal.x && ball.x <= goal.x + goal.width && ball.y >= goal.y && ball.y <= goal.y + goal.height);
 
-                if (isGoal) {
-                    if (distanceToGk < saveDistance) {
-                        resultText = "DEFENDEU!"; resultColor = "#facc15";
-                    } else {
-                        resultText = "GOOOOOL!"; resultColor = "#10b981";
-                        if (turn === 'PLAYER') score.player++; else score.ai++;
-                    }
+                if (isGoal && distanceToGk >= saveDistance) {
+                    resultText = "GOOOOOL!"; resultColor = "#10b981";
+                    if (turn === 'PLAYER') { matchData.playerGoals++; matchData.playerHistory.push('GOAL'); }
+                    else { matchData.aiGoals++; matchData.aiHistory.push('GOAL'); }
+                } else if (isGoal && distanceToGk < saveDistance) {
+                    resultText = "DEFENDEU!"; resultColor = "#facc15";
+                    if (turn === 'PLAYER') matchData.playerHistory.push('MISS');
+                    else matchData.aiHistory.push('MISS');
                 } else {
                     resultText = "PARA FORA!"; resultColor = "#ef4444";
+                    if (turn === 'PLAYER') matchData.playerHistory.push('MISS');
+                    else matchData.aiHistory.push('MISS');
                 }
 
-                setTimeout(() => {
-                    if (score.player >= 5 || score.ai >= 5) endGame();
-                    else if (turn === 'PLAYER') setupAiTurn(); else setupPlayerTurn();
-                }, 2000);
+                if(turn === 'PLAYER') matchData.playerShots++; else matchData.aiShots++;
+
+                // Processar lógica de turnos e verificar fim da partida
+                setTimeout(checkMatchProgression, 2000);
             }
         }
+    }
+
+    function checkMatchProgression() {
+        // Se ambos completaram a cobrança da rodada atual
+        if (matchData.playerShots === matchData.aiShots) {
+            let shots = matchData.playerShots;
+            
+            // 1. Validação dos 5 Pênaltis Iniciais
+            if (shots >= 5) {
+                if (matchData.playerGoals !== matchData.aiGoals) {
+                    endPenaltyMatch();
+                    return;
+                } else {
+                    matchData.suddenDeath = true; // Empate nos 5 primeiros -> Ativa Alternados!
+                }
+            }
+            
+            // 2. Validação na Morte Súbita (Pênaltis Alternados)
+            if (matchData.suddenDeath && shots > 5) {
+                if (matchData.playerGoals !== matchData.aiGoals) {
+                    endPenaltyMatch();
+                    return;
+                }
+            }
+
+            matchData.currentKickNumber++;
+            setupPlayerTurn();
+        } else {
+            // Se o jogador acabou de bater, agora é a IA que cobra
+            setupAiTurn();
+        }
+    }
+
+    function endPenaltyMatch() {
+        // Calcular saldo final do jogo
+        let pGoals = matchData.playerGoals;
+        let aGoals = matchData.aiGoals;
+        let playerWin = pGoals > aGoals;
+
+        // Atualizar dados do jogador (Leão Azul)
+        let playerTeam = teams.find(t => t.isPlayer);
+        playerTeam.gd += (pGoals - aGoals);
+        if(playerWin) { playerTeam.p += 3; playerTeam.w += 1; } else { playerTeam.l += 1; }
+
+        // Simular resultado do outro jogo do grupo por inteligência básica
+        let otherTeams = teams.filter(t => !t.isPlayer && t !== currentOpponent);
+        let winOther = Math.random() > 0.5;
+        let g1 = Math.floor(Math.random()*4); let g2 = Math.floor(Math.random()*4);
+        if(g1 === g2) g1++; // Evitar empates absolutos nos pênaltis simulados
+        otherTeams[0].gd += (g1 - g2);
+        otherTeams[1].gd += (g2 - g1);
+        if(g1 > g2) { otherTeams[0].p += 3; otherTeams[0].w += 1; otherTeams[1].l += 1; } 
+        else { otherTeams[1].p += 3; otherTeams[1].w += 1; otherTeams[0].l += 1; }
+
+        // Atualizar oponente atual
+        currentOpponent.gd += (aGoals - pGoals);
+        if(!playerWin) { currentOpponent.p += 3; currentOpponent.w += 1; } else { currentOpponent.l += 1; }
+
+        currentRound++;
+        showTournament();
     }
 
     function render() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        // 1. Céu da Noite e Arquibancada de Fundo
+        // Cenário: Estádio e Torcida Viva
         ctx.fillStyle = '#090d16'; ctx.fillRect(0, 0, canvas.width, 100);
         ctx.fillStyle = '#111827'; ctx.fillRect(0, 40, canvas.width, 60);
+        crowd.forEach(p => { ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); });
 
-        // Renderizar a Torcida Viva (Puntilhada como nas fotos)
-        crowdParticles.forEach(p => {
-            ctx.fillStyle = p.color;
-            ctx.fillRect(p.x, p.y, 3, 3);
-        });
-
-        // Painel Publicitário (Muro do estádio)
+        // Outdoor publicitário
         ctx.fillStyle = '#f97316'; ctx.fillRect(0, 100, canvas.width, 25);
         ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Ubuntu';
-        ctx.fillText("PENALTY CHALLENGE X    PENALTY SHOOTERS PRO    CHALLENGE", 40, 117);
+        ctx.fillText("FASE DE GRUPOS    -    PENALTY CHALLENGE PRO 2026    -    RODADA " + currentRound, 40, 117);
 
-        // 2. Gramado Realista com Faixas de Perspectiva (Listras Claras/Escuras)
-        let totalStripes = 8;
+        // Gramado Realista em Perspectiva
         let currentY = 125;
-        for (let i = 0; i < totalStripes; i++) {
+        for (let i = 0; i < 8; i++) {
             let stripeHeight = 15 + (i * 6);
             ctx.fillStyle = (i % 2 === 0) ? '#15803d' : '#166534';
             ctx.fillRect(0, currentY, canvas.width, stripeHeight);
             currentY += stripeHeight;
         }
 
-        // Linhas Brancas do Campo
+        // Linhas brancas do campo
         ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 3;
         ctx.strokeRect(70, 270, 710, 210);
 
-        // 3. O GOL (Traves grossas brancas e rede quadriculada)
+        // Desenhar Trave e Rede
         ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 7;
         ctx.strokeRect(goal.x, goal.y, goal.width, goal.height);
-        
         ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
         for(let x = goal.x; x < goal.x + goal.width; x += 14) {
             ctx.beginPath(); ctx.moveTo(x, goal.y); ctx.lineTo(x, goal.y + goal.height); ctx.stroke();
         }
-        for(let y = goal.y; y < goal.y + goal.height; y += 14) {
-            ctx.beginPath(); ctx.moveTo(goal.x, y); ctx.lineTo(goal.x + goal.width, y); ctx.stroke();
+
+        // Indicadores Visuais das 5 Cobranças (Círculos no topo do Gol)
+        let totalDots = Math.max(5, matchData.playerShots, matchData.aiShots);
+        for(let i=0; i<totalDots; i++) {
+            // Bolinhas do Jogador (Esquerda)
+            ctx.fillStyle = '#4b5563'; // Neutro
+            if(matchData.playerHistory[i] === 'GOAL') ctx.fillStyle = '#10b981'; // Verde
+            if(matchData.playerHistory[i] === 'MISS') ctx.fillStyle = '#ef4444'; // Vermelho
+            ctx.beginPath(); ctx.arc(goal.x + 30 + (i * 24), goal.y - 25, 8, 0, Math.PI*2); ctx.fill();
+
+            // Bolinhas da Máquina (Direita)
+            ctx.fillStyle = '#4b5563';
+            if(matchData.aiHistory[i] === 'GOAL') ctx.fillStyle = '#10b981';
+            if(matchData.aiHistory[i] === 'MISS') ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(goal.x + goal.width - 30 - (i * 24), goal.y - 25, 8, 0, Math.PI*2); ctx.fill();
         }
 
-        // 4. ELEMENTOS DE MIRA (Seta e Círculo Vermelho iguaizinhos aos prints)
+        // Elementos de Mira
         if (turn === 'PLAYER' && gameState === 'AIMING_ARROW') {
-            ctx.save();
-            ctx.translate(ballOrigin.x, ballOrigin.y); ctx.rotate(arrowAngle);
+            ctx.save(); ctx.translate(ballOrigin.x, ballOrigin.y); ctx.rotate(arrowAngle);
             ctx.fillStyle = '#eab308'; ctx.beginPath();
             ctx.moveTo(-10, -25); ctx.lineTo(10, -25); ctx.lineTo(5, -110); ctx.lineTo(-5, -110);
             ctx.closePath(); ctx.fill(); ctx.restore();
         }
         if (turn === 'PLAYER' && (gameState === 'AIMING_TARGET' || gameState === 'AIMING_POWER')) {
-            // Desenha o Alvo Vermelho com bordas amarelas idêntico ao jogo real
             ctx.strokeStyle = '#eab308'; ctx.lineWidth = 4;
             ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 22, 0, Math.PI*2); ctx.stroke();
             ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
             ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 14, 0, Math.PI*2); ctx.fill();
         }
 
-        // 5. GOLEIRO (Com luvas e uniforme detalhado de goleiro)
+        // Goleiro Dinâmico
         ctx.fillStyle = turn === 'PLAYER' ? '#06b6d4' : '#ec4899';
-        ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 25); // Camisa
-        ctx.fillStyle = '#111827'; ctx.fillRect(gk.x - gk.width/2, gk.y - 25, gk.width, 25); // Calção
-        ctx.fillStyle = '#fbcfe8'; ctx.beginPath(); ctx.arc(gk.x, gk.y - gk.height - 12, 12, 0, Math.PI*2); ctx.fill(); // Rosto
-        // Luvas Grandes de Goleiro
-        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 25);
+        ctx.fillStyle = '#111827'; ctx.fillRect(gk.x - gk.width/2, gk.y - 25, gk.width, 25);
+        ctx.fillStyle = '#fbcfe8'; ctx.beginPath(); ctx.arc(gk.x, gk.y - gk.height - 12, 12, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#ffffff'; // Luvas
         ctx.fillRect(gk.x - gk.width - 8, gk.y - gk.height + 15, 15, 15);
         ctx.fillRect(gk.x + gk.width - 7, gk.y - gk.height + 15, 15, 15);
 
-        // 6. JOGADOR DE COSTAS (Sempre visível na cobrança do jogador - Igual ao Print com Camisa número 3!)
+        // Jogador de costas com camisa Número 3
         if (turn === 'PLAYER') {
-            ctx.fillStyle = '#facc15'; // Camisa Listrada Amarela/Preta
+            ctx.fillStyle = '#2563eb'; // Camisa Azul do Leão Azul
             ctx.fillRect(player.x, player.y, 50, 40);
-            ctx.fillStyle = '#000000'; // Listras pretas
-            ctx.fillRect(player.x + 12, player.y, 8, 40);
-            ctx.fillRect(player.x + 30, player.y, 8, 40);
-            // Número 3 grande nas costas
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 22px Ubuntu';
             ctx.fillText("3", player.x + 18, player.y + 28);
-            // Calção e Pernas
             ctx.fillStyle = '#000'; ctx.fillRect(player.x, player.y + 40, 50, 20);
             ctx.fillStyle = '#fbcfe8'; ctx.fillRect(player.x + 8, player.y + 60, 10, 25);
             ctx.fillRect(player.x + 32, player.y + 60, 10, 25);
         }
 
-        // 7. A BOLA (Branca com gomos pretos estilizados)
+        // Bola com sombra
         if (gameState !== 'START') {
             ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath();
-            ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill(); // Sombra
-
+            ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 2;
             ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-            // Detalhes dos gomos internos da bola
-            if(ball.radius > 8) {
-                ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius*0.3, 0, Math.PI*2); ctx.fill();
-            }
         }
 
-        // BARRA DE FORÇA VERTICAL NO CANTO
+        // Barra de Força Lateral
         if (gameState === 'AIMING_POWER') {
             ctx.fillStyle = '#1e293b'; ctx.fillRect(35, 180, 25, 180);
             let pColor = '#10b981';
@@ -314,24 +451,25 @@
             ctx.fillStyle = pColor; ctx.fillRect(35, 360, 25, -powerBar * 1.8);
         }
 
-        // 8. PLACAR DO TORNEIO (Translúcido e elegante igual ao do print)
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)'; ctx.fillRect(canvas.width - 240, canvas.height - 95, 215, 75);
+        // Placar HUD da Partida Atual
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)'; ctx.fillRect(canvas.width - 240, canvas.height - 95, 215, 75);
         ctx.lineWidth = 2; ctx.strokeStyle = '#eab308'; ctx.strokeRect(canvas.width - 240, canvas.height - 95, 215, 75);
-        ctx.fillStyle = '#fff'; ctx.font = '15px Ubuntu';
-        ctx.fillText("LEAO AZUL", canvas.width - 220, canvas.height - 65);
-        ctx.fillText("DESCALCO", canvas.width - 220, canvas.height - 35);
+        ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu';
+        ctx.fillText("LEÃO AZUL (VOCÊ)", canvas.width - 225, canvas.height - 65);
+        ctx.fillText(currentOpponent ? currentOpponent.name : "RIVAL", canvas.width - 225, canvas.height - 35);
         ctx.font = '20px Ubuntu'; ctx.fillStyle = '#facc15';
-        ctx.fillText(score.player, canvas.width - 65, canvas.height - 63);
-        ctx.fillText(score.ai, canvas.width - 65, canvas.height - 33);
+        ctx.fillText(matchData.playerGoals, canvas.width - 55, canvas.height - 63);
+        ctx.fillText(matchData.aiGoals, canvas.width - 55, canvas.height - 33);
 
-        // Banner informativo Superior
-        ctx.fillStyle = turn === 'PLAYER' ? '#1e3a8a' : '#c2410c';
+        // Banner de Instruções e Modo de Jogo
+        ctx.fillStyle = matchData.suddenDeath ? '#b91c1c' : (turn === 'PLAYER' ? '#1e3a8a' : '#c2410c');
         ctx.fillRect(0, 0, canvas.width, 40);
-        ctx.fillStyle = '#fff'; ctx.font = '15px Ubuntu'; ctx.textAlign = 'center';
-        ctx.fillText(turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE PARA FIXAR DIRECÃO, ALVO E FORÇA" : "SUA VEZ DE DEFENDER! CLIQUE EM UM DOS CANTO DO GOL PARA O GOLEIRO PULAR", canvas.width/2, 25);
-        ctx.textAlign = 'left';
+        ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu'; ctx.textAlign = 'center';
+        let statusMsg = matchData.suddenDeath ? "PÊNALTIS ALTERNADOS (MORTE SÚBITA)! " : `COBRANÇA Nº ${matchData.currentKickNumber} de 5 - `;
+        statusMsg += turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE" : "SUA VEZ DE DEFENDER! CLIQUE NOS CANTOS DO GOL";
+        ctx.fillText(statusMsg, canvas.width/2, 25); ctx.textAlign = 'left';
 
-        // Telas de Gol / Defesa
+        // Cartaz de Resultado temporário
         if (gameState === 'RESULT') {
             ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.fillRect(0, 200, canvas.width, 90);
             ctx.font = 'bold 42px Ubuntu'; ctx.fillStyle = resultColor; ctx.textAlign = 'center';
@@ -339,10 +477,16 @@
         }
     }
 
-    function endGame() {
-        gameState = 'START';
+    function endChampionship() {
+        document.getElementById('gameCanvas').style.display = 'none';
+        document.getElementById('tournamentScreen').style.display = 'none';
+        
+        // Verificar quem ficou em primeiro após as 3 rodadas
+        teams.sort((a,b) => b.p - a.p || b.gd - a.gd);
+        let champion = teams[0];
+
         document.getElementById('endScreen').style.display = 'flex';
-        document.getElementById('endTitle').innerText = score.player > score.ai ? "Você Ganhou! 🏆" : "A Máquina Ganhou! 🤖";
+        document.getElementById('endTitle').innerText = champion.isPlayer ? "🏆 PARABÉNS! VOCÊ É O CAMPEÃO DO GRUPO A! 🏆" : `FIM DE TORNEIO! O campeão foi o ${champion.name}`;
     }
 </script>
 
