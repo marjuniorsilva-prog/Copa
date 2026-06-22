@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Penalty Shooters Clone Pro</title>
+    <title>Penalty Shooters - Edição Realista</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Montserrat', sans-serif; }
+        body { background: #05070f; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Ubuntu', sans-serif; }
         
-        #gameContainer { position: relative; width: 100%; max-width: 800px; aspect-ratio: 16/9; background: #222; box-shadow: 0 0 30px rgba(0,0,0,0.7); }
+        #gameContainer { position: relative; width: 100%; max-width: 850px; aspect-ratio: 16/9; background: #000; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 4px solid #1e293b; border-radius: 8px; }
         canvas { width: 100%; height: 100%; display: block; }
 
-        /* Telas de Interface */
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(11, 15, 25, 0.9); color: white; z-index: 100; }
-        h1 { font-size: 42px; color: #f59e0b; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); text-transform: uppercase; }
-        .play-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 15px 40px; font-size: 22px; font-weight: 900; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(217,119,6,0.4); transition: transform 0.1s; text-transform: uppercase; }
-        .play-btn:active { transform: scale(0.95); }
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(5, 7, 15, 0.95); color: white; z-index: 100; }
+        h1 { font-size: 46px; color: #facc15; margin-bottom: 25px; text-shadow: 0 4px 12px rgba(0,0,0,0.8); letter-spacing: 2px; }
+        .play-btn { background: linear-gradient(to bottom, #facc15, #eab308); color: #000; border: none; padding: 16px 50px; font-size: 24px; font-weight: bold; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 20px rgba(234,179,8,0.4); transition: 0.1s; text-transform: uppercase; }
+        .play-btn:active { transform: scale(0.96); }
     </style>
 </head>
 <body>
 
 <div id="gameContainer">
     <div id="startScreen" class="screen">
-        <h1>Penalty Challenge</h1>
+        <h1>PENALTY CHALLENGE</h1>
         <button class="play-btn" onclick="startGame()">Jogar</button>
     </div>
 
@@ -39,41 +38,39 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Forçar proporção HD interna do canvas para nitidez
-    canvas.width = 800;
-    canvas.height = 450;
+    canvas.width = 850;
+    canvas.height = 480;
 
-    // Estados do Jogo: 'START', 'AIMING_ARROW', 'AIMING_HEIGHT', 'BALL_FLYING', 'GK_SAVING', 'RESULT', 'AI_SHOOTING'
     let gameState = 'START'; 
     let turn = 'PLAYER'; // PLAYER ou AI
     let score = { player: 0, ai: 0 };
     
-    // Configurações Físicas e Elementos
-    const goal = { x: 160, y: 80, width: 480, height: 160 };
-    const ballOrigin = { x: 400, y: 390 };
-    let ball = { x: 400, y: 390, radius: 12, targetX: 0, targetY: 0, speed: 18, progress: 0 };
+    // Configurações do Cenário baseado nos prints
+    const goal = { x: 175, y: 100, width: 500, height: 170 };
+    const ballOrigin = { x: 425, y: 410 };
+    let ball = { x: 425, y: 410, radius: 14, targetX: 0, targetY: 0, speed: 18, progress: 0 };
     
-    // Atributos Goleiro (Igual às fotos de atributos que você mandou!)
-    let gk = { 
-        x: 400, y: 220, targetX: 400, targetY: 220, 
-        width: 35, height: 65, speed: 9, maxReach: 140,
-        state: 'IDLE' // IDLE, DIVING, RETURNING
-    };
+    let gk = { x: 425, y: 255, targetX: 425, targetY: 255, width: 45, height: 80, speed: 10, state: 'IDLE' };
+    let player = { x: 330, y: 440, frame: 0 }; // Nosso batedor visto de costas
 
-    // Mecânica das Setas e Calibração
-    let arrowAngle = 0;
-    let arrowDir = 0.03;
+    // Elementos de Mira e Força (Idênticos aos prints)
+    let arrowAngle = -0.6;
+    let arrowDir = 0.025;
+    let targetCircle = { x: 425, y: 185, dirX: 4, dirY: 2 };
     let powerBar = 0;
-    let powerDir = 4;
+    let powerDir = 4.5;
     let resultText = '';
     let resultColor = '#fff';
 
-    // Zonas para clique na Defesa
-    const defenseZones = [
-        { id: 'left', x: 160, y: 80, w: 160, h: 160 },
-        { id: 'center', x: 320, y: 80, w: 160, h: 160 },
-        { id: 'right', x: 480, y: 80, w: 160, h: 160 }
-    ];
+    // Gerador de Torcida de fundo fixo para realismo
+    const crowdParticles = [];
+    for(let i=0; i<1200; i++) {
+        crowdParticles.push({
+            x: Math.random() * canvas.width,
+            y: 40 + Math.random() * 60,
+            color: ['#3b82f6', '#ef4444', '#eab308', '#10b981', '#a855f7', '#64748b'][Math.floor(Math.random()*6)]
+        });
+    }
 
     function startGame() {
         document.getElementById('startScreen').style.display = 'none';
@@ -85,81 +82,68 @@
         turn = 'PLAYER';
         gameState = 'AIMING_ARROW';
         ball.x = ballOrigin.x; ball.y = ballOrigin.y; ball.progress = 0;
-        gk.x = 400; gk.y = 220; gk.targetX = 400; gk.targetY = 220; gk.state = 'IDLE';
-        arrowAngle = 0;
-        powerBar = 0;
+        gk.x = 425; gk.y = 255; gk.targetX = 425; gk.targetY = 255; gk.state = 'IDLE';
+        targetCircle.x = 425; targetCircle.y = 185;
     }
 
     function setupAiTurn() {
         turn = 'AI';
         gameState = 'AI_SHOOTING';
         ball.x = ballOrigin.x; ball.y = ballOrigin.y; ball.progress = 0;
-        gk.x = 400; gk.y = 220; gk.targetX = 400; gk.targetY = 220; gk.state = 'IDLE';
+        gk.x = 425; gk.y = 255; gk.targetX = 425; gk.targetY = 255; gk.state = 'IDLE';
         
-        // Máquina escolhe um ponto aleatório de chute com força variável
         setTimeout(() => {
             if (gameState !== 'AI_SHOOTING') return;
-            const targetOptions = [
-                {x: 220 + Math.random()*80, y: 100 + Math.random()*100}, // Esquerda
-                {x: 360 + Math.random()*80, y: 100 + Math.random()*100}, // Centro
-                {x: 500 + Math.random()*80, y: 100 + Math.random()*100}  // Direita
+            // IA escolhe cantos difíceis
+            const spots = [
+                {x: 210 + Math.random()*80, y: 120 + Math.random()*80},
+                {x: 560 + Math.random()*80, y: 120 + Math.random()*80},
+                {x: 425 + (Math.random()*60 - 30), y: 130}
             ];
-            const chosen = targetOptions[Math.floor(Math.random() * targetOptions.length)];
+            const chosen = spots[Math.floor(Math.random() * spots.length)];
             ball.targetX = chosen.x;
             ball.targetY = chosen.y;
-            ball.speed = 12 + Math.random() * 12; // Velocidade aleatória da máquina
-            
+            ball.speed = 13 + Math.random() * 10;
             gameState = 'BALL_FLYING';
-            
-            // Definição automática de para onde o goleiro da IA vai pular baseado no clique prévio do jogador
-            // Se o jogador não escolheu a tempo, pula aleatório
-            if(gk.targetX === 400) {
-                const choices = [240, 400, 560];
-                gk.targetX = choices[Math.floor(Math.random()*3)];
-                gk.targetY = 160;
-                gk.state = 'DIVING';
+
+            if(gk.targetX === 425) {
+                const moves = [250, 425, 600];
+                gk.targetX = moves[Math.floor(Math.random()*3)];
+                gk.targetY = 200; gk.state = 'DIVING';
             }
-        }, 1500);
+        }, 1600);
     }
 
-    // Gerenciar cliques na tela
-    window.addEventListener('mousedown', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = ((e.clientX - rect.left) / rect.width) * canvas.width;
-        const mouseY = ((e.clientY - rect.top) / rect.height) * canvas.height;
-
+    window.addEventListener('mousedown', () => {
         if (turn === 'PLAYER') {
             if (gameState === 'AIMING_ARROW') {
-                gameState = 'AIMING_HEIGHT';
-            } else if (gameState === 'AIMING_HEIGHT') {
-                // Calcular ponto final do chute baseado na Seta e na Força
-                let distance = 150 + (powerBar * 2.5); // Mais força = bola vai mais longe/alto
-                ball.targetX = ballOrigin.x + Math.sin(arrowAngle) * distance;
-                ball.targetY = ballOrigin.y - Math.cos(arrowAngle) * distance;
-                ball.speed = 10 + (powerBar * 0.15); // Barra cheia = bola ultra rápida!
-                
-                // Goleiro da IA decide para onde pular
-                const aiChoices = [240, 400, 560];
-                gk.targetX = aiChoices[Math.floor(Math.random() * aiChoices.length)];
-                gk.targetY = 150 + Math.random() * 50;
-                gk.state = 'DIVING';
+                gameState = 'AIMING_TARGET';
+            } else if (gameState === 'AIMING_TARGET') {
+                gameState = 'AIMING_POWER';
+            } else if (gameState === 'AIMING_POWER') {
+                // Chute disparado!
+                ball.targetX = targetCircle.x;
+                ball.targetY = targetCircle.y;
+                ball.speed = 12 + (powerBar * 0.16); // Quanto mais força, mais rápido
 
+                // Goleiro da máquina escolhe um lado para pular
+                const aiMoves = [250, 425, 600];
+                gk.targetX = aiMoves[Math.floor(Math.random() * aiMoves.length)];
+                gk.targetY = 180 + Math.random() * 50;
+                gk.state = 'DIVING';
                 gameState = 'BALL_FLYING';
             }
         } else if (turn === 'AI' && gameState === 'AI_SHOOTING') {
-            // No turno de defender, você clica nas zonas do gol para mandar seu goleiro saltar
-            defenseZones.forEach(zone => {
-                if (mouseX >= zone.x && mouseX <= zone.x + zone.w && mouseY >= zone.y && mouseY <= zone.y + zone.h) {
-                    if (zone.id === 'left') { gk.targetX = 240; gk.targetY = 160; }
-                    if (zone.id === 'center') { gk.targetX = 400; gk.targetY = 140; }
-                    if (zone.id === 'right') { gk.targetX = 560; gk.targetY = 160; }
-                    gk.state = 'DIVING';
-                }
-            });
+            // Defesa do jogador usando cliques esquerdo/centro/direito do gol
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = ((event.clientX - rect.left) / rect.width) * canvas.width;
+            if (mouseX < 340) { gk.targetX = 250; gk.targetY = 200; }
+            else if (mouseX > 510) { gk.targetX = 600; gk.targetY = 200; }
+            else { gk.targetX = 425; gk.targetY = 220; }
+            gk.state = 'DIVING';
         }
     });
 
-    // Loop Principal de Atualização e Renderização Gráfica
     function gameLoop() {
         update();
         render();
@@ -167,209 +151,198 @@
     }
 
     function update() {
-        // 1. Atualizar rotação da seta amarela
+        // Movimento do alvo e indicadores
         if (gameState === 'AIMING_ARROW') {
             arrowAngle += arrowDir;
-            if (arrowAngle > 0.8 || arrowAngle < -0.8) arrowDir *= -1;
+            if (arrowAngle > 0.6 || arrowAngle < -0.6) arrowDir *= -1;
         }
-
-        // 2. Atualizar subida da barra de força
-        if (gameState === 'AIMING_HEIGHT') {
+        if (gameState === 'AIMING_TARGET') {
+            targetCircle.x += targetCircle.dirX;
+            targetCircle.y += targetCircle.dirY;
+            if(targetCircle.x < goal.x + 30 || targetCircle.x > goal.x + goal.width - 30) targetCircle.dirX *= -1;
+            if(targetCircle.y < goal.y + 30 || targetCircle.y > goal.y + goal.height - 30) targetCircle.dirY *= -1;
+        }
+        if (gameState === 'AIMING_POWER') {
             powerBar += powerDir;
             if (powerBar > 100 || powerBar < 0) powerDir *= -1;
         }
 
-        // 3. Movimentação Dinâmica do Goleiro (Física de velocidade de reação)
+        // Movimento do Goleiro
         if (gk.state === 'DIVING') {
-            let dx = gk.targetX - gk.x;
-            let dy = gk.targetY - gk.y;
-            gk.x += dx * 0.12 * (gk.speed * 0.15); // Aplica o atributo de velocidade
-            gk.y += dy * 0.12 * (gk.speed * 0.15);
+            gk.x += (gk.targetX - gk.x) * 0.16;
+            gk.y += (gk.targetY - gk.y) * 0.16;
         }
 
-        // 4. Trajetória da Bola e Checagem de Defesa no tempo certo
+        // Movimento da Bola
         if (gameState === 'BALL_FLYING') {
-            ball.progress += 0.03;
-            
-            // Interpolar posição da bola (Efeito parábola 3D)
+            ball.progress += 0.035;
             ball.x = ballOrigin.x + (ball.targetX - ballOrigin.x) * ball.progress;
             ball.y = ballOrigin.y + (ball.targetY - ballOrigin.y) * ball.progress;
-            ball.radius = 14 - (6 * ball.progress); // Bola diminui dando efeito de profundidade
+            ball.radius = 15 - (7 * ball.progress);
 
-            // Quando a bola chega na linha do gol
             if (ball.progress >= 1) {
                 gameState = 'RESULT';
-                
-                // Calcular distância exata da bola para as luvas do goleiro
-                let distanceToGk = Math.hypot(ball.x - gk.x, ball.y - (gk.y - 20));
+                let distanceToGk = Math.hypot(ball.x - gk.x, ball.y - (gk.y - 25));
+                let saveDistance = ball.speed > 22 ? 45 : 75; // Bola muito forte reduz o alcance do goleiro
 
-                // REGRA DA BOLA FORTE: Se o chute foi forte (speed > 20) e no canto extremo, 
-                // o goleiro precisa estar muito perto (raio menor) para defender, simulando falta de tempo.
-                let saveRadius = ball.speed > 21 ? 40 : 70;
+                let isGoal = (ball.x >= goal.x && ball.x <= goal.x + goal.width && ball.y >= goal.y && ball.y <= goal.y + goal.height);
 
-                // Verificar se está dentro do gol
-                let insideGoal = (ball.x >= goal.x && ball.x <= goal.x + goal.width && ball.y >= goal.y && ball.y <= goal.y + goal.height);
-
-                if (insideGoal) {
-                    if (distanceToGk < saveRadius) {
-                        resultText = "DEFENDEU!";
-                        resultColor = "#eab308";
+                if (isGoal) {
+                    if (distanceToGk < saveDistance) {
+                        resultText = "DEFENDEU!"; resultColor = "#facc15";
                     } else {
-                        resultText = "GOOOOOL!";
-                        resultColor = "#10b981";
+                        resultText = "GOOOOOL!"; resultColor = "#10b981";
                         if (turn === 'PLAYER') score.player++; else score.ai++;
                     }
                 } else {
-                    resultText = "PARA FORA!";
-                    resultColor = "#ef4444";
+                    resultText = "PARA FORA!"; resultColor = "#ef4444";
                 }
 
-                // Trocar de turno após 2 segundos
                 setTimeout(() => {
-                    if (score.player >= 5 || score.ai >= 5) {
-                        endGame();
-                    } else {
-                        if (turn === 'PLAYER') setupAiTurn(); else setupPlayerTurn();
-                    }
+                    if (score.player >= 5 || score.ai >= 5) endGame();
+                    else if (turn === 'PLAYER') setupAiTurn(); else setupPlayerTurn();
                 }, 2000);
             }
         }
     }
 
     function render() {
-        // Limpar tela
-        ctx.fillStyle = '#1e3a1e';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        // Desenhar Arquibancada de fundo (Linha superior)
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, 0, canvas.width, 120);
+        // 1. Céu da Noite e Arquibancada de Fundo
+        ctx.fillStyle = '#090d16'; ctx.fillRect(0, 0, canvas.width, 100);
+        ctx.fillStyle = '#111827'; ctx.fillRect(0, 40, canvas.width, 60);
 
-        // Gramado em perspectiva
-        let grad = ctx.createLinearGradient(0, 120, 0, canvas.height);
-        grad.addColorStop(0, '#15803d');
-        grad.addColorStop(1, '#166534');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 120, canvas.width, canvas.height - 120);
+        // Renderizar a Torcida Viva (Puntilhada como nas fotos)
+        crowdParticles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, 3, 3);
+        });
 
-        // Linhas de campo branca
-        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(60, 240, 680, 210);
+        // Painel Publicitário (Muro do estádio)
+        ctx.fillStyle = '#f97316'; ctx.fillRect(0, 100, canvas.width, 25);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Ubuntu';
+        ctx.fillText("PENALTY CHALLENGE X    PENALTY SHOOTERS PRO    CHALLENGE", 40, 117);
 
-        // Desenhar o Gol (Trave e Rede)
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 8;
+        // 2. Gramado Realista com Faixas de Perspectiva (Listras Claras/Escuras)
+        let totalStripes = 8;
+        let currentY = 125;
+        for (let i = 0; i < totalStripes; i++) {
+            let stripeHeight = 15 + (i * 6);
+            ctx.fillStyle = (i % 2 === 0) ? '#15803d' : '#166534';
+            ctx.fillRect(0, currentY, canvas.width, stripeHeight);
+            currentY += stripeHeight;
+        }
+
+        // Linhas Brancas do Campo
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 3;
+        ctx.strokeRect(70, 270, 710, 210);
+
+        // 3. O GOL (Traves grossas brancas e rede quadriculada)
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 7;
         ctx.strokeRect(goal.x, goal.y, goal.width, goal.height);
         
-        // Rede estilizada
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-        ctx.lineWidth = 1;
-        for(let i = goal.x; i < goal.x + goal.width; i+=15) {
-            ctx.beginPath(); ctx.moveTo(i, goal.y); ctx.lineTo(i, goal.y + goal.height); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
+        for(let x = goal.x; x < goal.x + goal.width; x += 14) {
+            ctx.beginPath(); ctx.moveTo(x, goal.y); ctx.lineTo(x, goal.y + goal.height); ctx.stroke();
+        }
+        for(let y = goal.y; y < goal.y + goal.height; y += 14) {
+            ctx.beginPath(); ctx.moveTo(goal.x, y); ctx.lineTo(goal.x + goal.width, y); ctx.stroke();
         }
 
-        // Desenhar Indicadores de clique de defesa se for turno da máquina
-        if (turn === 'AI' && gameState === 'AI_SHOOTING') {
-            ctx.fillStyle = 'rgba(245, 158, 11, 0.1)';
-            defenseZones.forEach(z => {
-                ctx.fillRect(z.x + 5, z.y + 5, z.w - 10, z.h - 10);
-                ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                ctx.font = '14px Montserrat';
-                ctx.fillText("CLIQUE PARA PULAR", z.x + 12, z.y + 30);
-            });
-        }
-
-        // Desenhar Goleiro (Visual de Uniforme como nas fotos)
-        ctx.fillStyle = turn === 'PLAYER' ? '#06b6d4' : '#f97316'; // Cores vivas de camisa
-        ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 20); // Corpo
-        ctx.fillStyle = '#1e293b'; // Calção
-        ctx.fillRect(gk.x - gk.width/2, gk.y - 20, gk.width, 20);
-        ctx.fillStyle = '#fbcfe8'; // Cabeça
-        ctx.beginPath(); ctx.arc(gk.x, gk.y - gk.height - 10, 10, 0, Math.PI*2); ctx.fill();
-        // Luvas abertas
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(gk.x - gk.width - 5, gk.y - gk.height + 10, 12, 12);
-        ctx.fillRect(gk.x + gk.width - 7, gk.y - gk.height + 10, 12, 12);
-
-        // Desenhar Seta Giratória de Mira (Apenas no primeiro estágio)
-        if (gameState === 'AIMING_ARROW') {
+        // 4. ELEMENTOS DE MIRA (Seta e Círculo Vermelho iguaizinhos aos prints)
+        if (turn === 'PLAYER' && gameState === 'AIMING_ARROW') {
             ctx.save();
-            ctx.translate(ballOrigin.x, ballOrigin.y);
-            ctx.rotate(arrowAngle);
-            ctx.fillStyle = '#f59e0b';
-            ctx.beginPath();
-            ctx.moveTo(-8, -20); ctx.lineTo(8, -20); ctx.lineTo(4, -80); ctx.lineTo(-4, -80);
-            ctx.closePath(); ctx.fill();
-            ctx.restore();
+            ctx.translate(ballOrigin.x, ballOrigin.y); ctx.rotate(arrowAngle);
+            ctx.fillStyle = '#eab308'; ctx.beginPath();
+            ctx.moveTo(-10, -25); ctx.lineTo(10, -25); ctx.lineTo(5, -110); ctx.lineTo(-5, -110);
+            ctx.closePath(); ctx.fill(); ctx.restore();
+        }
+        if (turn === 'PLAYER' && (gameState === 'AIMING_TARGET' || gameState === 'AIMING_POWER')) {
+            // Desenha o Alvo Vermelho com bordas amarelas idêntico ao jogo real
+            ctx.strokeStyle = '#eab308'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 22, 0, Math.PI*2); ctx.stroke();
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
+            ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 14, 0, Math.PI*2); ctx.fill();
         }
 
-        // Desenhar Barra de Força / Altura
-        if (gameState === 'AIMING_HEIGHT') {
-            ctx.fillStyle = '#334155';
-            ctx.fillRect(20, 150, 25, 200);
-            let color = '#10b981';
-            if(powerBar > 60) color = '#eab308';
-            if(powerBar > 85) color = '#ef4444'; // Força excessiva corre risco de isolar
-            ctx.fillStyle = color;
-            ctx.fillRect(20, 350, 25, -powerBar * 2);
+        // 5. GOLEIRO (Com luvas e uniforme detalhado de goleiro)
+        ctx.fillStyle = turn === 'PLAYER' ? '#06b6d4' : '#ec4899';
+        ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 25); // Camisa
+        ctx.fillStyle = '#111827'; ctx.fillRect(gk.x - gk.width/2, gk.y - 25, gk.width, 25); // Calção
+        ctx.fillStyle = '#fbcfe8'; ctx.beginPath(); ctx.arc(gk.x, gk.y - gk.height - 12, 12, 0, Math.PI*2); ctx.fill(); // Rosto
+        // Luvas Grandes de Goleiro
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(gk.x - gk.width - 8, gk.y - gk.height + 15, 15, 15);
+        ctx.fillRect(gk.x + gk.width - 7, gk.y - gk.height + 15, 15, 15);
+
+        // 6. JOGADOR DE COSTAS (Sempre visível na cobrança do jogador - Igual ao Print com Camisa número 3!)
+        if (turn === 'PLAYER') {
+            ctx.fillStyle = '#facc15'; // Camisa Listrada Amarela/Preta
+            ctx.fillRect(player.x, player.y, 50, 40);
+            ctx.fillStyle = '#000000'; // Listras pretas
+            ctx.fillRect(player.x + 12, player.y, 8, 40);
+            ctx.fillRect(player.x + 30, player.y, 8, 40);
+            // Número 3 grande nas costas
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 22px Ubuntu';
+            ctx.fillText("3", player.x + 18, player.y + 28);
+            // Calção e Pernas
+            ctx.fillStyle = '#000'; ctx.fillRect(player.x, player.y + 40, 50, 20);
+            ctx.fillStyle = '#fbcfe8'; ctx.fillRect(player.x + 8, player.y + 60, 10, 25);
+            ctx.fillRect(player.x + 32, player.y + 60, 10, 25);
         }
 
-        // Desenhar Bola com Sombra Realista
+        // 7. A BOLA (Branca com gomos pretos estilizados)
         if (gameState !== 'START') {
-            // Sombra no chão
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath();
-            let shadowY = ballOrigin.y + (420 - ballOrigin.y) * ball.progress;
-            ctx.arc(ball.x, gameState === 'BALL_FLYING' ? ball.y + (20 * ball.progress) : ball.y, ball.radius, 0, Math.PI*2);
-            ctx.fill();
+            ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath();
+            ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill(); // Sombra
 
-            // Bola Principal
-            ctx.fillStyle = '#ffffff';
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-            ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            // Detalhes dos gomos internos da bola
+            if(ball.radius > 8) {
+                ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius*0.3, 0, Math.PI*2); ctx.fill();
+            }
         }
 
-        // Desenhar Placar Compacto (Estilo HUD igual da sua foto original)
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
-        ctx.fillRect(canvas.width - 240, canvas.height - 80, 220, 65);
-        ctx.fillStyle = '#fff';
-        ctx.font = '14px Montserrat';
-        ctx.fillText("VOCÊ", canvas.width - 220, canvas.height - 55);
-        ctx.fillText("MÁQUINA", canvas.width - 220, canvas.height - 30);
-        ctx.font = '18px Montserrat';
-        ctx.fillStyle = '#f59e0b';
-        ctx.fillText(score.player, canvas.width - 60, canvas.height - 55);
-        ctx.fillText(score.ai, canvas.width - 60, canvas.height - 30);
+        // BARRA DE FORÇA VERTICAL NO CANTO
+        if (gameState === 'AIMING_POWER') {
+            ctx.fillStyle = '#1e293b'; ctx.fillRect(35, 180, 25, 180);
+            let pColor = '#10b981';
+            if(powerBar > 65) pColor = '#facc15';
+            if(powerBar > 85) pColor = '#ef4444';
+            ctx.fillStyle = pColor; ctx.fillRect(35, 360, 25, -powerBar * 1.8);
+        }
 
-        // Banner informativo de Turnos no topo
-        ctx.fillStyle = turn === 'PLAYER' ? '#2563eb' : '#d97706';
-        ctx.fillRect(0, 0, canvas.width, 35);
-        ctx.fillStyle = '#fff';
-        ctx.font = '14px Montserrat';
-        ctx.textAlign = 'center';
-        ctx.fillText(turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE PARA FIXAR A MIRA E A FORÇA" : "SUA VEZ DE DEFENDER! CLIQUE EM UM DOS LADOS DO GOL", canvas.width/2, 23);
-        ctx.textAlign = 'left'; // Reset
+        // 8. PLACAR DO TORNEIO (Translúcido e elegante igual ao do print)
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)'; ctx.fillRect(canvas.width - 240, canvas.height - 95, 215, 75);
+        ctx.lineWidth = 2; ctx.strokeStyle = '#eab308'; ctx.strokeRect(canvas.width - 240, canvas.height - 95, 215, 75);
+        ctx.fillStyle = '#fff'; ctx.font = '15px Ubuntu';
+        ctx.fillText("LEAO AZUL", canvas.width - 220, canvas.height - 65);
+        ctx.fillText("DESCALCO", canvas.width - 220, canvas.height - 35);
+        ctx.font = '20px Ubuntu'; ctx.fillStyle = '#facc15';
+        ctx.fillText(score.player, canvas.width - 65, canvas.height - 63);
+        ctx.fillText(score.ai, canvas.width - 65, canvas.height - 33);
 
-        // Mensagens de Gol / Defesa na tela
+        // Banner informativo Superior
+        ctx.fillStyle = turn === 'PLAYER' ? '#1e3a8a' : '#c2410c';
+        ctx.fillRect(0, 0, canvas.width, 40);
+        ctx.fillStyle = '#fff'; ctx.font = '15px Ubuntu'; ctx.textAlign = 'center';
+        ctx.fillText(turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE PARA FIXAR DIRECÃO, ALVO E FORÇA" : "SUA VEZ DE DEFENDER! CLIQUE EM UM DOS CANTO DO GOL PARA O GOLEIRO PULAR", canvas.width/2, 25);
+        ctx.textAlign = 'left';
+
+        // Telas de Gol / Defesa
         if (gameState === 'RESULT') {
-            ctx.fillStyle = 'rgba(0,0,0,0.7)';
-            ctx.fillRect(0, 180, canvas.width, 80);
-            ctx.font = '40px Montserrat';
-            ctx.fillStyle = resultColor;
-            ctx.textAlign = 'center';
-            ctx.fillText(resultText, canvas.width/2, 235);
-            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.fillRect(0, 200, canvas.width, 90);
+            ctx.font = 'bold 42px Ubuntu'; ctx.fillStyle = resultColor; ctx.textAlign = 'center';
+            ctx.fillText(resultText, canvas.width/2, 260); ctx.textAlign = 'left';
         }
     }
 
     function endGame() {
         gameState = 'START';
         document.getElementById('endScreen').style.display = 'flex';
-        document.getElementById('endTitle').innerText = score.player > score.ai ? "Você Ganhou! 🏆" : "Máquina Ganhou! 🤖";
+        document.getElementById('endTitle').innerText = score.player > score.ai ? "Você Ganhou! 🏆" : "A Máquina Ganhou! 🤖";
     }
 </script>
 
