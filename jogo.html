@@ -3,321 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Disputa de Pênaltis Oficial</title>
+    <title>Penalty Simulator Pro: Edição Calibração</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Oswald', sans-serif; }
-        body { background-color: #1e293b; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
+        body { background-color: #0b0f19; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
         
-        .container { width: 100%; max-width: 600px; height: 100vh; max-height: 800px; position: relative; background: linear-gradient(to bottom, #0f172a 0%, #1e293b 20%, #166534 50%, #14532d 100%); overflow: hidden; display: flex; flex-direction: column; }
+        .container { width: 100%; max-width: 600px; height: 100vh; max-height: 800px; position: relative; background: linear-gradient(to bottom, #020617 0%, #1e1b4b 30%, #115e59 50%, #064e3b 100%); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
 
-        /* TELA INICIAL E FINAL */
+        /* TELAS ADICIONAIS */
         .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; padding: 20px; text-align: center; }
-        h1 { margin-bottom: 30px; font-size: 36px; color: #fbbf24; text-shadow: 2px 2px 0 #000; }
-        button.action-btn { background: #3b82f6; color: white; border: none; padding: 15px 40px; font-size: 22px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 0 #1d4ed8; transition: all 0.1s; }
-        button.action-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #1d4ed8; }
-        .result-title { font-size: 40px; margin-bottom: 10px; }
+        h1 { margin-bottom: 10px; font-size: 38px; color: #f59e0b; text-shadow: 0 4px 10px rgba(245,158,11,0.3); letter-spacing: 2px; }
+        button.action-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 16px 45px; font-size: 24px; font-weight: bold; border-radius: 40px; cursor: pointer; margin-top: 20px; box-shadow: 0 6px 20px rgba(29,78,216,0.4); transition: all 0.2s; text-transform: uppercase; }
+        button.action-btn:hover { transform: scale(1.05); }
 
-        /* PLACAR OFICIAL */
-        .scoreboard { background: rgba(0,0,0,0.8); padding: 10px 5px; z-index: 10; border-bottom: 3px solid #fbbf24; display: flex; flex-direction: column; align-items: center; }
-        .teams-row { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; padding: 0 10px; }
-        .team-info { display: flex; flex-direction: column; align-items: center; width: 45%; }
-        .team-name { font-size: 18px; font-weight: bold; text-transform: uppercase; color: #fff; }
+        /* PLACAR */
+        .scoreboard { background: rgba(15, 23, 42, 0.9); padding: 15px 10px; z-index: 10; border-bottom: 4px solid #f59e0b; display: flex; flex-direction: column; align-items: center; }
+        .teams-row { display: flex; justify-content: space-between; width: 100%; align-items: center; }
+        .team-info { display: flex; flex-direction: column; align-items: center; width: 42%; }
+        .team-name { font-size: 18px; font-weight: bold; color: #94a3b8; }
         
-        /* BOLINHAS DOS PÊNALTIS */
-        .kicks-tracker { display: flex; gap: 5px; margin-top: 5px; }
-        .kick-circle { width: 20px; height: 20px; border-radius: 50%; background: #475569; border: 2px solid #94a3b8; display: flex; justify-content: center; align-items: center; font-size: 12px; }
-        .kick-hit { background: #22c55e; border-color: #16a34a; }
-        .kick-miss { background: #ef4444; border-color: #dc2626; }
+        .kicks-tracker { display: flex; gap: 6px; margin-top: 8px; }
+        .kick-circle { width: 22px; height: 22px; border-radius: 50%; background: #334155; border: 2px solid #475569; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; }
+        .kick-hit { background: #10b981; border-color: #34d399; box-shadow: 0 0 10px #10b981; }
+        .kick-miss { background: #ef4444; border-color: #f87171; box-shadow: 0 0 10px #ef4444; }
+        .score-number { font-size: 46px; font-weight: bold; color: #f59e0b; margin: 0 20px; }
+
+        .turn-banner { width: 100%; text-align: center; padding: 10px; font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .turn-kicking { background: #2563eb; }
+        .turn-defending { background: #d97706; }
+
+        /* CAMPO DE JOGO */
+        .game-area { flex: 1; position: relative; background: radial-gradient(circle at bottom, transparent 30%, rgba(0,0,0,0.4)), repeating-linear-gradient(90deg, #14532d, #14532d 40px, #166534 40px, #166534 80px); }
         
-        .score-number { font-size: 40px; font-weight: bold; color: #fbbf24; line-height: 1; margin: 0 15px; }
-
-        /* INDICADOR DE TURNO */
-        .turn-banner { width: 100%; text-align: center; padding: 8px; font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: background 0.3s; }
-        .turn-kicking { background: #3b82f6; color: white; }
-        .turn-defending { background: #f59e0b; color: white; }
-
-        /* ÁREA DO GOL */
-        .game-area { flex: 1; position: relative; }
-        .goal { position: absolute; top: 15%; left: 10%; width: 80%; height: 40%; border: 10px solid white; border-bottom: none; display: flex; z-index: 1; background: rgba(255,255,255,0.1); }
-        
-        /* ZONAS DE CLIQUE */
-        .zone { flex: 1; height: 100%; border-right: 2px dashed rgba(255,255,255,0.3); cursor: pointer; position: relative; display: flex; justify-content: center; align-items: center; transition: background 0.2s; }
-        .zone:last-child { border-right: none; }
-        .zone:hover { background: rgba(255,255,255,0.3); }
-        .zone-label { font-size: 30px; opacity: 0.8; pointer-events: none; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5)); }
-
-        /* SPRITES (Goleiro e Bola) */
-        .goalkeeper { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 90px; z-index: 3; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.5)); }
-        .ball { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); font-size: 60px; z-index: 5; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.5)); }
-
-        /* MENSAGEM DE AÇÃO */
-        .message-overlay { position: absolute; top: 35%; left: 0; width: 100%; text-align: center; font-size: 55px; font-weight: bold; text-transform: uppercase; z-index: 20; opacity: 0; text-shadow: 4px 4px 0 #000; transform: scale(0.5); pointer-events: none; transition: all 0.3s ease; }
-        .show-msg { opacity: 1; transform: scale(1); }
-
-    </style>
-</head>
-<body>
-
-<div class="container">
-    
-    <!-- TELA INICIAL -->
-    <div id="startScreen" class="overlay-screen">
-        <h1>FINAL DO CAMPEONATO</h1>
-        <p style="font-size: 18px; margin-bottom: 20px;">Disputa Oficial de Pênaltis (5 cobranças)</p>
-        <button class="action-btn" onclick="startGame()">INICIAR DISPUTA</button>
-    </div>
-
-    <!-- TELA FINAL -->
-    <div id="endScreen" class="overlay-screen" style="display: none;">
-        <h1 id="endTitle" class="result-title">FIM DE JOGO</h1>
-        <p id="endSubtitle" style="font-size: 24px; margin-bottom: 20px;"></p>
-        <button class="action-btn" onclick="location.reload()">JOGAR NOVAMENTE</button>
-    </div>
-
-    <!-- PLACAR SUPERIOR -->
-    <div class="scoreboard" id="gameScoreboard" style="display: none;">
-        <div class="teams-row">
-            <div class="team-info">
-                <div class="team-name">VOCÊ</div>
-                <div class="kicks-tracker" id="playerKicks">
-                    <!-- Bolinhas geradas no JS -->
-                </div>
-            </div>
-            
-            <div style="display: flex; align-items: center;">
-                <span class="score-number" id="p1Score">0</span>
-                <span style="color: white; font-weight: bold;">X</span>
-                <span class="score-number" id="aiScore">0</span>
-            </div>
-
-            <div class="team-info">
-                <div class="team-name">MÁQUINA</div>
-                <div class="kicks-tracker" id="aiKicks">
-                    <!-- Bolinhas geradas no JS -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="turn-banner turn-kicking" id="turnBanner" style="display: none;">
-        ⚽ SUA VEZ DE CHUTAR
-    </div>
-
-    <!-- ÁREA DE JOGO -->
-    <div class="game-area" id="gameArea" style="display: none;">
-        <div class="goal" id="goal">
-            <div class="zone" onclick="playAction('left')"><span class="zone-label" id="lblLeft">👈</span></div>
-            <div class="zone" onclick="playAction('center')"><span class="zone-label" id="lblCenter">☝️</span></div>
-            <div class="zone" onclick="playAction('right')"><span class="zone-label" id="lblRight">👉</span></div>
-            <div class="goalkeeper" id="gk">🧍‍♂️</div>
-        </div>
-        <div class="ball" id="ball">⚽</div>
-        <div class="message-overlay" id="resultMsg"></div>
-    </div>
-
-</div>
-
-<script>
-    // --- VARIÁVEIS DE ESTADO ---
-    let score = { player: 0, ai: 0 };
-    let kicksTaken = { player: 0, ai: 0 };
-    let history = { player: [], ai: [] };
-    let isPlayerTurnToShoot = true; 
-    let actionInProgress = false;
-    let isSuddenDeath = false;
-
-    const maxRegularKicks = 5;
-
-    // --- ELEMENTOS DOM ---
-    const gk = document.getElementById('gk');
-    const ball = document.getElementById('ball');
-    const resultMsg = document.getElementById('resultMsg');
-    const turnBanner = document.getElementById('turnBanner');
-    const playerKicksDiv = document.getElementById('playerKicks');
-    const aiKicksDiv = document.getElementById('aiKicks');
-
-    const positions = { 'left': '15%', 'center': '50%', 'right': '85%' };
-
-    // --- INICIALIZAÇÃO ---
-    function startGame() {
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementById('gameScoreboard').style.display = 'flex';
-        document.getElementById('turnBanner').style.display = 'block';
-        document.getElementById('gameArea').style.display = 'block';
-        
-        renderKicksTracker();
-        updateUI();
-    }
-
-    function renderKicksTracker() {
-        playerKicksDiv.innerHTML = '';
-        aiKicksDiv.innerHTML = '';
-        
-        let displayCount = Math.max(maxRegularKicks, history.player.length + (isPlayerTurnToShoot ? 1 : 0));
-        if (isSuddenDeath) displayCount = history.player.length + 1;
-
-        for(let i = 0; i < displayCount; i++) {
-            playerKicksDiv.innerHTML += getCircleHtml(history.player[i]);
-            aiKicksDiv.innerHTML += getCircleHtml(history.ai[i]);
-        }
-    }
-
-    function getCircleHtml(result) {
-        if (result === true) return '<div class="kick-circle kick-hit">✓</div>';
-        if (result === false) return '<div class="kick-circle kick-miss">✗</div>';
-        return '<div class="kick-circle"></div>'; // Vazio
-    }
-
-    // --- LÓGICA DA RODADA ---
-    function playAction(playerChoice) {
-        if (actionInProgress) return;
-        actionInProgress = true;
-
-        const options = ['left', 'center', 'right'];
-        const aiChoice = options[Math.floor(Math.random() * options.length)];
-
-        let ballTarget = isPlayerTurnToShoot ? playerChoice : aiChoice;
-        let gkTarget = isPlayerTurnToShoot ? aiChoice : playerChoice;
-
-        animatePlay(ballTarget, gkTarget);
-    }
-
-    function animatePlay(ballTarget, gkTarget) {
-        // Goleiro
-        gk.innerText = '🧤';
-        gk.style.left = positions[gkTarget];
-        if (gkTarget === 'left') gk.style.transform = 'translateX(-50%) rotate(-60deg)';
-        else if (gkTarget === 'right') gk.style.transform = 'translateX(-50%) rotate(60deg)';
-        else gk.style.transform = 'translateX(-50%) translateY(-20px)'; // Pula no meio
-
-        // Bola
-        ball.style.left = positions[ballTarget];
-        ball.style.top = '25%'; 
-        ball.style.transform = 'translateX(-50%) scale(0.4)';
-
-        setTimeout(() => {
-            const isGoal = (ballTarget !== gkTarget);
-            processResult(isGoal);
-        }, 400);
-    }
-
-    function processResult(isGoal) {
-        if (isGoal) {
-            resultMsg.innerText = "GOOOOOL! ⚽";
-            resultMsg.style.color = "#4ade80";
-            if (isPlayerTurnToShoot) { score.player++; history.player.push(true); }
-            else { score.ai++; history.ai.push(true); }
-        } else {
-            resultMsg.innerText = "DEFENDEU! 🧤";
-            resultMsg.style.color = "#f87171";
-            if (isPlayerTurnToShoot) history.player.push(false);
-            else history.ai.push(false);
-        }
-
-        if (isPlayerTurnToShoot) kicksTaken.player++;
-        else kicksTaken.ai++;
-
-        resultMsg.classList.add('show-msg');
-        document.getElementById('p1Score').innerText = score.player;
-        document.getElementById('aiScore').innerText = score.ai;
-        renderKicksTracker();
-
-        setTimeout(() => {
-            resetPositions();
-            checkMatchStatus();
-        }, 2000);
-    }
-
-    function resetPositions() {
-        resultMsg.classList.remove('show-msg');
-        ball.style.transition = 'none';
-        gk.style.transition = 'none';
-        
-        ball.style.left = '50%';
-        ball.style.top = 'auto';
-        ball.style.bottom = '5%';
-        ball.style.transform = 'translateX(-50%) scale(1)';
-        
-        gk.innerText = '🧍‍♂️'; // Goleiro em pé
-        gk.style.left = '50%';
-        gk.style.transform = 'translateX(-50%) rotate(0deg)';
-
-        setTimeout(() => {
-            ball.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-            gk.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-        }, 50);
-    }
-
-    function checkMatchStatus() {
-        let matchOver = false;
-        let pRem = maxRegularKicks - kicksTaken.player;
-        let aiRem = maxRegularKicks - kicksTaken.ai;
-
-        // Fase Regular (5 cobranças)
-        if (!isSuddenDeath && kicksTaken.player <= maxRegularKicks && kicksTaken.ai <= maxRegularKicks) {
-            // Vitória matemática antecipada
-            if (score.player > score.ai + aiRem) endGame("VITÓRIA!", "Você venceu a disputa!");
-            else if (score.ai > score.player + pRem) endGame("DERROTA!", "A Máquina venceu.");
-            else if (kicksTaken.player === maxRegularKicks && kicksTaken.ai === maxRegularKicks) {
-                if (score.player === score.ai) {
-                    isSuddenDeath = true;
-                    nextTurn();
-                }
-            } else {
-                nextTurn();
-            }
-        } 
-        // Morte Súbita (Alternadas)
-        else if (isSuddenDeath) {
-            // Checa apenas depois que os dois bateram na rodada extra
-            if (kicksTaken.player === kicksTaken.ai) {
-                if (score.player > score.ai) endGame("VITÓRIA SUADA!", "Você venceu nas Alternadas!");
-                else if (score.ai > score.player) endGame("DERROTA!", "Você perdeu nas Alternadas.");
-                else nextTurn(); // Empate continua
-            } else {
-                nextTurn();
-            }
-        }
-    }
-
-    function nextTurn() {
-        isPlayerTurnToShoot = !isPlayerTurnToShoot;
-        updateUI();
-        if (isSuddenDeath) renderKicksTracker(); // Adiciona nova bolinha
-        actionInProgress = false;
-    }
-
-    function updateUI() {
-        if (isPlayerTurnToShoot) {
-            turnBanner.innerText = isSuddenDeath ? "☠️ ALTERNADAS: VOCÊ CHUTA" : "⚽ SUA VEZ DE CHUTAR";
-            turnBanner.className = "turn-banner turn-kicking";
-            document.getElementById('lblLeft').innerText = "👈";
-            document.getElementById('lblCenter').innerText = "☝️";
-            document.getElementById('lblRight').innerText = "👉";
-        } else {
-            turnBanner.innerText = isSuddenDeath ? "☠️ ALTERNADAS: VOCÊ DEFENDE" : "🧤 SUA VEZ DE DEFENDER";
-            turnBanner.className = "turn-banner turn-defending";
-            // Quando defende, o botão indica para onde o Goleiro vai pular
-            document.getElementById('lblLeft').innerText = "🧤";
-            document.getElementById('lblCenter').innerText = "🧍‍♂️";
-            document.getElementById('lblRight').innerText = "🧤";
-        }
-    }
-
-    function endGame(title, subtitle) {
-        document.getElementById('endScreen').style.display = 'flex';
-        document.getElementById('endTitle').innerText = title;
-        document.getElementById('endSubtitle').innerText = subtitle;
-        
-        if(title.includes("VITÓRIA")) {
-            document.getElementById('endTitle').style.color = "#4ade80";
-        } else {
-            document.getElementById('endTitle').style.color = "#f87171";
-        }
-    }
-</script>
-
-</body>
-</html>
+        /* GOL E REDE */
+        .goal-container { position: absolute; top: 15%; left: 8%; width: 84%; height: 38
