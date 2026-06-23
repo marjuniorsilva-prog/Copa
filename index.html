@@ -123,9 +123,8 @@
         /* POPUPS FLUTUANTES */
         .event-section { background: #fff; margin: 5px 10px; border-radius: 6px; border: 2px dashed #ef4444; padding: 8px; text-align: center; font-size: 13px; font-weight: bold; color: #b91c1c; display: none; }
         
-        /* NOVO DESIGN DO DRAMA (FIXADO PARA NÃO TRAVAR) */
         .choice-section { display: none; background: rgba(0,0,0,0.95); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        .choice-box { background: white; width: 100%; max-width: 380px; padding: 20px; border-radius: 12px; border: 4px solid #3b82f6; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .choice-box { background: white; width: 100%; max-width: 380px; padding: 20px; border-radius: 12px; border: 4px solid #3b82f6; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto;}
         .choice-btn { width: 100%; background: #1e293b; color: white; border: 1px solid #475569; padding: 12px; border-radius: 6px; font-weight: normal; font-size: 12px; cursor: pointer; text-align: left; transition: 0.2s; margin-top: 8px;}
         .choice-btn:hover { background: #3b82f6; }
         .choice-btn b { color: #fbbf24; margin-right: 5px; font-size: 14px;}
@@ -389,9 +388,6 @@
     const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
     let currentStep = 0;
     let entrevistaAtual = null;
-
-    // SOLUÇÃO DO BUG: Agora guardamos apenas os NÚMEROS (índices) dos dramas na memória, 
-    // assim não destruímos as funções de cálculo quando o navegador salva os dados!
     let indicesDramasDisponiveis = [];
 
     let records = {
@@ -404,38 +400,181 @@
         if (dadosSalvos) records = JSON.parse(dadosSalvos);
     } catch(e) {}
 
+    // BATERIA DE 15 DRAMAS VARIADOS (CAMPO, VESTIÁRIO E VIDA PESSOAL)
     const bancoDramasOriginal = [
         {
-            texto: "Seu irmão mais velho ligou bêbado dizendo que bateu o carro em um muro e precisa de €50k rápido para não ser preso.",
-            A: "Transferir o dinheiro imediatamente para salvar a pele dele.",
-            B: "Dizer que ele precisa assumir as consequências como adulto e desligar.",
-            C: "Pagar o prejuízo do muro, mas obrigá-lo a ir para uma clínica de reabilitação.",
+            texto: "🍷 FARRA NOTURNA: Véspera de um jogo decisivo e os 'parças' te chamam para uma balada VIP com tudo pago. Vão ter celebridades e a festa não tem hora para acabar.",
+            A: "Ir para a farra até o amanhecer.",
+            B: "Ficar em casa focado no jogo, dormindo cedo.",
+            C: "Ir na festa, mas beber só água e voltar antes da meia-noite.",
             acao: (opt) => {
-                if(opt==='A'){ p.banco-=50000; p.emocao="Triste 😢"; return "💸 Você perdeu €50k. Ele não aprendeu a lição, continuou bebendo e isso destruiu seu emocional (Status: Triste)."; }
-                if(opt==='B'){ p.emocao="Focado 🧘"; p.fama-=100000; return "🚨 ESCÂNDALO! Ele foi preso, a imprensa descobriu e te chamaram de 'irmão ingrato'. Você perdeu 100k de fãs."; }
-                p.banco-=150000; p.ovr+=2; return "🤝 Atitude de líder! Custou caro (€150k), mas ele se curou. A paz mental te fez evoluir em campo (+2 Geral).";
+                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.pac-=3; p.sho-=3; p.dri-=2; p.fama+=500000; return "🎉 Você curtiu demais! Ganhou 500k fãs na internet, mas foi jogar de ressaca. Ficou desatento, perdeu bola fácil e perdeu gols feitos. Seus atributos despencaram (-3 Ritmo, -3 Fin, -2 Drible)."; }
+                if(opt==='B'){ p.emocao="Focado 🧘"; p.ovr+=2; p.sho+=2; p.pas+=2; return "🛏️ Profissionalismo puro! Você dormiu, acordou voando no jogo decisivo e destruiu a partida. Ganhou atributos permanentes (+2 OVR, +2 Fin, +2 Pas)."; }
+                p.fama+=100000; return "📸 Meio termo. Apareceu nas fotos, fez média, e conseguiu descansar o suficiente. Apenas manteve a forma.";
             }
         },
         {
-            texto: "Sua esposa descobriu mensagens suspeitas no seu celular e exigiu o divórcio imediato. Ela quer metade do patrimônio e fazer um circo na mídia.",
-            A: "Contratar o melhor advogado do país para lutar na justiça e não pagar nada.",
-            B: "Aceitar a culpa, dar metade da sua conta bancária sem brigar e seguir a vida.",
-            C: "Dar uma entrevista se fazendo de vítima e acusando ela de interesseira.",
+            texto: "💰 MÁFIA DE APOSTAS: Um empresário obscuro te oferece €2 Milhões limpos na sua conta só para você forçar um Cartão Vermelho no primeiro tempo hoje.",
+            A: "Aceitar o dinheiro e dar uma entrada criminosa no adversário.",
+            B: "Recusar, bloquear o contato e jogar limpo.",
+            C: "Denunciar o esquema publicamente na TV.",
             acao: (opt) => {
-                if(opt==='A'){ p.banco-=1000000; p.emocao="Triste 😢"; p.relacao="Divorciado"; return "⚖️ Guerra judicial. Você gastou €1M com advogados, a mídia vazou áudios seus e a pressão acabou com sua cabeça (Triste)."; }
-                if(opt==='B'){ p.banco = Math.floor(p.banco / 2); p.relacao="Divorciado"; p.emocao="Focado 🧘"; return "💔 Acordo milionário. Você perdeu METADE de todo o seu dinheiro guardado, mas o processo foi abafado e você está limpo para jogar (Focado)."; }
-                p.fama-=2000000; p.relacao="Cancelado"; p.emocao="Ressaca 🥴"; return "🚨 CANCELAMENTO MASSIVO! ESCÂNDALO! O público ficou do lado dela, você foi massacrado online (-2M de fãs) e pegou status de Ressaca mental.";
+                if(opt==='A'){ p.banco+=2000000; p.fama-=1500000; p.emocao="Triste 😢"; return "🚨 ESCÂNDALO! Você pegou os €2M, foi expulso, mas o tribunal esportivo desconfiou. A torcida te odeia (-1.5M fãs) e a culpa destruiu sua cabeça (Status: Triste)."; }
+                if(opt==='B'){ p.emocao="Focado 🧘"; return "🤝 Integridade mantida. Você jogou limpo e evitou um problema gigante na sua carreira."; }
+                p.fama+=2000000; p.emocao="Alegre 😁"; return "🎤 HERÓI DO ESPORTE! Você denunciou, a polícia prendeu o cara e você virou símbolo mundial de honestidade (+2 Milhões de Fãs, Status: Alegre).";
             }
         },
         {
-            texto: "Uma reportagem mostrou uma comunidade carente que joga futebol em um campo de terra cheio de lixo. A internet começou a marcar seu nome pedindo ajuda.",
-            A: "Fazer uma doação gigantesca de €1.5 Milhões para construir um CT profissional lá.",
-            B: "Ignorar, você paga seus impostos e o Estado que resolva.",
-            C: "Gravar um vídeo mandando abraços e doar 100 chuteiras (Custo €10k).",
+            texto: "👟 PATROCÍNIO TÓXICO: Uma marca gringa quer te pagar €3 Milhões de luvas, mas exige que você use a chuteira deles, que é dura, desconfortável e está machucando seu pé nos treinos.",
+            A: "Assinar o contrato. O que importa é o dinheiro na conta.",
+            B: "Recusar o contrato e continuar usando sua chuteira antiga sem patrocínio.",
+            C: "Pegar o dinheiro, mas jogar com sua chuteira velha pintada de preto escondido.",
             acao: (opt) => {
-                if(opt==='A'){ p.banco-=1500000; p.fama+=4000000; p.emocao="Alegre 😁"; return "🏟️ HERÓI DO POVO! Você doou €1.5M, o CT levou seu nome, sua fama explodiu em 4 Milhões de fãs e você atingiu o nirvana (Alegre)."; }
-                if(opt==='B'){ p.fama-=500000; return "🚨 PÉSSIMA IMAGEM! ESCÂNDALO DE ARROGÂNCIA! Chamaram você de 'alienado milionário', perdendo 500k de Fãs."; }
-                p.banco-=10000; p.fama+=100000; return "👟 Marketing cirúrgico. Gastou pouco (€10k), a mídia achou bonito e você ganhou 100k fãs sem muito esforço.";
+                if(opt==='A'){ p.banco+=3000000; p.pac-=4; p.dri-=3; p.ovr-=1; return "💶 Você ficou milionário (+€3M), mas a chuteira te encheu de bolhas. Você perdeu velocidade e habilidade (-4 Ritmo, -3 Drible, -1 OVR)."; }
+                if(opt==='B'){ p.ovr+=1; p.pac+=2; p.emocao="Focado 🧘"; return "⚡ Foco no desempenho! Você recusou a grana, continuou ágil e voando em campo (+1 OVR, +2 Ritmo)."; }
+                p.banco+=1000000; p.fama-=500000; return "🚨 ESCÂNDALO COMERCIAL! A marca descobriu a pintura no intervalo do jogo, te processou e rescindiu. Você ficou com 1/3 da grana mas manchou sua imagem.";
+            }
+        },
+        {
+            texto: "🤬 TRETA DE VESTIÁRIO: O camisa 10 veterano do time está com inveja do seu brilho e simplesmente parou de tocar a bola para você nos jogos.",
+            A: "Ir para cima dele e sair na porrada no vestiário.",
+            B: "Abaixar a cabeça, jogar para o time e virar garçom dele.",
+            C: "Chamar ele para um jantar pago por você e resolver na conversa.",
+            acao: (opt) => {
+                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.fama-=800000; p.ovr-=2; return "🥊 PÉSSIMO! A briga vazou. O clima ficou insuportável, o time rachou e sua performance caiu muito (-2 OVR)."; }
+                if(opt==='B'){ p.pas+=5; p.sho-=3; p.emocao="Triste 😢"; return "👟 Você virou ajudante. Ganhou muita visão de jogo (+5 Passe), mas perdeu seu faro artilheiro (-3 Finalização) e se sente frustrado."; }
+                p.banco-=20000; p.pas+=3; p.sho+=3; p.emocao="Alegre 😁"; return "🍝 Maturidade! O jantar custou €20k, mas vocês viraram uma dupla letal. Entrosamento perfeito rendeu evolução no campo (+3 Passe, +3 Finalização).";
+            }
+        },
+        {
+            texto: "📋 CRISE COM TÉCNICO: O novo treinador é retranqueiro e quer te obrigar a jogar recuado como volante de marcação. Ele disse que se você não aceitar, vai pro banco.",
+            A: "Bater o pé, xingar o treinador e exigir jogar no ataque.",
+            B: "Aceitar quieto e começar a dar carrinho no meio campo.",
+            C: "Reclamar com o presidente do clube (que é seu fã).",
+            acao: (opt) => {
+                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.ovr-=3; p.fama-=500000; return "🥶 GELADEIRA! Ele te colocou no banco por meses. Sem ritmo de jogo, seus atributos murcharam (-3 OVR)."; }
+                if(opt==='B'){ p.def+=15; p.sho-=6; return "🛡️ Sacrifício tático. Você virou um cão de guarda (+15 Defesa), mas esqueceu totalmente como se faz gols (-6 Finalização)."; }
+                p.emocao="Alegre 😁"; p.sho+=2; p.ovr+=1; return "👔 Política nos bastidores! O presidente interviu, demitiu o técnico e você continuou no ataque, feliz e brocando (+1 OVR).";
+            }
+        },
+        {
+            texto: "🥅 PÊNALTI DA GLÓRIA: Último minuto da final do campeonato continental. Está empatado. O juiz marca pênalti. Você não é o batedor oficial, mas a torcida grita seu nome.",
+            A: "Pegar a bola e bater a penalidade no ângulo.",
+            B: "Pegar a bola e tentar dar uma cavadinha (Panenka).",
+            C: "Respeitar a hierarquia e deixar o batedor oficial cobrar.",
+            acao: (opt) => {
+                let chance = p.sho > 85 ? 0.8 : 0.5;
+                if(opt==='A'){
+                    if(Math.random() < chance) { p.fama+=3000000; p.ovr+=2; p.emocao="Alegre 😁"; return "⚽ GOL DO TÍTULO! Uma bomba no ângulo! Você virou o rei da cidade, ganhou +3M de fãs e sua moral explodiu (+2 OVR)!"; }
+                    else { p.fama-=1500000; p.emocao="Triste 😢"; p.sho-=4; return "🚨 PÉSSIMO! ESCÂNDALO! Você bateu fraco, o goleiro pegou e o time perdeu a final. A culpa caiu em você, causando trauma (-4 Fin, -1.5M Fãs)."; }
+                }
+                if(opt==='B'){
+                    if(Math.random() < 0.3) { p.fama+=5000000; p.ovr+=3; p.emocao="Alegre 😁"; return "👑 LENDÁRIO! A cavadinha entrou! Uma humilhação histórica no adversário que te consagrou para sempre (+5M de fãs, +3 OVR)."; }
+                    else { p.fama-=2500000; p.emocao="Ressaca 🥴"; p.ovr-=4; return "🚨 CANCELAMENTO MASSIVO! O goleiro nem pulou e pegou a bola no peito. A arrogância te custou a carreira. Torcida em fúria (-4 OVR)."; }
+                }
+                p.emocao="Focado 🧘"; p.pas+=2; return "🤝 Ele cobrou e fez. Você não virou herói, mas mostrou respeito ao grupo (+2 Passe).";
+            }
+        },
+        {
+            texto: "🍺 FAMÍLIA EM CRISE: Seu irmão mais velho ligou bêbado dizendo que bateu o carro em um muro e precisa de €50k rápido para não ser preso.",
+            A: "Transferir o dinheiro imediatamente para abafar.",
+            B: "Desligar na cara dele.",
+            C: "Pagar, mas obrigá-lo a ir para a reabilitação (Custo €150k).",
+            acao: (opt) => {
+                if(opt==='A'){ p.banco-=50000; p.emocao="Triste 😢"; return "💸 Gastou €50k. Ele continuou bebendo, te sugando dinheiro e isso te deprimiu profundamente."; }
+                if(opt==='B'){ p.fama-=500000; return "🚨 ESCÂNDALO! Ele foi preso, a imprensa descobriu e te chamaram de milionário ingrato."; }
+                p.banco-=150000; p.ovr+=2; p.emocao="Alegre 😁"; return "🏥 Custou caro (€150k), mas funcionou. Ver seu irmão limpo te deu paz e você voou nos treinos (+2 OVR).";
+            }
+        },
+        {
+            texto: "💔 DIVÓRCIO POLÊMICO: Sua esposa encontrou DMs no seu celular e exigiu divórcio, querendo metade do seu fundo e ameaçando a mídia.",
+            A: "Contratar o melhor advogado para lutar.",
+            B: "Dar metade de tudo em silêncio.",
+            C: "Dar entrevista atacando ela antes.",
+            acao: (opt) => {
+                if(opt==='A'){ p.banco-=1000000; p.emocao="Triste 😢"; p.relacao="Divorciado"; return "⚖️ Você gastou €1M com advogados. Áudios vazaram, sua cabeça destruiu e você virou reserva."; }
+                if(opt==='B'){ p.banco = Math.floor(p.banco/2); p.relacao="Divorciado"; p.emocao="Focado 🧘"; return "💔 Acordo sigiloso. Perdeu METADE da fortuna, mas a mente ficou limpa para jogar futebol."; }
+                p.fama-=3000000; p.relacao="Cancelado"; p.emocao="Ressaca 🥴"; return "🚨 CANCELAMENTO MASSIVO! Você se fez de vítima, mas ela expôs prints piores. Fim da sua moral pública.";
+            }
+        },
+        {
+            texto: "🚑 LESÃO GRAVE: Você sentiu o joelho no treino. O médico do clube quer fazer cirurgia (4 meses fora). Seu empresário achou um 'curandeiro chinês' que promete curar em 1 semana por €100k.",
+            A: "Fazer a cirurgia correta e perder a temporada.",
+            B: "Pagar o curandeiro chinês (€100k).",
+            C: "Forçar a barra e jogar com dor no sacrifício.",
+            acao: (opt) => {
+                if(opt==='A'){ p.ovr-=1; p.pac-=2; p.emocao="Focado 🧘"; return "🏥 Recuperação chata, perdeu um pouco de explosão física (-2 Ritmo), mas o joelho está firme para o resto da vida."; }
+                if(opt==='B'){ 
+                    if(Math.random() > 0.5) { p.banco-=100000; p.ovr+=2; return "🐉 MILAGRE MEDICINAL! As agulhas funcionaram. Custou €100k, mas você voltou parecendo uma máquina (+2 OVR)."; }
+                    else { p.banco-=100000; p.pac-=6; p.phy-=6; p.ovr-=3; p.emocao="Triste 😢"; return "🚨 PÉSSIMO! O tratamento era farsa. Você infeccionou o joelho, piorou a lesão e perdeu MUITO físico (-6 Ritmo, -3 OVR)."; }
+                }
+                p.pac-=8; p.dri-=5; p.ovr-=4; p.emocao="Triste 😢"; return "🩸 VOCÊ ESTOUROU O LIGAMENTO EM CAMPO! Jogar com dor foi burrice. Perdeu quase toda a sua velocidade e drible (-4 OVR).";
+            }
+        },
+        {
+            texto: "🤑 PROPOSTA DAS ARÁBIAS: O príncipe dono do clube árabe ofereceu €15 Milhões agora, só para você faltar no jogo do seu clube amanhã e ir jantar no iate dele em Dubai.",
+            A: "Aceitar a grana, meter um atestado falso e ir pro iate.",
+            B: "Recusar e bloquear o número dele.",
+            C: "Aceitar a grana, mas dizer que só vai nas suas férias.",
+            acao: (opt) => {
+                if(opt==='A'){ p.banco+=15000000; p.fama-=2000000; p.ovr-=2; p.emocao="Ressaca 🥴"; return "🛥️ Milionário safado! Você pegou €15M, mas foi flagrado no iate enquanto seu time perdia. Escândalo mundial, torcida queimou sua camisa (-2 OVR, Status: Ressaca)."; }
+                if(opt==='B'){ p.fama+=1000000; p.emocao="Focado 🧘"; return "🛡️ Integridade blindada. O áudio do seu 'não' vazou e a torcida te chamou de lenda leal ao clube (+1M de fãs)."; }
+                p.emocao="Triste 😢"; return "🤴 Ele se ofendeu com suas condições, cancelou tudo e mandou hackearem suas redes sociais. Dia péssimo.";
+            }
+        },
+        {
+            texto: "🏃‍♂️ FÃ INVASOR: No meio do jogo, uma criança invade o campo chorando e correndo na sua direção. Os seguranças truculentos estão prestes a derrubar ela.",
+            A: "Correr, empurrar os seguranças e abraçar a criança.",
+            B: "Sair de perto para não se envolver.",
+            C: "Pedir calma aos guardas e tirar a camisa para o menino.",
+            acao: (opt) => {
+                if(opt==='A'){ p.fama+=2000000; p.emocao="Alegre 😁"; return "🦸‍♂️ ATITUDE DE HERÓI! O vídeo viralizou globalmente. Você defendeu a criança e virou o queridinho da internet (+2M de Fãs)."; }
+                if(opt==='B'){ p.fama-=1000000; return "🚨 ESCÂNDALO! A câmera pegou você virando as costas. A internet te apelidou de 'pipoqueiro sem coração' (-1M fãs)."; }
+                p.fama+=500000; return "👕 Bonita atitude. Deu a camisa, resolveu a situação de forma pacífica e ganhou moral pública.";
+            }
+        },
+        {
+            texto: "🎙️ ENTREVISTA POLÊMICA: Após uma derrota dolorosa por 3x0, o repórter te pergunta por que o time jogou tão mal.",
+            A: "Culpar o esquema tático do treinador abertamente.",
+            B: "Culpar a arbitragem que 'roubou' vocês.",
+            C: "Assumir a culpa toda no peito.",
+            acao: (opt) => {
+                if(opt==='A'){ p.emocao="Triste 😢"; p.ovr-=2; return "🚨 PÉSSIMO! O treinador viu a entrevista, o vestiário quebrou e você foi barrado dos próximos jogos (-2 OVR)."; }
+                if(opt==='B'){ p.banco-=50000; return "⚖️ A federação não gostou. Você tomou um processo pesado e pagou €50k de multa para não ser suspenso."; }
+                p.emocao="Alegre 😁"; p.ovr+=1; p.fama+=500000; return "🛡️ Perfil de Capitão! Você blindou o grupo chamando a culpa. O elenco fechou com você e a química aumentou (+1 OVR).";
+            }
+        },
+        {
+            texto: "🍔 EXCESSO DE PESO: Férias chegaram, você relaxou e engordou 6 quilos comendo churrasco. A reapresentação do elenco é em duas semanas.",
+            A: "Contratar uma clínica de emagrecimento de choque (€80k).",
+            B: "Fazer treinos duplos sozinho na praia até vomitar.",
+            C: "Voltar gordo mesmo e justificar que é 'massa muscular'.",
+            acao: (opt) => {
+                if(opt==='A'){ p.banco-=80000; p.phy+=3; p.pac+=2; return "🥗 A clínica resolveu! Você gastou €80k, perdeu o peso e ainda voltou mais forte e rápido (+3 Físico, +2 Ritmo)."; }
+                if(opt==='B'){ p.pac-=3; p.emocao="Triste 😢"; return "🤕 Overtraining! Você treinou errado na areia e puxou a coxa. Voltou machucado e mais lento (-3 Ritmo)."; }
+                p.pac-=5; p.dri-=4; p.ovr-=2; p.emocao="Ressaca 🥴"; return "🚨 ESCÂNDALO! A imprensa postou fotos da sua barriga. Virou meme nacional e perdeu muita agilidade (-5 Ritmo, -4 Drible).";
+            }
+        },
+        {
+            texto: "🏘️ CARIDADE NO BAIRRO: Uma comunidade carente está pedindo ajuda para construir um campo decente para as crianças.",
+            A: "Doar €1.5 Milhões e fazer um super CT padrão FIFA.",
+            B: "Ignorar, isso é dever da prefeitura.",
+            C: "Doar apenas 100 chuteiras (Custo €10k).",
+            acao: (opt) => {
+                if(opt==='A'){ p.banco-=1500000; p.fama+=4000000; p.emocao="Alegre 😁"; return "🏟️ HERÓI DO POVO! Você fez o CT, sua fama explodiu em 4 Milhões e a energia positiva te renovou!"; }
+                if(opt==='B'){ p.fama-=500000; return "🚨 PÉSSIMA IMAGEM! Vazou que você negou ajuda e a internet te massacrou."; }
+                p.banco-=10000; p.fama+=100000; return "👟 Marketing OK. Gastou pouco e ficou bem na foto nas redes sociais.";
+            }
+        },
+        {
+            texto: "💉 ACUSAÇÃO FALSA: Um jornalista espalhou no Twitter que seus músculos novos são fruto de Doping pesado.",
+            A: "Pagar €500k para os melhores advogados processarem o jornalista.",
+            B: "Gravar um vídeo chorando e pedindo para pararem.",
+            C: "Fazer o teste surpresa na frente das câmeras da TV.",
+            acao: (opt) => {
+                if(opt==='A'){ p.banco-=500000; p.emocao="Focado 🧘"; p.fama+=800000; return "👨‍⚖️ O cara perdeu na justiça, teve que pedir desculpas públicas e seus fãs amaram a resposta firme!"; }
+                if(opt==='B'){ p.fama-=300000; p.emocao="Triste 😢"; return "📉 O choro soou como culpa. A dúvida ficou no ar, você perdeu fãs e confiança emocional."; }
+                p.fama+=1500000; p.ovr+=1; p.emocao="Alegre 😁"; return "🧬 GÊNIO! O exame deu negativo na TV ao vivo. Humilhou os críticos e sua popularidade foi às alturas (+1 OVR).";
             }
         }
     ];
@@ -446,7 +585,6 @@
             if(mem) indicesDramasDisponiveis = JSON.parse(mem);
         } catch(e) {}
         
-        // Se a lista estiver vazia, recarregamos com todos os números originais
         if(!indicesDramasDisponiveis || indicesDramasDisponiveis.length === 0) {
             indicesDramasDisponiveis = [];
             for(let i = 0; i < bancoDramasOriginal.length; i++) {
@@ -548,6 +686,13 @@
 
     function atualizarUI() {
         ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
+        
+        // Recalcular o OVR baseando-se na média caso os eventos tenham modificado muito
+        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.def > 70 ? 2 : 0) + (p.archetype === 'matador' ? 3 : 0);
+        if(Math.abs(calcOvr - p.ovr) > 5) p.ovr = calcOvr; 
+
+        ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
+
         let ovrHTML = `<div class="ovr-col"><span style="color:#15803d">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime ? 'inline' : 'none'}">⬆</span></div>`;
         document.getElementById('attr-vals').innerHTML = `${ovrHTML}<div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
         
@@ -739,7 +884,7 @@
 
         atualizarUI();
         
-        if (Math.random() < 0.75) {
+        if (Math.random() < 0.85) { 
             abrirEntrevista();
         } else {
             if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -751,7 +896,6 @@
         
         document.getElementById('action-area').style.display = 'none';
         
-        // Pega um número de drama aleatório da lista que ainda sobrou
         let randPos = Math.floor(Math.random() * indicesDramasDisponiveis.length);
         let realIndex = indicesDramasDisponiveis.splice(randPos, 1)[0]; 
         entrevistaAtual = bancoDramasOriginal[realIndex]; 
@@ -778,7 +922,7 @@
             
             if (randomNum <= chanceAbafar) {
                 p.emocao = "Focado 🧘";
-                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua assessoria agiu rápido, abafou a crise e não deixou o escândalo afetar sua mente (Humor restaurado)!</span>`;
+                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua assessoria agiu rápido, abafou a crise e não deixou o escândalo afetar sua mente! (Humor restaurado, foco mantido).</span>`;
             } else {
                 textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi muito forte para sua equipe nível ${p.prLevel}!</span>`;
             }
