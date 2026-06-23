@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -125,12 +126,13 @@
         .choice-section { display: none; background: #fff; margin: 10px; border-radius: 8px; border: 3px solid #3b82f6; padding: 12px; flex-direction: column; gap: 8px; position: absolute; top: 22%; left: 5%; width: 90%; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
         .choice-btn { background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; text-align: left;}
 
-        .lifestyle-section { display: flex; gap: 8px; margin: 5px 10px 10px 10px; }
-        .life-wrapper { flex: 1; border-radius: 6px; overflow: hidden; border: 2px solid #5b2268; background: white; display: flex; flex-direction: column;}
-        .life-title { background: #5b2268; color: white; font-size: 14px; font-weight: 900; text-align: center; padding: 2px; font-family: 'Oswald', sans-serif;}
-        .life-photo { height: 70px; width: 100%; background-size: cover; background-position: center; position: relative;}
-        .life-text { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; text-align: center; font-size: 11px; font-weight: 900; padding: 2px 0; text-transform: uppercase;}
-        .life-btn { background: #f59e0b; border: none; padding: 5px; font-weight: 900; font-size: 10px; cursor: pointer; color: black; text-align: center; border-top: 1px solid #ccc;}
+        /* GRADE DE ESTILO DE VIDA EXPANDIDA 2X2 */
+        .lifestyle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 5px 10px 10px 10px; }
+        .life-wrapper { border-radius: 6px; overflow: hidden; border: 2px solid #5b2268; background: white; display: flex; flex-direction: column;}
+        .life-title { background: #5b2268; color: white; font-size: 12px; font-weight: 900; text-align: center; padding: 2px; font-family: 'Oswald', sans-serif;}
+        .life-photo { height: 55px; width: 100%; background-size: cover; background-position: center; position: relative;}
+        .life-text { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.75); color: white; text-align: center; font-size: 10px; font-weight: 900; padding: 2px 0; text-transform: uppercase;}
+        .life-btn { background: #f59e0b; border: none; padding: 4px; font-weight: 900; font-size: 9px; cursor: pointer; color: black; text-align: center; border-top: 1px solid #ccc; flex-grow: 1; display: flex; align-items: center; justify-content: center;}
 
         /* BOTÕES PRINCIPAIS */
         .action-area { padding: 5px 10px 10px 10px; text-align: center; }
@@ -244,20 +246,34 @@
         </div>
     </div>
 
-    <div class="lifestyle-section">
+    <div class="lifestyle-grid">
         <div class="life-wrapper">
             <div class="life-title">MORADIA</div>
             <div class="life-photo" id="photo-house">
                 <div class="life-text" id="text-house">Casa dos Pais</div>
             </div>
-            <div class="life-btn" id="btn-buy-house" onclick="comprarPatrimonio('house')">Melhorar (€1M)</div>
+            <div class="life-btn" id="btn-buy-house" onclick="comprarPatrimonio('house')">Melhorar</div>
         </div>
         <div class="life-wrapper">
             <div class="life-title">VEÍCULO</div>
             <div class="life-photo" id="photo-car">
                 <div class="life-text" id="text-car">Bicicleta</div>
             </div>
-            <div class="life-btn" id="btn-buy-car" onclick="comprarPatrimonio('car')">Melhorar (€150k)</div>
+            <div class="life-btn" id="btn-buy-car" onclick="comprarPatrimonio('car')">Melhorar</div>
+        </div>
+        <div class="life-wrapper">
+            <div class="life-title">VIDA SOCIAL</div>
+            <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80')">
+                <div class="life-text" id="text-social">Solteiro</div>
+            </div>
+            <div class="life-btn" style="background:#2563eb; color:white; font-weight:bold;" id="btn-social">Status Estável</div>
+        </div>
+        <div class="life-wrapper">
+            <div class="life-title">FINANÇAS</div>
+            <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&q=80')">
+                <div class="life-text" id="text-finance">Fundo: €0</div>
+            </div>
+            <div class="life-btn" style="background:#16a34a; color:white;" id="btn-finance" onclick="investirFundo()">Investir €250k</div>
         </div>
     </div>
 
@@ -350,7 +366,7 @@
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false,
-        hasTrainer: false, hasAgent: false, houseTier: 0, carTier: 0,
+        hasTrainer: false, hasAgent: false, houseTier: 0, carTier: 0, relacao: "Solteiro", investido: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
@@ -362,32 +378,53 @@
         ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" }
     };
 
+    // BANCO DE ENTREVISTAS EXPANDIDO COM CASAMENTOS, FESTAS, TRAIÇÕES E INVESTIMENTOS
     const bancoEntrevistas = [
         {
-            texto: "🎤 COLETIVA DE IMPRENSA: Críticas sobre seu desempenho tático recente. Qual sua postura?",
-            A: "Criticar o esquema tático do técnico (+4 Finalização, mas perde -1 título nacional)",
-            B: "Assumir a responsabilidade e treinar mais (+4 Físico, bônus de imagem)",
+            texto: "🎤 CAPA DE REVISTA: Você foi flagrado com modelos em Ibiza no meio da pré-temporada. Sua parceira exige o divórcio!",
+            A: "Aceitar a separação judicial (Custa 50% de todo seu dinheiro em conta, vira 'Divorciado', +5 Ritmo)",
+            B: "Tentar reconciliação pública (Gasta €400k em presentes caros, vira 'Noivo 💍', +4 Físico)",
             acao: (opt) => {
-                if(opt === 'A') { p.sho += 4; p.totals.dom = Math.max(0, p.totals.dom - 1); }
-                else { p.phy += 4; p.banco += 500000; }
+                if(opt === 'A') { p.banco = Math.floor(p.banco * 0.5); p.relacao = "Divorciado"; p.pac += 5; }
+                else { p.banco -= 400000; p.relacao = "Noivo 💍"; p.phy += 4; }
             }
         },
         {
-            texto: "🎤 ZONA MISTA: O principal astro adversário te provocou antes do clássico decisivo.",
-            A: "Provocar de volta aquecendo o jogo (+5 Ritmo, toma +2 cartões amarelos)",
-            B: "Manter o foco absoluto dentro de campo (+4 Passe, bônus comercial de €250k)",
+            texto: "🎤 EVENTO SOCIAL: Seu relacionamento de longa data está cobrando um posicionamento definitivo.",
+            A: "Organizar o Casamento do Ano (Gasta €500k, vira 'Casado 👑', +6 Passe devido ao foco tático)",
+            B: "Adiar a festa e gastar o dinheiro com carros (Continua 'Solteiro', economiza o caixa, +5 Drible)",
             acao: (opt) => {
-                if(opt === 'A') { p.pac += 5; p.totals.yc += 2; }
-                else { p.pas += 4; p.banco += 250000; }
+                if(opt === 'A') { p.banco -= 500000; p.relacao = "Casado 👑"; p.pas += 6; }
+                else { p.dri += 5; }
             }
         },
         {
-            texto: "🎤 REUNIÃO DE VESTIÁRIO: O elenco está dividido sobre bônus financeiro extra.",
-            A: "Exigir uma cota individual maior egoísta (Ganha bônus de €600k em dinheiro)",
-            B: "Exigir divisão comunitária igualitária (+4 Drible devido ao ótimo ambiente)",
+            texto: "🎤 DRAMA FAMILIAR: Seus parentes no Brasil pediram uma quantia absurda para salvar o negócio da família.",
+            A: "Enviar a ajuda financeira imediatamente (Gasta €350k, ganha bônus de paz mental +4 Geral)",
+            B: "Negar a ajuda para proteger seu patrimônio (Guarda o dinheiro, perde -3 Geral por estresse familiar)",
             acao: (opt) => {
-                if(opt === 'A') { p.banco += 600000; }
-                else { p.dri += 4; }
+                if(opt === 'A') { p.banco -= 350000; p.ovr += 4; }
+                else { p.ovr -= 3; }
+            }
+        },
+        {
+            texto: "🎤 GOLPE DO PARÇA: Um amigo de seleção te chamou para investir numa fazenda de Criptomoedas duvidosas.",
+            A: "Ir com tudo na ganância de enriquecer (50% de chance de lucrar €1.5M ou 50% de chance de perder €600k)",
+            B: "Ignorar o parça e focar nos treinos (Não altera finanças, ganha +4 Finalização)",
+            acao: (opt) => {
+                if(opt === 'A') {
+                    if(Math.random() > 0.5) p.banco += 1500000;
+                    else p.banco -= 600000;
+                } else { p.sho += 4; }
+            }
+        },
+        {
+            texto: "🎤 POLÊMICA DE BALADA: Você foi visto saindo de uma casa noturna às 4h da manhã na véspera da Grande Final.",
+            A: "Subornar os repórteres para abafar o caso (Gasta €200k, joga focado e ganha +1 Título Continental)",
+            B: "Ir direto para a partida de ressaca (Não gasta dinheiro, toma +2 Cartões Amarelos, perde -1 Título)",
+            acao: (opt) => {
+                if(opt === 'A') { p.banco -= 200000; p.totals.int += 1; }
+                else { p.totals.yc += 2; p.totals.dom = Math.max(0, p.totals.dom - 1); }
             }
         }
     ];
@@ -433,6 +470,7 @@
     function initGrid() {
         p.age = 15; p.banco = 0; p.isConvocado = false; p.hasTrainer = false; p.hasAgent = false;
         p.houseTier = 0; p.carTier = 0; p.transferFee = ""; p.maxFeeNum = 0; p.maxFeeStr = "€0m";
+        p.relacao = "Solteiro"; p.investido = 0;
         p.totals = { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 };
         currentStep = 0;
 
@@ -467,6 +505,7 @@
 
     function formatMoeda(num) {
         if(num >= 1000000) return "€" + (num/1000000).toFixed(1) + "M";
+        if(num <= -1000000) return "-€" + (Math.abs(num)/1000000).toFixed(1) + "M";
         return "€" + (num/1000).toFixed(0) + "k";
     }
 
@@ -507,6 +546,18 @@
         document.getElementById('text-car').innerText = c.name;
         if(p.carTier < 3) document.getElementById('btn-buy-car').innerText = "Melhorar (" + formatMoeda(carUpgrades[p.carTier+1].price) + ")";
         else document.getElementById('btn-buy-car').innerText = "Máximo";
+
+        // ATUALIZAR INTERFACE DE VIDA SOCIAL & INVESTIMENTOS
+        document.getElementById('text-social').innerText = p.relacao;
+        document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
+    }
+
+    function investirFundo() {
+        if(p.banco >= 250000) {
+            p.banco -= 250000;
+            p.investido += 250000;
+            atualizarUI();
+        }
     }
 
     function contratarStaff(tipo) {
@@ -552,6 +603,12 @@
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { p.age += 3; currentStep++; }
 
+        // RENDIMENTO DE INVESTIMENTOS (25% DE LUCRO A CADA 3 ANOS)
+        if(p.investido > 0) {
+            let lucro = Math.floor(p.investido * 0.25);
+            p.banco += lucro;
+        }
+
         let salSemanal = 5000;
         if(eliteClubs.includes(p.club)) salSemanal = 180000;
         else if(tierPrata.includes(p.club)) salSemanal = 35000;
@@ -560,6 +617,16 @@
         if(p.ovr >= 80) p.isConvocado = true;
 
         let eventoTexto = "";
+
+        // MECÂNICA DE DEFESA DE FALÊNCIA RPG
+        if (p.banco < 0) {
+            p.banco = 0;
+            p.houseTier = 0;
+            p.carTier = 0;
+            p.investido = 0;
+            eventoTexto = "📉 FALÊNCIA COMPLETA: Seus luxos, multas e divórcios estouraram sua conta! Você faliu, perdeu seus carros e voltou a morar com os pais.";
+        }
+
         if (p.age <= 21) {
             let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
@@ -570,14 +637,14 @@
             let d = Math.floor(Math.random() * 4) + 2;
             p.pac -= (d+4); p.phy -= d; 
             p.sho += 2; p.pas += 2; p.ovr += 1; 
-            eventoTexto = "👴 MAESTRIA VETERANA: Sua velocidade caiu, mas sua experiência aumentou seu Passe e Finalização!";
+            if(eventoTexto === "") eventoTexto = "👴 MAESTRIA VETERANA: Sua velocidade caiu, mas sua experiência aumentou seu Passe e Finalização!";
         }
 
         if(Math.random() < 0.20 && currentStep > 1 && p.age < 36) {
             if(p.hasTrainer && Math.random() > 0.2) {
-                eventoTexto = "🛡️ LESÃO EVITADA: Seu Preparador Físico Particular salvou sua musculatura!";
+                if(eventoTexto === "") eventoTexto = "🛡️ LESÃO EVITADA: Seu Preparador Físico Particular salvou sua musculatura!";
             } else {
-                eventoTexto = "💥 LESÃO GRAVE: Ruptura muscular em campo! Desfalque em metade da liga (-3 Ritmo e Físico)";
+                if(eventoTexto === "") eventoTexto = "💥 LESÃO GRAVE: Ruptura muscular em campo! Desfalque em metade da liga (-3 Ritmo e Físico)";
                 p.pac -= 3; p.phy -= 3; p.ovr -= 1;
             }
         }
@@ -605,7 +672,7 @@
         p.totals.dom += tDom; p.totals.int += tInt;
 
         if(p.ovr > 85 && Math.random() > 0.5) p.totals.cont++;
-        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; eventoTexto = "🇧🇷 CAMPEÃO DO MUNDO: Conquista mágica! Você ergueu a taça da Copa do Mundo!"; }
+        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; if(eventoTexto==="") eventoTexto = "🇧🇷 CAMPEÃO DO MUNDO: Conquista mágica! Você ergueu a taça da Copa do Mundo!"; }
         
         if (gol >= 95 && p.ovr >= 89) p.totals.bdor += 1;
 
@@ -624,7 +691,7 @@
 
         atualizarUI();
         
-        if (Math.random() < 0.45 && currentStep > 1 && p.age < 36) {
+        if (Math.random() < 0.55 && currentStep > 1 && p.age < 36) {
             abrirEntrevista();
         } else {
             if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -712,6 +779,22 @@
         if(p.maxFeeNum > records.fee.val) { records.fee = { val: p.maxFeeNum, str: p.maxFeeStr, name: playerID }; updated = true; }
         if(updated) { localStorage.setItem('mfc_records', JSON.stringify(records)); atualizarDadosRanking(); }
     }
+
+    function atualizarDadosRanking() {
+        document.getElementById('rk-ovr-val').innerText = records.ovr.val;
+        document.getElementById('rk-ovr-name').innerText = records.ovr.name;
+        document.getElementById('rk-gol-val').innerText = records.gol.val;
+        document.getElementById('rk-gol-name').innerText = records.gol.name;
+        document.getElementById('rk-bdor-val').innerText = records.bdor.val;
+        document.getElementById('rk-bdor-name').innerText = records.bdor.name;
+        document.getElementById('rk-wc-val').innerText = records.wc.val;
+        document.getElementById('rk-wc-name').innerText = records.wc.name;
+        document.getElementById('rk-fee-val').innerText = records.fee.str || "€0m";
+        document.getElementById('rk-fee-name').innerText = records.fee.name;
+    }
+
+    function abrirRanking() { document.getElementById('modal-rank').style.display = 'flex'; }
+    function fecharRanking() { document.getElementById('modal-rank').style.display = 'none'; }
 
     atualizarDadosRanking();
 </script>
