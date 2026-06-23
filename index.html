@@ -331,20 +331,20 @@
     const countryMap = {
         "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇨🇴": "COLÔMBIA", "🇨🇱": "CHILE", "🇪🇨": "EQUADOR", "🇵🇾": "PARAGUAI", "🇵🇪": "PERU", "🇧🇴": "BOLÍVIA", "🇻🇪": "VENEZUELA",
         "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇺🇦": "UCRÂNIA", "🇭🇷": "CROÁCIA",
-        "🇺🇸": "EUA", "🇲🇽": "MÉXICO", "🇸🇦": "ARÁBIA SAUDITA", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO"
+        "🇺🇸": "EUA", "🇲🇽": "MÉXICO", "🇸🇦": "ARÁBIA SAUDITA", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO", "🇧🇪": "BÉLGICA"
     };
 
     const tierBronze = [
         "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷",
         "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Defensa y Justicia 🇦🇷", "Peñarol 🇺🇾", "Barcelona SC 🇪🇨", "Alianza Lima 🇵🇪",
         "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mallorca 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Genoa 🇮🇹", "Monza 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Toulouse 🇫🇷", "Nantes 🇫🇷",
-        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧exe", "Zürich 🇨🇭", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
+        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧🇪", "Zürich 🇨🇭", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
     ];
 
     const tierPrata = [
         "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Nacional 🇺🇾", "Atlético Nacional 🇨🇴", "Colo-Colo 🇨🇱", "LDU 🇪🇨",
         "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷",
-        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Olympiacos 🇬🇷", "Sparta Praha 🇨🇿", "Dinamo Zagreb 🇭🇷", "Shakhtar Donetsk 🇺🇦", "Club América 🇲🇽", "Monterrey 🇲🇽", "Al-Ahli 🇸🇦", "Al-Sadd 🇶🇦", "Vissel Kobe 🇯🇵"
+        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Olympiacos 🇬🇷", "Sparta Praha 🇨🇿", "Dinamo Zagreb 🇭🇷", "Shakhtar Donetsk 🇺🇦", "Club América 🇲🇽", "Monterrey 🇲🇽", "Al-Ahli 🇸🇦", "Al-Sadd 🇶🇦", "Vissel Kobe 🇯ピア"
     ];
 
     const eliteClubs = [
@@ -381,25 +381,27 @@
     let currentStep = 0;
     let entrevistaAtual = null;
 
-    // --- SEGURANÇA ULTRA-BLINDADA PARA EVITAR CONFLITOS DE MEMÓRIA ---
-    let records;
+    // --- NOVO SISTEMA DE INICIALIZAÇÃO COMPLETAMENTE PASSIVO E SEGURO ---
+    let records = {
+        ovr: { val: 0, name: "-" },
+        gol: { val: 0, name: "-" },
+        bdor: { val: 0, name: "-" },
+        wc: { val: 0, name: "-" },
+        fee: { val: 0, str: "€0m", name: "-" }
+    };
+
     try {
         let dadosSalvos = localStorage.getItem('mfc_records');
-        records = JSON.parse(dadosSalvos);
-        // Se a estrutura antiga for detectada (campos faltando ou formato incorreto), força reset limpo
-        if (!records || typeof records.ovr !== 'object' || !records.ovr.hasOwnProperty('val') || !records.fee.hasOwnProperty('str')) {
-            throw new Error("Reset de segurança comercial exigido.");
+        if (dadosSalvos) {
+            let dadosParsed = JSON.parse(dadosSalvos);
+            if (dadosParsed && dadosParsed.ovr && dadosParsed.gol && dadosParsed.bdor && dadosParsed.wc && dadosParsed.fee && dadosParsed.fee.str) {
+                records = dadosParsed;
+            }
         }
     } catch(e) {
-        records = {
-            ovr: { val: 0, name: "-" },
-            gol: { val: 0, name: "-" },
-            bdor: { val: 0, name: "-" },
-            wc: { val: 0, name: "-" },
-            fee: { val: 0, str: "€0m", name: "-" }
-        };
-        localStorage.setItem('mfc_records', JSON.stringify(records));
+        console.log("Memória limpa redefinida com sucesso.");
     }
+    localStorage.setItem('mfc_records', JSON.stringify(records));
 
     const bancoEntrevistas = [
         {
@@ -507,7 +509,7 @@
         let pool = p.isProdigy ? tierPrata : tierBronze;
         p.club = pool[Math.floor(Math.random() * pool.length)];
         
-        if(p.club.includes("🇪🇸") || p.club.includes("🏴") || p.club.includes("🇮🇹") || p.club.includes("🇩🇪") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱")) {
+        if(p.club.includes("🇪🇸") || p.club.includes("🏴") || p.club.includes("🇮🇹") || p.club.includes("🇩🇪") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇧🇪")) {
             p.origin = "Europa"; document.getElementById('icone-continente').innerText = "🏆 Eurocopa";
         } else {
             p.origin = "Am. do Sul"; document.getElementById('icone-continente').innerText = "🏆 Copa América";
@@ -836,3 +838,80 @@
             list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">💰 Salário Comercial: ${salTxt}</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val})">🤝 Aceitar Proposta €${val}M</div></div>`;
         }
     }
+
+    function aceitarTransf(c, strVal, numVal) { 
+        p.club = c; p.transferFee = strVal; 
+        if(numVal > p.maxFeeNum) { p.maxFeeNum = numVal; p.maxFeeStr = "€" + strVal; }
+        fecharMercado(); 
+    }
+    function ficarNoTime() { p.transferFee = ""; fecharMercado(); }
+    function fecharMercado() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
+    
+    function finalizarCarreira() {
+        document.getElementById(`club-cell-9`).innerHTML = formatarClubeHTML(p.club, "");
+        document.getElementById(`stats-titles-9`).innerText = "-";
+        document.getElementById(`stats-goals-9`).innerText = "-";
+        document.getElementById(`stats-assists-9`).innerText = "-";
+
+        let cargoFinal = (p.ovr > 84) ? "Diretoria Executiva 💼" : "Treinador Técnico 📋";
+        document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML(cargoFinal, "");
+        document.getElementById(`stats-titles-10`).innerText = "-";
+        document.getElementById(`stats-goals-10`).innerText = "-";
+        document.getElementById(`stats-assists-10`).innerText = "-";
+        
+        let totalScore = p.totals.gol + (p.totals.ass * 0.7) + (p.totals.dom * 15) + (p.totals.int * 25) + (p.totals.bdor * 120) + (p.totals.wc * 200);
+        let veredito = "";
+        if(totalScore > 1400) veredito = "🐐 LENDÁRIO ABSOLUTO! Você sentou no trono ao lado de Pelé, Messi e Cristiano Ronaldo. Seu legado de drama e glória é imortal!";
+        else if(totalScore > 850) veredito = "👑 CRAQUE GERACIONAL! Sua genialidade marcou as noites e os gramados. Lembrado no patamar de Ronaldinho Gaúcho e Neymar!";
+        else if(totalScore > 400) veredito = "⚽ ÍDOLO DE RESPEITO! Campeão em grandes ligas, temido pelas defesas internacionais.";
+        else veredito = "👕 ATLETA PROFISSIONAL! Cumpriu sua jornada dignamente no ecossistema comercial do futebol.";
+
+        let legadoFinanceiro = "";
+        if (p.banco >= 45000000) {
+            legadoFinanceiro = "<br><br>💰 <b>BILIONÁRIO DA SAF:</b> Dono de uma fortuna chocante de " + formatMoeda(p.banco) + ", você comprou um clube europeu de tradição, virou presidente de SAF e hoje manda no mercado de transferências internacional!";
+        } else if (p.banco >= 12000000) {
+            legadoFinanceiro = "<br><br>💼 <b>AGENTE DE ELITE FIFA:</b> Altamente influente, você abriu sua própria agência internacional de Staff, controlando o passe das maiores promessas da seleção.";
+        } else {
+            legadoFinanceiro = "<br><br>📻 <b>COMENTARISTA DE PODCAST:</b> Como gastou bastante curtindo a vida, restou o suficiente para viver bem. Hoje você é um commentator de polêmicas pesadas em canais do YouTube e podcasts locais.";
+        }
+        veredito += legadoFinanceiro;
+
+        const evBox = document.getElementById('event-section');
+        evBox.innerHTML = `<div style='color:#4c1d95; font-size:13px; font-weight:900;'>🏁 JORNADA ENCERRADA!<br>${veredito}</div>`;
+        evBox.style.display = 'block';
+
+        document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">NOVA CARREIRA RPG</button>`;
+        checarRecordes();
+    }
+
+    function checarRecordes() {
+        let playerID = `${p.origin} ATA`;
+        let updated = false;
+        if(p.prime > records.ovr.val) { records.ovr = { val: p.prime, name: playerID }; updated = true; }
+        if(p.totals.gol > records.gol.val) { records.gol = { val: p.totals.gol, name: playerID }; updated = true; }
+        if(p.totals.bdor > records.bdor.val) { records.bdor = { val: p.totals.bdor, name: playerID }; updated = true; }
+        if(p.totals.wc > records.wc.val) { records.wc = { val: p.totals.wc, name: playerID }; updated = true; }
+        if(p.maxFeeNum > records.fee.val) { records.fee = { val: p.maxFeeNum, str: p.maxFeeStr, name: playerID }; updated = true; }
+        if(updated) { localStorage.setItem('mfc_records', JSON.stringify(records)); atualizarDadosRanking(); }
+    }
+
+    function atualizarDadosRanking() {
+        document.getElementById('rk-ovr-val').innerText = records.ovr.val;
+        document.getElementById('rk-ovr-name').innerText = records.ovr.name;
+        document.getElementById('rk-gol-val').innerText = records.gol.val;
+        document.getElementById('rk-gol-name').innerText = records.gol.name;
+        document.getElementById('rk-bdor-val').innerText = records.bdor.val;
+        document.getElementById('rk-bdor-name').innerText = records.bdor.name;
+        document.getElementById('rk-wc-val').innerText = records.wc.val;
+        document.getElementById('rk-wc-name').innerText = records.wc.name;
+        document.getElementById('rk-fee-val').innerText = records.fee.str || "€0m";
+        document.getElementById('rk-fee-name').innerText = records.fee.name;
+    }
+
+    function abrirRanking() { document.getElementById('modal-rank').style.display = 'flex'; }
+    function fecharRanking() { document.getElementById('modal-rank').style.display = 'none'; }
+
+    atualizarDadosRanking();
+</script>
+</body>
+</html>
