@@ -401,7 +401,6 @@
         if (dadosSalvos) records = JSON.parse(dadosSalvos);
     } catch(e) {}
 
-    // AQUI VOCÊ PODE COLAR SEUS 500 DRAMAS
     const bancoDramasOriginal = [
         {
             texto: "Seu irmão mais velho ligou bêbado dizendo que bateu o carro em um muro e precisa de €50k rápido para não ser preso.",
@@ -757,33 +756,48 @@
         document.getElementById('choice-buttons-block').style.display = 'flex';
         document.getElementById('btn-choice-next').style.display = 'none';
         document.getElementById('choice-section').style.display = 'flex';
+
+        // Reseta as cores dos botões para o padrão escuro
+        const btns = document.querySelectorAll('.choice-btn');
+        btns.forEach(b => b.style.background = '#1e293b');
     }
 
     function escolherOpcao(opt) {
+        // Aplica a cor azul ao botão selecionado
+        const btns = document.querySelectorAll('.choice-btn');
+        btns.forEach(b => b.style.background = '#1e293b');
+        document.getElementById('btn-' + opt.toLowerCase()).style.background = '#3b82f6';
+
+        // Executa a lógica da ação
         let textoConsequencia = entrevistaAtual.acao(opt);
         
+        // Lógica de Assessoria PR
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("CANCELAMENTO");
 
         if (precisaPR && p.prLevel > 0) {
             let chanceAbafar = prChances[p.prLevel];
-            let randomNum = Math.random() * 100;
-            
-            if (randomNum <= chanceAbafar) {
+            if (Math.random() * 100 <= chanceAbafar) {
                 p.emocao = "Focado 🧘";
-                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua assessoria agiu rápido, abafou a crise e não deixou o escândalo afetar sua mente (Humor restaurado)!</span>`;
+                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua assessoria abafou a crise (Humor restaurado)!</span>`;
             } else {
-                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi muito forte para sua equipe nível ${p.prLevel}!</span>`;
+                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi muito forte para sua equipe PR!</span>`;
             }
         }
         
-        document.getElementById('choice-text').innerHTML = textoConsequencia;
+        // Atualiza o texto com o resultado
+        document.getElementById('choice-text').innerHTML = "<b>RESULTADO:</b><br>" + textoConsequencia;
+        
+        // Esconde os botões A, B, C e mostra o botão verde para continuar
         document.getElementById('choice-buttons-block').style.display = 'none';
         document.getElementById('btn-choice-next').style.display = 'block';
+        
         atualizarUI();
     }
 
     function fecharJanelaConsequencia() {
         document.getElementById('choice-section').style.display = 'none';
+        document.getElementById('btn-choice-next').style.display = 'none';
+        document.getElementById('choice-buttons-block').style.display = 'flex';
         document.getElementById('action-area').style.display = 'block';
         if (p.age < 39) abrirMercado(); else finalizarCarreira();
     }
