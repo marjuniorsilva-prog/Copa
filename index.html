@@ -759,25 +759,8 @@
         document.getElementById('choice-section').style.display = 'flex';
     }
 
-    // Substitua sua função escolherOpcao atual por esta:
-function escolherOpcao(opt) {
-    // 1. Aplica o estilo visual de seleção
-    const buttons = document.querySelectorAll('.choice-btn');
-    buttons.forEach(btn => btn.style.background = '#1e293b'); // Reseta todos
-    document.getElementById('btn-' + opt.toLowerCase()).style.background = '#3b82f6'; // Destaca o clicado
-
-    // 2. Processa a lógica (isso é o que estava faltando disparar)
-    let textoConsequencia = entrevistaAtual.acao(opt);
-    
-    // 3. Atualiza o texto para mostrar o resultado da escolha
-    document.getElementById('choice-text').innerHTML = textoConsequencia;
-    
-    // 4. Esconde os botões A, B, C e mostra o botão para seguir o jogo
-    document.getElementById('choice-buttons-block').style.display = 'none';
-    document.getElementById('btn-choice-next').style.display = 'block';
-    
-    atualizarUI(); // Garante que o dinheiro/status atualize na tela principal
-}
+    function escolherOpcao(opt) {
+        let textoConsequencia = entrevistaAtual.acao(opt);
         
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("CANCELAMENTO");
 
