@@ -327,7 +327,7 @@
 <script>
     const countryMap = {
         "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇨🇴": "COLÔMBIA", "🇨🇱": "CHILE", "🇪🇨": "EQUADOR", "🇵🇾": "PARAGUAI", "🇵🇪": "PERU", "🇧🇴": "BOLÍVIA", "🇻🇪": "VENEZUELA",
-        "🏴%20🎯": "INGLATERRA", "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇺🇦": "UCRÂNIA", "🇭🇷": "CROÁCIA",
+        "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇺🇦": "UCRÂNIA", "🇭🇷": "CROÁCIA",
         "🇺🇸": "EUA", "🇲🇽": "MÉXICO", "🇸🇦": "ARÁBIA SAUDITA", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO"
     };
 
@@ -382,71 +382,148 @@
         ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" }
     };
 
-    // NOVO BANCO DE DRAMAS COM ESCOLHAS COMPLETAMENTE CEGAS E MISTERIOSAS
+    // BANCO DE DADOS RPG TOTALMENTE EXPANDIDO COM SITUAÇÕES DE CAMPO, ADVERSÁRIOS E BIRRAS DE TÉCNICOS
     const bancoEntrevistas = [
+        // --- 1. SEÇÃO PRINCIPAL: BIRRAS DE TÉCNICO & VESTIÁRIO ---
         {
-            texto: "🎤 ESCÂNDALO NA PRENSA: Fotos suas em uma balada pesada regada a bebidas na Espanha vazaram na véspera da semifinal.",
-            A: "Subornar o fotógrafo com dinheiro de caixa para apagar as fotos.",
-            B: "Ignorar e dizer que sua vida particular não diz respeito a ninguém.",
+            texto: "🎤 CRÍTICA DO PROFESSOR: O técnico deu uma entrevista dizendo que você é egoísta em campo e desobedece o esquema tático.",
+            A: "Pedir desculpas publicamente e aceitar o esquema tático recuado.",
+            B: "Rebater dizendo que quem faz gols ganha jogos e o esquema dele é ultrapassado.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco -= 300000; p.emocao = "Focado 🧘"; return "💸 Você gastou €300k do seu bolso para calar a mídia. O caso foi abafado, você manteve o foco, mas seu saldo bancário sentiu o golpe."; }
-                else { p.emocao = "Ressaca 🥴"; p.phy -= 4; p.totals.yc += 2; return "🥴 Você bateu de frente! A torcida ficou furiosa, a pressão te deixou em estado de Ressaca, perdendo -4 de Físico e recebendo +2 cartões amarelos."; }
+                if(opt==='A'){ p.pas+=6; p.sho-=3; p.emocao="Focado 🧘"; return "🧘 Humildade tática. Você ganhou +6 de Passe por jogar pro time, mas sua Finalização caiu -3."; }
+                else { p.sho+=6; p.totals.dom=Math.max(0, p.totals.dom-1); p.emocao="Triste 😢"; return "😢 Guerra declarada! O técnico te barrou de jogos importantes. Você ganhou +6 de Finalização de raiva, mas perdeu -1 título."; }
             }
         },
         {
-            texto: "🎤 DRAMA AMOROSO: Uma famosa cantora pop internacional quer assumir um namoro midiático altamente lucrativo com você.",
-            A: "Aceitar o namoro e focar nas campanhas publicitárias de casal.",
-            B: "Recusar para manter sua privacidade e vida social longe dos holofotes.",
+            texto: "🎤 RIXA NO INTERVALO: O time está perdendo o clássico e o técnico decide te substituir aos 40 minutos do 1º tempo.",
+            A: "Sair de campo direto pro vestiário chutando um copo de água.",
+            B: "Cumprimentar o reserva e sentar no banco de cabeça baixa para apoiar o grupo.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco += 1000000; p.relacao = "Namorando 💖"; p.emocao = "Alegre 😁"; p.pas -= 3; return "💖 Você aceitou! Entrou €1M de patrocínio na conta, você virou uma celebridade Alegre, mas perdeu -3 de Passe devido à distração com os flashes."; }
-                else { p.relacao = "Solteiro"; p.emocao = "Focado 🧘"; p.sho += 4; return "🧘 Você recusou! Focado inteiramente na bola, você permaneceu Solteiro, mas ganhou +4 de Finalização nos treinos quietos."; }
+                if(opt==='A'){ p.phy+=5; p.totals.yc+=2; p.emocao="Triste 😢"; return "🥊 Fúria! Você ganhou +5 de Físico no ódio, mas o elenco achou desrespeito. Ganhou +2 cartões amarelos ocultos de indisciplina."; }
+                else { p.ovr+=3; p.emocao="Alegre 😁"; return "😁 Postura de capitão. O grupo te adorou, blindando o ambiente: +3 de Geral e vestiário Alegre."; }
             }
         },
         {
-            texto: "🎤 CASSINO CLANDESTINO: Jogadores experientes do time te convidaram para uma mesa secreta de pôquer de alta grana na concentração.",
-            A: "Entrar na mesa de jogos apostando alto para ganhar respeito dos veteranos.",
-            B: "Ficar no quarto dormindo e descansando para a partida do dia seguinte.",
+            texto: "🎤 MUDANÇA DE ARQUÉTIPO MARRENTO: O treinador exige que você mude sua forma de jogar e comece a dar carrinhos e marcar o lateral rival.",
+            A: "Aceitar a nova função tática defensiva de operário.",
+            B: "Dizer que estrela não corre para trás e continuar focado no ataque.",
             acao: (opt) => {
-                if(opt === 'A') {
-                    if(Math.random() > 0.5) { p.banco += 800000; p.emocao = "Alegre 😁"; return "🎰 Sorte pura! Você limpou a mesa dos veteranos, ganhou €800k e ficou Alegre para o jogo."; }
-                    else { p.banco -= 500000; p.emocao = "Triste 😢"; return "📉 Prejuízo! Você tomou um blefe, perdeu €500k, ficou Triste e vai pro jogo sem cabeça."; }
-                } else { p.pac += 4; return "💤 Escolha madura! Você descansou perfeitamente e ganhou um bônus de +4 de Ritmo para a partida."; }
+                if(opt==='A'){ p.def+=10; p.pac-=4; return "🛡️ Sacrifício! Sua Defesa subiu +10, mas o cansaço tirou -4 do seu Ritmo ofensivo."; }
+                else { p.dri+=5; p.emocao="Focado 🧘"; p.totals.dom=Math.max(0, p.totals.dom-1); return "🏟️ Marrento! Você guardou fôlego e ganhou +5 de Drible, mas virou reserva e o time perdeu -1 título."; }
             }
         },
+        {
+            texto: "🎤 PANE COMPLETA: Um novo técnico assume o clube e decide te barrar dos titulares sem dar nenhuma explicação lógica.",
+            A: "Treinar em silêncio absoluto dobrando a carga de treinos nas folgas.",
+            B: "Acionar seu superempresário na mídia para forçar uma transferência imediata.",
+            acao: (opt) => {
+                if(opt==='A'){ p.ovr+=4; p.phy+=4; return "🏋️ Que resposta! Você destruiu fisicamente nos treinos e recuperou a vaga: +4 de Geral e +4 de Físico."; }
+                else { p.banco-=200000; p.emocao="Triste 😢"; return "💼 Negociações tensas. Você gastou €200k em comissões para o agente limpar sua barra, mas ficou Triste."; }
+            }
+        },
+
+        // --- 2. SEÇÃO PRINCIPAL: BIRRAS E PROVOCAÇÕES DE ADVERSÁRIOS ---
+        {
+            texto: "🎤 ZAGUEIRO CARNICEIRO: O xerife da zaga rival disse na TV que clássico é lugar de homem e que vai te tirar de campo de maca.",
+            A: "Responder à altura dizendo que vai passar por cima dele driblando de letra.",
+            B: "Ficar quieto e responder jogando bola sem entrar no jogo mental dele.",
+            acao: (opt) => {
+                if(opt==='A'){ p.dri+=6; p.totals.yc+=2; p.emocao="Ressaca 🥴"; return "🥴 Jogo quente! Você humilhou ele com dribles (+6 Drible), mas apanhou o jogo todo e acumulou +2 cartões amarelos por confusão."; }
+                else { p.sho+=5; p.emocao="Focado 🧘"; return "🧘 Frieza cirúrgica. Você ignorou a pilha e guardou energias para cravar: +5 de Finalização em campo."; }
+            }
+        },
+        {
+            texto: "🎤 PROVOCAÇÃO DO ASTRO RIVAL: O principal craque do time adversário disse que você some em jogos grandes e é pipoqueiro.",
+            A: "Invadir a coletiva dele ou mandar indireta pesada nas redes sociais chamando-o de amador.",
+            B: "Ignorar e postar uma foto das suas taças com emojis de silêncio.",
+            acao: (opt) => {
+                if(opt==='A'){ p.pac+=4; p.totals.rc+=1; p.emocao="Triste 😢"; return "🚨 Passou do ponto! A federação te multou e suspendeu. Ganhou +4 de Ritmo de ódio, mas tomou +1 Vermelho direto."; }
+                else { p.ovr+=3; p.emocao="Alegre 😁"; return "👑 Resposta de Rei. A torcida foi à loucura com seu deboche elegante: +3 de Geral e status Alegre."; }
+            }
+        },
+        {
+            texto: "🎤 GOLEIRO PROVOCADOR: Na disputa de pênaltis da grande final, o goleiro rival começa a bater no peito e apontar o canto pra você.",
+            A: "Mudar de ideia na hora da batida e tentar uma cavadinha ousada no meio do gol.",
+            B: "Ignorar o teatro, fechar os olhos e soltar uma bomba indefensável no ângulo.",
+            acao: (opt) => {
+                if(opt==='A'){ if(Math.random()>0.5){ p.totals.int+=1; p.emocao="Alegre 😁"; return "👑 LENDÁRIO! Você meteu de cavadinha, humilhou o rival e ganhou +1 Título Continental!"; } else { p.emocao="Triste 😢"; p.totals.dom=Math.max(0, p.totals.dom-1); return "📉 Fiasco! Ele pegou de peito, você virou meme nacional, perdeu o título e caiu em profunda Tristeza."; } }
+                else { p.sho+=4; p.totals.dom+=1; return "⚽ Bola na rede! Você fuzilou o ângulo, calou o estádio e garantiu +1 Título Nacional e +4 de Finalização."; }
+            }
+        },
+
+        // --- 3. SEÇÃO PRINCIPAL: SITUAÇÕES CRUCIAIS DE CAMPO ---
+        {
+            texto: "🎤 DILEMA DO FOMINHA: Você está cara a cara com o goleiro na grande final, mas o companheiro de equipe está livre ao lado sem goleiro.",
+            A: "Chutar direto para o gol buscando a glória pessoal da artilharia da temporada.",
+            B: "Dar o passe de lado e garantir o gol do título sem riscos.",
+            acao: (opt) => {
+                if(opt==='A'){ p.sho+=6; if(Math.random()>0.4){ p.totals.int+=1; return "⚽ Herói! Você fez o gol, ganhou +1 Título Continental e +6 de Finalização, virando o rei do clube."; } else { p.pas-=4; return "📉 Vilão! Você isolou a bola, o elenco te odiou no vestiário e seu Passe caiu -4."; } }
+                else { p.pas+=6; p.totals.int+=1; p.emocao="Alegre 😁"; return "🤝 Craque humilde! Você deu a assistência, o time garantiu +1 Título Continental e você faturou +6 de Passe."; }
+            }
+        },
+        {
+            texto: "🎤 ROUBO DE PÊNALTI: O juiz marca pênalti decisivo aos 94 minutos. Você não é o batedor oficial, mas quer cobrar para decidir.",
+            A: "Arrancar a bola das mãos do batedor oficial e assumir a responsabilidade.",
+            B: "Respeitar a hierarquia do vestiário e deixar o batedor oficial cobrar.",
+            acao: (opt) => {
+                if(opt==='A'){ p.sho+=5; if(Math.random()>0.3){ p.totals.dom+=1; return "⚽ Gênio incompreendido! Você converteu, deu o título ao time (+1 Doméstico), mas rachou o grupo."; } else { p.emocao="Triste 😢"; return "📉 Tragédia! Você cobrou pra fora, o batedor oficial quase te agrediu e você entrou em depressão."; } }
+                else { p.ovr+=3; return "🧘 Maturidade de vestiário. O batedor oficial fez o gol, o time comemorou e você ganhou +3 de Geral pelo respeito."; }
+            }
+        },
+        {
+            texto: "🎤 JOGO DA LAMA: Uma tempestade torrencial alagou o gramado. O futebol virou um poço de barro e carrinhos violentos.",
+            A: "Entrar de carrinho em todas as jogadas aceitando o jogo físico e a raça pura.",
+            B: "Tentar jogar bonito por baixo, evitando contato físico para não estragar as chuteiras.",
+            acao: (opt) => {
+                if(opt==='A'){ p.phy+=6; p.totals.yc+=2; return "🏋️ Raça pura! Você se adaptou à guerra, ganhou +6 de Físico, mas acumulou +2 amarelos pelas pancadas."; }
+                else { p.dri-=4; p.emocao="Triste 😢"; return "😢 Sumiu do jogo. A bola prendia nas poças, você foi anulado pela marcação e perdeu -4 de Drible."; }
+            }
+        },
+        {
+            texto: "🎤 MIGUÉ MÉDICO OU INFILTRAÇÃO? Você sente uma fisgada violenta na coxa na véspera da Grande Final da liga.",
+            A: "Tomar uma infiltração de analgésico na veia para jogar no sacrifício absoluto.",
+            B: "Dar o 'migué' médico para se poupar e proteger seu corpo visando a janela comercial de transferências.",
+            acao: (opt) => {
+                if(opt==='A'){ p.totals.dom+=1; p.phy-=5; p.pac-=3; return "💥 Preço alto! Jogou no sacrifício, garantiu +1 Título Nacional, mas estourou o músculo: -5 de Físico e -3 de Ritmo."; }
+                else { p.pac+=4; p.totals.dom=Math.max(0, p.totals.dom-1); p.emocao="Triste 😢"; return "💼 Visão de negócios. Você salvou suas pernas (+4 Ritmo), mas o time perdeu a final sem você e a torcida te odeia."; }
+            }
+        },
+
+        // --- 4. CLÁSSICOS REAIS EXTRACAMPO E MARKETING DO ANTERIOR ---
         {
             texto: "🎤 CHANTAGEM DE DIVÓRCIO: Seu relacionamento sério entrou em colapso total após discussões sobre suas festas de comemoração.",
             A: "Ceder às exigências e assinar uma união estável com divisão de bens.",
             B: "Romper bruscamente e enfrentar um longo processo judicial nas mídias.",
             acao: (opt) => {
-                if(opt === 'A') { p.relacao = "Casado 💍"; p.banco -= 400000; p.emocao = "Focado 🧘"; return "💍 Para evitar barulho, você cedeu. Perdeu €400k em taxas advocatícias e agora está Casado, mas comprou sua paz mental."; }
-                else { p.relacao = "Divorciado 💔"; p.banco = Math.floor(p.banco * 0.6); p.emocao = "Triste 😢"; return "💔 Que pancada! O divórcio saiu litigioso, a justiça levou 40% de todo o dinheiro da sua conta, você virou Divorciado e caiu em profunda Tristeza."; }
+                if(opt==='A'){ p.relacao="Casado 💍"; p.banco-=400000; p.emocao="Focado 🧘"; return "💍 Para evitar barulho, você cedeu. Perdeu €400k em taxas advocatícias e agora está Casado, mas comprou sua paz mental."; }
+                else { p.relacao="Divorciado 💔"; p.banco = Math.floor(p.banco * 0.6); p.emocao="Triste 😢"; return "💔 Que pancada! O divórcio saiu litigioso, a justiça levou 40% de todo o dinheiro da sua conta, você virou Divorciado e caiu em profunda Tristeza."; }
             }
         },
         {
-            texto: "🎤 INVESTIMENTO ARRISCADO: Seu tio te pede um empréstimo para abrir uma rede de restaurantes no Brasil.",
-            A: "Ajudar a família e transferir o capital comercial solicitado.",
-            B: "Negar educadamente e dizer que seus assessores proibiram investimentos fora do fundo.",
+            texto: "🎤 MARCA DE CHUTEIRA VITALÍCIA: A maior multinacional esportiva quer assinar um contrato exclusivo com o seu nome.",
+            A: "Assinar o contrato vitalício fechado imediatamente garantindo o bônus.",
+            B: "Recusar e criar sua própria marca independente de chuteiras inflacionando o mercado.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco -= 300000; if(Math.random() > 0.6) { p.banco += 1000000; return "🚀 O negócio do seu tio estourou! Ele te pagou de volta e você lucrou €1M de retorno!"; } else { return "📉 O restaurante faliu em 6 meses. Você perdeu os €300k investidos para sempre."; } }
-                else { p.emocao = "Triste 😢"; return "😢 Você segurou o dinheiro, mas o clima familiar rachou. As cobranças no WhatsApp te deixaram Triste."; }
+                if(opt==='A'){ p.banco+=1200000; p.emocao="Alegre 😁"; return "💰 Contrato histórico! Entrou €1.2M de luvas na sua conta comercial de forma limpa e segura."; }
+                else { if(Math.random()>0.4){ p.banco+=2500000; return "🚀 Sucesso comercial estrondoso! Sua marca própria estourou no mercado e rendeu €2.5M!"; } else { p.banco-=400000; return "📉 Fiasco. A fabricação deu prejuízo e você perdeu €400k tentando abrir a empresa."; } }
             }
         },
         {
-            texto: "🎤 SÍNDROME DO SUCESSO (FESTA): O time acabou de ganhar um troféu e o elenco fretou um iate de luxo com bebidas para comemorar por 3 dias.",
-            A: "Ir com o grupo, beber pesado e curtir a glória de ser campeão.",
-            B: "Recusar a festa e ir para a academia manter o físico em dia.",
+            texto: "🎤 CHANTAGEM DIGITAL: Um hacker conseguiu acesso a fotos e conversas íntimas do seu celular e pede €300k de resgate.",
+            A: "Pagar o valor solicitado secretamente via Criptomoedas.",
+            B: "Recusar o pagamento e mandar os assessores ativarem a polícia digital.",
             acao: (opt) => {
-                if(opt === 'A') { p.emocao = "Ressaca 🥴"; p.phy -= 5; p.dri += 5; return "🥴 Que ressaca! Você festejou como um deus, seu Drible subiu +5 pela ginga, mas seu Físico despencou -5 no retorno aos treinos."; }
-                else { p.emocao = "Focado 🧘"; p.phy += 5; return "🏋️ Que monstro! Enquanto eles bebiam, você treinou. Seu Físico subiu +5 de forma limpa."; }
+                if(opt==='A'){ p.banco-=300000; p.emocao="Focado 🧘"; return "💸 Saldo reduzido em €300k. O hacker sumiu e seus segredos estão guardados. Vida que segue."; }
+                else { p.emocao="Triste 😢"; p.sho-=4; return "🚨 Vazou na internet! O constrangimento público destruiu sua concentração e sua Finalização caiu -4."; }
             }
         },
         {
-            texto: "🎤 TESTE DE DOPING: Um suplemento misterioso importado que você tomou deu alteração leve nos exames internos do clube.",
-            A: "Contratar uma equipe médica particular secreta para mascarar o relatório.",
-            B: "Notificar a comissão técnica abertamente e aceitar ficar suspenso de 3 jogos.",
+            texto: "🎤 INVESTIMENTO EM STARTUP: Um amigo bilionário te convida para ser sócio de um app inovador de estatísticas de futebol.",
+            A: "Apostar alto no projeto investindo €400k do seu saldo livre.",
+            B: "Recusar o risco e manter o dinheiro rendendo quieto nas finanças.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco -= 500000; if(Math.random() > 0.2) { p.pac += 6; return "🧪 Funcionou! Você gastou €500k, o caso sumiu e o suplemento te deu +6 de Ritmo!"; } else { p.ovr -= 5; p.emocao = "Triste 😢"; return "🚨 Pego no pulo! A farsa foi descoberta, você tomou uma multa pesada e perdeu -5 de Geral por punição."; } }
-                else { p.emocao = "Triste 😢"; p.totals.dom = Math.max(0, p.totals.dom - 1); return "📋 Honestidade profissional. Você foi suspenso temporariamente, ficou Triste e seu time perdeu -1 título nacional sem você."; }
+                if(opt==='A'){ if(Math.random()>0.3){ p.banco+=1800000; return "🚀 O app foi comprado por uma big tech! Seu investimento retornou €1.8M limpos!"; } else { p.banco-=400000; return "📉 O app flopou nas lojas digitais. Você queimou €400k em marketing fracassado."; } }
+                else { return "💼 Você preferiu a segurança. Seu dinheiro continua intocado na carteira virtual."; }
             }
         }
     ];
@@ -657,7 +734,6 @@
             }
         }
 
-        // SIMULAÇÃO DE JOGOS BASEADO NO HUMOR DO COMPORTAMENTO
         let apps = 100 + Math.floor(Math.random() * 45);
         let formGols = Math.random() * 0.6 + 0.5;
         if(p.emocao === "Alegre 😁") formGols += 0.25; 
@@ -685,7 +761,6 @@
         if (isElite || p.ovr > 86) { if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1; }
         p.totals.dom += tDom; p.totals.int += tInt;
 
-        // SISTEMA DE JEJUM SINDROME COM PERDA DE RENDIMENTO
         if (tDom > 0 || tInt > 0) {
             p.jejumAnos = 0;
         } else {
@@ -716,8 +791,7 @@
 
         atualizarUI();
         
-        // GATILHO DINÂMICO PARA DRAMAS OU MERCADO comercial
-        if (Math.random() < 0.60 && currentStep > 1 && p.age < 36) {
+        if (Math.random() < 0.75) {
             abrirEntrevista();
         } else {
             if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -730,21 +804,18 @@
         
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
         document.getElementById('btn-choice-a').innerText = "Escolha A: " + entrevistaAtual.A;
-        document.getElementById('btn-choice-b').innerText = "Escolha B: " + entrevistaAtual.B;
+        document.getElementById('btn-choice-b').innerText = "Opção B: " + entrevistaAtual.B;
         
-        // Garantir que os blocos de escolha corretos fiqum visíveis
         document.getElementById('choice-buttons-block').style.display = 'flex';
         document.getElementById('btn-choice-next').style.display = 'none';
         document.getElementById('choice-section').style.display = 'flex';
     }
 
     function escolherOpcao(opt) {
-        // Roda a ação às cegas e captura o texto da revelação pós-clique
         let textoConsequencia = entrevistaAtual.acao(opt);
         
-        document.getElementById('choice-text').innerHTML = `<span style='color:#dc2626; font-size:13px; display:block; margin-bottom:4px;'>💥 CONSEQUÊNCIA REVELADA:</span>` + textoConsequencia;
+        document.getElementById('choice-text').innerHTML = `<span style='color:#dc2626; font-size:13px; display:block; margin-bottom:4px;'>💥 JORNAL ESPORTIVO - IMPACTO DE CAMPO/VESTIÁRIO:</span>` + textoConsequencia;
         
-        // Esconde os botões de ação e mostra apenas o botão de continuar
         document.getElementById('choice-buttons-block').style.display = 'none';
         document.getElementById('btn-choice-next').style.display = 'block';
         atualizarUI();
