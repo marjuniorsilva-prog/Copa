@@ -389,7 +389,10 @@
     const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
     let currentStep = 0;
     let entrevistaAtual = null;
-    let dramasDisponiveis = [];
+
+    // SOLUÇÃO DO BUG: Agora guardamos apenas os NÚMEROS (índices) dos dramas na memória, 
+    // assim não destruímos as funções de cálculo quando o navegador salva os dados!
+    let indicesDramasDisponiveis = [];
 
     let records = {
         ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" },
@@ -439,17 +442,21 @@
 
     function carregarDramasDaMemoria() {
         try {
-            let mem = localStorage.getItem('mfc_dramas_memoria');
-            if(mem) dramasDisponiveis = JSON.parse(mem);
+            let mem = localStorage.getItem('mfc_dramas_memoria_idx');
+            if(mem) indicesDramasDisponiveis = JSON.parse(mem);
         } catch(e) {}
         
-        if(!dramasDisponiveis || dramasDisponiveis.length === 0) {
-            dramasDisponiveis = JSON.parse(JSON.stringify(bancoDramasOriginal));
+        // Se a lista estiver vazia, recarregamos com todos os números originais
+        if(!indicesDramasDisponiveis || indicesDramasDisponiveis.length === 0) {
+            indicesDramasDisponiveis = [];
+            for(let i = 0; i < bancoDramasOriginal.length; i++) {
+                indicesDramasDisponiveis.push(i);
+            }
         }
     }
 
     function salvarDramas() {
-        try { localStorage.setItem('mfc_dramas_memoria', JSON.stringify(dramasDisponiveis)); } catch(e) {}
+        try { localStorage.setItem('mfc_dramas_memoria_idx', JSON.stringify(indicesDramasDisponiveis)); } catch(e) {}
     }
 
     function cliqueBotaoPrincipal() {
@@ -740,12 +747,14 @@
     }
 
     function abrirEntrevista() {
-        if (dramasDisponiveis.length === 0) carregarDramasDaMemoria(); 
+        if (indicesDramasDisponiveis.length === 0) carregarDramasDaMemoria(); 
         
         document.getElementById('action-area').style.display = 'none';
         
-        let randomIndex = Math.floor(Math.random() * dramasDisponiveis.length);
-        entrevistaAtual = dramasDisponiveis.splice(randomIndex, 1)[0]; 
+        // Pega um número de drama aleatório da lista que ainda sobrou
+        let randPos = Math.floor(Math.random() * indicesDramasDisponiveis.length);
+        let realIndex = indicesDramasDisponiveis.splice(randPos, 1)[0]; 
+        entrevistaAtual = bancoDramasOriginal[realIndex]; 
         salvarDramas();
         
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
@@ -756,48 +765,33 @@
         document.getElementById('choice-buttons-block').style.display = 'flex';
         document.getElementById('btn-choice-next').style.display = 'none';
         document.getElementById('choice-section').style.display = 'flex';
-
-        // Reseta as cores dos botões para o padrão escuro
-        const btns = document.querySelectorAll('.choice-btn');
-        btns.forEach(b => b.style.background = '#1e293b');
     }
 
     function escolherOpcao(opt) {
-        // Aplica a cor azul ao botão selecionado
-        const btns = document.querySelectorAll('.choice-btn');
-        btns.forEach(b => b.style.background = '#1e293b');
-        document.getElementById('btn-' + opt.toLowerCase()).style.background = '#3b82f6';
-
-        // Executa a lógica da ação
         let textoConsequencia = entrevistaAtual.acao(opt);
         
-        // Lógica de Assessoria PR
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("CANCELAMENTO");
 
         if (precisaPR && p.prLevel > 0) {
             let chanceAbafar = prChances[p.prLevel];
-            if (Math.random() * 100 <= chanceAbafar) {
+            let randomNum = Math.random() * 100;
+            
+            if (randomNum <= chanceAbafar) {
                 p.emocao = "Focado 🧘";
-                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua assessoria abafou a crise (Humor restaurado)!</span>`;
+                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua assessoria agiu rápido, abafou a crise e não deixou o escândalo afetar sua mente (Humor restaurado)!</span>`;
             } else {
-                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi muito forte para sua equipe PR!</span>`;
+                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi muito forte para sua equipe nível ${p.prLevel}!</span>`;
             }
         }
         
-        // Atualiza o texto com o resultado
-        document.getElementById('choice-text').innerHTML = "<b>RESULTADO:</b><br>" + textoConsequencia;
-        
-        // Esconde os botões A, B, C e mostra o botão verde para continuar
+        document.getElementById('choice-text').innerHTML = textoConsequencia;
         document.getElementById('choice-buttons-block').style.display = 'none';
         document.getElementById('btn-choice-next').style.display = 'block';
-        
         atualizarUI();
     }
 
     function fecharJanelaConsequencia() {
         document.getElementById('choice-section').style.display = 'none';
-        document.getElementById('btn-choice-next').style.display = 'none';
-        document.getElementById('choice-buttons-block').style.display = 'flex';
         document.getElementById('action-area').style.display = 'block';
         if (p.age < 39) abrirMercado(); else finalizarCarreira();
     }
