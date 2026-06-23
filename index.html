@@ -109,11 +109,11 @@
         .stats-cell-item.goals-col { color: #15803d; background: #e2f5e9; }
         .stats-cell-item.assists-col { color: #2563eb; background: #e0f2fe; }
         
-        /* ESCRITÓRIO & STAFF */
+        /* ESCRITÓRIO & STAFF MULTIPAINEL */
         .office-section { background: white; margin: 2px 10px; border-radius: 6px; padding: 6px; border: 1px solid #ccc; font-size: 11px;}
         .office-title { background: #475569; color: white; font-size: 11px; font-weight: 900; text-align: center; padding: 3px; font-family: 'Oswald', sans-serif; border-radius: 4px; margin-bottom: 4px;}
-        .office-grid { display: flex; justify-content: space-between; gap: 4px; }
-        .office-btn { background: #e2e8f0; border: 1px solid #cbd5e1; padding: 4px; font-weight: bold; border-radius: 4px; cursor: pointer; flex: 1; font-size: 10px; text-align: center;}
+        .office-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+        .office-btn { background: #e2e8f0; border: 1px solid #cbd5e1; padding: 4px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 9px; text-align: center; line-height: 1.2;}
         
         .bottom-section { background: white; margin: 5px 10px; text-align: center; border-radius: 6px; padding-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #ccc;}
         .bottom-title { background: #5b2268; color: white; font-size: 13px; font-weight: 900; padding: 4px; font-family: 'Oswald', sans-serif; border-radius: 4px 4px 0 0; letter-spacing: 1px;}
@@ -174,6 +174,7 @@
         <div style="color: #b45309; font-weight: bold;">💶 Passe: <span id="hdr-value">-</span></div>
         <div style="color: #16a34a; font-weight: 900;">💰 Conta: <span id="hdr-bank">€0</span></div>
         <div style="color: #4c1d95; font-weight: bold;">📋 Seleção: <span id="hdr-selecao">Não</span></div>
+        <div style="color: #2563eb; font-weight: bold;">📣 Fama: <span id="hdr-fama">100k</span></div>
     </div>
 
     <div class="totals-bar">
@@ -221,8 +222,10 @@
     <div class="office-section" id="office-panel">
         <div class="office-title">ESCRITÓRIO COMERCIAL & CONTRATAÇÕES STAFF</div>
         <div class="office-grid">
-            <div class="office-btn" id="staff-trainer" onclick="contratarStaff('trainer')">🏋️ Preparador Físico<br>(€500k/Período)</div>
-            <div class="office-btn" id="staff-agent" onclick="contratarStaff('agent')">💼 Superempresário<br>(€1M/Período)</div>
+            <div class="office-btn" id="staff-trainer" onclick="contratarStaff('trainer')">🏋️ Preparador Físico<br>(€500k)</div>
+            <div class="office-btn" id="staff-agent" onclick="contratarStaff('agent')">💼 Superempresário<br>(€1M)</div>
+            <div class="office-btn" id="staff-pr" onclick="contratarStaff('pr')">📢 Assessoria PR<br>(€750k)</div>
+            <div class="office-btn" id="staff-chef" onclick="contratarStaff('chef')">🥗 Chef Particular<br>(€400k)</div>
         </div>
     </div>
 
@@ -369,8 +372,8 @@
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false,
-        hasTrainer: false, hasAgent: false, houseTier: 0, carTier: 0, relacao: "Solteiro", investido: 0,
-        emocao: "Focado 🧘", jejumAnos: 0,
+        hasTrainer: false, hasAgent: false, hasPR: false, hasChef: false, relacao: "Solteiro", investido: 0,
+        emocao: "Focado 🧘", jejumAnos: 0, fama: 100000,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
@@ -382,15 +385,13 @@
         ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" }
     };
 
-    // BANCO DE DADOS RPG TOTALMENTE EXPANDIDO COM SITUAÇÕES DE CAMPO, ADVERSÁRIOS E BIRRAS DE TÉCNICOS
     const bancoEntrevistas = [
-        // --- 1. SEÇÃO PRINCIPAL: BIRRAS DE TÉCNICO & VESTIÁRIO ---
         {
             texto: "🎤 CRÍTICA DO PROFESSOR: O técnico deu uma entrevista dizendo que você é egoísta em campo e desobedece o esquema tático.",
             A: "Pedir desculpas publicamente e aceitar o esquema tático recuado.",
             B: "Rebater dizendo que quem faz gols ganha jogos e o esquema dele é ultrapassado.",
             acao: (opt) => {
-                if(opt==='A'){ p.pas+=6; p.sho-=3; p.emocao="Focado 🧘"; return "🧘 Humildade tática. Você ganhou +6 de Passe por jogar pro time, mas sua Finalização caiu -3."; }
+                if(opt==='A'){ p.pas+=6; p.sho-=3; return "🧘 Humildade tática. Você ganhou +6 de Passe por jogar pro time, mas sua Finalização caiu -3."; }
                 else { p.sho+=6; p.totals.dom=Math.max(0, p.totals.dom-1); p.emocao="Triste 😢"; return "😢 Guerra declarada! O técnico te barrou de jogos importantes. Você ganhou +6 de Finalização de raiva, mas perdeu -1 título."; }
             }
         },
@@ -400,7 +401,7 @@
             B: "Cumprimentar o reserva e sentar no banco de cabeça baixa para apoiar o grupo.",
             acao: (opt) => {
                 if(opt==='A'){ p.phy+=5; p.totals.yc+=2; p.emocao="Triste 😢"; return "🥊 Fúria! Você ganhou +5 de Físico no ódio, mas o elenco achou desrespeito. Ganhou +2 cartões amarelos ocultos de indisciplina."; }
-                else { p.ovr+=3; p.emocao="Alegre 😁"; return "😁 Postura de capitão. O grupo te adorou, blindando o ambiente: +3 de Geral e vestiário Alegre."; }
+                else { p.ovr+=3; p.emocao="Alegre 😁"; return "👑 Postura de capitão. O grupo te adorou, blindando o ambiente: +3 de Geral e vestiário Alegre."; }
             }
         },
         {
@@ -412,17 +413,6 @@
                 else { p.dri+=5; p.emocao="Focado 🧘"; p.totals.dom=Math.max(0, p.totals.dom-1); return "🏟️ Marrento! Você guardou fôlego e ganhou +5 de Drible, mas virou reserva e o time perdeu -1 título."; }
             }
         },
-        {
-            texto: "🎤 PANE COMPLETA: Um novo técnico assume o clube e decide te barrar dos titulares sem dar nenhuma explicação lógica.",
-            A: "Treinar em silêncio absoluto dobrando a carga de treinos nas folgas.",
-            B: "Acionar seu superempresário na mídia para forçar uma transferência imediata.",
-            acao: (opt) => {
-                if(opt==='A'){ p.ovr+=4; p.phy+=4; return "🏋️ Que resposta! Você destruiu fisicamente nos treinos e recuperou a vaga: +4 de Geral e +4 de Físico."; }
-                else { p.banco-=200000; p.emocao="Triste 😢"; return "💼 Negociações tensas. Você gastou €200k em comissões para o agente limpar sua barra, mas ficou Triste."; }
-            }
-        },
-
-        // --- 2. SEÇÃO PRINCIPAL: BIRRAS E PROVOCAÇÕES DE ADVERSÁRIOS ---
         {
             texto: "🎤 ZAGUEIRO CARNICEIRO: O xerife da zaga rival disse na TV que clássico é lugar de homem e que vai te tirar de campo de maca.",
             A: "Responder à altura dizendo que vai passar por cima dele driblando de letra.",
@@ -442,41 +432,12 @@
             }
         },
         {
-            texto: "🎤 GOLEIRO PROVOCADOR: Na disputa de pênaltis da grande final, o goleiro rival começa a bater no peito e apontar o canto pra você.",
-            A: "Mudar de ideia na hora da batida e tentar uma cavadinha ousada no meio do gol.",
-            B: "Ignorar o teatro, fechar os olhos e soltar uma bomba indefensável no ângulo.",
-            acao: (opt) => {
-                if(opt==='A'){ if(Math.random()>0.5){ p.totals.int+=1; p.emocao="Alegre 😁"; return "👑 LENDÁRIO! Você meteu de cavadinha, humilhou o rival e ganhou +1 Título Continental!"; } else { p.emocao="Triste 😢"; p.totals.dom=Math.max(0, p.totals.dom-1); return "📉 Fiasco! Ele pegou de peito, você virou meme nacional, perdeu o título e caiu em profunda Tristeza."; } }
-                else { p.sho+=4; p.totals.dom+=1; return "⚽ Bola na rede! Você fuzilou o ângulo, calou o estádio e garantiu +1 Título Nacional e +4 de Finalização."; }
-            }
-        },
-
-        // --- 3. SEÇÃO PRINCIPAL: SITUAÇÕES CRUCIAIS DE CAMPO ---
-        {
             texto: "🎤 DILEMA DO FOMINHA: Você está cara a cara com o goleiro na grande final, mas o companheiro de equipe está livre ao lado sem goleiro.",
             A: "Chutar direto para o gol buscando a glória pessoal da artilharia da temporada.",
             B: "Dar o passe de lado e garantir o gol do título sem riscos.",
             acao: (opt) => {
                 if(opt==='A'){ p.sho+=6; if(Math.random()>0.4){ p.totals.int+=1; return "⚽ Herói! Você fez o gol, ganhou +1 Título Continental e +6 de Finalização, virando o rei do clube."; } else { p.pas-=4; return "📉 Vilão! Você isolou a bola, o elenco te odiou no vestiário e seu Passe caiu -4."; } }
                 else { p.pas+=6; p.totals.int+=1; p.emocao="Alegre 😁"; return "🤝 Craque humilde! Você deu a assistência, o time garantiu +1 Título Continental e você faturou +6 de Passe."; }
-            }
-        },
-        {
-            texto: "🎤 ROUBO DE PÊNALTI: O juiz marca pênalti decisivo aos 94 minutos. Você não é o batedor oficial, mas quer cobrar para decidir.",
-            A: "Arrancar a bola das mãos do batedor oficial e assumir a responsabilidade.",
-            B: "Respeitar a hierarquia do vestiário e deixar o batedor oficial cobrar.",
-            acao: (opt) => {
-                if(opt==='A'){ p.sho+=5; if(Math.random()>0.3){ p.totals.dom+=1; return "⚽ Gênio incompreendido! Você converteu, deu o título ao time (+1 Doméstico), mas rachou o grupo."; } else { p.emocao="Triste 😢"; return "📉 Tragédia! Você cobrou pra fora, o batedor oficial quase te agrediu e você entrou em depressão."; } }
-                else { p.ovr+=3; return "🧘 Maturidade de vestiário. O batedor oficial fez o gol, o time comemorou e você ganhou +3 de Geral pelo respeito."; }
-            }
-        },
-        {
-            texto: "🎤 JOGO DA LAMA: Uma tempestade torrencial alagou o gramado. O futebol virou um poço de barro e carrinhos violentos.",
-            A: "Entrar de carrinho em todas as jogadas aceitando o jogo físico e a raça pura.",
-            B: "Tentar jogar bonito por baixo, evitando contato físico para não estragar as chuteiras.",
-            acao: (opt) => {
-                if(opt==='A'){ p.phy+=6; p.totals.yc+=2; return "🏋️ Raça pura! Você se adaptou à guerra, ganhou +6 de Físico, mas acumulou +2 amarelos pelas pancadas."; }
-                else { p.dri-=4; p.emocao="Triste 😢"; return "😢 Sumiu do jogo. A bola prendia nas poças, você foi anulado pela marcação e perdeu -4 de Drible."; }
             }
         },
         {
@@ -488,42 +449,14 @@
                 else { p.pac+=4; p.totals.dom=Math.max(0, p.totals.dom-1); p.emocao="Triste 😢"; return "💼 Visão de negócios. Você salvou suas pernas (+4 Ritmo), mas o time perdeu a final sem você e a torcida te odeia."; }
             }
         },
-
-        // --- 4. CLÁSSICOS REAIS EXTRACAMPO E MARKETING DO ANTERIOR ---
         {
-            texto: "🎤 CHANTAGEM DE DIVÓRCIO: Seu relacionamento sério entrou em colapso total após discussões sobre suas festas de comemoração.",
-            A: "Ceder às exigências e assinar uma união estável com divisão de bens.",
-            B: "Romper bruscamente e enfrentar um longo processo judicial nas mídias.",
+            texto: "🎤 ESCÂNDALO NA PRENSA: Fotos suas em uma balada pesada regada a bebidas na Espanha vazaram na véspera da semifinal.",
+            A: "Subornar o fotógrafo com dinheiro de caixa para apagar as fotos.",
+            B: "Ignorar e dizer que sua vida particular não diz respeito a ninguém.",
             acao: (opt) => {
-                if(opt==='A'){ p.relacao="Casado 💍"; p.banco-=400000; p.emocao="Focado 🧘"; return "💍 Para evitar barulho, você cedeu. Perdeu €400k em taxas advocatícias e agora está Casado, mas comprou sua paz mental."; }
-                else { p.relacao="Divorciado 💔"; p.banco = Math.floor(p.banco * 0.6); p.emocao="Triste 😢"; return "💔 Que pancada! O divórcio saiu litigioso, a justiça levou 40% de todo o dinheiro da sua conta, você virou Divorciado e caiu em profunda Tristeza."; }
-            }
-        },
-        {
-            texto: "🎤 MARCA DE CHUTEIRA VITALÍCIA: A maior multinacional esportiva quer assinar um contrato exclusivo com o seu nome.",
-            A: "Assinar o contrato vitalício fechado imediatamente garantindo o bônus.",
-            B: "Recusar e criar sua própria marca independente de chuteiras inflacionando o mercado.",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco+=1200000; p.emocao="Alegre 😁"; return "💰 Contrato histórico! Entrou €1.2M de luvas na sua conta comercial de forma limpa e segura."; }
-                else { if(Math.random()>0.4){ p.banco+=2500000; return "🚀 Sucesso comercial estrondoso! Sua marca própria estourou no mercado e rendeu €2.5M!"; } else { p.banco-=400000; return "📉 Fiasco. A fabricação deu prejuízo e você perdeu €400k tentando abrir a empresa."; } }
-            }
-        },
-        {
-            texto: "🎤 CHANTAGEM DIGITAL: Um hacker conseguiu acesso a fotos e conversas íntimas do seu celular e pede €300k de resgate.",
-            A: "Pagar o valor solicitado secretamente via Criptomoedas.",
-            B: "Recusar o pagamento e mandar os assessores ativarem a polícia digital.",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco-=300000; p.emocao="Focado 🧘"; return "💸 Saldo reduzido em €300k. O hacker sumiu e seus segredos estão guardados. Vida que segue."; }
-                else { p.emocao="Triste 😢"; p.sho-=4; return "🚨 Vazou na internet! O constrangimento público destruiu sua concentração e sua Finalização caiu -4."; }
-            }
-        },
-        {
-            texto: "🎤 INVESTIMENTO EM STARTUP: Um amigo bilionário te convida para ser sócio de um app inovador de estatísticas de futebol.",
-            A: "Apostar alto no projeto investindo €400k do seu saldo livre.",
-            B: "Recusar o risco e manter o dinheiro rendendo quieto nas finanças.",
-            acao: (opt) => {
-                if(opt==='A'){ if(Math.random()>0.3){ p.banco+=1800000; return "🚀 O app foi comprado por uma big tech! Seu investimento retornou €1.8M limpos!"; } else { p.banco-=400000; return "📉 O app flopou nas lojas digitais. Você queimou €400k em marketing fracassado."; } }
-                else { return "💼 Você preferiu a segurança. Seu dinheiro continua intocado na carteira virtual."; }
+                let cost = p.fama > 5000000 ? 500000 : 250000;
+                if(opt==='A') { p.banco -= cost; return "💸 Peso da Fama! Você gastou " + formatMoeda(cost) + " para abafar o caso através da sua grana livre."; }
+                else { p.emocao="Ressaca 🥴"; p.phy-=4; return "🥴 Escândalo nacional! Sem assessoria, a pressão de cancelamento te deu o status de Ressaca e -4 de Físico."; }
             }
         }
     ];
@@ -568,8 +501,9 @@
     
     function initGrid() {
         p.age = 15; p.banco = 0; p.isConvocado = false; p.hasTrainer = false; p.hasAgent = false;
+        p.hasPR = false; p.hasChef = false;
         p.houseTier = 0; p.carTier = 0; p.transferFee = ""; p.maxFeeNum = 0; p.maxFeeStr = "€0m";
-        p.relacao = "Solteiro"; p.investido = 0; p.emocao = "Focado 🧘"; p.jejumAnos = 0;
+        p.relacao = "Solteiro"; p.investido = 0; p.emocao = "Focado 🧘"; p.jejumAnos = 0; p.fama = 100000;
         p.totals = { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 };
         currentStep = 0;
 
@@ -602,10 +536,9 @@
         atualizarUI();
     }
 
-    function formatMoeda(num) {
-        if(num >= 1000000) return "€" + (num/1000000).toFixed(1) + "M";
-        if(num <= -1000000) return "-€" + (Math.abs(num)/1000000).toFixed(1) + "M";
-        return "€" + (num/1000).toFixed(0) + "k";
+    function formatFama(num) {
+        if(num >= 1000000) return (num/1000000).toFixed(1) + "M";
+        return (num/1000).toFixed(0) + "k";
     }
 
     function atualizarUI() {
@@ -622,6 +555,7 @@
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco);
         document.getElementById('hdr-selecao').innerText = p.isConvocado ? "Sim 🇧🇷" : "Não";
         document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
+        document.getElementById('hdr-fama').innerText = formatFama(p.fama);
         
         document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
         document.getElementById('tot-app').innerText = p.totals.app; document.getElementById('tot-gol').innerText = p.totals.gol;
@@ -633,6 +567,10 @@
         document.getElementById('staff-trainer').style.color = p.hasTrainer ? "white" : "black";
         document.getElementById('staff-agent').style.background = p.hasAgent ? "#b91c1c" : "#e2e8f0";
         document.getElementById('staff-agent').style.color = p.hasAgent ? "white" : "black";
+        document.getElementById('staff-pr').style.background = p.hasPR ? "#b91c1c" : "#e2e8f0";
+        document.getElementById('staff-pr').style.color = p.hasPR ? "white" : "black";
+        document.getElementById('staff-chef').style.background = p.hasChef ? "#b91c1c" : "#e2e8f0";
+        document.getElementById('staff-chef').style.color = p.hasChef ? "white" : "black";
 
         let h = houseUpgrades[p.houseTier];
         document.getElementById('photo-house').style.backgroundImage = `url('${h.img}')`;
@@ -657,6 +595,8 @@
     function contratarStaff(tipo) {
         if(tipo === 'trainer' && !p.hasTrainer && p.banco >= 500000) { p.banco -= 500000; p.hasTrainer = true; }
         if(tipo === 'agent' && !p.hasAgent && p.banco >= 1000000) { p.banco -= 1000000; p.hasAgent = true; }
+        if(tipo === 'pr' && !p.hasPR && p.banco >= 750000) { p.banco -= 750000; p.hasPR = true; }
+        if(tipo === 'chef' && !p.hasChef && p.banco >= 400000) { p.banco -= 400000; p.hasChef = true; }
         atualizarUI();
     }
 
@@ -702,7 +642,10 @@
         let salSemanal = 5000;
         if(eliteClubs.includes(p.club)) salSemanal = 180000;
         else if(tierPrata.includes(p.club)) salSemanal = 35000;
-        p.banco += (salSemanal * 150);
+        
+        // Fama Multiplica Ganhos de Patrocínio
+        let bonusFamaComercial = Math.floor(p.fama * 0.05);
+        p.banco += (salSemanal * 150) + bonusFamaComercial;
 
         if(p.ovr >= 80) p.isConvocado = true;
 
@@ -713,6 +656,7 @@
             eventoTexto = "📉 FALÊNCIA COMPLETA: Seus luxos, multas e divórcios estouraram sua conta comercial! Você faliu, perdeu seus carros e voltou a morar com os pais de bicicleta.";
         }
 
+        // --- SISTEMA REALISTA DE CURVA DE IDADE ---
         if (p.age <= 21) {
             let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
@@ -720,9 +664,22 @@
             let g = Math.floor(Math.random() * 4) + 2;
             p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
-            let d = Math.floor(Math.random() * 4) + 2;
-            p.pac -= (d+4); p.phy -= d; p.sho += 2; p.pas += 2; p.ovr += 1; 
-            if(eventoTexto === "") eventoTexto = "👴 MAESTRIA VETERANA: Sua velocidade caiu, mas sua sabedoria em campo aumentou seu Passe e Chute!";
+            let d = Math.floor(Math.random() * 2) + 4; // Queda brutal de explosão
+            p.pac -= d; p.phy -= (d - 1); 
+            p.sho += 4; p.pas += 5; // Ganho de posicionamento cerebral e passe
+            p.ovr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + 10;
+            if(eventoTexto === "") eventoTexto = "👴 CURVA DE ENVELHECIMENTO: Suas pernas perderam a velocidade de jovem (-Ritmo/-Físico), mas sua visão e inteligência deram um salto (+Passe/+Finalização)!";
+        } else if (p.age === 30) {
+            p.pac -= 2; p.phy -= 1; p.pas += 2; p.sho += 2;
+        }
+
+        // --- MECÂNICA CHEF NUTRICIONISTA ---
+        if (p.hasChef) {
+            p.phy += 2;
+            if (p.emocao === "Ressaca 🥴") {
+                p.emocao = "Focado 🧘";
+                if(eventoTexto === "") eventoTexto = "🥗 NUTRIÇÃO DE ELITE: Seu Chef Particular preparou um plano ortomolecular que eliminou os efeitos da sua Ressaca imediatamente!";
+            }
         }
 
         if(Math.random() < 0.20 && currentStep > 1 && p.age < 36) {
@@ -761,6 +718,10 @@
         if (isElite || p.ovr > 86) { if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1; }
         p.totals.dom += tDom; p.totals.int += tInt;
 
+        // --- CRESCIMENTO DE FAMA BASEADO EM PERFORMANCE ---
+        let ganhoFama = (gol * 20000) + (ass * 10000) + (tDom * 150000) + (tInt * 300000);
+        p.fama += ganhoFama;
+
         if (tDom > 0 || tInt > 0) {
             p.jejumAnos = 0;
         } else {
@@ -772,9 +733,9 @@
         }
 
         if(p.ovr > 85 && Math.random() > 0.5) p.totals.cont++;
-        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; if(eventoTexto==="") eventoTexto = "🇧🇷 TAÇA DO MUNDO: Lendário! Você ergueu a taça da Copa do Mundo com a Seleção!"; }
+        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; p.fama += 4000000; if(eventoTexto==="") eventoTexto = "🇧🇷 TAÇA DO MUNDO: Lendário! Você ergueu a taça da Copa do Mundo com a Seleção (+4M de Fãs)!"; }
         
-        if (gol >= 95 && p.ovr >= 89) p.totals.bdor += 1;
+        if (gol >= 95 && p.ovr >= 89) { p.totals.bdor += 1; p.fama += 5000000; }
 
         let tag = p.transferFee ? `<div class="transfer-fee">€${p.transferFee}</div>` : "";
         document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(p.club, tag);
@@ -814,7 +775,13 @@
     function escolherOpcao(opt) {
         let textoConsequencia = entrevistaAtual.acao(opt);
         
-        document.getElementById('choice-text').innerHTML = `<span style='color:#dc2626; font-size:13px; display:block; margin-bottom:4px;'>💥 JORNAL ESPORTIVO - IMPACTO DE CAMPO/VESTIÁRIO:</span>` + textoConsequencia;
+        // --- INTERCEÇÃO DA ASSESSORIA DE IMPRENSA PR Realista ---
+        if (p.hasPR && (p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("furiosa") || textoConsequencia.includes("cancelamento"))) {
+            p.emocao = "Focado 🧘";
+            textoConsequencia += "<br><br>📢 <b>PR INTERVENÇÃO:</b> Sua Assessoria de Imprensa agiu com notas oficiais rápidas na TV, limpou seu nome com os patrocinadores e restaurou seu humor para <b>Focado 🧘</b>!";
+        }
+        
+        document.getElementById('choice-text').innerHTML = `<span style='color:#dc2626; font-size:13px; display:block; margin-bottom:4px;'>💥 JORNAL ESPORTIVO - EXTRA-CAMPO:</span>` + textoConsequencia;
         
         document.getElementById('choice-buttons-block').style.display = 'none';
         document.getElementById('btn-choice-next').style.display = 'block';
@@ -833,83 +800,15 @@
         let list = document.getElementById('offer-list'); list.innerHTML = "";
         
         let pool = [];
-        if (p.ovr >= 85 || p.hasAgent) { pool = eliteClubs; } 
-        else if (p.ovr >= 76) { pool = tierPrata; } 
-        else { pool = tierBronze; }
+        // --- LEI DO MERCADO CRUEL PARA VETERANOS ---
+        if (p.age >= 33 && p.totals.bdor === 0) {
+            pool = Math.random() > 0.4 ? tierPrata : tierBronze; // Pushed to MLS/Arabia/Brasil
+        } else {
+            if (p.ovr >= 85 || p.hasAgent) { pool = eliteClubs; } 
+            else if (p.ovr >= 76) { pool = tierPrata; } 
+            else { pool = tierBronze; }
+        }
         
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
-            let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
-            let salTxt = "€35k/semana";
-            if(eliteClubs.includes(c)) salTxt = "€180k/semana";
-            if(tierBronze.includes(c)) salTxt = "€5k/semana";
-            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">💰 Salário Comercial: ${salTxt}</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val})">🤝 Aceitar Proposta €${val}M</div></div>`;
-        }
-    }
-
-    function aceitarTransf(c, strVal, numVal) { 
-        p.club = c; p.transferFee = strVal; 
-        if(numVal > p.maxFeeNum) { p.maxFeeNum = numVal; p.maxFeeStr = "€" + strVal; }
-        fecharMercado(); 
-    }
-    function ficarNoTime() { p.transferFee = ""; fecharMercado(); }
-    function fecharMercado() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
-    
-    function finalizarCarreira() {
-        document.getElementById(`club-cell-9`).innerHTML = formatarClubeHTML(p.club, "");
-        document.getElementById(`stats-titles-9`).innerText = "-";
-        document.getElementById(`stats-goals-9`).innerText = "-";
-        document.getElementById(`stats-assists-9`).innerText = "-";
-
-        let cargoFinal = (p.ovr > 84) ? "Diretoria Executiva 💼" : "Treinador Técnico 📋";
-        document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML(cargoFinal, "");
-        document.getElementById(`stats-titles-10`).innerText = "-";
-        document.getElementById(`stats-goals-10`).innerText = "-";
-        document.getElementById(`stats-assists-10`).innerText = "-";
-        
-        let totalScore = p.totals.gol + (p.totals.ass * 0.7) + (p.totals.dom * 15) + (p.totals.int * 25) + (p.totals.bdor * 120) + (p.totals.wc * 200);
-        let veredito = "";
-        if(totalScore > 1400) veredito = "🐐 LENDÁRIO ABSOLUTO! Você sentou no trono ao lado de Pelé, Messi e Cristiano Ronaldo. Seu legado de drama e glória é imortal!";
-        else if(totalScore > 850) veredito = "👑 CRAQUE GERACIONAL! Sua genialidade marcou as noites e os gramados. Lembrado no patamar de Ronaldinho Gaúcho e Neymar!";
-        else if(totalScore > 400) veredito = "⚽ ÍDOLO DE RESPEITO! Campeão em grandes ligas, temido pelas defesas internacionais.";
-        else veredito = "👕 ATLETA PROFISSIONAL! Cumpriu sua jornada dignamente no ecossistema comercial do futebol.";
-
-        const evBox = document.getElementById('event-section');
-        evBox.innerHTML = `<div style='color:#4c1d95; font-size:13px; font-weight:900;'>🏁 JORNADA ENCERRADA!<br>${veredito}</div>`;
-        evBox.style.display = 'block';
-
-        document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">NOVA CARREIRA RPG</button>`;
-        checarRecordes();
-    }
-
-    function checarRecordes() {
-        let playerID = `${p.origin} ATA`;
-        let updated = false;
-        if(p.prime > records.ovr.val) { records.ovr = { val: p.prime, name: playerID }; updated = true; }
-        if(p.totals.gol > records.gol.val) { records.gol = { val: p.totals.gol, name: playerID }; updated = true; }
-        if(p.totals.bdor > records.bdor.val) { records.bdor = { val: p.totals.bdor, name: playerID }; updated = true; }
-        if(p.totals.wc > records.wc.val) { records.wc = { val: p.totals.wc, name: playerID }; updated = true; }
-        if(p.maxFeeNum > records.fee.val) { records.fee = { val: p.maxFeeNum, str: p.maxFeeStr, name: playerID }; updated = true; }
-        if(updated) { localStorage.setItem('mfc_records', JSON.stringify(records)); atualizarDadosRanking(); }
-    }
-
-    function atualizarDadosRanking() {
-        document.getElementById('rk-ovr-val').innerText = records.ovr.val;
-        document.getElementById('rk-ovr-name').innerText = records.ovr.name;
-        document.getElementById('rk-gol-val').innerText = records.gol.val;
-        document.getElementById('rk-gol-name').innerText = records.gol.name;
-        document.getElementById('rk-bdor-val').innerText = records.bdor.val;
-        document.getElementById('rk-bdor-name').innerText = records.bdor.name;
-        document.getElementById('rk-wc-val').innerText = records.wc.val;
-        document.getElementById('rk-wc-name').innerText = records.wc.name;
-        document.getElementById('rk-fee-val').innerText = records.fee.str || "€0m";
-        document.getElementById('rk-fee-name').innerText = records.fee.name;
-    }
-
-    function abrirRanking() { document.getElementById('modal-rank').style.display = 'flex'; }
-    function fecharRanking() { document.getElementById('modal-rank').style.display = 'none'; }
-
-    atualizarDadosRanking();
-</script>
-</body>
-</html>
+            let val = (p.ovr > 85) ? Math
