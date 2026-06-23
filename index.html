@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -123,7 +122,7 @@
         /* POPUPS FLUTUANTES */
         .event-section { background: #fff; margin: 5px 10px; border-radius: 6px; border: 2px dashed #ef4444; padding: 8px; text-align: center; font-size: 13px; font-weight: bold; color: #b91c1c; display: none; }
         
-        .choice-section { display: none; background: #fff; margin: 10px; border-radius: 8px; border: 3px solid #3b82f6; padding: 12px; flex-direction: column; gap: 8px; position: absolute; top: 22%; left: 5%; width: 90%; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        .choice-section { display: none; background: #fff; margin: 10px; border-radius: 8px; border: 3px solid #3b82f6; padding: 12px; flex-direction: column; gap: 8px; position: absolute; top: 15%; left: 5%; width: 90%; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
         .choice-btn { background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; text-align: left;}
 
         /* GRADE DE ESTILO DE VIDA EXPANDIDA 2X2 */
@@ -169,7 +168,7 @@
         <div class="top-item" id="hdr-region">🌍 Região: -</div>
         <div class="top-item" id="hdr-arq">🏟️ ESTILO</div>
         <div class="top-item">⏱️ <span id="hdr-age">15</span> Anos</div>
-        <div class="top-item">✨ Auge: <span id="hdr-prime">0</span></div>
+        <div class="top-item" id="hdr-mood">🧠 Focado 🧘</div>
     </div>
     <div class="top-bar" style="background: #fdfdfd; border-top: none; font-size: 12px; padding: 4px 8px;">
         <div style="color: #b45309; font-weight: bold;">💶 Passe: <span id="hdr-value">-</span></div>
@@ -209,9 +208,14 @@
     <div class="event-section" id="event-section"></div>
     
     <div class="choice-section" id="choice-section">
-        <div id="choice-text" style="font-size: 12px; font-weight: bold; color: #1e3a8a; margin-bottom: 6px;"></div>
-        <button class="choice-btn" id="btn-choice-a" onclick="escolherOpcao('A')"></button>
-        <button class="choice-btn" id="btn-choice-b" onclick="escolherOpcao('B')"></button>
+        <div id="choice-text" style="font-size: 12px; font-weight: bold; color: #1e3a8a; margin-bottom: 10px; line-height: 1.3;"></div>
+        
+        <div id="choice-buttons-block" style="display: flex; flex-direction: column; gap: 6px;">
+            <button class="choice-btn" id="btn-choice-a" onclick="escolherOpcao('A')"></button>
+            <button class="choice-btn" id="btn-choice-b" onclick="escolherOpcao('B')"></button>
+        </div>
+
+        <button class="btn-continue" id="btn-choice-next" style="display:none; width:100%; font-size:13px; padding:10px; background:#16a34a; margin-top:8px;" onclick="fecharJanelaConsequencia()">ACEITAR CONSEQUÊNCIAS & CONTINUAR</button>
     </div>
 
     <div class="office-section" id="office-panel">
@@ -266,7 +270,7 @@
             <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80')">
                 <div class="life-text" id="text-social">Solteiro</div>
             </div>
-            <div class="life-btn" style="background:#2563eb; color:white; font-weight:bold;" id="btn-social">Status Estável</div>
+            <div class="life-btn" style="background:#2563eb; color:white; font-weight:bold; cursor:default;" id="btn-social">Status Estável</div>
         </div>
         <div class="life-wrapper">
             <div class="life-title">FINANÇAS</div>
@@ -286,9 +290,9 @@
     <div class="modal" id="modal-arq" style="background: rgba(10,15,30,0.96);">
         <div class="modal-content" style="border-color:#5b2268;">
             <div class="rank-title">ESCOLHA SEU ARQUÉTIPO INICIAL</div>
-            <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible. Alta taxa de assistências e velocidade.</div></div>
-            <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante Matador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico. O terror das defesas na grande área.</div></div>
-            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Meio-Campista Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro focado em armar títulos e jogadas.</div></div>
+            <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible. Alta taxa de assistências.</div></div>
+            <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante Matador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico. O terror da grande área.</div></div>
+            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Meio-Campista Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro focado em armar títulos.</div></div>
         </div>
     </div>
 
@@ -323,16 +327,15 @@
 <script>
     const countryMap = {
         "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇨🇴": "COLÔMBIA", "🇨🇱": "CHILE", "🇪🇨": "EQUADOR", "🇵🇾": "PARAGUAI", "🇵🇪": "PERU", "🇧🇴": "BOLÍVIA", "🇻🇪": "VENEZUELA",
-        "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇮🇪": "IRLANDA", "🏴󠁧󠁢󠁷󠁬󠁳󠁿": "PAÍS DE GALES", "🇧🇪": "BÉLGICA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇭🇺": "HUNGRIA", "🇵🇱": "POLÔNIA", "🇸🇰": "ESLOVÁQUIA", "🇫🇮": "FINLÂNDIA", "🇸🇪": "SUÉCIA", "🇳🇴": "NORUEGA", "🇩🇰": "DINAMARCA", "🇮🇸": "ISLÂNDIA", "🇭🇷": "CROÁCIA", "🇷🇸": "SÉRVIA", "🇷🇴": "ROMÊNIA", "🇧🇬": "BULGÁRIA", "🇺🇦": "UCRÂNIA", "🇸🇮": "ESLOVÊNIA", "🇧🇦": "BÓSNIA", "🇮🇱": "ISRAEL", "🇨🇾": "CHIPRE",
-        "🇺🇸": "EUA", "🇨🇦": "CANADÁ", "🇲🇽": "MÉXICO", "🇨🇷": "COSTA RICA", "🇭🇳": "HONDURAS",
-        "🇸🇦": "ARÁBIA SAUDITA", "🇦🇪": "EAU", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO", "🇰🇷": "CORÉIA DO SUL", "🇨🇳": "CHINA", "🇦🇺": "AUSTRÁLIA", "🇮🇷": "IRÃ", "🇪🇬": "EGITO", "🇲🇦": "MARROCOS", "🇿🇦": "ÁFRICA DO SUL", "🇹🇳": "TUNÍSIA", "🇩🇿": "ARGÉLIA"
+        "🏴%20🎯": "INGLATERRA", "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇺🇦": "UCRÂNIA", "🇭🇷": "CROÁCIA",
+        "🇺🇸": "EUA", "🇲🇽": "MÉXICO", "🇸🇦": "ARÁBIA SAUDITA", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO"
     };
 
     const tierBronze = [
         "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷",
         "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Defensa y Justicia 🇦🇷", "Peñarol 🇺🇾", "Barcelona SC 🇪🇨", "Alianza Lima 🇵🇪",
         "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mallorca 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Genoa 🇮🇹", "Monza 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Toulouse 🇫🇷", "Nantes 🇫🇷",
-        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧🇪", "Zürich 🇨🇭", "Rapid Wien 🇦🇹", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
+        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧🇪", "Zürich 🇨🇭", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
     ];
 
     const tierPrata = [
@@ -367,6 +370,7 @@
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false,
         hasTrainer: false, hasAgent: false, houseTier: 0, carTier: 0, relacao: "Solteiro", investido: 0,
+        emocao: "Focado 🧘", jejumAnos: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
@@ -378,53 +382,71 @@
         ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" }
     };
 
-    // BANCO DE ENTREVISTAS EXPANDIDO COM CASAMENTOS, FESTAS, TRAIÇÕES E INVESTIMENTOS
+    // NOVO BANCO DE DRAMAS COM ESCOLHAS COMPLETAMENTE CEGAS E MISTERIOSAS
     const bancoEntrevistas = [
         {
-            texto: "🎤 CAPA DE REVISTA: Você foi flagrado com modelos em Ibiza no meio da pré-temporada. Sua parceira exige o divórcio!",
-            A: "Aceitar a separação judicial (Custa 50% de todo seu dinheiro em conta, vira 'Divorciado', +5 Ritmo)",
-            B: "Tentar reconciliação pública (Gasta €400k em presentes caros, vira 'Noivo 💍', +4 Físico)",
+            texto: "🎤 ESCÂNDALO NA PRENSA: Fotos suas em uma balada pesada regada a bebidas na Espanha vazaram na véspera da semifinal.",
+            A: "Subornar o fotógrafo com dinheiro de caixa para apagar as fotos.",
+            B: "Ignorar e dizer que sua vida particular não diz respeito a ninguém.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco = Math.floor(p.banco * 0.5); p.relacao = "Divorciado"; p.pac += 5; }
-                else { p.banco -= 400000; p.relacao = "Noivo 💍"; p.phy += 4; }
+                if(opt === 'A') { p.banco -= 300000; p.emocao = "Focado 🧘"; return "💸 Você gastou €300k do seu bolso para calar a mídia. O caso foi abafado, você manteve o foco, mas seu saldo bancário sentiu o golpe."; }
+                else { p.emocao = "Ressaca 🥴"; p.phy -= 4; p.totals.yc += 2; return "🥴 Você bateu de frente! A torcida ficou furiosa, a pressão te deixou em estado de Ressaca, perdendo -4 de Físico e recebendo +2 cartões amarelos."; }
             }
         },
         {
-            texto: "🎤 EVENTO SOCIAL: Seu relacionamento de longa data está cobrando um posicionamento definitivo.",
-            A: "Organizar o Casamento do Ano (Gasta €500k, vira 'Casado 👑', +6 Passe devido ao foco tático)",
-            B: "Adiar a festa e gastar o dinheiro com carros (Continua 'Solteiro', economiza o caixa, +5 Drible)",
+            texto: "🎤 DRAMA AMOROSO: Uma famosa cantora pop internacional quer assumir um namoro midiático altamente lucrativo com você.",
+            A: "Aceitar o namoro e focar nas campanhas publicitárias de casal.",
+            B: "Recusar para manter sua privacidade e vida social longe dos holofotes.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco -= 500000; p.relacao = "Casado 👑"; p.pas += 6; }
-                else { p.dri += 5; }
+                if(opt === 'A') { p.banco += 1000000; p.relacao = "Namorando 💖"; p.emocao = "Alegre 😁"; p.pas -= 3; return "💖 Você aceitou! Entrou €1M de patrocínio na conta, você virou uma celebridade Alegre, mas perdeu -3 de Passe devido à distração com os flashes."; }
+                else { p.relacao = "Solteiro"; p.emocao = "Focado 🧘"; p.sho += 4; return "🧘 Você recusou! Focado inteiramente na bola, você permaneceu Solteiro, mas ganhou +4 de Finalização nos treinos quietos."; }
             }
         },
         {
-            texto: "🎤 DRAMA FAMILIAR: Seus parentes no Brasil pediram uma quantia absurda para salvar o negócio da família.",
-            A: "Enviar a ajuda financeira imediatamente (Gasta €350k, ganha bônus de paz mental +4 Geral)",
-            B: "Negar a ajuda para proteger seu patrimônio (Guarda o dinheiro, perde -3 Geral por estresse familiar)",
-            acao: (opt) => {
-                if(opt === 'A') { p.banco -= 350000; p.ovr += 4; }
-                else { p.ovr -= 3; }
-            }
-        },
-        {
-            texto: "🎤 GOLPE DO PARÇA: Um amigo de seleção te chamou para investir numa fazenda de Criptomoedas duvidosas.",
-            A: "Ir com tudo na ganância de enriquecer (50% de chance de lucrar €1.5M ou 50% de chance de perder €600k)",
-            B: "Ignorar o parça e focar nos treinos (Não altera finanças, ganha +4 Finalização)",
+            texto: "🎤 CASSINO CLANDESTINO: Jogadores experientes do time te convidaram para uma mesa secreta de pôquer de alta grana na concentração.",
+            A: "Entrar na mesa de jogos apostando alto para ganhar respeito dos veteranos.",
+            B: "Ficar no quarto dormindo e descansando para a partida do dia seguinte.",
             acao: (opt) => {
                 if(opt === 'A') {
-                    if(Math.random() > 0.5) p.banco += 1500000;
-                    else p.banco -= 600000;
-                } else { p.sho += 4; }
+                    if(Math.random() > 0.5) { p.banco += 800000; p.emocao = "Alegre 😁"; return "🎰 Sorte pura! Você limpou a mesa dos veteranos, ganhou €800k e ficou Alegre para o jogo."; }
+                    else { p.banco -= 500000; p.emocao = "Triste 😢"; return "📉 Prejuízo! Você tomou um blefe, perdeu €500k, ficou Triste e vai pro jogo sem cabeça."; }
+                } else { p.pac += 4; return "💤 Escolha madura! Você descansou perfeitamente e ganhou um bônus de +4 de Ritmo para a partida."; }
             }
         },
         {
-            texto: "🎤 POLÊMICA DE BALADA: Você foi visto saindo de uma casa noturna às 4h da manhã na véspera da Grande Final.",
-            A: "Subornar os repórteres para abafar o caso (Gasta €200k, joga focado e ganha +1 Título Continental)",
-            B: "Ir direto para a partida de ressaca (Não gasta dinheiro, toma +2 Cartões Amarelos, perde -1 Título)",
+            texto: "🎤 CHANTAGEM DE DIVÓRCIO: Seu relacionamento sério entrou em colapso total após discussões sobre suas festas de comemoração.",
+            A: "Ceder às exigências e assinar uma união estável com divisão de bens.",
+            B: "Romper bruscamente e enfrentar um longo processo judicial nas mídias.",
             acao: (opt) => {
-                if(opt === 'A') { p.banco -= 200000; p.totals.int += 1; }
-                else { p.totals.yc += 2; p.totals.dom = Math.max(0, p.totals.dom - 1); }
+                if(opt === 'A') { p.relacao = "Casado 💍"; p.banco -= 400000; p.emocao = "Focado 🧘"; return "💍 Para evitar barulho, você cedeu. Perdeu €400k em taxas advocatícias e agora está Casado, mas comprou sua paz mental."; }
+                else { p.relacao = "Divorciado 💔"; p.banco = Math.floor(p.banco * 0.6); p.emocao = "Triste 😢"; return "💔 Que pancada! O divórcio saiu litigioso, a justiça levou 40% de todo o dinheiro da sua conta, você virou Divorciado e caiu em profunda Tristeza."; }
+            }
+        },
+        {
+            texto: "🎤 INVESTIMENTO ARRISCADO: Seu tio te pede um empréstimo para abrir uma rede de restaurantes no Brasil.",
+            A: "Ajudar a família e transferir o capital comercial solicitado.",
+            B: "Negar educadamente e dizer que seus assessores proibiram investimentos fora do fundo.",
+            acao: (opt) => {
+                if(opt === 'A') { p.banco -= 300000; if(Math.random() > 0.6) { p.banco += 1000000; return "🚀 O negócio do seu tio estourou! Ele te pagou de volta e você lucrou €1M de retorno!"; } else { return "📉 O restaurante faliu em 6 meses. Você perdeu os €300k investidos para sempre."; } }
+                else { p.emocao = "Triste 😢"; return "😢 Você segurou o dinheiro, mas o clima familiar rachou. As cobranças no WhatsApp te deixaram Triste."; }
+            }
+        },
+        {
+            texto: "🎤 SÍNDROME DO SUCESSO (FESTA): O time acabou de ganhar um troféu e o elenco fretou um iate de luxo com bebidas para comemorar por 3 dias.",
+            A: "Ir com o grupo, beber pesado e curtir a glória de ser campeão.",
+            B: "Recusar a festa e ir para a academia manter o físico em dia.",
+            acao: (opt) => {
+                if(opt === 'A') { p.emocao = "Ressaca 🥴"; p.phy -= 5; p.dri += 5; return "🥴 Que ressaca! Você festejou como um deus, seu Drible subiu +5 pela ginga, mas seu Físico despencou -5 no retorno aos treinos."; }
+                else { p.emocao = "Focado 🧘"; p.phy += 5; return "🏋️ Que monstro! Enquanto eles bebiam, você treinou. Seu Físico subiu +5 de forma limpa."; }
+            }
+        },
+        {
+            texto: "🎤 TESTE DE DOPING: Um suplemento misterioso importado que você tomou deu alteração leve nos exames internos do clube.",
+            A: "Contratar uma equipe médica particular secreta para mascarar o relatório.",
+            B: "Notificar a comissão técnica abertamente e aceitar ficar suspenso de 3 jogos.",
+            acao: (opt) => {
+                if(opt === 'A') { p.banco -= 500000; if(Math.random() > 0.2) { p.pac += 6; return "🧪 Funcionou! Você gastou €500k, o caso sumiu e o suplemento te deu +6 de Ritmo!"; } else { p.ovr -= 5; p.emocao = "Triste 😢"; return "🚨 Pego no pulo! A farsa foi descoberta, você tomou uma multa pesada e perdeu -5 de Geral por punição."; } }
+                else { p.emocao = "Triste 😢"; p.totals.dom = Math.max(0, p.totals.dom - 1); return "📋 Honestidade profissional. Você foi suspenso temporariamente, ficou Triste e seu time perdeu -1 título nacional sem você."; }
             }
         }
     ];
@@ -470,7 +492,7 @@
     function initGrid() {
         p.age = 15; p.banco = 0; p.isConvocado = false; p.hasTrainer = false; p.hasAgent = false;
         p.houseTier = 0; p.carTier = 0; p.transferFee = ""; p.maxFeeNum = 0; p.maxFeeStr = "€0m";
-        p.relacao = "Solteiro"; p.investido = 0;
+        p.relacao = "Solteiro"; p.investido = 0; p.emocao = "Focado 🧘"; p.jejumAnos = 0;
         p.totals = { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 };
         currentStep = 0;
 
@@ -516,13 +538,13 @@
         
         document.getElementById('hdr-age').innerText = p.age;
         if(p.ovr > p.prime) p.prime = p.ovr;
-        document.getElementById('hdr-prime').innerText = p.prime;
         
         let valBase = (p.ovr > 85) ? Math.floor(Math.random()*100)+50 : Math.floor(Math.random()*40)+5;
         if(p.age > 33) valBase = Math.floor(valBase * 0.3);
         document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : "€" + valBase + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco);
         document.getElementById('hdr-selecao').innerText = p.isConvocado ? "Sim 🇧🇷" : "Não";
+        document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
         
         document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
         document.getElementById('tot-app').innerText = p.totals.app; document.getElementById('tot-gol').innerText = p.totals.gol;
@@ -547,17 +569,12 @@
         if(p.carTier < 3) document.getElementById('btn-buy-car').innerText = "Melhorar (" + formatMoeda(carUpgrades[p.carTier+1].price) + ")";
         else document.getElementById('btn-buy-car').innerText = "Máximo";
 
-        // ATUALIZAR INTERFACE DE VIDA SOCIAL & INVESTIMENTOS
         document.getElementById('text-social').innerText = p.relacao;
         document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
     }
 
     function investirFundo() {
-        if(p.banco >= 250000) {
-            p.banco -= 250000;
-            p.investido += 250000;
-            atualizarUI();
-        }
+        if(p.banco >= 250000) { p.banco -= 250000; p.investido += 250000; atualizarUI(); }
     }
 
     function contratarStaff(tipo) {
@@ -603,11 +620,7 @@
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { p.age += 3; currentStep++; }
 
-        // RENDIMENTO DE INVESTIMENTOS (25% DE LUCRO A CADA 3 ANOS)
-        if(p.investido > 0) {
-            let lucro = Math.floor(p.investido * 0.25);
-            p.banco += lucro;
-        }
+        if(p.investido > 0) { let lucro = Math.floor(p.investido * 0.25); p.banco += lucro; }
 
         let salSemanal = 5000;
         if(eliteClubs.includes(p.club)) salSemanal = 180000;
@@ -618,13 +631,9 @@
 
         let eventoTexto = "";
 
-        // MECÂNICA DE DEFESA DE FALÊNCIA RPG
         if (p.banco < 0) {
-            p.banco = 0;
-            p.houseTier = 0;
-            p.carTier = 0;
-            p.investido = 0;
-            eventoTexto = "📉 FALÊNCIA COMPLETA: Seus luxos, multas e divórcios estouraram sua conta! Você faliu, perdeu seus carros e voltou a morar com os pais.";
+            p.banco = 0; p.houseTier = 0; p.carTier = 0; p.investido = 0; p.emocao = "Triste 😢";
+            eventoTexto = "📉 FALÊNCIA COMPLETA: Seus luxos, multas e divórcios estouraram sua conta comercial! Você faliu, perdeu seus carros e voltou a morar com os pais de bicicleta.";
         }
 
         if (p.age <= 21) {
@@ -635,30 +644,35 @@
             p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
             let d = Math.floor(Math.random() * 4) + 2;
-            p.pac -= (d+4); p.phy -= d; 
-            p.sho += 2; p.pas += 2; p.ovr += 1; 
-            if(eventoTexto === "") eventoTexto = "👴 MAESTRIA VETERANA: Sua velocidade caiu, mas sua experiência aumentou seu Passe e Finalização!";
+            p.pac -= (d+4); p.phy -= d; p.sho += 2; p.pas += 2; p.ovr += 1; 
+            if(eventoTexto === "") eventoTexto = "👴 MAESTRIA VETERANA: Sua velocidade caiu, mas sua sabedoria em campo aumentou seu Passe e Chute!";
         }
 
         if(Math.random() < 0.20 && currentStep > 1 && p.age < 36) {
             if(p.hasTrainer && Math.random() > 0.2) {
-                if(eventoTexto === "") eventoTexto = "🛡️ LESÃO EVITADA: Seu Preparador Físico Particular salvou sua musculatura!";
+                if(eventoTexto === "") eventoTexto = "🛡️ LESÃO EVITADA: Seu Preparador Físico Particular salvou sua musculatura na pré-temporada!";
             } else {
-                if(eventoTexto === "") eventoTexto = "💥 LESÃO GRAVE: Ruptura muscular em campo! Desfalque em metade da liga (-3 Ritmo e Físico)";
-                p.pac -= 3; p.phy -= 3; p.ovr -= 1;
+                if(eventoTexto === "") eventoTexto = "💥 LESÃO GRAVE: Ruptura de ligamentos! Departamento médico ativo (-3 Ritmo e Físico)";
+                p.pac -= 3; p.phy -= 3; p.ovr -= 1; p.emocao = "Triste 😢";
             }
         }
 
+        // SIMULAÇÃO DE JOGOS BASEADO NO HUMOR DO COMPORTAMENTO
         let apps = 100 + Math.floor(Math.random() * 45);
         let formGols = Math.random() * 0.6 + 0.5;
+        if(p.emocao === "Alegre 😁") formGols += 0.25; 
+        if(p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢") formGols -= 0.3;
+
         let shootFactor = Math.pow(p.sho / 100, 2);
-        let gol = Math.floor(apps * shootFactor * formGols);
+        let gol = Math.max(0, Math.floor(apps * shootFactor * formGols));
         if(p.archetype === 'matador') gol = Math.floor(gol * 1.35);
 
-        let ass = Math.floor(apps * (p.pas / 100) * (Math.random() * 0.3 + 0.2));
+        let ass = Math.max(0, Math.floor(apps * (p.pas / 100) * (Math.random() * 0.3 + 0.2)));
         if(p.archetype === 'ponta' || p.archetype === 'armador') ass = Math.floor(ass * 1.4);
 
-        let yc = Math.floor(Math.random() * 12); let rc = Math.random() > 0.85 ? 1 : 0;
+        let yc = Math.floor(Math.random() * 12); 
+        let rc = Math.random() > (p.emocao === "Ressaca 🥴" ? 0.6 : 0.85) ? 1 : 0;
+        if(rc > 0) gol = Math.floor(gol * 0.8);
         
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         p.totals.yc += yc; p.totals.rc += rc;
@@ -671,8 +685,19 @@
         if (isElite || p.ovr > 86) { if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1; }
         p.totals.dom += tDom; p.totals.int += tInt;
 
+        // SISTEMA DE JEJUM SINDROME COM PERDA DE RENDIMENTO
+        if (tDom > 0 || tInt > 0) {
+            p.jejumAnos = 0;
+        } else {
+            p.jejumAnos += 3;
+            if(p.jejumAnos >= 6) {
+                p.ovr -= 3; p.pac -= 3; p.sho -= 3; p.emocao = "Triste 😢";
+                if(eventoTexto === "") eventoTexto = `📉 SÍNDROME DO JEJUM: Você está há ${p.jejumAnos} anos sem títulos! A crise de confiança derrubou seu rendimento (-3 Geral, Ritmo e Chute).`;
+            }
+        }
+
         if(p.ovr > 85 && Math.random() > 0.5) p.totals.cont++;
-        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; if(eventoTexto==="") eventoTexto = "🇧🇷 CAMPEÃO DO MUNDO: Conquista mágica! Você ergueu a taça da Copa do Mundo!"; }
+        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; if(eventoTexto==="") eventoTexto = "🇧🇷 TAÇA DO MUNDO: Lendário! Você ergueu a taça da Copa do Mundo com a Seleção!"; }
         
         if (gol >= 95 && p.ovr >= 89) p.totals.bdor += 1;
 
@@ -691,7 +716,8 @@
 
         atualizarUI();
         
-        if (Math.random() < 0.55 && currentStep > 1 && p.age < 36) {
+        // GATILHO DINÂMICO PARA DRAMAS OU MERCADO comercial
+        if (Math.random() < 0.60 && currentStep > 1 && p.age < 36) {
             abrirEntrevista();
         } else {
             if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -701,14 +727,30 @@
     function abrirEntrevista() {
         document.getElementById('action-area').style.display = 'none';
         entrevistaAtual = bancoEntrevistas[Math.floor(Math.random() * bancoEntrevistas.length)];
+        
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
-        document.getElementById('btn-choice-a').innerText = "Opção A: " + entrevistaAtual.A;
-        document.getElementById('btn-choice-b').innerText = "Opção B: " + entrevistaAtual.B;
+        document.getElementById('btn-choice-a').innerText = "Escolha A: " + entrevistaAtual.A;
+        document.getElementById('btn-choice-b').innerText = "Escolha B: " + entrevistaAtual.B;
+        
+        // Garantir que os blocos de escolha corretos fiqum visíveis
+        document.getElementById('choice-buttons-block').style.display = 'flex';
+        document.getElementById('btn-choice-next').style.display = 'none';
         document.getElementById('choice-section').style.display = 'flex';
     }
 
     function escolherOpcao(opt) {
-        entrevistaAtual.acao(opt);
+        // Roda a ação às cegas e captura o texto da revelação pós-clique
+        let textoConsequencia = entrevistaAtual.acao(opt);
+        
+        document.getElementById('choice-text').innerHTML = `<span style='color:#dc2626; font-size:13px; display:block; margin-bottom:4px;'>💥 CONSEQUÊNCIA REVELADA:</span>` + textoConsequencia;
+        
+        // Esconde os botões de ação e mostra apenas o botão de continuar
+        document.getElementById('choice-buttons-block').style.display = 'none';
+        document.getElementById('btn-choice-next').style.display = 'block';
+        atualizarUI();
+    }
+
+    function fecharJanelaConsequencia() {
         document.getElementById('choice-section').style.display = 'none';
         document.getElementById('action-area').style.display = 'block';
         if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -756,13 +798,13 @@
         
         let totalScore = p.totals.gol + (p.totals.ass * 0.7) + (p.totals.dom * 15) + (p.totals.int * 25) + (p.totals.bdor * 120) + (p.totals.wc * 200);
         let veredito = "";
-        if(totalScore > 1400) veredito = "🐐 LENDÁRIO ABSOLUTO! Você sentou no trono ao lado de Pelé, Messi e Cristiano Ronaldo. O mundo reverencia seu legado imortal!";
-        else if(totalScore > 850) veredito = "👑 CRAQUE GERACIONAL! Sua genialidade plástica marcou o futebol mundial. Lembrado na mesma prateleira de Ronaldinho Gaúcho e Neymar!";
-        else if(totalScore > 400) veredito = "⚽ ÍDOLO DE RESPEITO! Campeão em grandes ligas, temido e respeitado pelas defesas internacionais.";
-        else veredito = "👕 ATLETA PROFISSIONAL! Cumpriu sua jornada tática dignamente no ecossistema comercial do futebol.";
+        if(totalScore > 1400) veredito = "🐐 LENDÁRIO ABSOLUTO! Você sentou no trono ao lado de Pelé, Messi e Cristiano Ronaldo. Seu legado de drama e glória é imortal!";
+        else if(totalScore > 850) veredito = "👑 CRAQUE GERACIONAL! Sua genialidade marcou as noites e os gramados. Lembrado no patamar de Ronaldinho Gaúcho e Neymar!";
+        else if(totalScore > 400) veredito = "⚽ ÍDOLO DE RESPEITO! Campeão em grandes ligas, temido pelas defesas internacionais.";
+        else veredito = "👕 ATLETA PROFISSIONAL! Cumpriu sua jornada dignamente no ecossistema comercial do futebol.";
 
         const evBox = document.getElementById('event-section');
-        evBox.innerHTML = `<div style='color:#4c1d95; font-size:13px; font-weight:900;'>🏁 CARREIRA ENCERRADA!<br>${veredito}</div>`;
+        evBox.innerHTML = `<div style='color:#4c1d95; font-size:13px; font-weight:900;'>🏁 JORNADA ENCERRADA!<br>${veredito}</div>`;
         evBox.style.display = 'block';
 
         document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">NOVA CARREIRA RPG</button>`;
