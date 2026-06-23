@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Football Career - Edição VIP Completa</title>
+    <title>Minha Carreira no Futebol - Edição VIP Completa</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght=500;700&family=Roboto:wght=400;700;900&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
         body { background-color: #111; display: flex; justify-content: center; padding: 10px; color: #333;}
         
         .app-container { width: 100%; max-width: 420px; background-color: #d8dbe2; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
         
-        /* TOP BAR */
+        /* BARRA SUPERIOR */
         .top-bar { display: flex; justify-content: space-between; background: white; padding: 8px; font-size: 13px; font-weight: 900; border-bottom: 2px solid #bbb; }
         .top-item { background: #f3f4f6; padding: 4px 8px; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; gap: 4px; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);}
         
-        /* TOTALS BAR */
+        /* BARRA DE TOTAIS */
         .totals-bar { display: flex; justify-content: space-between; background: white; padding: 6px; text-align: center; font-size: 14px; font-weight: 900; border-bottom: 2px solid #bbb; }
         .totals-box { flex: 1; border-right: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .totals-box:last-child { border-right: none; flex-direction: row; gap: 10px; }
         .totals-box img, .totals-box span.icon { font-size: 18px; margin-bottom: 2px; }
         
-        /* ATTRIBUTES */
+        /* ATRIBUTOS */
         .attr-bar { background-color: #5b2268; color: white; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 13px; font-family: 'Oswald', sans-serif; padding: 6px 0; border-bottom: 2px solid #3d1547;}
         .attr-vals { background-color: white; color: black; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 18px; font-weight: 900; padding: 6px 0; border-bottom: 3px solid #bbb;}
         .ovr-col { display: flex; align-items: center; justify-content: center; gap: 2px; }
         .ovr-arrow { background: #16a34a; color: white; font-size: 9px; padding: 1px 3px; border-radius: 50%; display: none; }
         
-        /* MAIN BODY */
+        /* CORPO PRINCIPAL */
         .main-body { display: flex; width: 100%; padding: 6px; gap: 4px; background: #d8dbe2;}
         
-        /* LEFT COLUMN (CLUBS) */
+        /* COLUNA ESQUERDA (CLUBES) */
         .col-left { width: 48%; display: flex; flex-direction: column; gap: 4px; }
         .age-row { display: flex; align-items: stretch; height: 36px; box-shadow: 1px 1px 3px rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;}
         .age-box { width: 34px; background: #4c1d95; color: white; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 16px; font-family: 'Oswald', sans-serif;}
@@ -44,31 +44,34 @@
         
         .transfer-fee { background: #fbcfe8; color: #831843; font-size: 10px; position: absolute; right: 0; top: 0; bottom: 0; padding: 0 4px; display: flex; align-items: center; font-weight: 900; border-left: 1px solid #ccc;}
         
-        /* RIGHT COLUMN (STATS) */
+        /* COLUNA DIREITA (ESTATÍSTICAS) */
         .col-right { width: 52%; display: flex; flex-direction: column;}
         .stats-header { background: #15803d; color: white; font-size: 11px; font-weight: 900; text-align: center; padding: 4px; border-radius: 4px 4px 0 0; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px;}
         .stats-icons { display: grid; grid-template-columns: repeat(3, 1fr); background: #86efac; text-align: center; font-size: 14px; padding: 4px 0; border-bottom: 2px solid #15803d;}
         .stats-grid { display: flex; flex-direction: column; background: #a7f3d0; border-radius: 0 0 4px 4px; border: 1px solid #86efac;}
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 14px; font-weight: 900; height: 36px; align-items: center; border-bottom: 1px solid #6ee7b7; margin-bottom: 4px;}
         
-        /* TROPHIES */
+        /* TROFÉUS */
         .bottom-section { background: white; margin: 5px 10px; text-align: center; border-radius: 6px; padding-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #ccc;}
         .bottom-title { background: #5b2268; color: white; font-size: 13px; font-weight: 900; padding: 4px; font-family: 'Oswald', sans-serif; border-radius: 4px 4px 0 0; letter-spacing: 1px;}
         .trophy-grid { display: flex; justify-content: space-around; padding-top: 10px; font-size: 22px; font-weight: 900; align-items: center;}
         
-        /* LIFESTYLE PHOTOS */
+        /* ESTILO DE VIDA */
         .lifestyle-section { display: flex; gap: 8px; margin: 5px 10px 10px 10px; }
         .life-wrapper { flex: 1; border-radius: 6px; overflow: hidden; border: 2px solid #5b2268; background: white;}
         .life-title { background: #5b2268; color: white; font-size: 14px; font-weight: 900; text-align: center; padding: 2px; font-family: 'Oswald', sans-serif;}
         .life-photo { height: 80px; width: 100%; background-size: cover; background-position: center; position: relative;}
         .life-text { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; text-align: center; font-size: 11px; font-weight: 900; padding: 2px 0; text-transform: uppercase;}
 
-        /* BUTTONS */
+        /* PAINEL DE EVENTOS DA CARREIRA */
+        .event-section { background: #fff; margin: 5px 10px; border-radius: 6px; border: 2px dashed #ef4444; padding: 8px; text-align: center; font-size: 13px; font-weight: bold; color: #b91c1c; display: none; }
+
+        /* BOTÕES */
         .action-area { padding: 5px 10px 10px 10px; text-align: center; }
         .btn-continue { background: #ef4444; color: white; border: none; padding: 12px 20px; font-size: 18px; font-weight: 900; border-radius: 25px; cursor: pointer; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); width: 85%; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px;}
         .btn-rank { background: #fbbf24; color: black; border: none; padding: 10px; font-size: 16px; font-weight: 900; border-radius: 8px; cursor: pointer; width: calc(100% - 20px); margin: 0 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-family: 'Oswald', sans-serif;}
 
-        /* MARKET PANEL */
+        /* PAINEL DE MERCADO */
         .market-panel { background: #fff; border: 3px solid #5b2268; padding: 12px; border-radius: 8px; margin: 10px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.4); position: absolute; top: 30%; width: calc(100% - 20px); z-index: 10;}
         .market-title { font-size: 13px; font-weight: 900; color: white; background: #5b2268; padding: 6px; text-align: center; margin:-12px -12px 12px -12px; border-radius: 4px 4px 0 0; font-family: 'Oswald', sans-serif;}
         .offer-row { display: flex; justify-content: space-between; border: 1px solid #ccc; margin-bottom: 6px; align-items: center; border-radius: 4px; background: #f9fafb;}
@@ -92,58 +95,60 @@
 
 <div class="app-container">
     <div class="top-bar">
-        <div class="top-item" id="hdr-region">🌍 S. America</div>
-        <div class="top-item">🏟️ ST</div>
-        <div class="top-item">⏱️ <span id="hdr-age">15</span></div>
-        <div class="top-item">✨ <span id="hdr-prime">0</span></div>
+        <div class="top-item" id="hdr-region">🌍 Am. do Sul</div>
+        <div class="top-item">🏟️ ATA</div>
+        <div class="top-item">⏱️ <span id="hdr-age">15</span> Anos</div>
+        <div class="top-item">✨ Auge: <span id="hdr-prime">0</span></div>
         <div class="top-item" style="background:#fef08a;">💶 <span id="hdr-value">-</span></div>
     </div>
 
     <div class="totals-bar">
-        <div class="totals-box"><span class="icon">📝</span><span id="tot-dom">0</span></div>
-        <div class="totals-box"><span class="icon">🏆</span><span id="tot-int">0</span></div>
-        <div class="totals-box"><span class="icon">👕</span><span id="tot-app">0</span></div>
-        <div class="totals-box"><span class="icon">⚽</span><span id="tot-gol">0</span></div>
-        <div class="totals-box"><span class="icon">👟</span><span id="tot-ass">0</span></div>
-        <div class="totals-box" style="background: #fee2e2;">
+        <div class="totals-box" title="Títulos Nacionais"><span class="icon">🏆</span><span id="tot-dom">0</span></div>
+        <div class="totals-box" title="Títulos Continentais"><span class="icon">🥇</span><span id="tot-int">0</span></div>
+        <div class="totals-box" title="Jogos Disputados"><span class="icon">👕</span><span id="tot-app">0</span></div>
+        <div class="totals-box" title="Gols Marcados"><span class="icon">⚽</span><span id="tot-gol">0</span></div>
+        <div class="totals-box" title="Assistências"><span class="icon">👟</span><span id="tot-ass">0</span></div>
+        <div class="totals-box" style="background: #fee2e2;" title="Cartões">
             <div style="display:flex; flex-direction:column;"><span class="icon">🟨</span><span id="tot-yc">0</span></div>
             <div style="display:flex; flex-direction:column;"><span class="icon">🟥</span><span id="tot-rc">0</span></div>
         </div>
     </div>
 
     <div class="attr-bar">
-        <div>OVR</div><div>PAC</div><div>SHO</div><div>PAS</div><div>DRI</div><div>DEF</div><div>PHY</div>
+        <div>GER</div><div>RIT</div><div>FIN</div><div>PAS</div><div>DRI</div><div>DEF</div><div>FIS</div>
     </div>
     <div class="attr-vals" id="attr-vals"></div>
 
     <div class="main-body">
         <div class="col-left" id="col-left"></div>
         <div class="col-right">
-            <div class="stats-header">Main Stats Per 3 Seasons</div>
-            <div class="stats-icons"><div>📝/🏆</div><div>⚽</div><div>👟</div></div>
+            <div class="stats-header">Histórico por Período (3 Anos)</div>
+            <div class="stats-icons"><div>🏆 Nac/Int</div><div>⚽ Gols</div><div>👟 Assis</div></div>
             <div class="stats-grid" id="stats-grid"></div>
         </div>
     </div>
 
+    <div class="event-section" id="event-section"></div>
+
     <div class="market-panel" id="market-panel">
-        <div class="market-title">BREAKING NEWS: TRANSFER OFFERS!</div>
+        <div class="market-title">ÚLTIMAS NOTÍCIAS: PROPOSTAS DE TRANSFERÊNCIA!</div>
         <div id="offer-list"></div>
-        <button class="btn-continue" style="width:100%; margin-top:10px; background:#15803d; font-size:14px; padding:10px;" onclick="ficarNoTime()">REJECT OFFERS (STAY)</button>
+        <button class="btn-continue" style="width:100%; margin-top:10px; background:#15803d; font-size:14px; padding:10px;" onclick="ficarNoTime()">REJEITAR OFERTAS (FICAR)</button>
     </div>
 
     <div class="bottom-section">
-        <div class="bottom-title">MAJOR TROPHIES</div>
+        <div class="bottom-title">GRANDES CONQUISTAS DA CARREIRA</div>
         <div class="trophy-grid">
             <div style="display:flex; flex-direction:column; align-items:center;">
                 <span id="icone-continente" style="font-size:18px;">🏆</span>
                 <span id="maj-cont">0</span>
             </div>
             <div style="display:flex; flex-direction:column; align-items:center;">
-                <span style="font-size:18px;">🥇</span>
+                <span style="font-size:18px;">🏆 Mundial</span>
                 <span id="maj-wc">0</span>
             </div>
             <div style="display:flex; flex-direction:column; align-items:center;">
-                <span style="font-size:18px;">✨</span>
+                <span style="font-size:18px;">✨ B. Ouro</span>
                 <span id="maj-bdor">0</span>
             </div>
         </div>
@@ -151,21 +156,21 @@
 
     <div class="lifestyle-section">
         <div class="life-wrapper">
-            <div class="life-title">HOUSE</div>
+            <div class="life-title">MORADIA</div>
             <div class="life-photo" id="photo-house" style="background-image: url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80');">
-                <div class="life-text" id="text-house">Parent's House</div>
+                <div class="life-text" id="text-house">Casa dos Pais</div>
             </div>
         </div>
         <div class="life-wrapper">
-            <div class="life-title">CAR</div>
+            <div class="life-title">VEÍCULO</div>
             <div class="life-photo" id="photo-car" style="background-image: url('https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=80');">
-                <div class="life-text" id="text-car">Bicycle</div>
+                <div class="life-text" id="text-car">Bicicleta</div>
             </div>
         </div>
     </div>
 
     <div class="action-area" id="action-area">
-        <button class="btn-continue" onclick="avancarCarreira()" id="btn-main">START CAREER</button>
+        <button class="btn-continue" onclick="avancarCarreira()" id="btn-main">INICIAR CARREIRA</button>
     </div>
 
     <button class="btn-rank" onclick="abrirRanking()">🏆 HALL DA FAMA OFICIAL</button>
@@ -174,7 +179,7 @@
         <div class="modal-content">
             <div class="rank-title">🏆 HALL DA FAMA</div>
             <div class="rank-row">
-                <div class="rank-label">👑 Maior OVR Prime</div>
+                <div class="rank-label">👑 Maior Geral no Auge</div>
                 <div class="rank-val"><span id="rk-ovr-val">0</span> <span class="rank-player" id="rk-ovr-name">-</span></div>
             </div>
             <div class="rank-row">
@@ -186,11 +191,11 @@
                 <div class="rank-val"><span id="rk-bdor-val">0</span> <span class="rank-player" id="rk-bdor-name">-</span></div>
             </div>
             <div class="rank-row">
-                <div class="rank-label">🥇 Copas do Mundo</div>
+                <div class="rank-label">🏆 Copas do Mundo</div>
                 <div class="rank-val"><span id="rk-wc-val">0</span> <span class="rank-player" id="rk-wc-name">-</span></div>
             </div>
             <div class="rank-row">
-                <div class="rank-label">💸 Maior Transferência</div>
+                <div class="rank-label">💸 Maior Venda Comercial</div>
                 <div class="rank-val"><span id="rk-fee-val">€0m</span> <span class="rank-player" id="rk-fee-name">-</span></div>
             </div>
             <button class="btn-close" onclick="fecharRanking()">FECHAR</button>
@@ -199,15 +204,15 @@
 </div>
 
 <script>
-    // Dicionário de Países para o Cartão do Clube
+    // Dicionário de Países Traduzido para o Brasil
     const countryMap = {
-        "🇧🇷": "BRAZIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAY", "🇨🇴": "COLOMBIA", "🇨🇱": "CHILE", "🇪🇨": "ECUADOR", "🇵🇾": "PARAGUAY", "🇵🇪": "PERU", "🇧🇴": "BOLIVIA", "🇻🇪": "VENEZUELA",
-        "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "ENGLAND", "🇪🇸": "SPAIN", "🇮🇹": "ITALY", "🇩🇪": "GERMANY", "🇫🇷": "FRANCE", "🇵🇹": "PORTUGAL", "🇳🇱": "NETHERLANDS", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "SCOTLAND", "🇮🇪": "IRELAND", "🏴󠁧󠁢󠁷󠁬󠁳󠁿": "WALES", "🇧🇪": "BELGIUM", "🇨🇭": "SWITZERLAND", "🇦🇹": "AUSTRIA", "🇹🇷": "TURKEY", "🇬🇷": "GREECE", "🇨🇿": "CZECHIA", "🇭🇺": "HUNGARY", "🇵🇱": "POLAND", "🇸🇰": "SLOVAKIA", "🇫🇮": "FINLAND", "🇸🇪": "SWEDEN", "🇳🇴": "NORWAY", "🇩🇰": "DENMARK", "🇮🇸": "ICELAND", "🇭🇷": "CROATIA", "🇷🇸": "SERBIA", "🇷🇴": "ROMANIA", "🇧🇬": "BULGARIA", "🇺🇦": "UKRAINE", "🇸🇮": "SLOVENIA", "🇧🇦": "BOSNIA", "🇮🇱": "ISRAEL", "🇨🇾": "CYPRUS",
-        "🇺🇸": "USA", "🇨🇦": "CANADA", "🇲🇽": "MEXICO", "🇨🇷": "COSTA RICA", "🇭🇳": "HONDURAS",
-        "🇸🇦": "SAUDI ARABIA", "🇦🇪": "UAE", "🇶🇦": "QATAR", "🇯🇵": "JAPAN", "🇰🇷": "SOUTH KOREA", "🇨🇳": "CHINA", "🇦🇺": "AUSTRALIA", "🇮🇷": "IRAN", "🇪🇬": "EGYPT", "🇲🇦": "MOROCCO", "🇿🇦": "SOUTH AFRICA", "🇹🇳": "TUNISIA", "🇩🇿": "ALGERIA"
+        "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇨🇴": "COLÔMBIA", "🇨🇱": "CHILE", "🇪🇨": "EQUADOR", "🇵🇾": "PARAGUAI", "🇵🇪": "PERU", "🇧🇴": "BOLÍVIA", "🇻🇪": "VENEZUELA",
+        "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇮🇪": "IRLANDA", "🏴󠁧󠁢󠁷󠁬󠁳󠁿": "PAÍS DE GALES", "🇧🇪": "BÉLGICA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇭🇺": "HUNGRIA", "🇵🇱": "POLÔNIA", "🇸貫": "ESLOVÁQUIA", "🇫🇮": "FINLÂNDIA", "🇸🇪": "SUÉCIA", "🇳🇴": "NORUEGA", "🇩★": "DINAMARCA", "🇮🇸": "ISLÂNDIA", "🇭🇷": "CROÁCIA", "🇷🇸": "SÉRVIA", "🇷🇴": "ROMÊNIA", "🇧🇬": "BULGÁRIA", "🇺🇦": "UCRÂNIA", "🇸🇮": "ESLOVÊNIA", "🇧🇦": "BÓSNIA", "🇮🇱": "ISRAEL", "🇨🇾": "CHIPRE",
+        "🇺🇸": "EUA", "🇨🇦": "CANADÁ", "🇲🇽": "MÉXICO", "🇨🇷": "COSTA RICA", "🇭🇳": "HONDURAS",
+        "🇸🇦": "ARÁBIA SAUDITA", "🇦🇪": "EAU", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO", "🇰🇷": "CORÉIA DO SUL", "🇨🇳": "CHINA", "🇦🇺": "AUSTRÁLIA", "🇮🇷": "IRÃ", "🇪🇬": "EGITO", "🇲🇦": "MARROCOS", "🇿🇦": "ÁFRICA DO SUL", "🇹🇳": "TUNÍSIA", "🇩🇿": "ARGÉLIA"
     };
 
-    // MEGABANCO DE DADOS
+    // BANCO DE DADOS DE TIMES REAIS COM NOMES EM PORTUGUÊS
     const tierBronze = [
         "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷",
         "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Defensa y Justicia 🇦🇷", "Defensor 🇺🇾", "América de Cali 🇨🇴", "U. Católica 🇨🇱", "Barcelona SC 🇪🇨", "Alianza Lima 🇵🇪", "Universitario 🇵🇪", "Sporting Cristal 🇵🇪", "Bolívar 🇧🇴", "The Strongest 🇧🇴", "Caracas FC 🇻🇪", "Deportivo Táchira 🇻🇪",
@@ -220,8 +225,8 @@
 
     const tierPrata = [
         "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Vasco 🇧🇷", "Bahia 🇧🇷", "Athletico-PR 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Racing 🇦🇷", "Independiente 🇦🇷", "San Lorenzo 🇦🇷", "Estudiantes 🇦🇷", "Vélez Sarsfield 🇦🇷", "Lanús 🇦🇷", "Peñarol 🇺🇾", "Nacional 🇺🇾", "Atlético Nacional 🇨🇴", "Millonarios 🇨🇴", "Junior Barranquilla 🇨🇴", "Colo-Colo 🇨🇱", "U. de Chile 🇨🇱", "LDU 🇪🇨", "Indep. del Valle 🇪🇨", "Olimpia 🇵🇾", "Cerro Porteño 🇵🇾", "Libertad 🇵🇾",
-        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪", "Hoffenheim 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷",
-        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭", "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷", "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Ferencváros 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰", "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Ludogorets 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦",
+        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Nottingham Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Wolverhampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Valencia 🇪🇸", "Girona 🇪🇸", "Celta de Vigo 🇪🇸", "Osasuna 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Torino 🇮🇹", "Bologna 🇮🇹", "Sassuolo 🇮🇹", "Udinese 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Einstraht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Wolfsburg 🇩🇪", "Mönchengladbach 🇩🇪", "Freiburg 🇩🇪", "Werder Bremen 🇩🇪", "Hoffenheim 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷", "Nice 🇫🇷", "Rennes 🇫🇷", "Lens 🇫🇷",
+        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Braga 🇵🇹", "V. Guimarães 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "AZ Alkmaar 🇳🇱", "Twente 🇳🇱", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Aberdeen 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Hearts 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧互", "Anderlecht 🇧🇪", "Genk 🇧🇪", "Union SG 🇧🇪", "Young Boys 🇨🇭", "FC Basel 🇨🇭", "Servette 🇨🇭", "RB Salzburg 🇦🇹", "Sturm Graz 🇦🇹", "LASK 🇦🇹", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Besiktas 🇹🇷", "Trabzonspor 🇹🇷", "Olympiacos 🇬🇷", "Panathinaikos 🇬🇷", "AEK Atenas 🇬🇷", "PAOK 🇬🇷", "Slavia Praha 🇨🇿", "Sparta Praha 🇨🇿", "Viktoria Plzeň 🇨🇿", "Ferencváros 🇭🇺", "Legia Warszawa 🇵🇱", "Lech Poznań 🇵🇱", "Raków Częstochowa 🇵🇱", "Malmö FF 🇸🇪", "Djurgårdens 🇸🇪", "IF Elfsborg 🇸🇪", "Bodø/Glimt 🇳🇴", "Molde 🇳🇴", "Rosenborg 🇳🇴", "FC Copenhagen 🇩🇰", "FC Midtjylland 🇩🇰", "Brøndby 🇩🇰", "Dinamo Zagreb 🇭🇷", "Hajduk Split 🇭🇷", "Estrela Vermelha 🇷🇸", "Partizan 🇷🇸", "FCSB 🇷🇴", "CFR Cluj 🇷🇴", "Ludogorets 🇧🇬", "Shakhtar Donetsk 🇺🇦", "Dynamo Kyiv 🇺🇦",
         "Club América 🇲🇽", "Monterrey 🇲🇽", "Tigres UANL 🇲🇽", "Al-Ahli 🇸🇦", "Al-Shabab 🇸🇦", "Al Ain 🇦🇪", "Al-Sadd 🇶🇦", "Kawasaki Frontale 🇯🇵", "Vissel Kobe 🇯🇵", "Yokohama F. Marinos 🇯🇵", "Urawa Red Diamonds 🇯🇵", "Jeonbuk Motors 🇰🇷", "Ulsan Hyundai 🇰🇷", "Al Ahly 🇪🇬", "Zamalek 🇪🇬", "Wydad Casablanca 🇲🇦", "Raja Casablanca 🇲🇦", "Mamelodi Sundowns 🇿🇦", "Orlando Pirates 🇿🇦", "Espérance de Tunis 🇹🇳"
     ];
 
@@ -239,7 +244,7 @@
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
-    const ages = ["A", 18, 21, 24, 27, 30, 33, 36, 39, "R", "M"];
+    const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
     let currentStep = 0;
 
     let records = JSON.parse(localStorage.getItem('mfc_records')) || {
@@ -255,7 +260,7 @@
     }
 
     function checarRecordes() {
-        let playerID = `${document.getElementById('hdr-region').innerText} ST`;
+        let playerID = `${document.getElementById('hdr-region').innerText} ATA`;
         let updated = false;
         if(p.prime > records.ovr.val) { records.ovr = { val: p.prime, name: playerID }; updated = true; }
         if(p.totals.gol > records.gol.val) { records.gol = { val: p.totals.gol, name: playerID }; updated = true; }
@@ -272,7 +277,7 @@
         let partes = clubeStr.trim().split(" ");
         let flag = partes.pop();
         let nomeClube = partes.join(" ");
-        let countryName = countryMap[flag] || "INTL";
+        let countryName = countryMap[flag] || "INTERNACIONAL";
         
         return `
             <div style="display:flex; align-items:center; height:100%; width:100%;">
@@ -298,16 +303,16 @@
         let pool = p.isProdigy ? tierPrata : tierBronze;
         p.club = pool[Math.floor(Math.random() * pool.length)];
 
-        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮󠁧󠁿") || p.club.includes("🇩🇪") || p.club.includes("🇮🇹") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇹🇷") || p.club.includes("🏴󠁧󠁢󠁳󠁣󠁴󠁿") || p.club.includes("🇧🇪") || p.club.includes("🇨🇭") || p.club.includes("🇬🇷") || p.club.includes("🇦🇹") || p.club.includes("🇨🇿") || p.club.includes("🇭🇺") || p.club.includes("🇵🇱") || p.club.includes("🇫🇮") || p.club.includes("🇸🇪") || p.club.includes("🇳🇴") || p.club.includes("🇩🇰") || p.club.includes("🇭🇷") || p.club.includes("🇷🇸") || p.club.includes("🇷🇴") || p.club.includes("🇧🇬") || p.club.includes("🇺🇦") || p.club.includes("🇮🇪") || p.club.includes("🇮🇸") || p.club.includes("🇨🇾") || p.club.includes("🇮🇱") || p.club.includes("🇸🇰") || p.club.includes("🇸🇮") || p.club.includes("🇧🇦") || p.club.includes("🏴󠁧󠁢󠁷󠁬󠁳󠁿")) {
-            p.origin = "Europe"; document.getElementById('icone-continente').innerText = "🏆 Euro";
-        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷") || p.club.includes("🇦🇪") || p.club.includes("🇶🇦") || p.club.includes("🇨🇳") || p.club.includes("🇦🇺") || p.club.includes("🇮🇷")) {
-            p.origin = "Asia"; document.getElementById('icone-continente').innerText = "🏆 Copa Ásia";
-        } else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽") || p.club.includes("🇨🇷") || p.club.includes("🇭🇳") || p.club.includes("🇨🇦")) {
-            p.origin = "N. America"; document.getElementById('icone-continente').innerText = "🏆 Copa Ouro";
-        } else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦") || p.club.includes("🇿🇦") || p.club.includes("🇹🇳") || p.club.includes("🇩🇿")) {
-            p.origin = "Africa"; document.getElementById('icone-continente').innerText = "🏆 CANA";
+        if(p.club.includes("🇪🇸") || p.club.includes("🏴󠁧󠁢󠁥󠁮%")) {
+            p.origin = "Europa"; document.getElementById('icone-continente').innerText = "🏆 Eurocopa";
+        } else if(p.club.includes("🇸🇦") || p.club.includes("🇯🇵") || p.club.includes("🇰🇷")) {
+            p.origin = "Ásia"; document.getElementById('icone-continente').innerText = "🏆 Copa da Ásia";
+        } else if(p.club.includes("🇺🇸") || p.club.includes("🇲🇽")) {
+            p.origin = "Am. do Norte"; document.getElementById('icone-continente').innerText = "🏆 Copa Ouro";
+        } else if(p.club.includes("🇪🇬") || p.club.includes("🇲🇦")) {
+            p.origin = "África"; document.getElementById('icone-continente').innerText = "🏆 CAN";
         } else {
-            p.origin = "S. America"; document.getElementById('icone-continente').innerText = "🏆 C. América";
+            p.origin = "Am. do Sul"; document.getElementById('icone-continente').innerText = "🏆 Copa América";
         }
         document.getElementById('hdr-region').innerText = `🌍 ${p.origin}`;
     }
@@ -319,10 +324,10 @@
         left.innerHTML = ''; right.innerHTML = '';
         
         ages.forEach((a, index) => {
-            let boxClass = "age-box" + (a === "A" ? " academy" : "") + ((a === "R" || a === "M") ? " retire" : "");
+            let boxClass = "age-box" + (a === "Base" ? " academy" : "") + ((a === "Apadr" || a === "Trein") ? " retire" : "");
             left.innerHTML += `<div class="age-row"><div class="${boxClass}">${a}</div><div class="club-box" id="club-box-${index}"><div class="empty-slot"></div></div></div>`;
-            if(a !== "R" && a !== "M" && a !== "A") right.innerHTML += `<div class="stats-row" id="row-right-${index}"><div>-</div><div>-</div><div>-</div></div>`;
-            else if (a === "A") right.innerHTML += `<div class="stats-row" id="row-right-0" style="background:#fef08a; border-bottom:1px solid #16a34a;"><div>-</div><div>-</div><div>-</div></div>`;
+            if(a !== "Apadr" && a !== "Trein" && a !== "Base") right.innerHTML += `<div class="stats-row" id="row-right-${index}"><div>-</div><div>-</div><div>-</div></div>`;
+            else if (a === "Base") right.innerHTML += `<div class="stats-row" id="row-right-0" style="background:#fef08a; border-bottom:1px solid #16a34a;"><div>-</div><div>-</div><div>-</div></div>`;
         });
         
         document.getElementById(`club-box-0`).innerHTML = formatarClubeHTML(p.club, "");
@@ -335,13 +340,13 @@
         let ovrHTML = `<div class="ovr-col"><span style="color:#15803d">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime ? 'inline' : 'none'}">⬆</span></div>`;
         document.getElementById('attr-vals').innerHTML = `${ovrHTML}<div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
         
-        document.getElementById('hdr-age').innerText = (p.age === 15) ? "15" : p.age;
+        document.getElementById('hdr-age').innerText = p.age;
         if(p.ovr > p.prime) p.prime = p.ovr;
         document.getElementById('hdr-prime').innerText = p.prime;
         
         let valBase = (p.ovr > 85) ? Math.floor(Math.random()*100)+50 : Math.floor(Math.random()*40)+5;
         if(p.age > 33) valBase = Math.floor(valBase * 0.3);
-        document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : "€" + valBase + "m";
+        document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : "€" + valBase + "M";
         
         document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
         document.getElementById('tot-app').innerText = p.totals.app; document.getElementById('tot-gol').innerText = p.totals.gol;
@@ -352,21 +357,20 @@
         
         p.wealth = p.prime + (p.totals.gol * 0.1) + (p.totals.app * 0.05);
         
-        // FOTOS REAIS (LIFESTYLE)
         let hImg = 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80', hTxt = "Casa dos Pais";
         let cImg = 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=80', cTxt = "Bicicleta";
         
         if(p.wealth > 75) { 
-            hImg = 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=400&q=80'; hTxt = "Apartamento"; 
+            hImg = 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=400&q=80'; hTxt = "Apartamento Centro"; 
             cImg = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=400&q=80'; cTxt = "Sedan Executivo"; 
         }
         if(p.wealth > 85) { 
-            hImg = 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80'; hTxt = "Casa de Luxo"; 
-            cImg = 'https://images.unsplash.com/photo-1605515298946-d062f2e9da53?w=400&q=80'; cTxt = "Esportivo"; 
+            hImg = 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80'; hTxt = "Casa em Condomínio"; 
+            cImg = 'https://images.unsplash.com/photo-1605515298946-d062f2e9da53?w=400&q=80'; cTxt = "Carro Esportivo"; 
         }
         if(p.wealth > 95) { 
-            hImg = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80'; hTxt = "Mansão"; 
-            cImg = 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80'; cTxt = "Supercarro"; 
+            hImg = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80'; hTxt = "Mansão da Estrela"; 
+            cImg = 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80'; cTxt = "Superesportivo Raro"; 
         }
         
         document.getElementById('photo-house').style.backgroundImage = `url('${hImg}')`; document.getElementById('text-house').innerText = hTxt;
@@ -374,10 +378,38 @@
     }
 
     function avancarCarreira() {
-        document.getElementById('btn-main').innerText = "CONTINUE";
+        document.getElementById('btn-main').innerText = "CONTINUAR PROGRESÃO";
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { if (p.age >= 39) { finalizarCarreira(); return; } p.age += 3; currentStep++; }
         
+        // SISTEMA DE EVENTOS ALEATÓRIOS (SUGESTÃO IMPLEMENTADA)
+        let eventoTexto = "";
+        let evChance = Math.random();
+        let evMod = 0;
+        
+        if (currentStep > 1 && p.age < 36) {
+            if (evChance < 0.15) {
+                eventoTexto = "💥 LESÃO GRAVE: Você quebrou os ligamentos! (-3 Ritmo e Físico)";
+                p.pac -= 3; p.phy -= 3; p.ovr -= 1;
+            } else if (evChance < 0.30) {
+                eventoTexto = "🔥 EM ALTA: Treinador novo te transformou em uma máquina! (+4 Finalização e Passe)";
+                p.sho += 4; p.pas += 4; p.ovr += 2;
+            } else if (evChance < 0.40) {
+                eventoTexto = "📰 EXTRACAMPO: Polêmicas em festas abalaram sua imagem nesta temporada.";
+            } else if (evChance > 0.90 && p.ovr > 82) {
+                eventoTexto = "👟 CHUTEIRA DE OURO: Você destruiu as defesas rivais! (+5 Finalização)";
+                p.sho += 5; p.ovr += 1;
+            }
+        }
+        
+        if (eventoTexto !== "") {
+            const evBox = document.getElementById('event-section');
+            evBox.innerText = eventoTexto;
+            evBox.style.display = 'block';
+        } else {
+            document.getElementById('event-section').style.display = 'none';
+        }
+
         if (p.age <= 21) {
             let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
@@ -452,7 +484,7 @@
             let c = pool[Math.floor(Math.random() * pool.length)];
             let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
             if(p.age > 33) val = Math.floor(val * 0.4);
-            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-val" onclick="aceitar('${c}', '${val}m', ${val})">🤝 €${val}m</div></div>`;
+            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-val" onclick="aceitar('${c}', '${val}M', ${val})">🤝 Aceitar €${val}M</div></div>`;
         }
     }
 
@@ -466,8 +498,8 @@
     
     function finalizarCarreira() {
         document.getElementById(`club-box-${ages.length-2}`).innerHTML = formatarClubeHTML(p.club, "");
-        document.getElementById(`club-box-${ages.length-1}`).innerHTML = formatarClubeHTML((p.ovr > 85) ? eliteClubs[Math.floor(Math.random()*eliteClubs.length)] : "Manager", "");
-        document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">RESTART CAREER</button>`;
+        document.getElementById(`club-box-${ages.length-1}`).innerHTML = formatarClubeHTML((p.ovr > 85) ? "Diretoria Executiva 💼" : "Treinador Adjunto 📋", "");
+        document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">RECOMEÇAR NOVA CARREIRA</button>`;
         checarRecordes();
     }
 
