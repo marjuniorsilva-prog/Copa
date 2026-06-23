@@ -109,7 +109,7 @@
         .stats-cell-item.goals-col { color: #15803d; background: #e2f5e9; }
         .stats-cell-item.assists-col { color: #2563eb; background: #e0f2fe; }
         
-        /* ESCRITÓRIO & STAFF MULTIPAINEL */
+        /* ESCRITÓRIO & STAFF */
         .office-section { background: white; margin: 2px 10px; border-radius: 6px; padding: 6px; border: 1px solid #ccc; font-size: 11px;}
         .office-title { background: #475569; color: white; font-size: 11px; font-weight: 900; text-align: center; padding: 3px; font-family: 'Oswald', sans-serif; border-radius: 4px; margin-bottom: 4px;}
         .office-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
@@ -338,7 +338,7 @@
         "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷",
         "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Defensa y Justicia 🇦🇷", "Peñarol 🇺🇾", "Barcelona SC 🇪🇨", "Alianza Lima 🇵🇪",
         "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mallorca 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Genoa 🇮🇹", "Monza 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Toulouse 🇫🇷", "Nantes 🇫🇷",
-        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧🇪", "Zürich 🇨🇭", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
+        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧exe", "Zürich 🇨🇭", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
     ];
 
     const tierPrata = [
@@ -381,9 +381,25 @@
     let currentStep = 0;
     let entrevistaAtual = null;
 
-    let records = JSON.parse(localStorage.getItem('mfc_records')) || {
-        ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" }
-    };
+    // --- SEGURANÇA ULTRA-BLINDADA PARA EVITAR CONFLITOS DE MEMÓRIA ---
+    let records;
+    try {
+        let dadosSalvos = localStorage.getItem('mfc_records');
+        records = JSON.parse(dadosSalvos);
+        // Se a estrutura antiga for detectada (campos faltando ou formato incorreto), força reset limpo
+        if (!records || typeof records.ovr !== 'object' || !records.ovr.hasOwnProperty('val') || !records.fee.hasOwnProperty('str')) {
+            throw new Error("Reset de segurança comercial exigido.");
+        }
+    } catch(e) {
+        records = {
+            ovr: { val: 0, name: "-" },
+            gol: { val: 0, name: "-" },
+            bdor: { val: 0, name: "-" },
+            wc: { val: 0, name: "-" },
+            fee: { val: 0, str: "€0m", name: "-" }
+        };
+        localStorage.setItem('mfc_records', JSON.stringify(records));
+    }
 
     const bancoEntrevistas = [
         {
@@ -536,6 +552,12 @@
         atualizarUI();
     }
 
+    function formatMoeda(num) {
+        if(num >= 1000000) return "€" + (num/1000000).toFixed(1) + "M";
+        if(num <= -1000000) return "-€" + (Math.abs(num)/1000000).toFixed(1) + "M";
+        return "€" + (num/1000).toFixed(0) + "k";
+    }
+
     function formatFama(num) {
         if(num >= 1000000) return (num/1000000).toFixed(1) + "M";
         return (num/1000).toFixed(0) + "k";
@@ -643,7 +665,6 @@
         if(eliteClubs.includes(p.club)) salSemanal = 180000;
         else if(tierPrata.includes(p.club)) salSemanal = 35000;
         
-        // Fama Multiplica Ganhos de Patrocínio
         let bonusFamaComercial = Math.floor(p.fama * 0.05);
         p.banco += (salSemanal * 150) + bonusFamaComercial;
 
@@ -656,7 +677,6 @@
             eventoTexto = "📉 FALÊNCIA COMPLETA: Seus luxos, multas e divórcios estouraram sua conta comercial! Você faliu, perdeu seus carros e voltou a morar com os pais de bicicleta.";
         }
 
-        // --- SISTEMA REALISTA DE CURVA DE IDADE ---
         if (p.age <= 21) {
             let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
@@ -664,16 +684,15 @@
             let g = Math.floor(Math.random() * 4) + 2;
             p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
-            let d = Math.floor(Math.random() * 2) + 4; // Queda brutal de explosão
+            let d = Math.floor(Math.random() * 2) + 4; 
             p.pac -= d; p.phy -= (d - 1); 
-            p.sho += 4; p.pas += 5; // Ganho de posicionamento cerebral e passe
+            p.sho += 4; p.pas += 5; 
             p.ovr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + 10;
             if(eventoTexto === "") eventoTexto = "👴 CURVA DE ENVELHECIMENTO: Suas pernas perderam a velocidade de jovem (-Ritmo/-Físico), mas sua visão e inteligência deram um salto (+Passe/+Finalização)!";
         } else if (p.age === 30) {
             p.pac -= 2; p.phy -= 1; p.pas += 2; p.sho += 2;
         }
 
-        // --- MECÂNICA CHEF NUTRICIONISTA ---
         if (p.hasChef) {
             p.phy += 2;
             if (p.emocao === "Ressaca 🥴") {
@@ -718,7 +737,6 @@
         if (isElite || p.ovr > 86) { if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1; }
         p.totals.dom += tDom; p.totals.int += tInt;
 
-        // --- CRESCIMENTO DE FAMA BASEADO EM PERFORMANCE ---
         let ganhoFama = (gol * 20000) + (ass * 10000) + (tDom * 150000) + (tInt * 300000);
         p.fama += ganhoFama;
 
@@ -775,7 +793,6 @@
     function escolherOpcao(opt) {
         let textoConsequencia = entrevistaAtual.acao(opt);
         
-        // --- INTERCEÇÃO DA ASSESSORIA DE IMPRENSA PR Realista ---
         if (p.hasPR && (p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("furiosa") || textoConsequencia.includes("cancelamento"))) {
             p.emocao = "Focado 🧘";
             textoConsequencia += "<br><br>📢 <b>PR INTERVENÇÃO:</b> Sua Assessoria de Imprensa agiu com notas oficiais rápidas na TV, limpou seu nome com os patrocinadores e restaurou seu humor para <b>Focado 🧘</b>!";
@@ -800,9 +817,8 @@
         let list = document.getElementById('offer-list'); list.innerHTML = "";
         
         let pool = [];
-        // --- LEI DO MERCADO CRUEL PARA VETERANOS ---
         if (p.age >= 33 && p.totals.bdor === 0) {
-            pool = Math.random() > 0.4 ? tierPrata : tierBronze; // Pushed to MLS/Arabia/Brasil
+            pool = Math.random() > 0.4 ? tierPrata : tierBronze; 
         } else {
             if (p.ovr >= 85 || p.hasAgent) { pool = eliteClubs; } 
             else if (p.ovr >= 76) { pool = tierPrata; } 
@@ -811,4 +827,12 @@
         
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
-            let val = (p.ovr > 85) ? Math
+            let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
+            if (p.age >= 33) val = Math.floor(val * 0.4);
+            
+            let salTxt = "€35k/semana";
+            if(eliteClubs.includes(c)) salTxt = "€180k/semana";
+            if(tierBronze.includes(c)) salTxt = "€5k/semana";
+            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">💰 Salário Comercial: ${salTxt}</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val})">🤝 Aceitar Proposta €${val}M</div></div>`;
+        }
+    }
