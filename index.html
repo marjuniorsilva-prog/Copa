@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Carreira no Futebol - Edição Pro RPG (V-MAX Corrigida)</title>
-    <!-- SDKs do Firebase -->
+    <title>Minha Carreira no Futebol - V-MAX Definitiva</title>
+    <!-- SDKs do Firebase (Opcional) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght=500;700&family=Roboto:wght=400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
         body { background-color: #111; display: flex; justify-content: center; padding: 10px; color: #333;}
@@ -41,7 +41,6 @@
         .club-box-cell { background: white; height: 100%; display: flex; align-items: center; padding: 0 4px; position: relative; overflow: hidden;}
         .club-info { display: flex; flex-direction: column; justify-content: center; line-height: 1.1; margin-left: 4px; width: 100%;}
         .c-name { font-size: 9px; font-weight: 900; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85px;}
-        .c-country { font-size: 7px; color: #666; font-weight: 700; text-transform: uppercase;}
         .transfer-fee { background: #fbcfe8; color: #831843; font-size: 9px; position: absolute; right: 0; top: 0; bottom: 0; padding: 0 3px; display: flex; align-items: center; font-weight: 900; border-left: 1px solid #ccc;}
         .stats-cell-item { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: #1e293b; background: #f1f5f9; height: 100%; }
         .stats-cell-item.goals-col { color: #15803d; background: #e2f5e9; } .stats-cell-item.assists-col { color: #2563eb; background: #e0f2fe; }
@@ -49,9 +48,10 @@
         /* SEÇÕES & GRIDS */
         .office-section { background: white; margin: 2px 10px; border-radius: 6px; padding: 6px; border: 1px solid #ccc; font-size: 11px;}
         .office-title { background: #475569; color: white; font-size: 11px; font-weight: 900; text-align: center; padding: 3px; font-family: 'Oswald', sans-serif; border-radius: 4px; margin-bottom: 4px;}
-        .office-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
-        .office-btn { background: #e2e8f0; border: 1px solid #cbd5e1; padding: 4px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 9px; text-align: center; line-height: 1.2;}
-        .pr-btn { background: #2563eb; color: white; border: none; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; text-align: center; width: 100%; margin-top: 4px;}
+        .office-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+        .office-btn { background: #e2e8f0; border: 1px solid #cbd5e1; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; text-align: center; line-height: 1.3;}
+        .office-btn:hover { background: #cbd5e1; }
+        
         .bottom-section { background: white; margin: 5px 10px; text-align: center; border-radius: 6px; padding-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #ccc;}
         .bottom-title { background: #5b2268; color: white; font-size: 13px; font-weight: 900; padding: 4px; font-family: 'Oswald', sans-serif; border-radius: 4px 4px 0 0; letter-spacing: 1px;}
         .trophy-grid { display: flex; justify-content: space-around; padding-top: 10px; font-size: 22px; font-weight: 900; align-items: center;}
@@ -142,7 +142,7 @@
     <div class="main-body">
         <div class="timeline-header">
             <div>IDADE</div>
-            <div style="text-align: left; padding-left: 10px;">CLUBE / CONTRATO ATUAL</div>
+            <div style="text-align: left; padding-left: 10px;">CLUBE (CICLO DE 3 ANOS)</div>
             <div>🏆 N/I</div>
             <div>⚽ GOL</div>
             <div>👟 ASS</div>
@@ -173,7 +173,7 @@
                 <div class="rival-name" id="riv-name">NOME RIVAL</div>
                 <div class="rival-stats">
                     <div>⭐ OVR: <span id="riv-ovr">0</span></div>
-                    <div>⚽ Gols: <span id="riv-gol">0</span></div>
+                    <div>⚽ Gols (3 Anos): <span id="riv-gol">0</span></div>
                     <div>✨ B.Ouro: <span id="riv-bdor">0</span></div>
                 </div>
             </div>
@@ -182,14 +182,15 @@
         </div>
     </div>
 
+    <!-- NOVO ESCRITÓRIO COMERCIAL (NÍVEIS DE 0 a 5) -->
     <div class="office-section" id="office-panel">
-        <div class="office-title">ESCRITÓRIO COMERCIAL & CONTRATAÇÕES STAFF</div>
+        <div class="office-title">ESCRITÓRIO & STAFF (NÍVEIS 0 A 5)</div>
         <div class="office-grid">
-            <div class="office-btn" id="staff-trainer" onclick="contratarStaff('trainer')">🏋️ Prep. Físico<br>(€500k)</div>
-            <div class="office-btn" id="staff-agent" onclick="contratarStaff('agent')">💼 Empresário<br>(€1M)</div>
-            <div class="office-btn" id="staff-psycho" onclick="contratarPsicologo()">🧠 Psicólogo<br>(€200k/Sessão)</div>
+            <div class="office-btn" onclick="uparStaff('trainer')">🏋️ Prep. Físico (Nív.<span id="lvl-trainer">0</span>)<br><span id="cst-trainer" style="color:#15803d">€500k</span></div>
+            <div class="office-btn" onclick="uparStaff('agent')">💼 Empresário (Nív.<span id="lvl-agent">0</span>)<br><span id="cst-agent" style="color:#15803d">€1.0M</span></div>
+            <div class="office-btn" onclick="uparStaff('psycho')">🧠 Psicólogo (Nív.<span id="lvl-psycho">0</span>)<br><span id="cst-psycho" style="color:#15803d">€250k</span></div>
+            <div class="office-btn" onclick="uparStaff('pr')">📢 Assessoria (Nív.<span id="lvl-pr">0</span>)<br><span id="cst-pr" style="color:#15803d">€250k</span></div>
         </div>
-        <button class="pr-btn" id="btn-pr" onclick="uparPR()">📢 Assessoria PR Nível 0 (0%) - Melhorar (€250k)</button>
     </div>
 
     <div class="market-panel" id="market-panel">
@@ -308,50 +309,47 @@
 </div>
 
 <script>
-    // INTEGRAÇÃO FIREBASE (Opcional)
-    const firebaseConfig = {};
-    let db = null;
-    try {
-        if (Object.keys(firebaseConfig).length > 0 && !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-        }
-    } catch(e) {}
-
     // DADOS DO JOGO
     const countryMap = { "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇪🇸": "ESPANHA", "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL" };
     const tierBronze = ["Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Talleres 🇦🇷", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Getafe 🇪🇸", "Monza 🇮🇹", "Augsburg 🇩🇪", "Al-Ettifaq 🇸🇦"];
     const tierPrata = ["Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "River Plate 🇦🇷", "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Bayer Leverkusen 🇩🇪", "Benfica 🇵🇹", "Al-Ahli 🇸🇦"];
     const eliteClubs = ["Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bayern 🇩🇪", "Inter de Milão 🇮🇹", "Milan 🇮🇹", "PSG 🇫🇷", "Al-Hilal 🇸🇦"];
 
-    const houseUpgrades = [ { name: "Casa dos Pais", price: 0, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80' }, { name: "Apto Centro", price: 1000000, img: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=400&q=80' }, { name: "Condomínio", price: 5000000, img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80' }, { name: "Mansão", price: 20000000, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80' } ];
-    const carUpgrades = [ { name: "Bicicleta", price: 0, img: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=80' }, { name: "Sedan", price: 150000, img: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=400&q=80' }, { name: "Esportivo", price: 600000, img: 'https://images.unsplash.com/photo-1605515298946-d062f2e9da53?w=400&q=80' }, { name: "Supercarro", price: 3000000, img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80' } ];
+    const houseUpgrades = [ { name: "Casa dos Pais", price: 0 }, { name: "Apto Centro", price: 1000000 }, { name: "Condomínio", price: 5000000 }, { name: "Mansão", price: 20000000 } ];
+    const carUpgrades = [ { name: "Bicicleta", price: 0 }, { name: "Sedan", price: 150000 }, { name: "Esportivo", price: 600000 }, { name: "Supercarro", price: 3000000 } ];
+
+    // Níveis de Staff: Preços do nível 1 ao 5
+    const custoSff = {
+        trainer: [0, 500000, 1500000, 3000000, 5000000, 10000000], // Ajuda na Energia
+        agent:   [0, 1000000, 2500000, 5000000, 8000000, 15000000], // Ajuda nos Salários
+        psycho:  [0, 250000,  750000,  1500000, 3000000, 5000000],  // Ajuda na Moral
+        pr:      [0, 250000,  1000000, 3000000, 5000000, 10000000]  // Ajuda na Fama / Protege Crises
+    };
+    const prChances = [0, 20, 40, 60, 80, 100]; // Porcentagem da Assessoria PR
 
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
         energia: 100, playMode: 'max', sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
-        hasTrainer: false, hasAgent: false, prLevel: 0, relacao: "Solteiro", investido: 0, salario: 3000,
-        emocao: "Focado 🧘", jejumAnos: 0, fama: 10000, houseTier: 0, carTier: 0,
+        staff: { trainer: 0, agent: 0, psycho: 0, pr: 0 }, // AGORA VAI DO 0 AO 5
+        relacao: "Solteiro", investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
     let rival = { nome: "O Prodígio", ovr: 72, gols: 0, bdor: 0, ativo: false };
-    const prCosts = [250000, 1000000, 3000000, 5000000, 10000000]; const prChances = [0, 20, 40, 60, 80, 100];
     const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
     let currentStep = 0; let entrevistaAtual = null; let dramasDisponiveis = []; 
 
     let records = { ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" } };
     try { let r = localStorage.getItem('mfc_records_vmax'); if(r) records = JSON.parse(r); } catch(e) {}
 
-    // BANCO DE EVENTOS EXPANDIDO
+    // BANCO DE EVENTOS
     const bancoDramasOriginal = [
-        { texto: "🍷 FARRA NOTURNA: Véspera de um jogo e os 'parças' chamam pra balada VIP.", A: "Ir até o amanhecer.", B: "Dormir cedo e focar.", C: "Ir, mas beber só água.", acao: (opt) => { if(opt==='A'){ p.emocao="Ressaca 🥴"; p.energia-=30; p.fama+=100000; return "Ficou de ressaca! Perdeu energia e atributos temporários, mas ganhou seguidores."; } if(opt==='B'){ p.ovr+=1; p.energia=100; return "Profissionalismo! Foco total, energia máxima e ganhou OVR."; } return "Fez média sem muito desgaste físico."; } },
+        { texto: "🍷 FARRA NOTURNA: Véspera de um jogo e os 'parças' chamam pra balada VIP.", A: "Ir até o amanhecer.", B: "Dormir cedo e focar.", C: "Ir, mas beber só água.", acao: (opt) => { if(opt==='A'){ p.emocao="Ressaca 🥴"; p.energia-=30; p.fama+=100000; return "Ficou de ressaca! Perdeu energia, mas ganhou seguidores."; } if(opt==='B'){ p.ovr+=1; p.energia=100; return "Profissionalismo! Foco total, energia máxima e ganhou OVR."; } return "Fez média sem muito desgaste físico."; } },
         { texto: "🚑 LESÃO GRAVE: Médico recomenda cirurgia (meses fora), curandeiro cobra €100k por milagre.", A: "Cirurgia segura.", B: "Pagar curandeiro (€100k).", C: "Jogar com dor no sacrifício.", acao: (opt) => { if(opt==='A'){ p.pac-=2; return "Perdeu ritmo (-2), mas o joelho está seguro para o futuro."; } if(opt==='B'){ if(p.banco < 100000) return "Você não tem dinheiro! Foi obrigado a operar."; if(Math.random()>0.5){ p.ovr+=2; p.banco-=100000; return "Milagre! A acupuntura curou rápido (+2 OVR)."; } else { p.ovr-=3; p.banco-=100000; return "Piorou a lesão! Caiu seu nível de jogo."; } } p.ovr-=4; p.energia-=40; p.emocao="Triste 😢"; return "Estourou o joelho de vez! Queda brusca de atributos."; } },
         { texto: "💰 MÁFIA DE APOSTAS: Oferecem €1.5M para você forçar um cartão vermelho no 1º tempo.", A: "Aceitar a grana e dar voadora.", B: "Recusar e denunciar à TV.", C: "Recusar em silêncio.", acao: (opt) => { if(opt==='A'){ p.banco+=1500000; p.fama-=2000000; p.emocao="Triste 😢"; return "Você pegou a grana, mas o tribunal desconfiou. A torcida te odeia e a culpa te consome."; } if(opt==='B'){ p.fama+=1500000; p.emocao="Alegre 😁"; return "HERÓI DA INTEGRIDADE! Ganhou fama mundial pela denúncia."; } return "Manteve-se limpo e seguro."; } },
         { texto: "👟 PATROCÍNIO TÓXICO: Marca paga €2M, mas a chuteira machuca seu pé.", A: "Assinar pelo dinheiro.", B: "Recusar o acordo.", C: "Usar escondido sua chuteira velha pintada.", acao: (opt) => { if(opt==='A'){ p.banco+=2000000; p.pac-=3; p.ovr-=1; return "Ficou rico, mas as bolhas no pé te deixaram mais lento (-3 Ritmo)."; } if(opt==='B'){ p.ovr+=1; p.emocao="Focado 🧘"; return "Foco na carreira! Manteve a agilidade."; } p.banco+=500000; p.fama-=500000; return "A marca descobriu a fraude. Escândalo! Perdeu parte do dinheiro e fãs."; } },
         { texto: "📉 QUEBRA DA BOLSA: Seu fundo derreteu com a 'Moeda Cachorrinho'.", A: "Vender tudo com prejuízo.", B: "Apostar o dobro.", C: "Processar o corretor.", acao: (opt) => { if(opt==='A'){ p.investido = Math.floor(p.investido * 0.5); return "Assumiu o prejuízo. O fundo caiu pela metade."; } if(opt==='B'){ if(Math.random()>0.7){ p.investido *= 2.5; return "LOUCURA! A moeda valorizou do nada. Seu fundo multiplicou!"; } else { p.investido = 0; p.emocao="Ressaca 🥴"; return "FALÊNCIA! A moeda zerou. Você perdeu todo o fundo."; } } p.investido = Math.floor(p.investido * 0.7); p.fama+=200000; return "Recuperou parte na justiça e ganhou visibilidade na mídia."; } },
-        { texto: "🚜 OPORTUNIDADE DE NEGÓCIO: Empresários convidam para ser sócio na fabricação do Dedo Triplo do Molinete. Custa €1M.", A: "Investir na fábrica e feiras agro (€1M).", B: "Recusar, seu foco é só futebol.", C: "Fazer só propaganda nas redes.", acao: (opt) => { if(opt==='A'){ if(p.banco >= 1000000){ p.banco-=1000000; p.investido+=1500000; p.fama+=500000; return "Sucesso no Agro! A fábrica decolou e a peça vendeu muito. Seu fundo aumentou absurdamente."; } return "Você não tinha 1 Milhão para investir."; } if(opt==='B'){ p.ovr+=1; return "Manteve a cabeça no campo (+1 OVR)."; } p.fama+=50000; return "Ajudou os amigos com divulgação. Tudo tranquilo."; } },
         { texto: "🤬 CRISE DE VESTIÁRIO: O técnico te barrou injustamente para colocar o 'queridinho' dele.", A: "Reclamar na imprensa.", B: "Abaixar a cabeça e treinar mais.", C: "Exigir rescisão de contrato.", acao: (opt) => { if(opt==='A'){ p.emocao="Triste 😢"; p.teamChemistry=0; return "O grupo rachou. O clima está horrível e seu entrosamento zerou."; } if(opt==='B'){ p.ovr+=2; p.energia=100; p.emocao="Focado 🧘"; return "Resiliência! Você calou a boca dele nos treinos e voltou destruindo (+2 OVR)."; } if(opt==='C'){ p.club = "Sem Clube"; p.salario=0; return "A diretoria apoiou o técnico. Você rescindiu contrato e está desempregado!"; } } }
     ];
 
@@ -380,7 +378,7 @@
 
     function selecionarArq(tipo) {
         p.archetype = tipo; document.getElementById('modal-arq').style.display = 'none';
-        initGrid(); document.getElementById('btn-main').innerText = "AVANÇAR CARREIRA";
+        initGrid(); document.getElementById('btn-main').innerText = "AVANÇAR 3 ANOS DA CARREIRA";
     }
 
     function initPlayer() {
@@ -405,6 +403,7 @@
     function initGrid() {
         p.age = 15; p.banco = 0; p.energia = 100; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
         p.perks = { capitao: false, motorzinho: false, marketing: false };
+        p.staff = { trainer: 0, agent: 0, psycho: 0, pr: 0 };
         currentStep = 0; initPlayer(); inicializarDramas();
         const container = document.getElementById('timeline-rows'); container.innerHTML = '';
         ages.forEach((a, index) => {
@@ -438,25 +437,34 @@
         document.getElementById('hdr-fama').innerText = formatFama(p.fama);
         document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
         
-        document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
-        document.getElementById('tot-gol').innerText = p.totals.gol; document.getElementById('tot-ass').innerText = p.totals.ass;
-        document.getElementById('tot-yc').innerText = p.totals.yc;   document.getElementById('tot-rc').innerText = p.totals.rc;
-        document.getElementById('maj-cont').innerText = p.totals.cont; document.getElementById('maj-wc').innerText = p.totals.wc; document.getElementById('maj-bdor').innerText = p.totals.bdor;
+        // CONTADORES SUPERIORES
+        document.getElementById('tot-app').innerText = p.totals.app;
+        document.getElementById('tot-dom').innerText = p.totals.dom; 
+        document.getElementById('tot-int').innerText = p.totals.int;
+        document.getElementById('tot-gol').innerText = p.totals.gol; 
+        document.getElementById('tot-ass').innerText = p.totals.ass;
+        document.getElementById('tot-yc').innerText = p.totals.yc;   
+        document.getElementById('tot-rc').innerText = p.totals.rc;
         
-        document.getElementById('staff-trainer').style.background = p.hasTrainer ? "#b91c1c" : "#e2e8f0";
-        document.getElementById('staff-trainer').style.color = p.hasTrainer ? "white" : "black";
-        document.getElementById('staff-agent').style.background = p.hasAgent ? "#b91c1c" : "#e2e8f0";
-        document.getElementById('staff-agent').style.color = p.hasAgent ? "white" : "black";
+        document.getElementById('maj-cont').innerText = p.totals.cont; 
+        document.getElementById('maj-wc').innerText = p.totals.wc; 
+        document.getElementById('maj-bdor').innerText = p.totals.bdor;
         
-        let prBtn = document.getElementById('btn-pr');
-        if(p.prLevel < 5) {
-            prBtn.innerText = `📢 Assessoria PR Nível ${p.prLevel} (Proteção: ${prChances[p.prLevel]}%) - Melhorar (${formatMoeda(prCosts[p.prLevel])})`;
-        } else {
-            prBtn.innerText = `📢 Assessoria PR MÁXIMA (Proteção: 100%)`;
-            prBtn.style.background = "#15803d";
-            prBtn.style.color = "white";
-        }
+        // ATUALIZA PAINEL DE STAFF (Níveis 1 a 5)
+        ['trainer', 'agent', 'psycho', 'pr'].forEach(tipo => {
+            document.getElementById(`lvl-${tipo}`).innerText = p.staff[tipo];
+            let nextLvl = p.staff[tipo] + 1;
+            let cstSpan = document.getElementById(`cst-${tipo}`);
+            if(nextLvl <= 5) {
+                cstSpan.innerText = formatMoeda(custoSff[tipo][nextLvl]);
+                cstSpan.style.color = "#15803d";
+            } else {
+                cstSpan.innerText = "MÁXIMO";
+                cstSpan.style.color = "#b91c1c";
+            }
+        });
 
+        // PERKS & PATRIMÔNIO
         let btnCap = document.getElementById('btn-perk-cap'); if(p.perks.capitao && btnCap) btnCap.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
         let btnMot = document.getElementById('btn-perk-mot'); if(p.perks.motorzinho && btnMot) btnMot.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
         let btnMkt = document.getElementById('btn-perk-mkt'); if(p.perks.marketing && btnMkt) btnMkt.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
@@ -469,8 +477,23 @@
         if(p.carTier < 3) document.getElementById('btn-buy-car').innerText = "Melhorar (" + formatMoeda(carUpgrades[p.carTier+1].price) + ")";
         else document.getElementById('btn-buy-car').innerText = "Máximo";
 
-        document.getElementById('text-social').innerText = p.relacao;
         document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
+    }
+
+    // FUNÇÃO UNIFICADA DE EVOLUIR STAFF
+    function uparStaff(tipo) {
+        let nextLvl = p.staff[tipo] + 1;
+        if (nextLvl > 5) { alert("Nível máximo já atingido para este profissional!"); return; }
+        
+        let custo = custoSff[tipo][nextLvl];
+        if (p.banco >= custo) {
+            p.banco -= custo;
+            p.staff[tipo] = nextLvl;
+            atualizarUI();
+            exibirMensagemTopo("✅ Staff evoluído com sucesso!");
+        } else {
+            alert("Dinheiro insuficiente para melhorar este setor do seu staff!");
+        }
     }
 
     function comprarPerk(tipo) {
@@ -488,7 +511,6 @@
     function mostrarTabRank(tab) {
         document.getElementById('rank-local-content').style.display = tab === 'local' ? 'block' : 'none';
         document.getElementById('rank-global-content').style.display = tab === 'global' ? 'block' : 'none';
-        if(tab === 'global' && db) carregarRankingGlobal();
     }
 
     function investirFundo(valor) { if(p.banco >= valor) { p.banco -= valor; p.investido += valor; atualizarUI(); } }
@@ -498,20 +520,12 @@
         atualizarUI();
     }
 
-    function contratarStaff(tipo) {
-        if(tipo === 'trainer' && !p.hasTrainer && p.banco >= 500000) { p.banco -= 500000; p.hasTrainer = true; }
-        if(tipo === 'agent' && !p.hasAgent && p.banco >= 1000000) { p.banco -= 1000000; p.hasAgent = true; }
-        atualizarUI();
-    }
-    function contratarPsicologo() { if(p.banco >= 200000) { p.banco -= 200000; p.emocao = "Focado 🧘"; p.energia = Math.min(100, p.energia + 20); atualizarUI(); } }
-    function uparPR() { if (p.prLevel < 5 && p.banco >= prCosts[p.prLevel]) { p.banco -= prCosts[p.prLevel]; p.prLevel++; atualizarUI(); } }
-
     function formatarClubeHTML(clubeStr, feeTag) {
         if(clubeStr === "Sem Clube" || clubeStr === "Aposentadoria") return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">❌</span><div class="club-info"><span class="c-name" style="color:red;">${clubeStr}</span></div></div>`;
         let partes = clubeStr.trim().split(" "); let flag = partes.pop(); let nomeClube = partes.join(" ");
         return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">${flag}</span><div class="club-info"><span class="c-name">${nomeClube}</span></div>${feeTag}</div>`;
     }
-    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 6000); }
+    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 5000); }
 
     function avancarCarreira() {
         if (p.age >= 39) { finalizarCarreira(); return; }
@@ -524,73 +538,88 @@
 
         if (p.club !== "Sem Clube" && p.ovr < leagueDifficulty - 10 && p.age > 21) {
             p.club = "Sem Clube"; p.salario = 0; p.teamChemistry = 0;
-            exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado. O clube rescindiu seu contrato.");
+            exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado nos últimos anos.");
         }
 
+        // SISTEMA DE VIGOR MELHORADO PELO PREPARADOR E PSICÓLOGO
+        let recuperacaoBase = 35;
+        let bonusTrainer = (p.staff.trainer * 12); // Nível 5 = +60 Energia
+        let bonusPsycho = (p.staff.psycho * 5); // Nível 5 = +25 Energia Mental
+
         if(p.playMode === 'max') {
-            p.energia -= Math.floor(Math.random() * 25) + 35;
+            let desgaste = Math.floor(Math.random() * 25) + 60; // Desgaste pesado
+            p.energia = p.energia - desgaste + bonusTrainer + bonusPsycho;
+            
             if(p.energia <= 10 && p.age >= 30 && Math.random() > 0.8) {
                 exibirMensagemTopo("🚑 LESÃO CATASTRÓFICA! Seu corpo não aguentou o ritmo insano. Sua carreira no campo acabou hoje.");
                 p.ovr -= 30; p.pac -= 40; p.phy -= 40; p.age = 39; finalizarCarreira(); return;
             } else if(p.energia <= 20) {
-                p.energia = 10; p.ovr -= 4; exibirMensagemTopo("🚑 EXAUSTÃO EXTREMA! Seu corpo estourou e você perdeu atributos vitais.");
+                p.energia = 10; p.ovr -= 4; exibirMensagemTopo("🚑 EXAUSTÃO EXTREMA! Seu corpo estourou e perdeu atributos.");
             }
         } else {
-            p.energia = Math.min(100, p.energia + 45);
+            p.energia = Math.min(100, p.energia + recuperacaoBase + bonusTrainer + bonusPsycho);
             if(p.club !== "Sem Clube") p.teamChemistry -= 10; 
         }
 
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
         
         let multiplierMkt = p.perks.marketing ? 1.5 : 1;
+        // Salário multiplicado por 150 (aprox. 3 anos de salários semanais pagos)
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
-        if(p.ovr >= 84) p.isConvocado = true;
-
+        
         if (p.age <= 24) { let g = Math.floor(Math.random() * 3) + 2; p.ovr += g; p.sho += g; p.dri += g; p.pas += g; } 
         else if (p.age >= 30) {
             let quedaPac = p.perks.motorzinho ? 1 : (p.archetype === 'ponta' ? 3 : 5); 
             p.pac -= quedaPac; p.phy -= 2; 
         }
 
-        let apps = (p.playMode === 'max' ? 80 : 45); 
-        if(p.club === "Sem Clube") apps = 0;
+        // ==========================================
+        // GERAÇÃO DE 3 ANOS DE JOGOS, GOLS E ASSIST.
+        // ==========================================
+        let apps3y = (p.playMode === 'max' ? 160 : 110); // Partidas ao longo de 3 anos
+        if(p.club === "Sem Clube") apps3y = 0;
 
         let performanceDelta = (p.ovr - leagueDifficulty) / 100;
         let golBase = Math.max(0.05, 0.20 + performanceDelta); 
-        let gol = Math.floor(apps * golBase * (Math.random() * 0.5 + 0.5));
+        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.4 + 0.8));
         
         let assBase = Math.max(0.05, 0.15 + performanceDelta);
-        let ass = Math.floor(apps * assBase * (Math.random() * 0.5 + 0.5));
+        let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.4 + 0.8));
 
-        if(p.archetype === 'matador') gol = Math.floor(gol * 1.25);
-        if(p.archetype === 'armador') ass = Math.floor(ass * 1.3);
-        if(p.club === "Sem Clube") { gol = 0; ass = 0; }
+        if(p.archetype === 'matador') gol3y = Math.floor(gol3y * 1.3);
+        if(p.archetype === 'armador') ass3y = Math.floor(ass3y * 1.3);
+        if(p.club === "Sem Clube") { gol3y = 0; ass3y = 0; }
 
-        p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
+        p.totals.app += apps3y; p.totals.gol += gol3y; p.totals.ass += ass3y;
         
-        let tDom = 0, tInt = 0;
+        let tDom3y = 0, tInt3y = 0;
         if(p.club !== "Sem Clube") {
-            tDom = p.ovr > leagueDifficulty && Math.random() > 0.5 ? 1 : 0;
-            tInt = eliteClubs.includes(p.club) && p.ovr >= 88 && Math.random() > 0.6 ? 1 : 0;
-            p.totals.dom += tDom; p.totals.int += tInt;
+            for(let i=0; i<3; i++) {
+                if(p.ovr > leagueDifficulty - 5 && Math.random() > 0.5) tDom3y++;
+                if(eliteClubs.includes(p.club) && p.ovr >= 85 && Math.random() > 0.6) tInt3y++;
+                else if(tierPrata.includes(p.club) && p.ovr >= 80 && Math.random() > 0.8) tInt3y++;
+            }
+            p.totals.dom += tDom3y; p.totals.int += tInt3y;
         }
         
-        p.fama += ((gol * 15000) + (tInt * 300000)) * multiplierMkt;
+        // Bônus do Nível de Assessoria PR para ganhar Fama
+        let fameBonusPR = 1 + (p.staff.pr * 0.15);
+        p.fama += ((gol3y * 5000) + (tInt3y * 150000)) * multiplierMkt * fameBonusPR;
         
         rival.ovr += p.age < 27 ? 3 : (p.age > 33 ? -2 : 1);
-        rival.gols = Math.floor((rival.ovr * 0.5) + (Math.random() * 30));
+        rival.gols = Math.floor((rival.ovr * 0.4) * 3 + (Math.random() * 40)); // Gols do rival em 3 anos
         
         let ganhouBdor = false; let rivalGanhouBdor = false;
-        if (p.club !== "Sem Clube" && (gol + ass) >= 60 && p.ovr >= 89 && tInt > 0 && gol > rival.gols) { 
+        if (p.club !== "Sem Clube" && (gol3y + ass3y) >= 120 && p.ovr >= 89 && tInt3y > 0 && gol3y > rival.gols) { 
             p.totals.bdor += 1; ganhouBdor = true; p.sp += 1; p.fama += 5000000;
-        } else if (rival.ovr > 88 && rival.gols > gol && Math.random() > 0.5) {
+        } else if (rival.ovr > 88 && rival.gols > gol3y && Math.random() > 0.5) {
             rival.bdor += 1; rivalGanhouBdor = true;
         }
 
         document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(p.club, "");
-        document.getElementById(`stats-titles-${currentStep}`).innerText = `${tDom}/${tInt}`;
-        document.getElementById(`stats-goals-${currentStep}`).innerText = gol;
-        document.getElementById(`stats-assists-${currentStep}`).innerText = ass;
+        document.getElementById(`stats-titles-${currentStep}`).innerText = `${tDom3y}/${tInt3y}`;
+        document.getElementById(`stats-goals-${currentStep}`).innerText = gol3y;
+        document.getElementById(`stats-assists-${currentStep}`).innerText = ass3y;
         atualizarUI();
         
         document.getElementById('riv-name').innerText = rival.nome;
@@ -598,8 +627,8 @@
         document.getElementById('riv-gol').innerText = rival.gols;
         document.getElementById('riv-bdor').innerText = rival.bdor;
         
-        let txt = "O duelo continua...";
-        if(ganhouBdor) txt = "✨ VOCÊ HUMILHOU SEU RIVAL E LEVOU A BOLA DE OURO!";
+        let txt = "O duelo continua nestes últimos 3 anos...";
+        if(ganhouBdor) txt = "✨ VOCÊ HUMILHOU SEU RIVAL E LEVOU A BOLA DE OURO DESTE CICLO!";
         else if (rivalGanhouBdor) { txt = "🤬 SEU RIVAL VENCEU A BOLA DE OURO! A mídia só fala dele."; p.emocao = "Triste 😢"; }
         document.getElementById('riv-text').innerText = txt;
         document.getElementById('rival-section').style.display = 'flex';
@@ -634,13 +663,13 @@
         let textoConsequencia = entrevistaAtual.acao(opt);
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("FALÊNCIA");
 
-        if (precisaPR && p.prLevel > 0) {
-            let chanceAbafar = prChances[p.prLevel];
+        if (precisaPR && p.staff.pr > 0) {
+            let chanceAbafar = prChances[p.staff.pr]; // Usa o nível da Assessoria
             if (Math.random() * 100 <= chanceAbafar) {
                 p.emocao = "Focado 🧘";
-                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua equipe jurídica agiu e abafou a crise para sua mente!</span>`;
+                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.staff.pr}:</b> Sua assessoria abafou a crise!</span>`;
             } else {
-                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi forte demais.</span>`;
+                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise vazou.</span>`;
             }
         }
         
@@ -662,7 +691,7 @@
         
         let pool = [];
         if(p.club === "Sem Clube" || p.ovr < 72) pool = tierBronze;
-        else if (p.ovr >= 88 || (p.ovr >= 84 && p.hasAgent)) pool = eliteClubs;
+        else if (p.ovr >= 88 || (p.ovr >= 84 && p.staff.agent >= 3)) pool = eliteClubs; // Empresário Nível 3+ ajuda muito
         else pool = tierPrata;
 
         for(let i=0; i<2; i++) {
@@ -674,6 +703,10 @@
             if(eliteClubs.includes(c)) salBase = Math.floor(p.ovr * 1.5) + (p.fama > 5000000 ? 50 : 0);
             if(c.includes("🇸🇦") && p.ovr > 80) salBase *= 3; 
             if(salBase < 3) salBase = 3;
+            
+            // Bônus de negociação do Empresário
+            let bonusAgent = 1 + (p.staff.agent * 0.10); // Até 50% de salário a mais
+            salBase = Math.floor(salBase * bonusAgent);
 
             list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">Sálário: €${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar (€${val}M)</div></div>`;
         }
