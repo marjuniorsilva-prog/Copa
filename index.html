@@ -182,7 +182,7 @@
         </div>
     </div>
 
-    <!-- NOVO ESCRITÓRIO COMERCIAL (NÍVEIS DE 0 a 5) -->
+    <!-- ESCRITÓRIO COMERCIAL (NÍVEIS DE 0 a 5) -->
     <div class="office-section" id="office-panel">
         <div class="office-title">ESCRITÓRIO & STAFF (NÍVEIS 0 A 5)</div>
         <div class="office-grid">
@@ -320,18 +320,18 @@
 
     // Níveis de Staff: Preços do nível 1 ao 5
     const custoSff = {
-        trainer: [0, 500000, 1500000, 3000000, 5000000, 10000000], // Ajuda na Energia
-        agent:   [0, 1000000, 2500000, 5000000, 8000000, 15000000], // Ajuda nos Salários
-        psycho:  [0, 250000,  750000,  1500000, 3000000, 5000000],  // Ajuda na Moral
-        pr:      [0, 250000,  1000000, 3000000, 5000000, 10000000]  // Ajuda na Fama / Protege Crises
+        trainer: [0, 500000, 1500000, 3000000, 5000000, 10000000],
+        agent:   [0, 1000000, 2500000, 5000000, 8000000, 15000000],
+        psycho:  [0, 250000,  750000,  1500000, 3000000, 5000000],
+        pr:      [0, 250000,  1000000, 3000000, 5000000, 10000000]
     };
-    const prChances = [0, 20, 40, 60, 80, 100]; // Porcentagem da Assessoria PR
+    const prChances = [0, 20, 40, 60, 80, 100]; 
 
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
         energia: 100, playMode: 'max', sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
-        staff: { trainer: 0, agent: 0, psycho: 0, pr: 0 }, // AGORA VAI DO 0 AO 5
+        staff: { trainer: 0, agent: 0, psycho: 0, pr: 0 }, 
         relacao: "Solteiro", investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
@@ -437,7 +437,6 @@
         document.getElementById('hdr-fama').innerText = formatFama(p.fama);
         document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
         
-        // CONTADORES SUPERIORES
         document.getElementById('tot-app').innerText = p.totals.app;
         document.getElementById('tot-dom').innerText = p.totals.dom; 
         document.getElementById('tot-int').innerText = p.totals.int;
@@ -450,7 +449,6 @@
         document.getElementById('maj-wc').innerText = p.totals.wc; 
         document.getElementById('maj-bdor').innerText = p.totals.bdor;
         
-        // ATUALIZA PAINEL DE STAFF (Níveis 1 a 5)
         ['trainer', 'agent', 'psycho', 'pr'].forEach(tipo => {
             document.getElementById(`lvl-${tipo}`).innerText = p.staff[tipo];
             let nextLvl = p.staff[tipo] + 1;
@@ -464,7 +462,6 @@
             }
         });
 
-        // PERKS & PATRIMÔNIO
         let btnCap = document.getElementById('btn-perk-cap'); if(p.perks.capitao && btnCap) btnCap.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
         let btnMot = document.getElementById('btn-perk-mot'); if(p.perks.motorzinho && btnMot) btnMot.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
         let btnMkt = document.getElementById('btn-perk-mkt'); if(p.perks.marketing && btnMkt) btnMkt.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
@@ -480,7 +477,6 @@
         document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
     }
 
-    // FUNÇÃO UNIFICADA DE EVOLUIR STAFF
     function uparStaff(tipo) {
         let nextLvl = p.staff[tipo] + 1;
         if (nextLvl > 5) { alert("Nível máximo já atingido para este profissional!"); return; }
@@ -541,13 +537,12 @@
             exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado nos últimos anos.");
         }
 
-        // SISTEMA DE VIGOR MELHORADO PELO PREPARADOR E PSICÓLOGO
         let recuperacaoBase = 35;
-        let bonusTrainer = (p.staff.trainer * 12); // Nível 5 = +60 Energia
-        let bonusPsycho = (p.staff.psycho * 5); // Nível 5 = +25 Energia Mental
+        let bonusTrainer = (p.staff.trainer * 12); 
+        let bonusPsycho = (p.staff.psycho * 5); 
 
         if(p.playMode === 'max') {
-            let desgaste = Math.floor(Math.random() * 25) + 60; // Desgaste pesado
+            let desgaste = Math.floor(Math.random() * 25) + 60; 
             p.energia = p.energia - desgaste + bonusTrainer + bonusPsycho;
             
             if(p.energia <= 10 && p.age >= 30 && Math.random() > 0.8) {
@@ -564,26 +559,27 @@
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
         
         let multiplierMkt = p.perks.marketing ? 1.5 : 1;
-        // Salário multiplicado por 150 (aprox. 3 anos de salários semanais pagos)
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
         
-        if (p.age <= 24) { let g = Math.floor(Math.random() * 3) + 2; p.ovr += g; p.sho += g; p.dri += g; p.pas += g; } 
+        // CÓDIGO CORRIGIDO 1: EVOLUÇÃO ATÉ OS 27 ANOS COM BUFF GIGANTE
+        if (p.age <= 27) { 
+            let g = Math.floor(Math.random() * 6) + 4; // Evolui 4 a 9 pontos por ciclo
+            p.sho += g; p.dri += g; p.pas += g; p.pac += (g-1); p.phy += (g-1); 
+        } 
         else if (p.age >= 30) {
             let quedaPac = p.perks.motorzinho ? 1 : (p.archetype === 'ponta' ? 3 : 5); 
             p.pac -= quedaPac; p.phy -= 2; 
         }
 
-        // ==========================================
-        // GERAÇÃO DE 3 ANOS DE JOGOS, GOLS E ASSIST.
-        // ==========================================
-        let apps3y = (p.playMode === 'max' ? 160 : 110); // Partidas ao longo de 3 anos
+        // CÓDIGO CORRIGIDO 2: GOLS E ASSISTÊNCIAS REAIS DE 3 ANOS
+        let apps3y = (p.playMode === 'max' ? 150 : 100); 
         if(p.club === "Sem Clube") apps3y = 0;
 
-        let performanceDelta = (p.ovr - leagueDifficulty) / 100;
-        let golBase = Math.max(0.05, 0.20 + performanceDelta); 
+        let performanceDelta = (p.ovr - leagueDifficulty) / 40; // Muito mais impacto do seu OVR agora
+        let golBase = Math.max(0.1, 0.35 + performanceDelta); // 0.35 * 150 = 52 base
         let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.4 + 0.8));
         
-        let assBase = Math.max(0.05, 0.15 + performanceDelta);
+        let assBase = Math.max(0.1, 0.20 + performanceDelta);
         let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.4 + 0.8));
 
         if(p.archetype === 'matador') gol3y = Math.floor(gol3y * 1.3);
@@ -592,27 +588,36 @@
 
         p.totals.app += apps3y; p.totals.gol += gol3y; p.totals.ass += ass3y;
         
-        let tDom3y = 0, tInt3y = 0;
+        // CÓDIGO CORRIGIDO 3: TÍTULOS (MUNDIAL E CLUBE)
+        let tDom3y = 0, tInt3y = 0, wcWon = 0;
         if(p.club !== "Sem Clube") {
             for(let i=0; i<3; i++) {
-                if(p.ovr > leagueDifficulty - 5 && Math.random() > 0.5) tDom3y++;
-                if(eliteClubs.includes(p.club) && p.ovr >= 85 && Math.random() > 0.6) tInt3y++;
-                else if(tierPrata.includes(p.club) && p.ovr >= 80 && Math.random() > 0.8) tInt3y++;
+                if(p.ovr + (p.teamChemistry/2) > leagueDifficulty - 5 && Math.random() > 0.4) tDom3y++;
+                if(eliteClubs.includes(p.club) && p.ovr >= 82 && Math.random() > 0.5) tInt3y++;
+                else if(tierPrata.includes(p.club) && p.ovr >= 78 && Math.random() > 0.7) tInt3y++; // Clubes Prata ganham título Continental
             }
             p.totals.dom += tDom3y; p.totals.int += tInt3y;
+            p.totals.cont += tInt3y;
         }
         
-        // Bônus do Nível de Assessoria PR para ganhar Fama
+        if (p.ovr >= 80) p.isConvocado = true;
+        // Lógica de Copa do Mundo (Mundial de Seleções) - Maior chance se for Craque (+88)
+        if (p.isConvocado && p.age >= 21) {
+             let wcChance = (p.ovr > 88) ? 0.30 : (p.ovr > 80 ? 0.10 : 0.05);
+             if (Math.random() < wcChance) { wcWon = 1; p.totals.wc += 1; }
+        }
+
         let fameBonusPR = 1 + (p.staff.pr * 0.15);
         p.fama += ((gol3y * 5000) + (tInt3y * 150000)) * multiplierMkt * fameBonusPR;
         
-        rival.ovr += p.age < 27 ? 3 : (p.age > 33 ? -2 : 1);
-        rival.gols = Math.floor((rival.ovr * 0.4) * 3 + (Math.random() * 40)); // Gols do rival em 3 anos
+        rival.ovr += p.age < 27 ? 4 : (p.age > 33 ? -2 : 1);
+        rival.gols = Math.floor((rival.ovr * 0.4) * 3 + (Math.random() * 40)); 
         
+        // CÓDIGO CORRIGIDO 4: BOLA DE OURO MAIS ACESSÍVEL PARA O CRAQUE DA GERAÇÃO
         let ganhouBdor = false; let rivalGanhouBdor = false;
-        if (p.club !== "Sem Clube" && (gol3y + ass3y) >= 120 && p.ovr >= 89 && tInt3y > 0 && gol3y > rival.gols) { 
+        if (p.club !== "Sem Clube" && p.ovr >= 85 && gol3y > rival.gols && tInt3y > 0 && ((gol3y + ass3y) > 90 || (wcWon > 0 && gol3y > 60))) { 
             p.totals.bdor += 1; ganhouBdor = true; p.sp += 1; p.fama += 5000000;
-        } else if (rival.ovr > 88 && rival.gols > gol3y && Math.random() > 0.5) {
+        } else if (rival.ovr > 86 && rival.gols > gol3y && Math.random() > 0.4) {
             rival.bdor += 1; rivalGanhouBdor = true;
         }
 
@@ -664,7 +669,7 @@
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("FALÊNCIA");
 
         if (precisaPR && p.staff.pr > 0) {
-            let chanceAbafar = prChances[p.staff.pr]; // Usa o nível da Assessoria
+            let chanceAbafar = prChances[p.staff.pr]; 
             if (Math.random() * 100 <= chanceAbafar) {
                 p.emocao = "Focado 🧘";
                 textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.staff.pr}:</b> Sua assessoria abafou a crise!</span>`;
@@ -691,7 +696,7 @@
         
         let pool = [];
         if(p.club === "Sem Clube" || p.ovr < 72) pool = tierBronze;
-        else if (p.ovr >= 88 || (p.ovr >= 84 && p.staff.agent >= 3)) pool = eliteClubs; // Empresário Nível 3+ ajuda muito
+        else if (p.ovr >= 85 || (p.ovr >= 82 && p.staff.agent >= 3)) pool = eliteClubs; 
         else pool = tierPrata;
 
         for(let i=0; i<2; i++) {
@@ -704,8 +709,7 @@
             if(c.includes("🇸🇦") && p.ovr > 80) salBase *= 3; 
             if(salBase < 3) salBase = 3;
             
-            // Bônus de negociação do Empresário
-            let bonusAgent = 1 + (p.staff.agent * 0.10); // Até 50% de salário a mais
+            let bonusAgent = 1 + (p.staff.agent * 0.10); 
             salBase = Math.floor(salBase * bonusAgent);
 
             list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">Sálário: €${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar (€${val}M)</div></div>`;
