@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Carreira no Futebol - Edição Pro RPG (V-MAX)</title>
-    <!-- SDKs do Firebase (Compat Version para uso direto no HTML) -->
+    <!-- SDKs do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -62,6 +62,8 @@
         .life-photo { height: 55px; width: 100%; background-size: cover; background-position: center; position: relative;}
         .life-text { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.75); color: white; text-align: center; font-size: 10px; font-weight: 900; padding: 2px 0; text-transform: uppercase;}
         .life-btn { background: #f59e0b; border: none; padding: 4px; font-weight: 900; font-size: 9px; cursor: pointer; color: black; text-align: center; border-top: 1px solid #ccc; flex-grow: 1; display: flex; align-items: center; justify-content: center;}
+        .finance-buttons { display: flex; width: 100%; }
+        .finance-btn-half { flex: 1; font-size: 9px; font-weight: 900; border: none; padding: 4px; cursor: pointer; border-top: 1px solid #ccc; color: white;}
 
         /* ÁREA DE AÇÃO & BOTÕES */
         .action-area { padding: 5px 10px 10px 10px; text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center;}
@@ -77,10 +79,10 @@
         .choice-btn { width: 100%; background: #1e293b; color: white; border: 1px solid #475569; padding: 12px; border-radius: 6px; font-weight: normal; font-size: 12px; cursor: pointer; text-align: left; transition: 0.2s; margin-top: 8px;}
         .choice-btn:hover { background: #3b82f6; } .choice-btn b { color: #fbbf24; margin-right: 5px; font-size: 14px;}
 
-        .market-panel { background: #fff; border: 3px solid #5b2268; padding: 12px; border-radius: 8px; margin: 10px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.4); position: fixed; top: 15%; left: 5%; width: 90%; max-width: 380px; z-index: 100;}
+        .market-panel { background: #fff; border: 3px solid #5b2268; padding: 12px; border-radius: 8px; margin: 10px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.4); position: fixed; top: 10%; left: 5%; width: 90%; max-width: 380px; z-index: 100;}
         .market-title { font-size: 13px; font-weight: 900; color: white; background: #5b2268; padding: 6px; text-align: center; margin:-12px -12px 12px -12px; border-radius: 4px 4px 0 0; font-family: 'Oswald', sans-serif;}
         .offer-row { display: flex; justify-content: space-between; border: 1px solid #ccc; margin-bottom: 6px; align-items: center; border-radius: 4px; background: #f9fafb; flex-direction: column; padding: 8px 0;}
-        .offer-club { font-weight: 900; font-size: 13px; text-transform: uppercase; margin-bottom: 4px;} .offer-sal { font-size: 11px; color: #15803d; font-weight: bold; margin-bottom: 6px;} .offer-val { background: #fbcfe8; color: #831843; font-weight: 900; font-size: 13px; padding: 6px 14px; border-radius: 4px; cursor: pointer; text-align: center;}
+        .offer-club { font-weight: 900; font-size: 13px; text-transform: uppercase; margin-bottom: 2px;} .offer-sal { font-size: 11px; color: #15803d; font-weight: bold; margin-bottom: 6px;} .offer-val { background: #fbcfe8; color: #831843; font-weight: 900; font-size: 13px; padding: 6px 14px; border-radius: 4px; cursor: pointer; text-align: center;}
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
         .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 12px; padding: 15px; border: 3px solid #fbbf24; }
@@ -94,7 +96,6 @@
         .arq-card { background: #f1f5f9; border: 2px solid #cbd5e1; padding: 10px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; font-weight: bold; transition: 0.1s;}
         .arq-card:hover { border-color: #5b2268; background: #fae8ff; }
 
-        /* ESTILOS ESPECÍFICOS RIVAL & PERKS */
         .rival-box { text-align: center; background: #fee2e2; border: 2px solid #b91c1c; border-radius: 8px; padding: 10px; margin-bottom: 10px;}
         .rival-name { font-size: 18px; font-weight: 900; color: #7f1d1d; font-family: 'Oswald', sans-serif;}
         .rival-stats { display: flex; justify-content: space-around; margin-top: 10px; font-weight: bold; color: #991b1b;}
@@ -118,7 +119,7 @@
         <div style="color: #b45309; font-weight: bold;">💶 Passe: <span id="hdr-value">-</span></div>
         <div style="color: #16a34a; font-weight: 900;">💰 <span id="hdr-bank">€0</span></div>
         <div style="color: #ea580c; font-weight: bold;">🔋 Vigor: <span id="hdr-energy">100%</span></div>
-        <div style="color: #2563eb; font-weight: bold;">📣 Fama: <span id="hdr-fama">100k</span></div>
+        <div style="color: #2563eb; font-weight: bold;">📣 Fama: <span id="hdr-fama">10k</span></div>
     </div>
 
     <div class="totals-bar">
@@ -154,7 +155,7 @@
     <!-- MODAL DE ESCOLHA DE DRAMA -->
     <div class="choice-section" id="choice-section">
         <div class="choice-box">
-            <div id="choice-text" style="font-size: 13px; font-weight: 900; color: #1e3a8a; margin-bottom: 10px; line-height: 1.3;">🚨 DRAMA NA CARREIRA!</div>
+            <div id="choice-text" style="font-size: 13px; font-weight: 900; color: #1e3a8a; margin-bottom: 10px; line-height: 1.3;">🚨 ACONTECIMENTO!</div>
             <div id="choice-buttons-block" style="display: flex; flex-direction: column; gap: 6px;">
                 <button class="choice-btn" id="btn-a" onclick="escolherOpcao('A')"></button>
                 <button class="choice-btn" id="btn-b" onclick="escolherOpcao('B')"></button>
@@ -186,7 +187,7 @@
         <div class="office-grid">
             <div class="office-btn" id="staff-trainer" onclick="contratarStaff('trainer')">🏋️ Prep. Físico<br>(€500k)</div>
             <div class="office-btn" id="staff-agent" onclick="contratarStaff('agent')">💼 Empresário<br>(€1M)</div>
-            <div class="office-btn" id="staff-psycho" onclick="contratarPsicologo()">🧠 Psicólogo<br>(€200k/Cura)</div>
+            <div class="office-btn" id="staff-psycho" onclick="contratarPsicologo()">🧠 Psicólogo<br>(€200k/Sessão)</div>
         </div>
         <button class="pr-btn" id="btn-pr" onclick="uparPR()">📢 Assessoria PR Nível 0 (0%) - Melhorar (€250k)</button>
     </div>
@@ -194,7 +195,7 @@
     <div class="market-panel" id="market-panel">
         <div class="market-title">URGENTE: PROPOSTAS DA JANELA DE TRANSFERÊNCIA!</div>
         <div id="offer-list"></div>
-        <button class="btn-continue" style="width:100%; margin-top:10px; background:#15803d; font-size:14px; padding:10px;" onclick="ficarNoTime()">REJEITAR E RENOVAR CONTRATO</button>
+        <button class="btn-continue" id="btn-renew" style="width:100%; margin-top:10px; background:#15803d; font-size:14px; padding:10px;" onclick="ficarNoTime()">RENOVAR / FICAR NO CLUBE</button>
     </div>
 
     <div class="bottom-section">
@@ -219,11 +220,18 @@
         <div class="life-wrapper"><div class="life-title">MORADIA</div><div class="life-photo" id="photo-house"><div class="life-text" id="text-house">Casa</div></div><div class="life-btn" id="btn-buy-house" onclick="comprarPatrimonio('house')">Melhorar</div></div>
         <div class="life-wrapper"><div class="life-title">VEÍCULO</div><div class="life-photo" id="photo-car"><div class="life-text" id="text-car">Bicicleta</div></div><div class="life-btn" id="btn-buy-car" onclick="comprarPatrimonio('car')">Melhorar</div></div>
         <div class="life-wrapper"><div class="life-title">VIDA SOCIAL</div><div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80')"><div class="life-text" id="text-social">Solteiro</div></div><div class="life-btn" style="background:#2563eb; color:white; font-weight:bold; cursor:default;" id="btn-social">Estável</div></div>
-        <div class="life-wrapper"><div class="life-title">FINANÇAS</div><div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&q=80')"><div class="life-text" id="text-finance">Fundo: €0</div></div><div class="life-btn" style="background:#16a34a; color:white;" id="btn-finance" onclick="investirFundo()">Investir €1M</div></div>
+        <div class="life-wrapper">
+            <div class="life-title">FINANÇAS</div>
+            <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&q=80')"><div class="life-text" id="text-finance">Fundo: €0</div></div>
+            <div class="finance-buttons">
+                <button class="finance-btn-half" style="background:#16a34a; border-right:1px solid #14532d;" onclick="investirFundo(1000000)">+ €1M</button>
+                <button class="finance-btn-half" style="background:#15803d;" onclick="investirFundo(10000000)">+ €10M</button>
+            </div>
+        </div>
     </div>
 
     <div class="action-area" id="action-area">
-        <button class="btn-toggle-energy" id="btn-energy-mode" onclick="toggleEnergyMode()">MODO DE JOGO: FORÇAR MÁXIMO 🔥</button>
+        <button class="btn-toggle-energy" id="btn-energy-mode" onclick="toggleEnergyMode()">MODO: FORÇAR MÁXIMO 🔥 (Risco de Lesão)</button>
         <button class="btn-continue" onclick="cliqueBotaoPrincipal()" id="btn-main">INICIAR CARREIRA</button>
     </div>
 
@@ -234,9 +242,9 @@
     <div class="modal" id="modal-arq" style="background: rgba(10,15,30,0.96);">
         <div class="modal-content" style="border-color:#5b2268;">
             <div class="rank-title">ESCOLHA SEU ARQUÉTIPO INICIAL</div>
-            <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible.</div></div>
-            <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico.</div></div>
-            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. Traz títulos.</div></div>
+            <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible. Tende a fazer mais assistências.</div></div>
+            <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico. Garantia de mais gols.</div></div>
+            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro que traz títulos ao time.</div></div>
         </div>
     </div>
 
@@ -292,7 +300,7 @@
                 <p><b>Top 1 Global (Maior OVR):</b> <span id="gb-ovr">Carregando...</span></p>
                 <p><b>Top 1 Global (Gols):</b> <span id="gb-gols">Carregando...</span></p>
                 <br>
-                <i style="color:#666;">Nota: Adicione as credenciais do Firebase no final do código para sincronizar os dados reais da nuvem com outros jogadores!</i>
+                <i style="color:#666;">Nota: Firebase está configurado para leitura passiva.</i>
             </div>
             <button class="btn-close" onclick="fecharRanking()">FECHAR</button>
         </div>
@@ -300,56 +308,21 @@
 </div>
 
 <script>
-    // ==========================================
-    // INTEGRAÇÃO FIREBASE (HALL DA FAMA GLOBAL)
-    // ==========================================
-    // Cole aqui o objeto do seu projeto Firebase gerado no console (Project Settings).
-    const firebaseConfig = {
-        // apiKey: "SUA_API_KEY",
-        // authDomain: "SEU_APP.firebaseapp.com",
-        // projectId: "SEU_PROJECT_ID",
-        // storageBucket: "SEU_APP.appspot.com",
-        // messagingSenderId: "SENDER_ID",
-        // appId: "APP_ID"
-    };
-
+    // INTEGRAÇÃO FIREBASE (Opcional)
+    const firebaseConfig = {};
     let db = null;
     try {
         if (Object.keys(firebaseConfig).length > 0 && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
-            console.log("Firebase conectado com sucesso!");
         }
-    } catch(e) { console.warn("Firebase não configurado ou erro na inicialização.", e); }
+    } catch(e) {}
 
-    function salvarRecordeGlobal(playerNome, ovr, gols) {
-        if(!db) return; // Se não tiver configurado, ignora
-        db.collection("hall_da_fama").add({
-            nome: playerNome, ovr: ovr, gols: gols, data: new Date()
-        }).catch(err => console.error("Erro ao salvar no Firebase:", err));
-    }
-
-    function carregarRankingGlobal() {
-        if(!db) {
-            document.getElementById('gb-ovr').innerText = "Firebase Offline (Modo Local)";
-            document.getElementById('gb-gols').innerText = "Firebase Offline (Modo Local)";
-            return;
-        }
-        db.collection("hall_da_fama").orderBy("ovr", "desc").limit(1).get().then(snap => {
-            if(!snap.empty) { let d = snap.docs[0].data(); document.getElementById('gb-ovr').innerText = `${d.nome} (${d.ovr})`; }
-        });
-        db.collection("hall_da_fama").orderBy("gols", "desc").limit(1).get().then(snap => {
-            if(!snap.empty) { let d = snap.docs[0].data(); document.getElementById('gb-gols').innerText = `${d.nome} (${d.gols})`; }
-        });
-    }
-
-    // ==========================================
-    // DADOS E MOTOR DO JOGO
-    // ==========================================
+    // DADOS DO JOGO
     const countryMap = { "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇪🇸": "ESPANHA", "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL" };
-    const tierBronze = ["Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Talleres 🇦🇷", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Getafe 🇪🇸", "Monza 🇮🇹", "Augsburg 🇩🇪"];
-    const tierPrata = ["Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "River Plate 🇦🇷", "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Bayer Leverkusen 🇩🇪", "Benfica 🇵🇹"];
-    const eliteClubs = ["Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bayern 🇩🇪", "Inter de Milão 🇮🇹", "Milan 🇮🇹", "PSG 🇫🇷"];
+    const tierBronze = ["Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Talleres 🇦🇷", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Getafe 🇪🇸", "Monza 🇮🇹", "Augsburg 🇩🇪", "Al-Ettifaq 🇸🇦"];
+    const tierPrata = ["Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "River Plate 🇦🇷", "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Bayer Leverkusen 🇩🇪", "Benfica 🇵🇹", "Al-Ahli 🇸🇦"];
+    const eliteClubs = ["Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bayern 🇩🇪", "Inter de Milão 🇮🇹", "Milan 🇮🇹", "PSG 🇫🇷", "Al-Hilal 🇸🇦"];
 
     const houseUpgrades = [ { name: "Casa dos Pais", price: 0, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80' }, { name: "Apto Centro", price: 1000000, img: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=400&q=80' }, { name: "Condomínio", price: 5000000, img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80' }, { name: "Mansão", price: 20000000, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80' } ];
     const carUpgrades = [ { name: "Bicicleta", price: 0, img: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=80' }, { name: "Sedan", price: 150000, img: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=400&q=80' }, { name: "Esportivo", price: 600000, img: 'https://images.unsplash.com/photo-1605515298946-d062f2e9da53?w=400&q=80' }, { name: "Supercarro", price: 3000000, img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80' } ];
@@ -358,34 +331,44 @@
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
         energia: 100, playMode: 'max', sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
-        hasTrainer: false, hasAgent: false, prLevel: 0, relacao: "Solteiro", investido: 0, salario: 5000,
-        emocao: "Focado 🧘", jejumAnos: 0, fama: 100000, houseTier: 0, carTier: 0,
+        hasTrainer: false, hasAgent: false, prLevel: 0, relacao: "Solteiro", investido: 0, salario: 3000,
+        emocao: "Focado 🧘", jejumAnos: 0, fama: 10000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
-    let rival = { nome: "K. Al-Dawsari", ovr: 72, gols: 0, bdor: 0, ativo: false };
-
+    let rival = { nome: "O Prodígio", ovr: 72, gols: 0, bdor: 0, ativo: false };
     const prCosts = [250000, 1000000, 3000000, 5000000, 10000000]; const prChances = [0, 20, 40, 60, 80, 100];
     const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
-    let currentStep = 0; let entrevistaAtual = null; let indicesDramas = [0,1,2,3,4,5,6]; // Index mockado
-    let records = { ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" } };
+    let currentStep = 0; let entrevistaAtual = null; let dramasDisponiveis = []; 
 
+    let records = { ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" } };
     try { let r = localStorage.getItem('mfc_records_vmax'); if(r) records = JSON.parse(r); } catch(e) {}
 
+    // BANCO DE EVENTOS EXPANDIDO
     const bancoDramasOriginal = [
-        { texto: "🍷 FARRA NOTURNA: Chamado para balada VIP.", A: "Ir até o amanhecer.", B: "Dormir cedo.", C: "Beber água na festa.", acao: (opt) => { if(opt==='A'){ p.emocao="Ressaca 🥴"; p.energia-=20; return "Ficou de ressaca, perdeu atributos físicos e energia."; } if(opt==='B'){ p.ovr+=1; p.energia=100; return "Foco total, energia máxima!"; } return "Fez média sem muito desgaste."; } },
-        { texto: "🚑 LESÃO GRAVE: Médico recomenda cirurgia, curandeiro cobra €100k.", A: "Cirurgia.", B: "Curandeiro.", C: "Jogar com dor.", acao: (opt) => { if(opt==='A') return "Perdeu ritmo (-2), joelho seguro."; if(opt==='B'){ if(Math.random()>0.5){ p.ovr+=2; p.banco-=100000; return "Milagre!"; } else { p.ovr-=3; p.banco-=100000; return "Piorou a lesão!"; } } p.ovr-=4; p.energia-=30; return "Estourou o joelho."; } }
+        { texto: "🍷 FARRA NOTURNA: Véspera de um jogo e os 'parças' chamam pra balada VIP.", A: "Ir até o amanhecer.", B: "Dormir cedo e focar.", C: "Ir, mas beber só água.", acao: (opt) => { if(opt==='A'){ p.emocao="Ressaca 🥴"; p.energia-=30; p.fama+=100000; return "Ficou de ressaca! Perdeu energia e atributos temporários, mas ganhou seguidores."; } if(opt==='B'){ p.ovr+=1; p.energia=100; return "Profissionalismo! Foco total, energia máxima e ganhou OVR."; } return "Fez média sem muito desgaste físico."; } },
+        { texto: "🚑 LESÃO GRAVE: Médico recomenda cirurgia (meses fora), curandeiro cobra €100k por milagre.", A: "Cirurgia segura.", B: "Pagar curandeiro (€100k).", C: "Jogar com dor no sacrifício.", acao: (opt) => { if(opt==='A'){ p.pac-=2; return "Perdeu ritmo (-2), mas o joelho está seguro para o futuro."; } if(opt==='B'){ if(p.banco < 100000) return "Você não tem dinheiro! Foi obrigado a operar."; if(Math.random()>0.5){ p.ovr+=2; p.banco-=100000; return "Milagre! A acupuntura curou rápido (+2 OVR)."; } else { p.ovr-=3; p.banco-=100000; return "Piorou a lesão! Caiu seu nível de jogo."; } } p.ovr-=4; p.energia-=40; p.emocao="Triste 😢"; return "Estourou o joelho de vez! Queda brusca de atributos."; } },
+        { texto: "💰 MÁFIA DE APOSTAS: Oferecem €1.5M para você forçar um cartão vermelho no 1º tempo.", A: "Aceitar a grana e dar voadora.", B: "Recusar e denunciar à TV.", C: "Recusar em silêncio.", acao: (opt) => { if(opt==='A'){ p.banco+=1500000; p.fama-=2000000; p.emocao="Triste 😢"; return "Você pegou a grana, mas o tribunal desconfiou. A torcida te odeia e a culpa te consome."; } if(opt==='B'){ p.fama+=1500000; p.emocao="Alegre 😁"; return "HERÓI DA INTEGRIDADE! Ganhou fama mundial pela denúncia."; } return "Manteve-se limpo e seguro."; } },
+        { texto: "👟 PATROCÍNIO TÓXICO: Marca paga €2M, mas a chuteira machuca seu pé.", A: "Assinar pelo dinheiro.", B: "Recusar o acordo.", C: "Usar escondido sua chuteira velha pintada.", acao: (opt) => { if(opt==='A'){ p.banco+=2000000; p.pac-=3; p.ovr-=1; return "Ficou rico, mas as bolhas no pé te deixaram mais lento (-3 Ritmo)."; } if(opt==='B'){ p.ovr+=1; p.emocao="Focado 🧘"; return "Foco na carreira! Manteve a agilidade."; } p.banco+=500000; p.fama-=500000; return "A marca descobriu a fraude. Escândalo! Perdeu parte do dinheiro e fãs."; } },
+        { texto: "📉 QUEBRA DA BOLSA: Seu fundo derreteu com a 'Moeda Cachorrinho'.", A: "Vender tudo com prejuízo.", B: "Apostar o dobro.", C: "Processar o corretor.", acao: (opt) => { if(opt==='A'){ p.investido = Math.floor(p.investido * 0.5); return "Assumiu o prejuízo. O fundo caiu pela metade."; } if(opt==='B'){ if(Math.random()>0.7){ p.investido *= 2.5; return "LOUCURA! A moeda valorizou do nada. Seu fundo multiplicou!"; } else { p.investido = 0; p.emocao="Ressaca 🥴"; return "FALÊNCIA! A moeda zerou. Você perdeu todo o fundo."; } } p.investido = Math.floor(p.investido * 0.7); p.fama+=200000; return "Recuperou parte na justiça e ganhou visibilidade na mídia."; } },
+        { texto: "🚜 OPORTUNIDADE DE NEGÓCIO: Empresários do interior te convidam para ser sócio em uma fábrica de peças agrícolas (fornecendo o 'Dedo Triplo do Molinete') e expor em grandes feiras. Custa €1M.", A: "Investir na fábrica e feiras agro (€1M).", B: "Recusar, seu foco é só futebol.", C: "Fazer só propaganda nas redes.", acao: (opt) => { if(opt==='A'){ if(p.banco >= 1000000){ p.banco-=1000000; p.investido+=1500000; p.fama+=500000; return "Sucesso no Agro! A fábrica decolou e a peça vendeu muito. Seu fundo aumentou absurdamente."; } return "Você não tinha 1 Milhão para investir."; } if(opt==='B'){ p.ovr+=1; return "Manteve a cabeça no campo (+1 OVR)."; } p.fama+=50000; return "Ajudou os amigos com divulgação. Tudo tranquilo."; } },
+        { texto: "🤬 CRISE DE VESTIÁRIO: O técnico te barrou injustamente para colocar o 'queridinho' dele.", A: "Reclamar na imprensa.", B: "Abaixar a cabeça e treinar mais.", C: "Exigir transferência com a diretoria.", acao: (opt) => { if(opt==='A'){ p.emocao="Triste 😢"; p.teamChemistry=0; return "O grupo rachou. O clima está horrível e seu entrosamento zerou."; } if(opt==='B'){ p.ovr+=2; p.energia=100; p.emocao="Focado 🧘"; return "Resiliência! Você calou a boca dele nos treinos e voltou destruindo (+2 OVR)."; } if(opt==='C'){ p.club = "Sem Clube"; p.salario=0; return "A diretoria ficou do lado do técnico. Você rescindiu contrato e está desempregado!"; } } }
     ];
+
+    function inicializarDramas() {
+        dramasDisponiveis = [...bancoDramasOriginal];
+        dramasDisponiveis.sort(() => Math.random() - 0.5); // Embaralha
+    }
 
     function toggleEnergyMode() {
         let btn = document.getElementById('btn-energy-mode');
         if(p.playMode === 'max') {
             p.playMode = 'poupar';
-            btn.innerText = "MODO DE JOGO: POUPAR FÍSICO 🧘";
+            btn.innerText = "MODO: POUPAR FÍSICO 🧘 (Menos Gols, Mais Seguro)";
             btn.style.background = "#16a34a"; btn.style.color = "white"; btn.style.borderColor = "#15803d";
         } else {
             p.playMode = 'max';
-            btn.innerText = "MODO DE JOGO: FORÇAR MÁXIMO 🔥";
+            btn.innerText = "MODO: FORÇAR MÁXIMO 🔥 (Risco de Lesão)";
             btn.style.background = "#1e293b"; btn.style.color = "#fbbf24"; btn.style.borderColor = "#fbbf24";
         }
     }
@@ -402,27 +385,27 @@
 
     function initPlayer() {
         p.isProdigy = Math.random() > 0.85; 
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 6) + 75 : Math.floor(Math.random() * 8) + 65;
+        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 5) + 72 : Math.floor(Math.random() * 6) + 64;
         p.ovr = baseOvr; p.prime = baseOvr; p.pac = baseOvr; p.sho = baseOvr; p.pas = baseOvr; p.dri = baseOvr; p.def = 40; p.phy = baseOvr;
 
         if(p.archetype === 'ponta') { p.pac += 8; p.dri += 6; document.getElementById('hdr-arq').innerText = "⚡ PONTA"; }
         if(p.archetype === 'matador') { p.sho += 10; p.phy += 6; document.getElementById('hdr-arq').innerText = "⚽ PIVÔ"; }
         if(p.archetype === 'armador') { p.pas += 10; p.dri += 4; document.getElementById('hdr-arq').innerText = "🪄 MEIO"; }
 
-        p.club = p.isProdigy ? tierPrata[0] : tierBronze[0];
+        p.club = p.isProdigy ? tierPrata[Math.floor(Math.random()*3)] : tierBronze[Math.floor(Math.random()*4)];
+        p.salario = p.isProdigy ? 15000 : 3000;
         p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
         document.getElementById('hdr-region').innerText = `🌍 ${p.origin}`;
         
-        // Gerar Rival
         let r_nomes = ["Mbappé V2", "H. Kane Jr.", "El Pibe", "Robô Nórdico"];
         rival.nome = r_nomes[Math.floor(Math.random()*r_nomes.length)];
-        rival.ovr = baseOvr + 2; rival.ativo = true;
+        rival.ovr = baseOvr + 4; rival.ativo = true;
     }
     
     function initGrid() {
-        p.age = 15; p.banco = 0; p.energia = 100; p.sp = 0; p.teamChemistry = 0; p.fama = 100000;
+        p.age = 15; p.banco = 0; p.energia = 100; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
         p.perks = { capitao: false, motorzinho: false, marketing: false };
-        currentStep = 0; initPlayer();
+        currentStep = 0; initPlayer(); inicializarDramas();
         const container = document.getElementById('timeline-rows'); container.innerHTML = '';
         ages.forEach((a, index) => {
             let boxClass = "age-box" + (a === "Base" ? " academy" : "") + ((a === "Apadr" || a === "Trein") ? " retire" : "");
@@ -437,16 +420,16 @@
 
     function atualizarUI() {
         ['pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
-        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.archetype === 'matador' ? 3 : 0);
+        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.archetype === 'matador' ? 2 : 0);
         p.ovr = Math.min(99, calcOvr + Math.floor(p.teamChemistry / 20)); 
 
         let ovrHTML = `<div class="ovr-col"><span style="color:#15803d">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime ? 'inline' : 'none'}">⬆</span></div>`;
         document.getElementById('attr-vals').innerHTML = `${ovrHTML}<div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
         
         document.getElementById('hdr-age').innerText = p.age; if(p.ovr > p.prime) p.prime = p.ovr;
-        let passe = p.age > 35 ? 0 : Math.floor((Math.pow(p.ovr, 2.5) / 1000) * (1 + (p.fama/10000000)));
+        let passe = p.age > 35 ? 0 : Math.floor((Math.pow(p.ovr, 2.5) / 1000) * (1 + (p.fama/20000000)));
         
-        document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0) ? "Livre" : "€" + passe + "M";
+        document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0 || p.club==="Sem Clube") ? "Livre" : "€" + passe + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco);
         document.getElementById('hdr-energy').innerText = Math.floor(p.energia) + "%";
         document.getElementById('hdr-energy').style.color = p.energia < 40 ? "#dc2626" : (p.energia < 70 ? "#d97706" : "#16a34a");
@@ -457,7 +440,6 @@
         document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
         document.getElementById('tot-gol').innerText = p.totals.gol; document.getElementById('tot-ass').innerText = p.totals.ass;
         
-        // Atualiza botões Perks
         if(p.perks.capitao) document.getElementById('btn-perk-cap').outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
         if(p.perks.motorzinho) document.getElementById('btn-perk-mot').outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
         if(p.perks.marketing) document.getElementById('btn-perk-mkt').outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
@@ -474,11 +456,9 @@
         if(p.sp >= custo && !p.perks[tipo]) {
             p.sp -= custo; p.perks[tipo] = true;
             if(tipo === 'capitao') p.teamChemistry = Math.max(p.teamChemistry, 30);
-            exibirMensagemTopo(`✨ Habilidade Adquirida! Você desbloqueou uma vantagem vitalícia.`);
+            exibirMensagemTopo(`✨ Habilidade Adquirida!`);
             atualizarUI();
-        } else {
-            alert("Pontos SP insuficientes!");
-        }
+        } else alert("Pontos SP insuficientes!");
     }
 
     function abrirPerks() { document.getElementById('modal-perks').style.display = 'flex'; }
@@ -486,10 +466,10 @@
     function mostrarTabRank(tab) {
         document.getElementById('rank-local-content').style.display = tab === 'local' ? 'block' : 'none';
         document.getElementById('rank-global-content').style.display = tab === 'global' ? 'block' : 'none';
-        if(tab === 'global') carregarRankingGlobal();
+        if(tab === 'global' && db) carregarRankingGlobal();
     }
 
-    function investirFundo() { if(p.banco >= 1000000) { p.banco -= 1000000; p.investido += 1000000; atualizarUI(); } }
+    function investirFundo(valor) { if(p.banco >= valor) { p.banco -= valor; p.investido += valor; atualizarUI(); } }
     function comprarPatrimonio(tipo) {
         if(tipo === 'house' && p.houseTier < 3) { let next = houseUpgrades[p.houseTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.houseTier++; } }
         if(tipo === 'car' && p.carTier < 3) { let next = carUpgrades[p.carTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.carTier++; } }
@@ -501,15 +481,15 @@
         if(tipo === 'agent' && !p.hasAgent && p.banco >= 1000000) { p.banco -= 1000000; p.hasAgent = true; }
         atualizarUI();
     }
-    function contratarPsicologo() {
-        if(p.banco >= 200000) { p.banco -= 200000; p.emocao = "Focado 🧘"; p.energia = Math.min(100, p.energia + 15); atualizarUI(); }
-    }
+    function contratarPsicologo() { if(p.banco >= 200000) { p.banco -= 200000; p.emocao = "Focado 🧘"; p.energia = Math.min(100, p.energia + 20); atualizarUI(); } }
+    function uparPR() { if (p.prLevel < 5 && p.banco >= prCosts[p.prLevel]) { p.banco -= prCosts[p.prLevel]; p.prLevel++; atualizarUI(); } }
 
     function formatarClubeHTML(clubeStr, feeTag) {
+        if(clubeStr === "Sem Clube") return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">❌</span><div class="club-info"><span class="c-name" style="color:red;">SEM CLUBE</span></div></div>`;
         let partes = clubeStr.trim().split(" "); let flag = partes.pop(); let nomeClube = partes.join(" ");
         return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">${flag}</span><div class="club-info"><span class="c-name">${nomeClube}</span></div>${feeTag}</div>`;
     }
-    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 5000); }
+    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 6000); }
 
     function avancarCarreira() {
         if (p.age >= 39) { finalizarCarreira(); return; }
@@ -517,52 +497,73 @@
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { p.age += 3; currentStep++; p.teamChemistry += 15; p.sp += 1; }
 
-        // Sistema de Vigor (Energia)
-        if(p.playMode === 'max') {
-            p.energia -= Math.floor(Math.random() * 20) + 30; // Perde 30~50%
-            if(p.energia < 30 && Math.random() > 0.5) {
-                p.energia = 10; p.ovr -= 3; p.pac -= 4; exibirMensagemTopo("🚑 LESÃO POR EXAUSTÃO! Jogar sem energia custou caro.");
-            }
-        } else {
-            p.energia = Math.min(100, p.energia + 40); // Recupera 40%
-            p.teamChemistry -= 5; // Torcida não gosta de quem poupa
+        // SISTEMA DE DEMISSÃO E LESÃO FIM DE CARREIRA
+        let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
+        if(p.club === "Sem Clube") leagueDifficulty = 50;
+
+        if (p.club !== "Sem Clube" && p.ovr < leagueDifficulty - 12 && !p.isProdigy) {
+            p.club = "Sem Clube"; p.salario = 0; p.teamChemistry = 0;
+            exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado. O clube rescindiu seu contrato. Fique de olho no mercado de clubes menores.");
         }
 
-        if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); // Simplificado
+        if(p.playMode === 'max') {
+            p.energia -= Math.floor(Math.random() * 25) + 35;
+            if(p.energia <= 10 && p.age >= 30 && Math.random() > 0.8) {
+                exibirMensagemTopo("🚑 LESÃO CATASTRÓFICA! Seu corpo não aguentou o ritmo insano. Sua carreira no campo acabou hoje.");
+                p.ovr -= 30; p.pac -= 40; p.phy -= 40; p.age = 39; finalizarCarreira(); return;
+            } else if(p.energia <= 20) {
+                p.energia = 10; p.ovr -= 4; exibirMensagemTopo("🚑 EXAUSTÃO EXTREMA! Seu corpo estourou e você perdeu atributos vitais.");
+            }
+        } else {
+            p.energia = Math.min(100, p.energia + 45);
+            if(p.club !== "Sem Clube") p.teamChemistry -= 10; 
+        }
+
+        if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
         
         let multiplierMkt = p.perks.marketing ? 1.5 : 1;
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
-        if(p.ovr >= 82) p.isConvocado = true;
+        if(p.ovr >= 84) p.isConvocado = true;
 
-        if (p.age <= 27) { let g = Math.floor(Math.random() * 5) + 3; p.ovr += g; p.sho += g; p.dri += g; p.pas += g; } 
-        else if (p.age >= 33) {
+        if (p.age <= 24) { let g = Math.floor(Math.random() * 3) + 2; p.ovr += g; p.sho += g; p.dri += g; p.pas += g; } 
+        else if (p.age >= 30) {
             let quedaPac = p.perks.motorzinho ? 1 : (p.archetype === 'ponta' ? 3 : 5); 
-            p.pac -= quedaPac; p.phy -= 3; p.sho += 3; 
+            p.pac -= quedaPac; p.phy -= 2; 
         }
 
-        let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : 75;
-        let apps = p.playMode === 'max' ? Math.floor(90 + (p.ovr - leagueDifficulty)) : 60; 
+        // BALANÇO DE GOLS (Contido)
+        let apps = (p.playMode === 'max' ? 80 : 45); 
+        if(p.club === "Sem Clube") apps = 0;
+
+        let performanceDelta = (p.ovr - leagueDifficulty) / 100;
+        let golBase = Math.max(0.05, 0.20 + performanceDelta); 
+        let gol = Math.floor(apps * golBase * (Math.random() * 0.5 + 0.5));
         
-        let golChance = (p.sho * 0.01) + ((p.ovr - leagueDifficulty) * 0.01);
-        let gol = Math.floor(apps * golChance * (Math.random() * 0.5 + 0.8));
-        let ass = Math.floor(apps * (p.pas * 0.01) * 0.5);
-        if(p.playMode === 'poupar') { gol = Math.floor(gol * 0.6); ass = Math.floor(ass * 0.6); }
+        let assBase = Math.max(0.05, 0.15 + performanceDelta);
+        let ass = Math.floor(apps * assBase * (Math.random() * 0.5 + 0.5));
+
+        if(p.archetype === 'matador') gol = Math.floor(gol * 1.25);
+        if(p.archetype === 'armador') ass = Math.floor(ass * 1.3);
+        if(p.club === "Sem Clube") { gol = 0; ass = 0; }
 
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         
-        let tDom = p.ovr > 80 && Math.random() > 0.4 ? 1 : 0;
-        let tInt = eliteClubs.includes(p.club) && Math.random() > 0.5 ? 1 : 0;
-        p.totals.dom += tDom; p.totals.int += tInt;
+        let tDom = 0, tInt = 0;
+        if(p.club !== "Sem Clube") {
+            tDom = p.ovr > leagueDifficulty && Math.random() > 0.5 ? 1 : 0;
+            tInt = eliteClubs.includes(p.club) && p.ovr >= 88 && Math.random() > 0.6 ? 1 : 0;
+            p.totals.dom += tDom; p.totals.int += tInt;
+        }
         
-        p.fama += ((gol * 25000) + (tInt * 400000)) * multiplierMkt;
+        p.fama += ((gol * 15000) + (tInt * 300000)) * multiplierMkt;
         
         // Simulação do Rival
-        rival.ovr += p.age < 27 ? 4 : (p.age > 33 ? -2 : 1);
-        rival.gols = Math.floor((rival.ovr * 0.6) + (Math.random() * 40));
+        rival.ovr += p.age < 27 ? 3 : (p.age > 33 ? -2 : 1);
+        rival.gols = Math.floor((rival.ovr * 0.5) + (Math.random() * 30));
         
         let ganhouBdor = false; let rivalGanhouBdor = false;
-        if ((gol + ass) >= 90 && p.ovr >= 90 && tInt > 0 && gol > rival.gols) { 
-            p.totals.bdor += 1; ganhouBdor = true; p.sp += 1;
+        if (p.club !== "Sem Clube" && (gol + ass) >= 60 && p.ovr >= 89 && tInt > 0 && gol > rival.gols) { 
+            p.totals.bdor += 1; ganhouBdor = true; p.sp += 1; p.fama += 5000000;
         } else if (rival.ovr > 88 && rival.gols > gol && Math.random() > 0.5) {
             rival.bdor += 1; rivalGanhouBdor = true;
         }
@@ -589,6 +590,52 @@
     function fecharRival() {
         document.getElementById('rival-section').style.display = 'none';
         atualizarUI();
+        if (Math.random() < 0.8 && dramasDisponiveis.length > 0) { 
+            abrirEntrevista();
+        } else {
+            if (p.age < 39) abrirMercado(); else finalizarCarreira();
+        }
+    }
+
+    function abrirEntrevista() {
+        if(dramasDisponiveis.length === 0) inicializarDramas(); // Refaz o ciclo se esgotar
+        entrevistaAtual = dramasDisponiveis.pop();
+        
+        document.getElementById('action-area').style.display = 'none';
+        document.getElementById('choice-text').innerText = entrevistaAtual.texto;
+        document.getElementById('btn-a').innerHTML = "<b>A)</b> " + entrevistaAtual.A;
+        document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B;
+        document.getElementById('btn-c').innerHTML = "<b>C)</b> " + entrevistaAtual.C;
+        
+        document.getElementById('choice-buttons-block').style.display = 'flex';
+        document.getElementById('btn-choice-next').style.display = 'none';
+        document.getElementById('choice-section').style.display = 'flex';
+    }
+
+    function escolherOpcao(opt) {
+        let textoConsequencia = entrevistaAtual.acao(opt);
+        
+        let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("FALÊNCIA");
+
+        if (precisaPR && p.prLevel > 0) {
+            let chanceAbafar = prChances[p.prLevel];
+            if (Math.random() * 100 <= chanceAbafar) {
+                p.emocao = "Focado 🧘";
+                textoConsequencia += `<br><br><span style='color:#15803d'>📢 <b>BLINDAGEM PR NÍVEL ${p.prLevel}:</b> Sua equipe jurídica agiu e abafou a crise para sua mente!</span>`;
+            } else {
+                textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise foi forte demais.</span>`;
+            }
+        }
+        
+        document.getElementById('choice-text').innerHTML = textoConsequencia;
+        document.getElementById('choice-buttons-block').style.display = 'none';
+        document.getElementById('btn-choice-next').style.display = 'block';
+        atualizarUI();
+    }
+
+    function fecharJanelaConsequencia() {
+        document.getElementById('choice-section').style.display = 'none';
+        document.getElementById('action-area').style.display = 'block';
         if (p.age < 39) abrirMercado(); else finalizarCarreira();
     }
 
@@ -596,27 +643,57 @@
         document.getElementById('action-area').style.display = 'none'; document.getElementById('market-panel').style.display = 'block';
         let list = document.getElementById('offer-list'); list.innerHTML = "";
         
-        let pool = p.ovr >= 85 ? eliteClubs : (p.ovr >= 75 ? tierPrata : tierBronze);
+        let pool = [];
+        if(p.club === "Sem Clube" || p.ovr < 72) pool = tierBronze;
+        else if (p.ovr >= 88 || (p.ovr >= 84 && p.hasAgent)) pool = eliteClubs;
+        else pool = tierPrata;
+
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
-            let val = Math.floor(Math.random() * 50) + 10;
-            let salBase = Math.floor(val * 2.5) + (eliteClubs.includes(c) ? 50 : 0);
-            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">€${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar Proposta</div></div>`;
+            let val = Math.floor(Math.random() * 30) + (p.ovr > 85 ? 40 : 5);
+            
+            // Salários mais realistas e contidos
+            let salBase = Math.floor(p.ovr * 0.1); 
+            if(tierPrata.includes(c)) salBase = Math.floor(p.ovr * 0.5);
+            if(eliteClubs.includes(c)) salBase = Math.floor(p.ovr * 1.5) + (p.fama > 5000000 ? 50 : 0);
+            if(c.includes("🇸🇦") && p.ovr > 80) salBase *= 3; // Árabes pagam muito, mas só se for craque
+            if(salBase < 3) salBase = 3;
+
+            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">Sálário: €${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar (€${val}M)</div></div>`;
+        }
+
+        let btnRenew = document.getElementById('btn-renew');
+        if(p.club === "Sem Clube") {
+            btnRenew.innerText = "FICAR DESEMPREGADO";
+            btnRenew.style.background = "#b91c1c";
+        } else {
+            btnRenew.innerText = "RENOVAR / FICAR NO CLUBE";
+            btnRenew.style.background = "#15803d";
         }
     }
 
-    function aceitarTransf(c, strVal, numVal, salK) { p.club = c; p.salario = salK * 1000; p.teamChemistry = p.perks.capitao ? 30 : 0; document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
-    function ficarNoTime() { p.teamChemistry += 20; document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
+    function aceitarTransf(c, strVal, numVal, salK) { 
+        p.club = c; p.salario = salK * 1000; p.teamChemistry = p.perks.capitao ? 30 : 0; 
+        document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; 
+    }
+    
+    function ficarNoTime() { 
+        if(p.club !== "Sem Clube") { p.teamChemistry += 20; p.salario = Math.floor(p.salario * 1.10); }
+        document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; 
+    }
     
     function finalizarCarreira() {
         document.getElementById(`club-cell-9`).innerHTML = formatarClubeHTML("Aposentadoria", "");
-        let cargoFinal = p.banco > 20000000 ? "Presidente SAF" : "Treinador Base";
+        let cargoFinal = p.banco > 20000000 ? "Empresário/Dono SAF" : "Treinador / Comentarista";
+        if(p.banco < 0) cargoFinal = "Falido / Influencer Menor";
         document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML(cargoFinal, "");
         
-        let veredito = p.totals.bdor > 0 ? "👑 LENDÁRIO! Você escreveu seu nome na história." : "⚽ GRANDE CARREIRA. Um atleta memorável.";
-        document.getElementById('event-section').innerHTML = `🏁 FIM DE JOGO!<br>${veredito}`;
+        let veredito = p.totals.bdor > 0 ? "👑 LENDÁRIO! Você escreveu seu nome na história do futebol." : "⚽ GRANDE CARREIRA. Um atleta memorável.";
+        if(p.club === "Sem Clube") veredito = "❌ FIM MELANCÓLICO. Você saiu do futebol pela porta dos fundos.";
+        
+        document.getElementById('event-section').innerHTML = `🏁 FIM DE JOGO!<br>${veredito}<br><br>Sua fortuna final (Conta + Fundo): <b>${formatMoeda(p.banco + p.investido)}</b>`;
         document.getElementById('event-section').style.display = 'block';
-        document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">NOVO JOGO</button>`;
+        document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">INICIAR NOVA CARREIRA</button>`;
         
         checarRecordes();
     }
@@ -626,9 +703,6 @@
         if(p.prime > records.ovr.val) records.ovr = { val: p.prime, name: playerID };
         if(p.totals.gol > records.gol.val) records.gol = { val: p.totals.gol, name: playerID };
         try { localStorage.setItem('mfc_records_vmax', JSON.stringify(records)); } catch(e) {}
-        
-        // Salva na nuvem se Firebase estiver ativo!
-        salvarRecordeGlobal(playerID, p.prime, p.totals.gol);
         
         document.getElementById('rk-ovr-val').innerText = records.ovr.val;
         document.getElementById('rk-gol-val').innerText = records.gol.val;
