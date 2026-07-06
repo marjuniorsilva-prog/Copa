@@ -112,7 +112,7 @@
         /* ESCRITÓRIO & STAFF */
         .office-section { background: white; margin: 2px 10px; border-radius: 6px; padding: 6px; border: 1px solid #ccc; font-size: 11px;}
         .office-title { background: #475569; color: white; font-size: 11px; font-weight: 900; text-align: center; padding: 3px; font-family: 'Oswald', sans-serif; border-radius: 4px; margin-bottom: 4px;}
-        .office-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+        .office-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
         .office-btn { background: #e2e8f0; border: 1px solid #cbd5e1; padding: 4px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 9px; text-align: center; line-height: 1.2;}
         .pr-btn { background: #2563eb; color: white; border: none; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; text-align: center; width: 100%; margin-top: 4px;}
         
@@ -229,8 +229,9 @@
     <div class="office-section" id="office-panel">
         <div class="office-title">ESCRITÓRIO COMERCIAL & CONTRATAÇÕES STAFF</div>
         <div class="office-grid">
-            <div class="office-btn" id="staff-trainer" onclick="contratarStaff('trainer')">🏋️ Preparador Físico<br>(€500k)</div>
-            <div class="office-btn" id="staff-agent" onclick="contratarStaff('agent')">💼 Superempresário<br>(€1M)</div>
+            <div class="office-btn" id="staff-trainer" onclick="contratarStaff('trainer')">🏋️ Prep. Físico<br>(€500k)</div>
+            <div class="office-btn" id="staff-agent" onclick="contratarStaff('agent')">💼 Empresário<br>(€1M)</div>
+            <div class="office-btn" id="staff-psycho" onclick="contratarPsicologo()">🧠 Psicólogo<br>(€200k/Cura)</div>
         </div>
         <button class="pr-btn" id="btn-pr" onclick="uparPR()">📢 Assessoria PR Nível 0 (0%) - Melhorar (€250k)</button>
     </div>
@@ -286,7 +287,7 @@
             <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&q=80')">
                 <div class="life-text" id="text-finance">Fundo: €0</div>
             </div>
-            <div class="life-btn" style="background:#16a34a; color:white;" id="btn-finance" onclick="investirFundo()">Investir €250k</div>
+            <div class="life-btn" style="background:#16a34a; color:white;" id="btn-finance" onclick="investirFundo()">Investir €1M</div>
         </div>
     </div>
 
@@ -334,7 +335,6 @@
 </div>
 
 <script>
-    // Configurações do Jogo (Inovação no Core Engine)
     const countryMap = {
         "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇨🇴": "COLÔMBIA", "🇨🇱": "CHILE", "🇪🇨": "EQUADOR", "🇵🇾": "PARAGUAI", "🇵🇪": "PERU", "🇧🇴": "BOLÍVIA", "🇻🇪": "VENEZUELA",
         "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇺🇦": "UCRÂNIA", "🇭🇷": "CROÁCIA",
@@ -359,11 +359,10 @@
         { name: "Superesportivo Raro", price: 3000000, img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80' }
     ];
 
-    // Estado central do jogador
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
-        hasTrainer: false, hasAgent: false, prLevel: 0, relacao: "Solteiro", investido: 0,
+        hasTrainer: false, hasAgent: false, prLevel: 0, relacao: "Solteiro", investido: 0, salario: 5000,
         emocao: "Focado 🧘", jejumAnos: 0, fama: 100000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
@@ -385,7 +384,6 @@
         if (dadosSalvos) records = JSON.parse(dadosSalvos);
     } catch(e) {}
 
-    // BATERIA EXPANDIDA DE DRAMAS (Inclui verificações de estado para mais imersão)
     const bancoDramasOriginal = [
         {
             texto: "🍷 FARRA NOTURNA: Véspera de um jogo decisivo e os 'parças' te chamam para uma balada VIP com tudo pago.",
@@ -435,7 +433,6 @@
                 p.emocao="Triste 😢"; return "🤴 Ele se ofendeu, cancelou tudo e mandou hackearem suas redes.";
             }
         },
-        // NOVOS DRAMAS INOVADORES
         {
             texto: "📉 QUEBRA DA BOLSA: Seu corretor investiu metade do seu fundo na 'Moeda do Cachorrinho'. A bolha estourou e você está prestes a perder milhões.",
             A: "Vender tudo agora com prejuízo.", B: "Apostar o dobro para tentar recuperar o preço médio.", C: "Demiti-lo e processar publicamente.",
@@ -511,6 +508,10 @@
         p.club = pool[Math.floor(Math.random() * pool.length)];
         p.teamChemistry = 0;
         
+        if(eliteClubs.includes(p.club)) p.salario = 100000;
+        else if(tierPrata.includes(p.club)) p.salario = 30000;
+        else p.salario = 5000;
+        
         if(p.club.includes("🇪🇸") || p.club.includes("🏴") || p.club.includes("🇮🇹") || p.club.includes("🇩🇪") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇧🇪")) {
             p.origin = "Europa"; document.getElementById('icone-continente').innerText = "🏆 Eurocopa";
         } else {
@@ -569,19 +570,18 @@
     }
 
     function calcularValorPasse() {
-        let valBase = (p.ovr > 85) ? Math.floor(Math.random()*60)+60 : Math.floor(Math.random()*30)+10;
-        if(p.age < 23) valBase *= 1.5; // Jovens hiperfaturados
-        if(p.age > 32) valBase = Math.floor(valBase * 0.25); // Velhos perdem passe brusco
-        if(p.age > 36) valBase = 0; // Passe livre
-        return valBase;
+        let base = Math.pow(p.ovr, 2.5) / 1000; 
+        if(p.age < 23) base *= 2.0;
+        if(p.age > 31) base *= 0.5;
+        if(p.age > 35) base = 0;
+        let famaMultiplier = 1 + (p.fama / 10000000);
+        return Math.floor(base * famaMultiplier);
     }
 
     function atualizarUI() {
         ['pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
         
         let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.def > 70 ? 2 : 0) + (p.archetype === 'matador' ? 3 : 0);
-        
-        // Aplica o entrosamento na moral mas com limite de 99
         let finalOvr = Math.min(99, calcOvr + Math.floor(p.teamChemistry / 20));
         p.ovr = finalOvr; 
 
@@ -642,13 +642,28 @@
     }
 
     function investirFundo() {
-        if(p.banco >= 250000) { p.banco -= 250000; p.investido += 250000; atualizarUI(); }
+        if(p.banco >= 1000000) { p.banco -= 1000000; p.investido += 1000000; atualizarUI(); }
     }
 
     function contratarStaff(tipo) {
         if(tipo === 'trainer' && !p.hasTrainer && p.banco >= 500000) { p.banco -= 500000; p.hasTrainer = true; }
         if(tipo === 'agent' && !p.hasAgent && p.banco >= 1000000) { p.banco -= 1000000; p.hasAgent = true; }
         atualizarUI();
+    }
+
+    function contratarPsicologo() {
+        if(p.banco >= 200000) {
+            if (p.emocao === "Focado 🧘" || p.emocao === "Alegre 😁") {
+                exibirMensagemTopo("✅ Você já está com a mente ótima! Não precisa de terapia agora.");
+                return;
+            }
+            p.banco -= 200000;
+            p.emocao = "Focado 🧘";
+            exibirMensagemTopo("🧠 Terapia concluída! Sua mente voltou ao foco total.");
+            atualizarUI();
+        } else {
+            exibirMensagemTopo("💸 Você não tem €200k para pagar o Psicólogo.");
+        }
     }
 
     function comprarPatrimonio(tipo) {
@@ -695,7 +710,6 @@
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
         else { p.age += 3; currentStep++; p.teamChemistry += 15; }
 
-        // DINÂMICA DE INVESTIMENTO
         if(p.investido > 0) {
             let marketEvent = Math.random();
             let yieldPct = 0;
@@ -707,15 +721,11 @@
             else { yieldPct = 0.8; msg = "🚀 MOON! Ações dispararam: Fundo rendeu +80%!"; }
             
             p.investido += Math.floor(p.investido * yieldPct);
-            if(yieldPct !== 0.15) exibirMensagemTopo(msg); // Só exibe se for fora do comum
+            if(yieldPct !== 0.15) exibirMensagemTopo(msg); 
         }
 
-        // SALÁRIOS E PATROCÍNIOS APRIMORADOS
-        let salSemanal = 5000;
-        if(eliteClubs.includes(p.club)) salSemanal = 180000;
-        else if(tierPrata.includes(p.club)) salSemanal = 45000;
-        
-        let bonusPatrocinio = Math.floor(p.fama * 0.08); // Patrocinadores pagam baseado na fama
+        let salSemanal = p.salario || 5000;
+        let bonusPatrocinio = Math.floor(p.fama * 0.08); 
         if (p.hasAgent) bonusPatrocinio *= 1.5;
         p.banco += (salSemanal * 150) + bonusPatrocinio;
 
@@ -726,7 +736,6 @@
             exibirMensagemTopo("🚨 FALÊNCIA! Seus bens foram leiloados para pagar dívidas.");
         }
 
-        // CURVA DE ENVELHECIMENTO INTELIGENTE
         if (p.age <= 21) {
             let g = Math.floor(Math.random() * (p.isProdigy ? 7 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
@@ -734,27 +743,26 @@
             let g = Math.floor(Math.random() * 4) + 2;
             p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
-            let quedaPac = (p.archetype === 'ponta') ? 2 : 5; // Pontas resistem mais antes dos 36, ou caem?
-            if (p.age >= 36 && p.archetype === 'ponta') quedaPac = 8; // Mas quebram de vez aos 36
+            let quedaPac = (p.archetype === 'ponta') ? 2 : 5; 
+            if (p.age >= 36 && p.archetype === 'ponta') quedaPac = 8; 
 
             p.pac -= quedaPac; p.phy -= 3; 
-            p.sho += 3; p.pas += 4; // Fica mais inteligente
+            p.sho += 3; p.pas += 4; 
             
-            if (p.hasTrainer) { p.pac += 2; p.phy += 2; } // Trainer reduz impacto
+            if (p.hasTrainer) { p.pac += 2; p.phy += 2; } 
         }
 
-        // NOVO MOTOR DE PARTIDA
         let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 78 : 65);
         let performanceDelta = p.ovr - leagueDifficulty; 
         
-        let apps = Math.max(10, Math.min(120, 90 + Math.floor(performanceDelta * 1.5))); // Se jogar num time muito bom e tiver OVR baixo, vai pro banco.
+        let apps = Math.max(10, Math.min(120, 90 + Math.floor(performanceDelta * 1.5))); 
         
         let formGols = 1.0;
         if(p.emocao === "Alegre 😁") formGols += 0.2; 
         if(p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢") formGols -= 0.4;
 
         let golChance = Math.max(0.05, (p.sho * 0.01) + (performanceDelta * 0.01));
-        if (p.archetype === 'matador') golChance *= 1.35; // Centroavante faz gol até em fase ruim
+        if (p.archetype === 'matador') golChance *= 1.35; 
 
         let gol = Math.floor(apps * golChance * formGols * (Math.random() * 0.5 + 0.8));
         
@@ -769,9 +777,8 @@
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         p.totals.yc += yc; p.totals.rc += rc;
         
-        // NOVO MOTOR DE TÍTULOS
         let isElite = eliteClubs.includes(p.club);
-        let bonusArmador = p.archetype === 'armador' ? 15 : 0; // Armador carrega o time
+        let bonusArmador = p.archetype === 'armador' ? 15 : 0; 
         let winChanceDom = (p.ovr * 0.4) + (leagueDifficulty * 0.6) + bonusArmador + (Math.random() * 30);
         let tDom = 0, tInt = 0;
         
@@ -785,11 +792,9 @@
         if (tDom > 0 || tInt > 0) p.jejumAnos = 0;
         else p.jejumAnos += 3;
 
-        // BOLA DE OURO & COPAS (Lógica mais restrita)
         if(p.ovr > 87 && Math.random() > 0.4 && p.isConvocado) p.totals.cont++;
         if(p.isConvocado && Math.random() > 0.82 && winChanceDom > 100) { p.totals.wc++; p.fama += 5000000; }
         
-        // Para a Bola de Ouro, precisa ser a Estrela (Gols + Assist altos) em um time de elite
         if ((gol + ass) >= 90 && p.ovr >= 90 && (tInt > 0 || p.jejumAnos === 0)) { 
             p.totals.bdor += 1; 
             p.fama += 8000000; 
@@ -866,7 +871,6 @@
         let list = document.getElementById('offer-list'); list.innerHTML = "";
         
         let pool = [];
-        // Lógica de mercado realista: Jogadores velhos sem fama caem para Bronze. Estrelas ficam no topo.
         if (p.age >= 33 && p.totals.bdor === 0 && p.ovr < 82) {
             pool = tierBronze; 
         } else {
@@ -878,22 +882,52 @@
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
             let val = calcularValorPasse();
-            // Desconto na negociação
-            val = Math.max(1, Math.floor(val * (Math.random() * 0.4 + 0.8)));
             
-            let salTxt = "€35k/semana";
-            if(eliteClubs.includes(c)) salTxt = "€180k/semana";
-            if(tierBronze.includes(c)) salTxt = "€5k/semana";
-            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">💰 Salário Comercial: ${salTxt}</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val})">🤝 Aceitar Proposta €${val}M</div></div>`;
+            if(eliteClubs.includes(c)) val = Math.floor(val * 1.2);
+            if(tierBronze.includes(c)) val = Math.floor(val * 0.4);
+            val = Math.max(1, Math.floor(val * (Math.random() * 0.4 + 0.8)));
+
+            let tagPasse = "";
+            if(val < 15) tagPasse = "🔴 Modesto";
+            else if(val < 50) tagPasse = "🟡 Mediano";
+            else if(val < 100) tagPasse = "🟢 Alto";
+            else tagPasse = "💎 ASTRONÔMICO";
+
+            let salBase = Math.floor(val * 2.5); 
+            if(eliteClubs.includes(c)) salBase = Math.floor(salBase * 1.5) + 50;
+            if(tierBronze.includes(c)) salBase = Math.floor(salBase * 0.3) + 5;
+            if(c.includes("🇸🇦") || c.includes("🇶🇦")) salBase *= 3.5; 
+            if(salBase < 5) salBase = Math.floor(Math.random() * 5) + 3;
+
+            let tagSalario = "";
+            if(salBase < 30) tagSalario = "🔴 Ruim";
+            else if(salBase < 90) tagSalario = "🟡 Mediano";
+            else if(salBase < 250) tagSalario = "🟢 Bom";
+            else tagSalario = "💎 SUPER SALÁRIO";
+
+            list.innerHTML += `
+            <div class="offer-row">
+                <div class="offer-club">${c}</div>
+                <div class="offer-sal">${tagSalario}: €${salBase}k/sem</div>
+                <div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar (€${val}M - ${tagPasse})</div>
+            </div>`;
         }
     }
 
-    function aceitarTransf(c, strVal, numVal) { 
-        p.club = c; p.transferFee = strVal; p.teamChemistry = 0; // Perde o entrosamento
+    function aceitarTransf(c, strVal, numVal, salK) { 
+        p.club = c; p.transferFee = strVal; p.teamChemistry = 0; 
+        p.salario = salK * 1000;
         if(numVal > p.maxFeeNum) { p.maxFeeNum = numVal; p.maxFeeStr = "€" + strVal; }
         fecharMercado(); 
     }
-    function ficarNoTime() { p.transferFee = ""; p.teamChemistry += 20; fecharMercado(); }
+    
+    function ficarNoTime() { 
+        p.transferFee = ""; 
+        p.teamChemistry += 20; 
+        p.salario = Math.floor(p.salario * 1.15); // Aumento por renovação
+        fecharMercado(); 
+    }
+    
     function fecharMercado() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
     
     function finalizarCarreira() {
@@ -916,7 +950,6 @@
         else if(totalScore > 400) veredito = "⚽ ÍDOLO DE RESPEITO! Campeão em grandes ligas, temido pelas defesas internacionais.";
         else veredito = "👕 ATLETA PROFISSIONAL! Cumpriu sua jornada dignamente no ecossistema comercial do futebol.";
 
-        // Múltiplos finais baseados no financeiro e relacional
         let legadoFinanceiro = "";
         let riquezaTotal = p.banco + p.investido;
         
