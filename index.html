@@ -299,9 +299,9 @@
     <div class="modal" id="modal-arq" style="background: rgba(10,15,30,0.96);">
         <div class="modal-content" style="border-color:#5b2268;">
             <div class="rank-title">ESCOLHA SEU ARQUÉTIPO INICIAL</div>
-            <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible. Alta taxa de assistências.</div></div>
-            <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante Matador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico. O terror da grande área.</div></div>
-            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Meio-Campista Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro focado em armar títulos.</div></div>
+            <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible. Alta taxa de assistências. Menos queda física precoce.</div></div>
+            <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante Matador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico. Converte mais gols mesmo com OVR baixo em ligas difíceis.</div></div>
+            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Meio-Campista Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro da equipe: multiplica as chances de títulos do time.</div></div>
         </div>
     </div>
 
@@ -334,32 +334,16 @@
 </div>
 
 <script>
+    // Configurações do Jogo (Inovação no Core Engine)
     const countryMap = {
         "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇨🇴": "COLÔMBIA", "🇨🇱": "CHILE", "🇪🇨": "EQUADOR", "🇵🇾": "PARAGUAI", "🇵🇪": "PERU", "🇧🇴": "BOLÍVIA", "🇻🇪": "VENEZUELA",
         "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇪🇸": "ESPANHA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL", "🇳🇱": "HOLANDA", "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "ESCÓCIA", "🇨🇭": "SUÍÇA", "🇦🇹": "ÁUSTRIA", "🇹🇷": "TURQUIA", "🇬🇷": "GRÉCIA", "🇨🇿": "REP. TCHECA", "🇺🇦": "UCRÂNIA", "🇭🇷": "CROÁCIA",
         "🇺🇸": "EUA", "🇲🇽": "MÉXICO", "🇸🇦": "ARÁBIA SAUDITA", "🇶🇦": "CATAR", "🇯🇵": "JAPÃO", "🇧🇪": "BÉLGICA"
     };
 
-    const tierBronze = [
-        "Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷",
-        "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Newell's 🇦🇷", "Argentinos Jrs 🇦🇷", "Defensa y Justicia 🇦🇷", "Peñarol 🇺🇾", "Barcelona SC 🇪🇨", "Alianza Lima 🇵🇪",
-        "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Leicester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mallorca 🇪🇸", "Getafe 🇪🇸", "Rayo Vallecano 🇪🇸", "Genoa 🇮🇹", "Monza 🇮🇹", "Parma 🇮🇹", "Como 🇮🇹", "Augsburg 🇩🇪", "Mainz 05 🇩🇪", "Toulouse 🇫🇷", "Nantes 🇫🇷",
-        "Famalicão 🇵🇹", "Utrecht 🇳🇱", "Standard Liège 🇧🇪", "Zürich 🇨🇭", "Başakşehir 🇹🇷", "Inter Miami 🇺🇸", "LA Galaxy 🇺🇸", "Pachuca 🇲🇽", "Cruz Azul 🇲🇽", "Al-Ettifaq 🇸🇦"
-    ];
-
-    const tierPrata = [
-        "Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Cruzeiro 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Nacional 🇺🇾", "Atlético Nacional 🇨🇴", "Colo-Colo 🇨🇱", "LDU 🇪🇨",
-        "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Real Betis 🇪🇸", "Real Sociedad 🇪🇸", "Athletic Bilbao 🇪🇸", "Villarreal 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Fiorentina 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Eintracht Frankfurt 🇩🇪", "Stuttgart 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Monaco 🇫🇷", "Lille 🇫🇷",
-        "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Feyenoord 🇳🇱", "Celtic 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Rangers 🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Club Brugge 🇧🇪", "Galatasaray 🇹🇷", "Fenerbahçe 🇹🇷", "Olympiacos 🇬🇷", "Sparta Praha 🇨🇿", "Dinamo Zagreb 🇭🇷", "Shakhtar Donetsk 🇺🇦", "Club América 🇲🇽", "Monterrey 🇲🇽", "Al-Ahli 🇸🇦", "Al-Sadd 🇶🇦", "Vissel Kobe 🇯🇵"
-    ];
-
-    const eliteClubs = [
-        "Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", 
-        "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", 
-        "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", 
-        "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "Napoli 🇮🇹", 
-        "PSG 🇫🇷", "Al-Hilal 🇸🇦", "Al-Nassr 🇸🇦", "Al-Ittihad 🇸🇦"
-    ];
+    const tierBronze = ["Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Atlético-GO 🇧🇷", "Cuiabá 🇧🇷", "Sport 🇧🇷", "Ceará 🇧🇷", "Bragantino 🇧🇷", "Santos 🇧🇷", "Talleres 🇦🇷", "Rosario Central 🇦🇷", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Getafe 🇪🇸", "Monza 🇮🇹", "Augsburg 🇩🇪", "Toulouse 🇫🇷", "Inter Miami 🇺🇸"];
+    const tierPrata = ["Palmeiras 🇧🇷", "Flamengo 🇧🇷", "São Paulo 🇧🇷", "Corinthians 🇧🇷", "Fluminense 🇧🇷", "Grêmio 🇧🇷", "Atlético-MG 🇧🇷", "Botafogo 🇧🇷", "Internacional 🇧🇷", "Boca Juniors 🇦🇷", "River Plate 🇦🇷", "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Sevilla 🇪🇸", "Real Sociedad 🇪🇸", "Lazio 🇮🇹", "Roma 🇮🇹", "Atalanta 🇮🇹", "Bayer Leverkusen 🇩🇪", "RB Leipzig 🇩🇪", "Marseille 🇫🇷", "Lyon 🇫🇷", "Benfica 🇵🇹", "Porto 🇵🇹", "Sporting 🇵🇹", "Ajax 🇳🇱", "PSV 🇳🇱", "Galatasaray 🇹🇷"];
+    const eliteClubs = ["Real Madrid 🇪🇸", "Barcelona 🇪🇸", "Atlético de Madrid 🇪🇸", "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Manchester United 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bayern de Munique 🇩🇪", "Borussia Dortmund 🇩🇪", "Inter de Milão 🇮🇹", "Juventus 🇮🇹", "Milan 🇮🇹", "PSG 🇫🇷"];
 
     const houseUpgrades = [
         { name: "Casa dos Pais", price: 0, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80' },
@@ -375,9 +359,10 @@
         { name: "Superesportivo Raro", price: 3000000, img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80' }
     ];
 
+    // Estado central do jogador
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
-        club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false,
+        club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
         hasTrainer: false, hasAgent: false, prLevel: 0, relacao: "Solteiro", investido: 0,
         emocao: "Focado 🧘", jejumAnos: 0, fama: 100000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
@@ -400,181 +385,79 @@
         if (dadosSalvos) records = JSON.parse(dadosSalvos);
     } catch(e) {}
 
-    // BATERIA DE 15 DRAMAS VARIADOS (CAMPO, VESTIÁRIO E VIDA PESSOAL)
+    // BATERIA EXPANDIDA DE DRAMAS (Inclui verificações de estado para mais imersão)
     const bancoDramasOriginal = [
         {
-            texto: "🍷 FARRA NOTURNA: Véspera de um jogo decisivo e os 'parças' te chamam para uma balada VIP com tudo pago. Vão ter celebridades e a festa não tem hora para acabar.",
-            A: "Ir para a farra até o amanhecer.",
-            B: "Ficar em casa focado no jogo, dormindo cedo.",
-            C: "Ir na festa, mas beber só água e voltar antes da meia-noite.",
+            texto: "🍷 FARRA NOTURNA: Véspera de um jogo decisivo e os 'parças' te chamam para uma balada VIP com tudo pago.",
+            A: "Ir para a farra até o amanhecer.", B: "Ficar em casa focado no jogo.", C: "Ir na festa, mas beber só água.",
             acao: (opt) => {
-                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.pac-=3; p.sho-=3; p.dri-=2; p.fama+=500000; return "🎉 Você curtiu demais! Ganhou 500k fãs na internet, mas foi jogar de ressaca. Ficou desatento, perdeu bola fácil e perdeu gols feitos. Seus atributos despencaram (-3 Ritmo, -3 Fin, -2 Drible)."; }
-                if(opt==='B'){ p.emocao="Focado 🧘"; p.ovr+=2; p.sho+=2; p.pas+=2; return "🛏️ Profissionalismo puro! Você dormiu, acordou voando no jogo decisivo e destruiu a partida. Ganhou atributos permanentes (+2 OVR, +2 Fin, +2 Pas)."; }
-                p.fama+=100000; return "📸 Meio termo. Apareceu nas fotos, fez média, e conseguiu descansar o suficiente. Apenas manteve a forma.";
+                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.pac-=3; p.sho-=3; p.dri-=2; p.fama+=500000; return "🎉 Você curtiu demais! Ganhou 500k fãs na internet, mas foi jogar de ressaca. Perdeu atributos (-3 Ritmo, -3 Fin)."; }
+                if(opt==='B'){ p.emocao="Focado 🧘"; p.ovr+=2; p.sho+=2; return "🛏️ Profissionalismo puro! Destruiu a partida e ganhou atributos permanentes (+2 OVR)."; }
+                p.fama+=100000; return "📸 Meio termo. Fez média e conseguiu descansar o suficiente.";
             }
         },
         {
-            texto: "💰 MÁFIA DE APOSTAS: Um empresário obscuro te oferece €2 Milhões limpos na sua conta só para você forçar um Cartão Vermelho no primeiro tempo hoje.",
-            A: "Aceitar o dinheiro e dar uma entrada criminosa no adversário.",
-            B: "Recusar, bloquear o contato e jogar limpo.",
-            C: "Denunciar o esquema publicamente na TV.",
+            texto: "💰 MÁFIA DE APOSTAS: Um empresário te oferece €2 Milhões limpos para você forçar um Cartão Vermelho hoje.",
+            A: "Aceitar o dinheiro e dar uma entrada criminosa.", B: "Recusar, bloquear o contato.", C: "Denunciar o esquema na TV.",
             acao: (opt) => {
-                if(opt==='A'){ p.banco+=2000000; p.fama-=1500000; p.emocao="Triste 😢"; return "🚨 ESCÂNDALO! Você pegou os €2M, foi expulso, mas o tribunal esportivo desconfiou. A torcida te odeia (-1.5M fãs) e a culpa destruiu sua cabeça (Status: Triste)."; }
-                if(opt==='B'){ p.emocao="Focado 🧘"; return "🤝 Integridade mantida. Você jogou limpo e evitou um problema gigante na sua carreira."; }
-                p.fama+=2000000; p.emocao="Alegre 😁"; return "🎤 HERÓI DO ESPORTE! Você denunciou, a polícia prendeu o cara e você virou símbolo mundial de honestidade (+2 Milhões de Fãs, Status: Alegre).";
+                if(opt==='A'){ p.banco+=2000000; p.fama-=1500000; p.emocao="Triste 😢"; return "🚨 ESCÂNDALO! Você pegou €2M, mas a culpa destruiu sua cabeça e a torcida te odeia (Status: Triste, -1.5M fãs)."; }
+                if(opt==='B'){ p.emocao="Focado 🧘"; return "🤝 Integridade mantida. Você evitou um problema gigante."; }
+                p.fama+=2000000; p.emocao="Alegre 😁"; return "🎤 HERÓI! Você denunciou, virou símbolo mundial de honestidade (+2M Fãs, Status: Alegre).";
             }
         },
         {
-            texto: "👟 PATROCÍNIO TÓXICO: Uma marca gringa quer te pagar €3 Milhões de luvas, mas exige que você use a chuteira deles, que é dura, desconfortável e está machucando seu pé nos treinos.",
-            A: "Assinar o contrato. O que importa é o dinheiro na conta.",
-            B: "Recusar o contrato e continuar usando sua chuteira antiga sem patrocínio.",
-            C: "Pegar o dinheiro, mas jogar com sua chuteira velha pintada de preto escondido.",
+            texto: "👟 PATROCÍNIO TÓXICO: Uma marca gringa te paga €3M, mas a chuteira é dura e está machucando seu pé.",
+            A: "Assinar o contrato.", B: "Recusar o contrato.", C: "Jogar com sua chuteira velha pintada de preto.",
             acao: (opt) => {
-                if(opt==='A'){ p.banco+=3000000; p.pac-=4; p.dri-=3; p.ovr-=1; return "💶 Você ficou milionário (+€3M), mas a chuteira te encheu de bolhas. Você perdeu velocidade e habilidade (-4 Ritmo, -3 Drible, -1 OVR)."; }
-                if(opt==='B'){ p.ovr+=1; p.pac+=2; p.emocao="Focado 🧘"; return "⚡ Foco no desempenho! Você recusou a grana, continuou ágil e voando em campo (+1 OVR, +2 Ritmo)."; }
-                p.banco+=1000000; p.fama-=500000; return "🚨 ESCÂNDALO COMERCIAL! A marca descobriu a pintura no intervalo do jogo, te processou e rescindiu. Você ficou com 1/3 da grana mas manchou sua imagem.";
+                if(opt==='A'){ p.banco+=3000000; p.pac-=4; p.dri-=3; p.ovr-=1; return "💶 Ficou milionário, mas a chuteira te encheu de bolhas (-4 Ritmo, -1 OVR)."; }
+                if(opt==='B'){ p.ovr+=1; p.pac+=2; p.emocao="Focado 🧘"; return "⚡ Foco no desempenho! Recusou a grana e voou em campo (+1 OVR)."; }
+                p.banco+=1000000; p.fama-=500000; return "🚨 ESCÂNDALO COMERCIAL! A marca descobriu a pintura. Manchou sua imagem (-500k Fãs).";
             }
         },
         {
-            texto: "🤬 TRETA DE VESTIÁRIO: O camisa 10 veterano do time está com inveja do seu brilho e simplesmente parou de tocar a bola para você nos jogos.",
-            A: "Ir para cima dele e sair na porrada no vestiário.",
-            B: "Abaixar a cabeça, jogar para o time e virar garçom dele.",
-            C: "Chamar ele para um jantar pago por você e resolver na conversa.",
+            texto: "🚑 LESÃO GRAVE: Você sentiu o joelho. O médico do clube quer fazer cirurgia (perde a temporada). Seu empresário tem um 'curandeiro' por €100k.",
+            A: "Fazer a cirurgia correta.", B: "Pagar o curandeiro (€100k).", C: "Jogar com dor no sacrifício.",
             acao: (opt) => {
-                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.fama-=800000; p.ovr-=2; return "🥊 PÉSSIMO! A briga vazou. O clima ficou insuportável, o time rachou e sua performance caiu muito (-2 OVR)."; }
-                if(opt==='B'){ p.pas+=5; p.sho-=3; p.emocao="Triste 😢"; return "👟 Você virou ajudante. Ganhou muita visão de jogo (+5 Passe), mas perdeu seu faro artilheiro (-3 Finalização) e se sente frustrado."; }
-                p.banco-=20000; p.pas+=3; p.sho+=3; p.emocao="Alegre 😁"; return "🍝 Maturidade! O jantar custou €20k, mas vocês viraram uma dupla letal. Entrosamento perfeito rendeu evolução no campo (+3 Passe, +3 Finalização).";
-            }
-        },
-        {
-            texto: "📋 CRISE COM TÉCNICO: O novo treinador é retranqueiro e quer te obrigar a jogar recuado como volante de marcação. Ele disse que se você não aceitar, vai pro banco.",
-            A: "Bater o pé, xingar o treinador e exigir jogar no ataque.",
-            B: "Aceitar quieto e começar a dar carrinho no meio campo.",
-            C: "Reclamar com o presidente do clube (que é seu fã).",
-            acao: (opt) => {
-                if(opt==='A'){ p.emocao="Ressaca 🥴"; p.ovr-=3; p.fama-=500000; return "🥶 GELADEIRA! Ele te colocou no banco por meses. Sem ritmo de jogo, seus atributos murcharam (-3 OVR)."; }
-                if(opt==='B'){ p.def+=15; p.sho-=6; return "🛡️ Sacrifício tático. Você virou um cão de guarda (+15 Defesa), mas esqueceu totalmente como se faz gols (-6 Finalização)."; }
-                p.emocao="Alegre 😁"; p.sho+=2; p.ovr+=1; return "👔 Política nos bastidores! O presidente interviu, demitiu o técnico e você continuou no ataque, feliz e brocando (+1 OVR).";
-            }
-        },
-        {
-            texto: "🥅 PÊNALTI DA GLÓRIA: Último minuto da final do campeonato continental. Está empatado. O juiz marca pênalti. Você não é o batedor oficial, mas a torcida grita seu nome.",
-            A: "Pegar a bola e bater a penalidade no ângulo.",
-            B: "Pegar a bola e tentar dar uma cavadinha (Panenka).",
-            C: "Respeitar a hierarquia e deixar o batedor oficial cobrar.",
-            acao: (opt) => {
-                let chance = p.sho > 85 ? 0.8 : 0.5;
-                if(opt==='A'){
-                    if(Math.random() < chance) { p.fama+=3000000; p.ovr+=2; p.emocao="Alegre 😁"; return "⚽ GOL DO TÍTULO! Uma bomba no ângulo! Você virou o rei da cidade, ganhou +3M de fãs e sua moral explodiu (+2 OVR)!"; }
-                    else { p.fama-=1500000; p.emocao="Triste 😢"; p.sho-=4; return "🚨 PÉSSIMO! ESCÂNDALO! Você bateu fraco, o goleiro pegou e o time perdeu a final. A culpa caiu em você, causando trauma (-4 Fin, -1.5M Fãs)."; }
-                }
-                if(opt==='B'){
-                    if(Math.random() < 0.3) { p.fama+=5000000; p.ovr+=3; p.emocao="Alegre 😁"; return "👑 LENDÁRIO! A cavadinha entrou! Uma humilhação histórica no adversário que te consagrou para sempre (+5M de fãs, +3 OVR)."; }
-                    else { p.fama-=2500000; p.emocao="Ressaca 🥴"; p.ovr-=4; return "🚨 CANCELAMENTO MASSIVO! O goleiro nem pulou e pegou a bola no peito. A arrogância te custou a carreira. Torcida em fúria (-4 OVR)."; }
-                }
-                p.emocao="Focado 🧘"; p.pas+=2; return "🤝 Ele cobrou e fez. Você não virou herói, mas mostrou respeito ao grupo (+2 Passe).";
-            }
-        },
-        {
-            texto: "🍺 FAMÍLIA EM CRISE: Seu irmão mais velho ligou bêbado dizendo que bateu o carro em um muro e precisa de €50k rápido para não ser preso.",
-            A: "Transferir o dinheiro imediatamente para abafar.",
-            B: "Desligar na cara dele.",
-            C: "Pagar, mas obrigá-lo a ir para a reabilitação (Custo €150k).",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco-=50000; p.emocao="Triste 😢"; return "💸 Gastou €50k. Ele continuou bebendo, te sugando dinheiro e isso te deprimiu profundamente."; }
-                if(opt==='B'){ p.fama-=500000; return "🚨 ESCÂNDALO! Ele foi preso, a imprensa descobriu e te chamaram de milionário ingrato."; }
-                p.banco-=150000; p.ovr+=2; p.emocao="Alegre 😁"; return "🏥 Custou caro (€150k), mas funcionou. Ver seu irmão limpo te deu paz e você voou nos treinos (+2 OVR).";
-            }
-        },
-        {
-            texto: "💔 DIVÓRCIO POLÊMICO: Sua esposa encontrou DMs no seu celular e exigiu divórcio, querendo metade do seu fundo e ameaçando a mídia.",
-            A: "Contratar o melhor advogado para lutar.",
-            B: "Dar metade de tudo em silêncio.",
-            C: "Dar entrevista atacando ela antes.",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco-=1000000; p.emocao="Triste 😢"; p.relacao="Divorciado"; return "⚖️ Você gastou €1M com advogados. Áudios vazaram, sua cabeça destruiu e você virou reserva."; }
-                if(opt==='B'){ p.banco = Math.floor(p.banco/2); p.relacao="Divorciado"; p.emocao="Focado 🧘"; return "💔 Acordo sigiloso. Perdeu METADE da fortuna, mas a mente ficou limpa para jogar futebol."; }
-                p.fama-=3000000; p.relacao="Cancelado"; p.emocao="Ressaca 🥴"; return "🚨 CANCELAMENTO MASSIVO! Você se fez de vítima, mas ela expôs prints piores. Fim da sua moral pública.";
-            }
-        },
-        {
-            texto: "🚑 LESÃO GRAVE: Você sentiu o joelho no treino. O médico do clube quer fazer cirurgia (4 meses fora). Seu empresário achou um 'curandeiro chinês' que promete curar em 1 semana por €100k.",
-            A: "Fazer a cirurgia correta e perder a temporada.",
-            B: "Pagar o curandeiro chinês (€100k).",
-            C: "Forçar a barra e jogar com dor no sacrifício.",
-            acao: (opt) => {
-                if(opt==='A'){ p.ovr-=1; p.pac-=2; p.emocao="Focado 🧘"; return "🏥 Recuperação chata, perdeu um pouco de explosão física (-2 Ritmo), mas o joelho está firme para o resto da vida."; }
+                if(opt==='A'){ p.ovr-=1; p.pac-=2; return "🏥 Recuperação chata, perdeu um pouco de explosão (-2 Ritmo), mas o joelho está firme."; }
                 if(opt==='B'){ 
-                    if(Math.random() > 0.5) { p.banco-=100000; p.ovr+=2; return "🐉 MILAGRE MEDICINAL! As agulhas funcionaram. Custou €100k, mas você voltou parecendo uma máquina (+2 OVR)."; }
-                    else { p.banco-=100000; p.pac-=6; p.phy-=6; p.ovr-=3; p.emocao="Triste 😢"; return "🚨 PÉSSIMO! O tratamento era farsa. Você infeccionou o joelho, piorou a lesão e perdeu MUITO físico (-6 Ritmo, -3 OVR)."; }
+                    if(Math.random() > 0.5) { p.banco-=100000; p.ovr+=2; return "🐉 MILAGRE! As agulhas funcionaram. Custou €100k, voltou feito máquina (+2 OVR)."; }
+                    else { p.banco-=100000; p.pac-=6; p.phy-=6; p.ovr-=3; p.emocao="Triste 😢"; return "🚨 PÉSSIMO! O tratamento era farsa. Você piorou a lesão (-6 Ritmo, -3 OVR)."; }
                 }
-                p.pac-=8; p.dri-=5; p.ovr-=4; p.emocao="Triste 😢"; return "🩸 VOCÊ ESTOUROU O LIGAMENTO EM CAMPO! Jogar com dor foi burrice. Perdeu quase toda a sua velocidade e drible (-4 OVR).";
+                p.pac-=8; p.dri-=5; p.ovr-=4; p.emocao="Triste 😢"; return "🩸 ESTOUROU O LIGAMENTO! Jogar com dor foi burrice. Perdeu agilidade (-4 OVR).";
             }
         },
         {
-            texto: "🤑 PROPOSTA DAS ARÁBIAS: O príncipe dono do clube árabe ofereceu €15 Milhões agora, só para você faltar no jogo do seu clube amanhã e ir jantar no iate dele em Dubai.",
-            A: "Aceitar a grana, meter um atestado falso e ir pro iate.",
-            B: "Recusar e bloquear o número dele.",
-            C: "Aceitar a grana, mas dizer que só vai nas suas férias.",
+            texto: "🤑 PROPOSTA DAS ARÁBIAS: O príncipe ofereceu €15 Milhões só para você faltar no jogo de hoje e jantar no iate dele.",
+            A: "Meter atestado e ir pro iate.", B: "Recusar e bloquear ele.", C: "Dizer que só vai nas férias.",
             acao: (opt) => {
-                if(opt==='A'){ p.banco+=15000000; p.fama-=2000000; p.ovr-=2; p.emocao="Ressaca 🥴"; return "🛥️ Milionário safado! Você pegou €15M, mas foi flagrado no iate enquanto seu time perdia. Escândalo mundial, torcida queimou sua camisa (-2 OVR, Status: Ressaca)."; }
-                if(opt==='B'){ p.fama+=1000000; p.emocao="Focado 🧘"; return "🛡️ Integridade blindada. O áudio do seu 'não' vazou e a torcida te chamou de lenda leal ao clube (+1M de fãs)."; }
-                p.emocao="Triste 😢"; return "🤴 Ele se ofendeu com suas condições, cancelou tudo e mandou hackearem suas redes sociais. Dia péssimo.";
+                if(opt==='A'){ p.banco+=15000000; p.fama-=2000000; p.ovr-=2; p.emocao="Ressaca 🥴"; return "🛥️ Milionário safado! Pegou €15M, mas foi flagrado. Torcida queimou sua camisa (-2 OVR)."; }
+                if(opt==='B'){ p.fama+=1000000; p.emocao="Focado 🧘"; return "🛡️ Integridade blindada. O áudio vazou e a torcida te chamou de lenda leal (+1M fãs)."; }
+                p.emocao="Triste 😢"; return "🤴 Ele se ofendeu, cancelou tudo e mandou hackearem suas redes.";
+            }
+        },
+        // NOVOS DRAMAS INOVADORES
+        {
+            texto: "📉 QUEBRA DA BOLSA: Seu corretor investiu metade do seu fundo na 'Moeda do Cachorrinho'. A bolha estourou e você está prestes a perder milhões.",
+            A: "Vender tudo agora com prejuízo.", B: "Apostar o dobro para tentar recuperar o preço médio.", C: "Demiti-lo e processar publicamente.",
+            acao: (opt) => {
+                if(opt==='A'){ p.investido = Math.floor(p.investido * 0.4); p.emocao="Triste 😢"; return "💸 Prejuízo real assumido. Seu fundo foi cortado em mais da metade. Que dor no coração."; }
+                if(opt==='B'){ 
+                    if(Math.random() > 0.8) { p.investido *= 3; return "🚀 LOUCURA! A moeda sofreu um pump bizarro na internet. Seu fundo triplicou de valor!"; }
+                    else { p.investido = 0; p.banco = 0; p.emocao="Ressaca 🥴"; return "🚨 PÉSSIMO! A moeda zerou. Você perdeu todo o dinheiro na conta e no fundo. Falência!"; }
+                }
+                p.fama+=500000; p.investido = Math.floor(p.investido * 0.5); return "👨‍⚖️ O processo abafou a dor e te rendeu fama, mas o dinheiro virou pó no mercado (-50% Fundo).";
             }
         },
         {
-            texto: "🏃‍♂️ FÃ INVASOR: No meio do jogo, uma criança invade o campo chorando e correndo na sua direção. Os seguranças truculentos estão prestes a derrubar ela.",
-            A: "Correr, empurrar os seguranças e abraçar a criança.",
-            B: "Sair de perto para não se envolver.",
-            C: "Pedir calma aos guardas e tirar a camisa para o menino.",
+            texto: "👑 EGO DE CRAQUE: Você discutiu feio com o treinador. Ele te tirou do time titular na final. O clima está horrível.",
+            A: "Pedir desculpas e aceitar o banco.", B: "Tentar derrubar o treinador na diretoria.", C: "Dar as costas e abandonar o estádio.",
             acao: (opt) => {
-                if(opt==='A'){ p.fama+=2000000; p.emocao="Alegre 😁"; return "🦸‍♂️ ATITUDE DE HERÓI! O vídeo viralizou globalmente. Você defendeu a criança e virou o queridinho da internet (+2M de Fãs)."; }
-                if(opt==='B'){ p.fama-=1000000; return "🚨 ESCÂNDALO! A câmera pegou você virando as costas. A internet te apelidou de 'pipoqueiro sem coração' (-1M fãs)."; }
-                p.fama+=500000; return "👕 Bonita atitude. Deu a camisa, resolveu a situação de forma pacífica e ganhou moral pública.";
-            }
-        },
-        {
-            texto: "🎙️ ENTREVISTA POLÊMICA: Após uma derrota dolorosa por 3x0, o repórter te pergunta por que o time jogou tão mal.",
-            A: "Culpar o esquema tático do treinador abertamente.",
-            B: "Culpar a arbitragem que 'roubou' vocês.",
-            C: "Assumir a culpa toda no peito.",
-            acao: (opt) => {
-                if(opt==='A'){ p.emocao="Triste 😢"; p.ovr-=2; return "🚨 PÉSSIMO! O treinador viu a entrevista, o vestiário quebrou e você foi barrado dos próximos jogos (-2 OVR)."; }
-                if(opt==='B'){ p.banco-=50000; return "⚖️ A federação não gostou. Você tomou um processo pesado e pagou €50k de multa para não ser suspenso."; }
-                p.emocao="Alegre 😁"; p.ovr+=1; p.fama+=500000; return "🛡️ Perfil de Capitão! Você blindou o grupo chamando a culpa. O elenco fechou com você e a química aumentou (+1 OVR).";
-            }
-        },
-        {
-            texto: "🍔 EXCESSO DE PESO: Férias chegaram, você relaxou e engordou 6 quilos comendo churrasco. A reapresentação do elenco é em duas semanas.",
-            A: "Contratar uma clínica de emagrecimento de choque (€80k).",
-            B: "Fazer treinos duplos sozinho na praia até vomitar.",
-            C: "Voltar gordo mesmo e justificar que é 'massa muscular'.",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco-=80000; p.phy+=3; p.pac+=2; return "🥗 A clínica resolveu! Você gastou €80k, perdeu o peso e ainda voltou mais forte e rápido (+3 Físico, +2 Ritmo)."; }
-                if(opt==='B'){ p.pac-=3; p.emocao="Triste 😢"; return "🤕 Overtraining! Você treinou errado na areia e puxou a coxa. Voltou machucado e mais lento (-3 Ritmo)."; }
-                p.pac-=5; p.dri-=4; p.ovr-=2; p.emocao="Ressaca 🥴"; return "🚨 ESCÂNDALO! A imprensa postou fotos da sua barriga. Virou meme nacional e perdeu muita agilidade (-5 Ritmo, -4 Drible).";
-            }
-        },
-        {
-            texto: "🏘️ CARIDADE NO BAIRRO: Uma comunidade carente está pedindo ajuda para construir um campo decente para as crianças.",
-            A: "Doar €1.5 Milhões e fazer um super CT padrão FIFA.",
-            B: "Ignorar, isso é dever da prefeitura.",
-            C: "Doar apenas 100 chuteiras (Custo €10k).",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco-=1500000; p.fama+=4000000; p.emocao="Alegre 😁"; return "🏟️ HERÓI DO POVO! Você fez o CT, sua fama explodiu em 4 Milhões e a energia positiva te renovou!"; }
-                if(opt==='B'){ p.fama-=500000; return "🚨 PÉSSIMA IMAGEM! Vazou que você negou ajuda e a internet te massacrou."; }
-                p.banco-=10000; p.fama+=100000; return "👟 Marketing OK. Gastou pouco e ficou bem na foto nas redes sociais.";
-            }
-        },
-        {
-            texto: "💉 ACUSAÇÃO FALSA: Um jornalista espalhou no Twitter que seus músculos novos são fruto de Doping pesado.",
-            A: "Pagar €500k para os melhores advogados processarem o jornalista.",
-            B: "Gravar um vídeo chorando e pedindo para pararem.",
-            C: "Fazer o teste surpresa na frente das câmeras da TV.",
-            acao: (opt) => {
-                if(opt==='A'){ p.banco-=500000; p.emocao="Focado 🧘"; p.fama+=800000; return "👨‍⚖️ O cara perdeu na justiça, teve que pedir desculpas públicas e seus fãs amaram a resposta firme!"; }
-                if(opt==='B'){ p.fama-=300000; p.emocao="Triste 😢"; return "📉 O choro soou como culpa. A dúvida ficou no ar, você perdeu fãs e confiança emocional."; }
-                p.fama+=1500000; p.ovr+=1; p.emocao="Alegre 😁"; return "🧬 GÊNIO! O exame deu negativo na TV ao vivo. Humilhou os críticos e sua popularidade foi às alturas (+1 OVR).";
+                if(opt==='A'){ p.emocao="Focado 🧘"; p.teamChemistry+=10; return "🤝 Maturidade! Você aceitou o banco, o time venceu e a química do grupo melhorou."; }
+                if(opt==='B'){
+                    if(p.ovr > 88) { p.emocao="Alegre 😁"; return "👔 Você manda aqui! A diretoria ouviu o craque, demitiu o técnico no vestiário e você foi jogar!"; }
+                    else { p.emocao="Triste 😢"; p.ovr-=3; p.teamChemistry=0; return "🚨 CANCELAMENTO! A diretoria apoiou o técnico. Você foi afastado e multado (-3 OVR)."; }
+                }
+                p.fama-=1500000; p.ovr-=2; p.emocao="Ressaca 🥴"; return "🏃‍♂️ Abandono de emprego. A torcida te rotulou de mercenário mimado (-1.5M Fãs, -2 OVR).";
             }
         }
     ];
@@ -626,6 +509,7 @@
 
         let pool = p.isProdigy ? tierPrata : tierBronze;
         p.club = pool[Math.floor(Math.random() * pool.length)];
+        p.teamChemistry = 0;
         
         if(p.club.includes("🇪🇸") || p.club.includes("🏴") || p.club.includes("🇮🇹") || p.club.includes("🇩🇪") || p.club.includes("🇫🇷") || p.club.includes("🇵🇹") || p.club.includes("🇳🇱") || p.club.includes("🇧🇪")) {
             p.origin = "Europa"; document.getElementById('icone-continente').innerText = "🏆 Eurocopa";
@@ -684,14 +568,22 @@
         return (num/1000).toFixed(0) + "k";
     }
 
-    function atualizarUI() {
-        ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
-        
-        // Recalcular o OVR baseando-se na média caso os eventos tenham modificado muito
-        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.def > 70 ? 2 : 0) + (p.archetype === 'matador' ? 3 : 0);
-        if(Math.abs(calcOvr - p.ovr) > 5) p.ovr = calcOvr; 
+    function calcularValorPasse() {
+        let valBase = (p.ovr > 85) ? Math.floor(Math.random()*60)+60 : Math.floor(Math.random()*30)+10;
+        if(p.age < 23) valBase *= 1.5; // Jovens hiperfaturados
+        if(p.age > 32) valBase = Math.floor(valBase * 0.25); // Velhos perdem passe brusco
+        if(p.age > 36) valBase = 0; // Passe livre
+        return valBase;
+    }
 
-        ['ovr','pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
+    function atualizarUI() {
+        ['pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
+        
+        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.def > 70 ? 2 : 0) + (p.archetype === 'matador' ? 3 : 0);
+        
+        // Aplica o entrosamento na moral mas com limite de 99
+        let finalOvr = Math.min(99, calcOvr + Math.floor(p.teamChemistry / 20));
+        p.ovr = finalOvr; 
 
         let ovrHTML = `<div class="ovr-col"><span style="color:#15803d">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime ? 'inline' : 'none'}">⬆</span></div>`;
         document.getElementById('attr-vals').innerHTML = `${ovrHTML}<div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
@@ -699,9 +591,8 @@
         document.getElementById('hdr-age').innerText = p.age;
         if(p.ovr > p.prime) p.prime = p.ovr;
         
-        let valBase = (p.ovr > 85) ? Math.floor(Math.random()*100)+50 : Math.floor(Math.random()*40)+5;
-        if(p.age > 33) valBase = Math.floor(valBase * 0.3);
-        document.getElementById('hdr-value').innerText = (p.age === 15) ? "-" : "€" + valBase + "M";
+        let passe = calcularValorPasse();
+        document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0) ? "Livre" : "€" + passe + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco);
         document.getElementById('hdr-selecao').innerText = p.isConvocado ? "Sim 🇧🇷" : "Não";
         document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
@@ -790,91 +681,120 @@
         `;
     }
 
+    function exibirMensagemTopo(msg) {
+        const ev = document.getElementById('event-section');
+        ev.innerHTML = msg;
+        ev.style.display = 'block';
+        setTimeout(() => { ev.style.display = 'none'; }, 5000);
+    }
+
     function avancarCarreira() {
         if (p.age >= 39) { finalizarCarreira(); return; }
         document.getElementById('btn-main').innerText = "CONTINUAR PROGRESSÃO";
         
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
-        else { p.age += 3; currentStep++; }
+        else { p.age += 3; currentStep++; p.teamChemistry += 15; }
 
-        if(p.investido > 0) { let lucro = Math.floor(p.investido * 0.25); p.banco += lucro; }
+        // DINÂMICA DE INVESTIMENTO
+        if(p.investido > 0) {
+            let marketEvent = Math.random();
+            let yieldPct = 0;
+            let msg = "";
+            if(marketEvent < 0.1) { yieldPct = -0.4; msg = "📉 CRASH no Mercado: Seu fundo derreteu -40%!"; }
+            else if(marketEvent < 0.3) { yieldPct = -0.1; msg = "🐻 Mercado Baixa: Fundo -10%!"; }
+            else if(marketEvent < 0.7) { yieldPct = 0.15; msg = "📊 Rendimento Estável: +15% no Fundo!"; }
+            else if(marketEvent < 0.9) { yieldPct = 0.4; msg = "📈 BULL MARKET: Seu fundo lucrou +40%!"; }
+            else { yieldPct = 0.8; msg = "🚀 MOON! Ações dispararam: Fundo rendeu +80%!"; }
+            
+            p.investido += Math.floor(p.investido * yieldPct);
+            if(yieldPct !== 0.15) exibirMensagemTopo(msg); // Só exibe se for fora do comum
+        }
 
+        // SALÁRIOS E PATROCÍNIOS APRIMORADOS
         let salSemanal = 5000;
         if(eliteClubs.includes(p.club)) salSemanal = 180000;
-        else if(tierPrata.includes(p.club)) salSemanal = 35000;
+        else if(tierPrata.includes(p.club)) salSemanal = 45000;
         
-        let bonusFamaComercial = Math.floor(p.fama * 0.05);
-        p.banco += (salSemanal * 150) + bonusFamaComercial;
+        let bonusPatrocinio = Math.floor(p.fama * 0.08); // Patrocinadores pagam baseado na fama
+        if (p.hasAgent) bonusPatrocinio *= 1.5;
+        p.banco += (salSemanal * 150) + bonusPatrocinio;
 
-        if(p.ovr >= 80) p.isConvocado = true;
+        if(p.ovr >= 82) p.isConvocado = true;
 
         if (p.banco < 0) {
             p.banco = 0; p.houseTier = 0; p.carTier = 0; p.investido = 0; p.emocao = "Triste 😢";
+            exibirMensagemTopo("🚨 FALÊNCIA! Seus bens foram leiloados para pagar dívidas.");
         }
 
+        // CURVA DE ENVELHECIMENTO INTELIGENTE
         if (p.age <= 21) {
-            let g = Math.floor(Math.random() * (p.isProdigy ? 6 : 5)) + 4; 
+            let g = Math.floor(Math.random() * (p.isProdigy ? 7 : 5)) + 4; 
             p.ovr += g; p.sho += g; p.dri += g; p.pac += Math.floor(g/2); p.pas += Math.floor(g/2);
         } else if (p.age <= 27) {
             let g = Math.floor(Math.random() * 4) + 2;
             p.ovr += g; p.sho += g; p.dri += g; p.pas += g;
         } else if (p.age >= 33) {
-            let d = Math.floor(Math.random() * 2) + 4; 
-            p.pac -= d; p.phy -= (d - 1); 
-            p.sho += 4; p.pas += 5; 
-            p.ovr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + 10;
-        } else if (p.age === 30) {
-            p.pac -= 2; p.phy -= 1; p.pas += 2; p.sho += 2;
+            let quedaPac = (p.archetype === 'ponta') ? 2 : 5; // Pontas resistem mais antes dos 36, ou caem?
+            if (p.age >= 36 && p.archetype === 'ponta') quedaPac = 8; // Mas quebram de vez aos 36
+
+            p.pac -= quedaPac; p.phy -= 3; 
+            p.sho += 3; p.pas += 4; // Fica mais inteligente
+            
+            if (p.hasTrainer) { p.pac += 2; p.phy += 2; } // Trainer reduz impacto
         }
 
-        if(Math.random() < 0.20 && currentStep > 1 && p.age < 36) {
-            if(!p.hasTrainer) {
-                p.pac -= 3; p.phy -= 3; p.ovr -= 1; p.emocao = "Triste 😢";
-            }
-        }
+        // NOVO MOTOR DE PARTIDA
+        let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 78 : 65);
+        let performanceDelta = p.ovr - leagueDifficulty; 
+        
+        let apps = Math.max(10, Math.min(120, 90 + Math.floor(performanceDelta * 1.5))); // Se jogar num time muito bom e tiver OVR baixo, vai pro banco.
+        
+        let formGols = 1.0;
+        if(p.emocao === "Alegre 😁") formGols += 0.2; 
+        if(p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢") formGols -= 0.4;
 
-        let apps = 100 + Math.floor(Math.random() * 45);
-        let formGols = Math.random() * 0.6 + 0.5;
-        if(p.emocao === "Alegre 😁") formGols += 0.25; 
-        if(p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢") formGols -= 0.3;
+        let golChance = Math.max(0.05, (p.sho * 0.01) + (performanceDelta * 0.01));
+        if (p.archetype === 'matador') golChance *= 1.35; // Centroavante faz gol até em fase ruim
 
-        let shootFactor = Math.pow(p.sho / 100, 2);
-        let gol = Math.max(0, Math.floor(apps * shootFactor * formGols));
-        if(p.archetype === 'matador') gol = Math.floor(gol * 1.35);
+        let gol = Math.floor(apps * golChance * formGols * (Math.random() * 0.5 + 0.8));
+        
+        let assChance = Math.max(0.05, (p.pas * 0.01) + (performanceDelta * 0.005));
+        let ass = Math.floor(apps * assChance * (Math.random() * 0.4 + 0.6));
+        if(p.archetype === 'ponta' || p.archetype === 'armador') ass = Math.floor(ass * 1.5);
 
-        let ass = Math.max(0, Math.floor(apps * (p.pas / 100) * (Math.random() * 0.3 + 0.2)));
-        if(p.archetype === 'ponta' || p.archetype === 'armador') ass = Math.floor(ass * 1.4);
-
-        let yc = Math.floor(Math.random() * 12); 
+        let yc = Math.floor(Math.random() * 10) + (p.def < 50 ? 5 : 0); 
         let rc = Math.random() > (p.emocao === "Ressaca 🥴" ? 0.6 : 0.85) ? 1 : 0;
-        if(rc > 0) gol = Math.floor(gol * 0.8);
+        if(rc > 0) gol = Math.floor(gol * 0.85);
         
         p.totals.app += apps; p.totals.gol += gol; p.totals.ass += ass;
         p.totals.yc += yc; p.totals.rc += rc;
         
+        // NOVO MOTOR DE TÍTULOS
         let isElite = eliteClubs.includes(p.club);
+        let bonusArmador = p.archetype === 'armador' ? 15 : 0; // Armador carrega o time
+        let winChanceDom = (p.ovr * 0.4) + (leagueDifficulty * 0.6) + bonusArmador + (Math.random() * 30);
         let tDom = 0, tInt = 0;
-        if (isElite || p.ovr > 84) { if (Math.random() > 0.25) tDom = Math.floor(Math.random() * 3) + 1; }
-        else if (p.ovr > 76) { if (Math.random() > 0.4) tDom = Math.floor(Math.random() * 2) + 1; }
-
-        if (isElite || p.ovr > 86) { if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1; }
+        
+        if (winChanceDom > 105) tDom = Math.floor(Math.random() * 2) + 1;
+        if (isElite || winChanceDom > 115) { if (Math.random() > 0.4) tInt = Math.floor(Math.random() * 2) + 1; }
         p.totals.dom += tDom; p.totals.int += tInt;
 
-        let ganhoFama = (gol * 20000) + (ass * 10000) + (tDom * 150000) + (tInt * 300000);
+        let ganhoFama = (gol * 25000) + (ass * 10000) + (tDom * 200000) + (tInt * 400000);
         p.fama += ganhoFama;
 
-        if (tDom > 0 || tInt > 0) {
-            p.jejumAnos = 0;
-        } else {
-            p.jejumAnos += 3;
-            if(p.jejumAnos >= 6) {
-                p.ovr -= 3; p.pac -= 3; p.sho -= 3; p.emocao = "Triste 😢";
-            }
-        }
+        if (tDom > 0 || tInt > 0) p.jejumAnos = 0;
+        else p.jejumAnos += 3;
 
-        if(p.ovr > 85 && Math.random() > 0.5) p.totals.cont++;
-        if(p.isConvocado && Math.random() > 0.78) { p.totals.wc++; p.fama += 4000000; }
-        if (gol >= 95 && p.ovr >= 89) { p.totals.bdor += 1; p.fama += 5000000; }
+        // BOLA DE OURO & COPAS (Lógica mais restrita)
+        if(p.ovr > 87 && Math.random() > 0.4 && p.isConvocado) p.totals.cont++;
+        if(p.isConvocado && Math.random() > 0.82 && winChanceDom > 100) { p.totals.wc++; p.fama += 5000000; }
+        
+        // Para a Bola de Ouro, precisa ser a Estrela (Gols + Assist altos) em um time de elite
+        if ((gol + ass) >= 90 && p.ovr >= 90 && (tInt > 0 || p.jejumAnos === 0)) { 
+            p.totals.bdor += 1; 
+            p.fama += 8000000; 
+            exibirMensagemTopo("✨ INACREDITÁVEL! Você venceu a BOLA DE OURO!");
+        }
 
         let tag = p.transferFee ? `<div class="transfer-fee">€${p.transferFee}</div>` : "";
         document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(p.club, tag);
@@ -884,7 +804,7 @@
 
         atualizarUI();
         
-        if (Math.random() < 0.85) { 
+        if (Math.random() < 0.75) { 
             abrirEntrevista();
         } else {
             if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -946,18 +866,20 @@
         let list = document.getElementById('offer-list'); list.innerHTML = "";
         
         let pool = [];
-        if (p.age >= 33 && p.totals.bdor === 0) {
-            pool = Math.random() > 0.4 ? tierPrata : tierBronze; 
+        // Lógica de mercado realista: Jogadores velhos sem fama caem para Bronze. Estrelas ficam no topo.
+        if (p.age >= 33 && p.totals.bdor === 0 && p.ovr < 82) {
+            pool = tierBronze; 
         } else {
-            if (p.ovr >= 85 || p.hasAgent) { pool = eliteClubs; } 
-            else if (p.ovr >= 76) { pool = tierPrata; } 
+            if (p.ovr >= 86 || (p.ovr >= 82 && p.hasAgent)) { pool = eliteClubs; } 
+            else if (p.ovr >= 75) { pool = tierPrata; } 
             else { pool = tierBronze; }
         }
         
         for(let i=0; i<2; i++) {
             let c = pool[Math.floor(Math.random() * pool.length)];
-            let val = (p.ovr > 85) ? Math.floor(Math.random()*120)+40 : Math.floor(Math.random()*30)+5;
-            if (p.age >= 33) val = Math.floor(val * 0.4);
+            let val = calcularValorPasse();
+            // Desconto na negociação
+            val = Math.max(1, Math.floor(val * (Math.random() * 0.4 + 0.8)));
             
             let salTxt = "€35k/semana";
             if(eliteClubs.includes(c)) salTxt = "€180k/semana";
@@ -967,11 +889,11 @@
     }
 
     function aceitarTransf(c, strVal, numVal) { 
-        p.club = c; p.transferFee = strVal; 
+        p.club = c; p.transferFee = strVal; p.teamChemistry = 0; // Perde o entrosamento
         if(numVal > p.maxFeeNum) { p.maxFeeNum = numVal; p.maxFeeStr = "€" + strVal; }
         fecharMercado(); 
     }
-    function ficarNoTime() { p.transferFee = ""; fecharMercado(); }
+    function ficarNoTime() { p.transferFee = ""; p.teamChemistry += 20; fecharMercado(); }
     function fecharMercado() { document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; }
     
     function finalizarCarreira() {
@@ -980,7 +902,7 @@
         document.getElementById(`stats-goals-9`).innerText = "-";
         document.getElementById(`stats-assists-9`).innerText = "-";
 
-        let cargoFinal = (p.ovr > 84) ? "Diretoria Executiva 💼" : "Treinador Técnico 📋";
+        let cargoFinal = (p.ovr > 84 || p.banco > 20000000) ? "Diretoria Executiva 💼" : "Treinador Técnico 📋";
         document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML(cargoFinal, "");
         document.getElementById(`stats-titles-10`).innerText = "-";
         document.getElementById(`stats-goals-10`).innerText = "-";
@@ -988,18 +910,24 @@
         
         let totalScore = p.totals.gol + (p.totals.ass * 0.7) + (p.totals.dom * 15) + (p.totals.int * 25) + (p.totals.bdor * 120) + (p.totals.wc * 200);
         let veredito = "";
+        
         if(totalScore > 1400) veredito = "🐐 LENDÁRIO ABSOLUTO! Você sentou no trono ao lado de Pelé, Messi e Cristiano Ronaldo. Seu legado de drama e glória é imortal!";
-        else if(totalScore > 850) veredito = "👑 CRAQUE GERACIONAL! Sua genialidade marcou as noites e os gramados. Lembrado no patamar de Ronaldinho Gaúcho e Neymar!";
+        else if(totalScore > 850) veredito = "👑 CRAQUE GERACIONAL! Sua genialidade marcou as noites e os gramados. Lembrado no patamar de Ronaldinho e Neymar!";
         else if(totalScore > 400) veredito = "⚽ ÍDOLO DE RESPEITO! Campeão em grandes ligas, temido pelas defesas internacionais.";
         else veredito = "👕 ATLETA PROFISSIONAL! Cumpriu sua jornada dignamente no ecossistema comercial do futebol.";
 
+        // Múltiplos finais baseados no financeiro e relacional
         let legadoFinanceiro = "";
-        if (p.banco >= 45000000) {
-            legadoFinanceiro = "<br><br>💰 <b>BILIONÁRIO DA SAF:</b> Dono de uma fortuna chocante de " + formatMoeda(p.banco) + ", você comprou um clube europeu de tradição, virou presidente de SAF e hoje manda no mercado de transferências internacional!";
-        } else if (p.banco >= 12000000) {
-            legadoFinanceiro = "<br><br>💼 <b>AGENTE DE ELITE FIFA:</b> Altamente influente, você abriu sua própria agência internacional de Staff, controlando o passe das maiores promessas da seleção.";
+        let riquezaTotal = p.banco + p.investido;
+        
+        if (riquezaTotal >= 60000000) {
+            legadoFinanceiro = "<br><br>💰 <b>BILIONÁRIO DA SAF:</b> Com uma fortuna faraônica de " + formatMoeda(riquezaTotal) + ", você comprou seu próprio clube, virou Dono de SAF e hoje inflaciona o mercado europeu de iate!";
+        } else if (riquezaTotal >= 15000000) {
+            legadoFinanceiro = "<br><br>💼 <b>EMPRESÁRIO MÁXIMO:</b> Inteligente com o dinheiro, abriu uma agência de jogadores, multiplicou sua fama de " + formatFama(p.fama) + " fãs e controla os bastidores da Seleção.";
+        } else if (riquezaTotal > 2000000) {
+            legadoFinanceiro = "<br><br>📻 <b>COMENTARISTA POLÊMICO:</b> O dinheiro deu pra viver bem. Hoje você ganha a vida xingando a nova geração em Podcasts e participando de programas esportivos de mesa redonda.";
         } else {
-            legadoFinanceiro = "<br><br>📻 <b>COMENTARISTA DE PODCAST:</b> Como gastou bastante curtindo a vida, restou o suficiente para viver bem. Hoje você é um comentarista de polêmicas pesadas em canais do YouTube e podcasts locais.";
+            legadoFinanceiro = "<br><br>🏚️ <b>FALÊNCIA PÓS-CARRREIRA:</b> Ganhos mal geridos sumiram. Você tenta a vida vendendo cursos duvidosos na internet e fazendo jogos festivos por cachê no interior.";
         }
         veredito += legadoFinanceiro;
 
@@ -1012,7 +940,7 @@
     }
 
     function checarRecordes() {
-        let playerID = `${p.origin} ATA`;
+        let playerID = `${p.origin} ${p.archetype.toUpperCase()}`;
         let updated = false;
         if(p.prime > records.ovr.val) { records.ovr = { val: p.prime, name: playerID }; updated = true; }
         if(p.totals.gol > records.gol.val) { records.gol = { val: p.totals.gol, name: playerID }; updated = true; }
