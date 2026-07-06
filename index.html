@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Carreira no Futebol - V-MAX Definitiva</title>
-    <!-- SDKs do Firebase (Opcional) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <title>Minha Carreira no Futebol - V-MAX Firebase Edition</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
@@ -68,8 +65,6 @@
         /* ÁREA DE AÇÃO & BOTÕES */
         .action-area { padding: 5px 10px 10px 10px; text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center;}
         .btn-continue { background: #ef4444; color: white; border: none; padding: 12px 20px; font-size: 18px; font-weight: 900; border-radius: 8px; cursor: pointer; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); width: 100%; font-family: 'Oswald', sans-serif; text-transform: uppercase;}
-        .btn-toggle-energy { background: #1e293b; color: #fbbf24; border: 2px solid #fbbf24; padding: 6px; font-size: 12px; font-weight: 900; border-radius: 6px; cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; transition: 0.3s;}
-        
         .btn-rank { background: #fbbf24; color: black; border: none; padding: 10px; font-size: 16px; font-weight: 900; border-radius: 8px; cursor: pointer; width: calc(100% - 20px); margin: 0 10px 10px 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-family: 'Oswald', sans-serif;}
 
         /* MODAIS & POPUPS */
@@ -118,7 +113,6 @@
     <div class="top-bar" style="background: #fdfdfd; border-top: none; font-size: 12px; padding: 4px 8px;">
         <div style="color: #b45309; font-weight: bold;">💶 Passe: <span id="hdr-value">-</span></div>
         <div style="color: #16a34a; font-weight: 900;">💰 <span id="hdr-bank">€0</span></div>
-        <div style="color: #ea580c; font-weight: bold;">🔋 Vigor: <span id="hdr-energy">100%</span></div>
         <div style="color: #2563eb; font-weight: bold;">📣 Fama: <span id="hdr-fama">10k</span></div>
     </div>
 
@@ -152,7 +146,6 @@
 
     <div class="event-section" id="event-section"></div>
     
-    <!-- MODAL DE ESCOLHA DE DRAMA -->
     <div class="choice-section" id="choice-section">
         <div class="choice-box">
             <div id="choice-text" style="font-size: 13px; font-weight: 900; color: #1e3a8a; margin-bottom: 10px; line-height: 1.3;">🚨 ACONTECIMENTO!</div>
@@ -165,7 +158,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE RIVALIDADE -->
     <div class="choice-section" id="rival-section">
         <div class="choice-box" style="border-color: #b91c1c;">
             <div class="rank-title" style="color:#b91c1c;">⚔️ O GRANDE RIVAL</div>
@@ -182,14 +174,13 @@
         </div>
     </div>
 
-    <!-- ESCRITÓRIO COMERCIAL (NÍVEIS DE 0 a 5) -->
     <div class="office-section" id="office-panel">
         <div class="office-title">ESCRITÓRIO & STAFF (NÍVEIS 0 A 5)</div>
         <div class="office-grid">
-            <div class="office-btn" onclick="uparStaff('trainer')">🏋️ Prep. Físico (Nív.<span id="lvl-trainer">0</span>)<br><span id="cst-trainer" style="color:#15803d">€500k</span></div>
-            <div class="office-btn" onclick="uparStaff('agent')">💼 Empresário (Nív.<span id="lvl-agent">0</span>)<br><span id="cst-agent" style="color:#15803d">€1.0M</span></div>
-            <div class="office-btn" onclick="uparStaff('psycho')">🧠 Psicólogo (Nív.<span id="lvl-psycho">0</span>)<br><span id="cst-psycho" style="color:#15803d">€250k</span></div>
-            <div class="office-btn" onclick="uparStaff('pr')">📢 Assessoria (Nív.<span id="lvl-pr">0</span>)<br><span id="cst-pr" style="color:#15803d">€250k</span></div>
+            <div class="office-btn" onclick="uparStaff('trainer')">🏋️ Prep. Físico (Nív.<span id="lvl-trainer">0</span>)<br><span style="font-weight:normal;">Alavanca OVR</span><br><span id="cst-trainer" style="color:#15803d">€500k</span></div>
+            <div class="office-btn" onclick="uparStaff('agent')">💼 Empresário (Nív.<span id="lvl-agent">0</span>)<br><span style="font-weight:normal;">Melhora Salários</span><br><span id="cst-agent" style="color:#15803d">€1.0M</span></div>
+            <div class="office-btn" onclick="uparStaff('psycho')">🧠 Psicólogo (Nív.<span id="lvl-psycho">0</span>)<br><span style="font-weight:normal;">Melhora a Moral</span><br><span id="cst-psycho" style="color:#15803d">€250k</span></div>
+            <div class="office-btn" onclick="uparStaff('pr')">📢 Assessoria (Nív.<span id="lvl-pr">0</span>)<br><span style="font-weight:normal;">Blindagem PR</span><br><span id="cst-pr" style="color:#15803d">€250k</span></div>
         </div>
     </div>
 
@@ -232,14 +223,12 @@
     </div>
 
     <div class="action-area" id="action-area">
-        <button class="btn-toggle-energy" id="btn-energy-mode" onclick="toggleEnergyMode()">MODO: FORÇAR MÁXIMO 🔥 (Risco de Lesão)</button>
         <button class="btn-continue" onclick="cliqueBotaoPrincipal()" id="btn-main">INICIAR CARREIRA</button>
     </div>
 
     <button class="btn-rank" style="background:#8b5cf6; color:white;" onclick="abrirPerks()">🌟 ÁRVORE DE HABILIDADES (SP: <span id="hdr-sp-btn">0</span>)</button>
     <button class="btn-rank" onclick="abrirRanking()">🏆 HALL DA FAMA (LOCAL E GLOBAL)</button>
 
-    <!-- MODAL ARQUÉTIPO -->
     <div class="modal" id="modal-arq" style="background: rgba(10,15,30,0.96);">
         <div class="modal-content" style="border-color:#5b2268;">
             <div class="rank-title">ESCOLHA SEU ARQUÉTIPO INICIAL</div>
@@ -249,7 +238,6 @@
         </div>
     </div>
 
-    <!-- MODAL PERKS -->
     <div class="modal" id="modal-perks">
         <div class="modal-content">
             <div class="rank-title" style="color:#4c1d95;">🌟 HABILIDADES ESPECIAIS</div>
@@ -283,7 +271,6 @@
         </div>
     </div>
 
-    <!-- MODAL RANKING -->
     <div class="modal" id="modal-rank">
         <div class="modal-content">
             <div class="rank-title">🏆 HALL DA FAMA</div>
@@ -298,17 +285,36 @@
                 <div class="rank-row"><div class="rank-label">💸 Maior Venda</div><div class="rank-val"><span id="rk-fee-val">€0m</span> <span class="rank-player" id="rk-fee-name">-</span></div></div>
             </div>
             <div id="rank-global-content" style="display:none; text-align:center; font-size:12px; padding:10px; background:#f1f5f9;">
-                <p><b>Top 1 Global (Maior OVR):</b> <span id="gb-ovr">Carregando...</span></p>
-                <p><b>Top 1 Global (Gols):</b> <span id="gb-gols">Carregando...</span></p>
+                <p><b>Top 1 Global (Maior OVR):</b> <br><span id="gb-ovr" style="font-size:16px; font-weight:bold; color:#5b2268;">Carregando...</span></p>
                 <br>
-                <i style="color:#666;">Nota: Firebase está configurado para leitura passiva.</i>
+                <p><b>Top 1 Global (Gols):</b> <br><span id="gb-gols" style="font-size:16px; font-weight:bold; color:#15803d;">Carregando...</span></p>
             </div>
             <button class="btn-close" onclick="fecharRanking()">FECHAR</button>
         </div>
     </div>
 </div>
 
-<script>
+<script type="module">
+    // INTEGRANDO FIREBASE V12
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+      authDomain: "copa-ae771.firebaseapp.com",
+      projectId: "copa-ae771",
+      storageBucket: "copa-ae771.firebasestorage.app",
+      messagingSenderId: "1030169877544",
+      appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
+    };
+
+    let app, db;
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        console.log("Firebase 12.15.0 inicializado com sucesso.");
+    } catch(e) { console.error("Erro no Firebase", e); }
+
     // DADOS DO JOGO
     const countryMap = { "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇪🇸": "ESPANHA", "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL" };
     const tierBronze = ["Vitória 🇧🇷", "Criciúma 🇧🇷", "Juventude 🇧🇷", "Talleres 🇦🇷", "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Getafe 🇪🇸", "Monza 🇮🇹", "Augsburg 🇩🇪", "Al-Ettifaq 🇸🇦"];
@@ -318,7 +324,6 @@
     const houseUpgrades = [ { name: "Casa dos Pais", price: 0 }, { name: "Apto Centro", price: 1000000 }, { name: "Condomínio", price: 5000000 }, { name: "Mansão", price: 20000000 } ];
     const carUpgrades = [ { name: "Bicicleta", price: 0 }, { name: "Sedan", price: 150000 }, { name: "Esportivo", price: 600000 }, { name: "Supercarro", price: 3000000 } ];
 
-    // Níveis de Staff: Preços do nível 1 ao 5
     const custoSff = {
         trainer: [0, 500000, 1500000, 3000000, 5000000, 10000000],
         agent:   [0, 1000000, 2500000, 5000000, 8000000, 15000000],
@@ -330,7 +335,7 @@
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
         club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
-        energia: 100, playMode: 'max', sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
+        sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
         staff: { trainer: 0, agent: 0, psycho: 0, pr: 0 }, 
         relacao: "Solteiro", investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
@@ -343,14 +348,14 @@
     let records = { ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" } };
     try { let r = localStorage.getItem('mfc_records_vmax'); if(r) records = JSON.parse(r); } catch(e) {}
 
-    // BANCO DE EVENTOS
+    // Acontecimentos não drenam vigor mais, afetam status ou moral
     const bancoDramasOriginal = [
-        { texto: "🍷 FARRA NOTURNA: Véspera de um jogo e os 'parças' chamam pra balada VIP.", A: "Ir até o amanhecer.", B: "Dormir cedo e focar.", C: "Ir, mas beber só água.", acao: (opt) => { if(opt==='A'){ p.emocao="Ressaca 🥴"; p.energia-=30; p.fama+=100000; return "Ficou de ressaca! Perdeu energia, mas ganhou seguidores."; } if(opt==='B'){ p.ovr+=1; p.energia=100; return "Profissionalismo! Foco total, energia máxima e ganhou OVR."; } return "Fez média sem muito desgaste físico."; } },
-        { texto: "🚑 LESÃO GRAVE: Médico recomenda cirurgia (meses fora), curandeiro cobra €100k por milagre.", A: "Cirurgia segura.", B: "Pagar curandeiro (€100k).", C: "Jogar com dor no sacrifício.", acao: (opt) => { if(opt==='A'){ p.pac-=2; return "Perdeu ritmo (-2), mas o joelho está seguro para o futuro."; } if(opt==='B'){ if(p.banco < 100000) return "Você não tem dinheiro! Foi obrigado a operar."; if(Math.random()>0.5){ p.ovr+=2; p.banco-=100000; return "Milagre! A acupuntura curou rápido (+2 OVR)."; } else { p.ovr-=3; p.banco-=100000; return "Piorou a lesão! Caiu seu nível de jogo."; } } p.ovr-=4; p.energia-=40; p.emocao="Triste 😢"; return "Estourou o joelho de vez! Queda brusca de atributos."; } },
-        { texto: "💰 MÁFIA DE APOSTAS: Oferecem €1.5M para você forçar um cartão vermelho no 1º tempo.", A: "Aceitar a grana e dar voadora.", B: "Recusar e denunciar à TV.", C: "Recusar em silêncio.", acao: (opt) => { if(opt==='A'){ p.banco+=1500000; p.fama-=2000000; p.emocao="Triste 😢"; return "Você pegou a grana, mas o tribunal desconfiou. A torcida te odeia e a culpa te consome."; } if(opt==='B'){ p.fama+=1500000; p.emocao="Alegre 😁"; return "HERÓI DA INTEGRIDADE! Ganhou fama mundial pela denúncia."; } return "Manteve-se limpo e seguro."; } },
-        { texto: "👟 PATROCÍNIO TÓXICO: Marca paga €2M, mas a chuteira machuca seu pé.", A: "Assinar pelo dinheiro.", B: "Recusar o acordo.", C: "Usar escondido sua chuteira velha pintada.", acao: (opt) => { if(opt==='A'){ p.banco+=2000000; p.pac-=3; p.ovr-=1; return "Ficou rico, mas as bolhas no pé te deixaram mais lento (-3 Ritmo)."; } if(opt==='B'){ p.ovr+=1; p.emocao="Focado 🧘"; return "Foco na carreira! Manteve a agilidade."; } p.banco+=500000; p.fama-=500000; return "A marca descobriu a fraude. Escândalo! Perdeu parte do dinheiro e fãs."; } },
-        { texto: "📉 QUEBRA DA BOLSA: Seu fundo derreteu com a 'Moeda Cachorrinho'.", A: "Vender tudo com prejuízo.", B: "Apostar o dobro.", C: "Processar o corretor.", acao: (opt) => { if(opt==='A'){ p.investido = Math.floor(p.investido * 0.5); return "Assumiu o prejuízo. O fundo caiu pela metade."; } if(opt==='B'){ if(Math.random()>0.7){ p.investido *= 2.5; return "LOUCURA! A moeda valorizou do nada. Seu fundo multiplicou!"; } else { p.investido = 0; p.emocao="Ressaca 🥴"; return "FALÊNCIA! A moeda zerou. Você perdeu todo o fundo."; } } p.investido = Math.floor(p.investido * 0.7); p.fama+=200000; return "Recuperou parte na justiça e ganhou visibilidade na mídia."; } },
-        { texto: "🤬 CRISE DE VESTIÁRIO: O técnico te barrou injustamente para colocar o 'queridinho' dele.", A: "Reclamar na imprensa.", B: "Abaixar a cabeça e treinar mais.", C: "Exigir rescisão de contrato.", acao: (opt) => { if(opt==='A'){ p.emocao="Triste 😢"; p.teamChemistry=0; return "O grupo rachou. O clima está horrível e seu entrosamento zerou."; } if(opt==='B'){ p.ovr+=2; p.energia=100; p.emocao="Focado 🧘"; return "Resiliência! Você calou a boca dele nos treinos e voltou destruindo (+2 OVR)."; } if(opt==='C'){ p.club = "Sem Clube"; p.salario=0; return "A diretoria apoiou o técnico. Você rescindiu contrato e está desempregado!"; } } }
+        { texto: "🍷 FARRA NOTURNA: Véspera de um jogo e os 'parças' chamam pra balada VIP.", A: "Ir até o amanhecer.", B: "Dormir cedo e focar.", C: "Ir, mas beber só água.", acao: (opt) => { if(opt==='A'){ p.emocao="Ressaca 🥴"; p.phy-=2; p.fama+=100000; return "Ficou de ressaca! Perdeu atributos físicos, mas ganhou seguidores."; } if(opt==='B'){ p.ovr+=1; return "Profissionalismo! Foco total e ganhou +1 OVR."; } return "Fez média sem muito desgaste."; } },
+        { texto: "🚑 LESÃO GRAVE: Médico recomenda cirurgia (meses fora), curandeiro cobra €100k por milagre.", A: "Cirurgia segura.", B: "Pagar curandeiro (€100k).", C: "Jogar com dor no sacrifício.", acao: (opt) => { if(opt==='A'){ p.pac-=2; return "Perdeu ritmo (-2), mas o joelho está seguro para o futuro."; } if(opt==='B'){ if(p.banco < 100000) return "Você não tem dinheiro! Foi obrigado a operar."; if(Math.random()>0.5){ p.ovr+=2; p.banco-=100000; return "Milagre! A acupuntura curou rápido (+2 OVR)."; } else { p.ovr-=3; p.banco-=100000; return "Piorou a lesão! Caiu seu nível de jogo."; } } p.ovr-=4; p.emocao="Triste 😢"; return "Estourou o joelho de vez! Queda brusca de atributos."; } },
+        { texto: "💰 MÁFIA DE APOSTAS: Oferecem €1.5M para você forçar um cartão vermelho no 1º tempo.", A: "Aceitar a grana.", B: "Recusar e denunciar à TV.", C: "Recusar em silêncio.", acao: (opt) => { if(opt==='A'){ p.banco+=1500000; p.fama-=2000000; p.emocao="Triste 😢"; return "Pegou a grana, mas o tribunal desconfiou. A torcida te odeia e a culpa te consome."; } if(opt==='B'){ p.fama+=1500000; p.emocao="Alegre 😁"; return "HERÓI DA INTEGRIDADE! Ganhou fama mundial pela denúncia."; } return "Manteve-se limpo e seguro."; } },
+        { texto: "👟 PATROCÍNIO TÓXICO: Marca paga €2M, mas a chuteira machuca seu pé.", A: "Assinar pelo dinheiro.", B: "Recusar o acordo.", C: "Usar escondido sua velha pintada.", acao: (opt) => { if(opt==='A'){ p.banco+=2000000; p.pac-=3; return "Ficou rico, mas as bolhas no pé te deixaram mais lento (-3 Ritmo)."; } if(opt==='B'){ p.ovr+=1; p.emocao="Focado 🧘"; return "Foco na carreira! Manteve a agilidade (+1 OVR)."; } p.banco+=500000; p.fama-=500000; return "A marca descobriu a fraude. Escândalo! Perdeu parte do dinheiro e fãs."; } },
+        { texto: "📉 QUEBRA DA BOLSA: Seu fundo derreteu com a 'Moeda Cachorrinho'.", A: "Vender com prejuízo.", B: "Apostar o dobro.", C: "Processar o corretor.", acao: (opt) => { if(opt==='A'){ p.investido = Math.floor(p.investido * 0.5); return "Assumiu o prejuízo. O fundo caiu pela metade."; } if(opt==='B'){ if(Math.random()>0.7){ p.investido *= 2.5; return "LOUCURA! A moeda valorizou do nada. Seu fundo multiplicou!"; } else { p.investido = 0; p.emocao="Triste 😢"; return "FALÊNCIA! A moeda zerou. Você perdeu todo o fundo."; } } p.investido = Math.floor(p.investido * 0.7); p.fama+=200000; return "Recuperou parte na justiça e ganhou visibilidade na mídia."; } },
+        { texto: "🤬 CRISE DE VESTIÁRIO: O técnico te barrou injustamente para colocar o 'queridinho' dele.", A: "Reclamar na imprensa.", B: "Abaixar a cabeça e treinar mais.", C: "Exigir rescisão de contrato.", acao: (opt) => { if(opt==='A'){ p.emocao="Triste 😢"; p.teamChemistry=0; return "O grupo rachou. O clima está horrível e seu entrosamento zerou."; } if(opt==='B'){ p.ovr+=2; p.emocao="Focado 🧘"; return "Resiliência! Você calou a boca dele nos treinos e voltou destruindo (+2 OVR)."; } if(opt==='C'){ p.club = "Sem Clube"; p.salario=0; return "A diretoria apoiou o técnico. Você rescindiu contrato e está desempregado!"; } } }
     ];
 
     function inicializarDramas() {
@@ -358,32 +363,20 @@
         dramasDisponiveis.sort(() => Math.random() - 0.5); 
     }
 
-    function toggleEnergyMode() {
-        let btn = document.getElementById('btn-energy-mode');
-        if(p.playMode === 'max') {
-            p.playMode = 'poupar';
-            btn.innerText = "MODO: POUPAR FÍSICO 🧘 (Menos Gols, Mais Seguro)";
-            btn.style.background = "#16a34a"; btn.style.color = "white"; btn.style.borderColor = "#15803d";
-        } else {
-            p.playMode = 'max';
-            btn.innerText = "MODO: FORÇAR MÁXIMO 🔥 (Risco de Lesão)";
-            btn.style.background = "#1e293b"; btn.style.color = "#fbbf24"; btn.style.borderColor = "#fbbf24";
-        }
-    }
-
-    function cliqueBotaoPrincipal() {
+    window.cliqueBotaoPrincipal = function() {
         if(currentStep === 0 && p.archetype === "") document.getElementById('modal-arq').style.display = 'flex';
         else avancarCarreira();
     }
 
-    function selecionarArq(tipo) {
+    window.selecionarArq = function(tipo) {
         p.archetype = tipo; document.getElementById('modal-arq').style.display = 'none';
         initGrid(); document.getElementById('btn-main').innerText = "AVANÇAR 3 ANOS DA CARREIRA";
     }
 
     function initPlayer() {
-        p.isProdigy = Math.random() > 0.85; 
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 5) + 72 : Math.floor(Math.random() * 6) + 64;
+        // Aumentando a chance e o status base para lendas nascerem mais fácil
+        p.isProdigy = Math.random() > 0.60; // 40% de chance de nascer lenda
+        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 8) + 78 : Math.floor(Math.random() * 6) + 68; // Lenda: 78 a 85
         p.ovr = baseOvr; p.prime = baseOvr; p.pac = baseOvr; p.sho = baseOvr; p.pas = baseOvr; p.dri = baseOvr; p.def = 40; p.phy = baseOvr;
 
         if(p.archetype === 'ponta') { p.pac += 8; p.dri += 6; document.getElementById('hdr-arq').innerText = "⚡ PONTA"; }
@@ -401,7 +394,7 @@
     }
     
     function initGrid() {
-        p.age = 15; p.banco = 0; p.energia = 100; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
+        p.age = 15; p.banco = 0; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
         p.perks = { capitao: false, motorzinho: false, marketing: false };
         p.staff = { trainer: 0, agent: 0, psycho: 0, pr: 0 };
         currentStep = 0; initPlayer(); inicializarDramas();
@@ -430,8 +423,6 @@
         
         document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0 || p.club==="Sem Clube") ? "Livre" : "€" + passe + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco);
-        document.getElementById('hdr-energy').innerText = Math.floor(p.energia) + "%";
-        document.getElementById('hdr-energy').style.color = p.energia < 40 ? "#dc2626" : (p.energia < 70 ? "#d97706" : "#16a34a");
         document.getElementById('hdr-sp-btn').innerText = p.sp;
         document.getElementById('modal-sp-val').innerText = p.sp;
         document.getElementById('hdr-fama').innerText = formatFama(p.fama);
@@ -477,7 +468,7 @@
         document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
     }
 
-    function uparStaff(tipo) {
+    window.uparStaff = function(tipo) {
         let nextLvl = p.staff[tipo] + 1;
         if (nextLvl > 5) { alert("Nível máximo já atingido para este profissional!"); return; }
         
@@ -492,7 +483,7 @@
         }
     }
 
-    function comprarPerk(tipo) {
+    window.comprarPerk = function(tipo) {
         let custo = tipo === 'capitao' ? 1 : 2;
         if(p.sp >= custo && !p.perks[tipo]) {
             p.sp -= custo; p.perks[tipo] = true;
@@ -502,15 +493,17 @@
         } else alert("Pontos SP insuficientes!");
     }
 
-    function abrirPerks() { document.getElementById('modal-perks').style.display = 'flex'; }
-    function fecharPerks() { document.getElementById('modal-perks').style.display = 'none'; }
-    function mostrarTabRank(tab) {
+    window.abrirPerks = function() { document.getElementById('modal-perks').style.display = 'flex'; }
+    window.fecharPerks = function() { document.getElementById('modal-perks').style.display = 'none'; }
+    
+    window.mostrarTabRank = function(tab) {
         document.getElementById('rank-local-content').style.display = tab === 'local' ? 'block' : 'none';
         document.getElementById('rank-global-content').style.display = tab === 'global' ? 'block' : 'none';
+        if(tab === 'global' && db) carregarRankingGlobal();
     }
 
-    function investirFundo(valor) { if(p.banco >= valor) { p.banco -= valor; p.investido += valor; atualizarUI(); } }
-    function comprarPatrimonio(tipo) {
+    window.investirFundo = function(valor) { if(p.banco >= valor) { p.banco -= valor; p.investido += valor; atualizarUI(); } }
+    window.comprarPatrimonio = function(tipo) {
         if(tipo === 'house' && p.houseTier < 3) { let next = houseUpgrades[p.houseTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.houseTier++; } }
         if(tipo === 'car' && p.carTier < 3) { let next = carUpgrades[p.carTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.carTier++; } }
         atualizarUI();
@@ -537,46 +530,35 @@
             exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado nos últimos anos.");
         }
 
-        let recuperacaoBase = 35;
-        let bonusTrainer = (p.staff.trainer * 12); 
-        let bonusPsycho = (p.staff.psycho * 5); 
-
-        if(p.playMode === 'max') {
-            let desgaste = Math.floor(Math.random() * 25) + 60; 
-            p.energia = p.energia - desgaste + bonusTrainer + bonusPsycho;
-            
-            if(p.energia <= 10 && p.age >= 30 && Math.random() > 0.8) {
-                exibirMensagemTopo("🚑 LESÃO CATASTRÓFICA! Seu corpo não aguentou o ritmo insano. Sua carreira no campo acabou hoje.");
-                p.ovr -= 30; p.pac -= 40; p.phy -= 40; p.age = 39; finalizarCarreira(); return;
-            } else if(p.energia <= 20) {
-                p.energia = 10; p.ovr -= 4; exibirMensagemTopo("🚑 EXAUSTÃO EXTREMA! Seu corpo estourou e perdeu atributos.");
-            }
-        } else {
-            p.energia = Math.min(100, p.energia + recuperacaoBase + bonusTrainer + bonusPsycho);
-            if(p.club !== "Sem Clube") p.teamChemistry -= 10; 
-        }
+        // Bônus Psicólogo na Moral
+        if (p.staff.psycho >= 3) p.emocao = "Focado 🧘";
+        if(p.club !== "Sem Clube") p.teamChemistry -= 10; 
 
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
         
         let multiplierMkt = p.perks.marketing ? 1.5 : 1;
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
         
-        // CÓDIGO CORRIGIDO 1: EVOLUÇÃO ATÉ OS 27 ANOS COM BUFF GIGANTE
+        // EVOLUÇÃO E PREPARADOR FÍSICO ALAVANCANDO OVR
         if (p.age <= 27) { 
-            let g = Math.floor(Math.random() * 6) + 4; // Evolui 4 a 9 pontos por ciclo
+            let g = Math.floor(Math.random() * 6) + 4; // 4 a 9 base
+            g += p.staff.trainer; // Nível 5 do preparador injeta +5 pts por ciclo!
             p.sho += g; p.dri += g; p.pas += g; p.pac += (g-1); p.phy += (g-1); 
         } 
         else if (p.age >= 30) {
             let quedaPac = p.perks.motorzinho ? 1 : (p.archetype === 'ponta' ? 3 : 5); 
-            p.pac -= quedaPac; p.phy -= 2; 
+            // Preparador físico impede queda de ritmo e físico na velhice
+            quedaPac -= Math.floor(p.staff.trainer / 2);
+            if(quedaPac < 0) quedaPac = 0;
+            p.pac -= quedaPac; 
+            p.phy -= Math.max(0, 2 - Math.floor(p.staff.trainer / 2)); 
         }
 
-        // CÓDIGO CORRIGIDO 2: GOLS E ASSISTÊNCIAS REAIS DE 3 ANOS
-        let apps3y = (p.playMode === 'max' ? 150 : 100); 
+        let apps3y = 140; // Aproximadamente 45-50 jogos por ano
         if(p.club === "Sem Clube") apps3y = 0;
 
-        let performanceDelta = (p.ovr - leagueDifficulty) / 40; // Muito mais impacto do seu OVR agora
-        let golBase = Math.max(0.1, 0.35 + performanceDelta); // 0.35 * 150 = 52 base
+        let performanceDelta = (p.ovr - leagueDifficulty) / 40; 
+        let golBase = Math.max(0.1, 0.35 + performanceDelta); 
         let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.4 + 0.8));
         
         let assBase = Math.max(0.1, 0.20 + performanceDelta);
@@ -588,20 +570,18 @@
 
         p.totals.app += apps3y; p.totals.gol += gol3y; p.totals.ass += ass3y;
         
-        // CÓDIGO CORRIGIDO 3: TÍTULOS (MUNDIAL E CLUBE)
         let tDom3y = 0, tInt3y = 0, wcWon = 0;
         if(p.club !== "Sem Clube") {
             for(let i=0; i<3; i++) {
                 if(p.ovr + (p.teamChemistry/2) > leagueDifficulty - 5 && Math.random() > 0.4) tDom3y++;
                 if(eliteClubs.includes(p.club) && p.ovr >= 82 && Math.random() > 0.5) tInt3y++;
-                else if(tierPrata.includes(p.club) && p.ovr >= 78 && Math.random() > 0.7) tInt3y++; // Clubes Prata ganham título Continental
+                else if(tierPrata.includes(p.club) && p.ovr >= 78 && Math.random() > 0.7) tInt3y++;
             }
             p.totals.dom += tDom3y; p.totals.int += tInt3y;
             p.totals.cont += tInt3y;
         }
         
         if (p.ovr >= 80) p.isConvocado = true;
-        // Lógica de Copa do Mundo (Mundial de Seleções) - Maior chance se for Craque (+88)
         if (p.isConvocado && p.age >= 21) {
              let wcChance = (p.ovr > 88) ? 0.30 : (p.ovr > 80 ? 0.10 : 0.05);
              if (Math.random() < wcChance) { wcWon = 1; p.totals.wc += 1; }
@@ -613,7 +593,6 @@
         rival.ovr += p.age < 27 ? 4 : (p.age > 33 ? -2 : 1);
         rival.gols = Math.floor((rival.ovr * 0.4) * 3 + (Math.random() * 40)); 
         
-        // CÓDIGO CORRIGIDO 4: BOLA DE OURO MAIS ACESSÍVEL PARA O CRAQUE DA GERAÇÃO
         let ganhouBdor = false; let rivalGanhouBdor = false;
         if (p.club !== "Sem Clube" && p.ovr >= 85 && gol3y > rival.gols && tInt3y > 0 && ((gol3y + ass3y) > 90 || (wcWon > 0 && gol3y > 60))) { 
             p.totals.bdor += 1; ganhouBdor = true; p.sp += 1; p.fama += 5000000;
@@ -639,7 +618,7 @@
         document.getElementById('rival-section').style.display = 'flex';
     }
 
-    function fecharRival() {
+    window.fecharRival = function() {
         document.getElementById('rival-section').style.display = 'none';
         atualizarUI();
         if (Math.random() < 0.8 && dramasDisponiveis.length > 0) { 
@@ -664,7 +643,7 @@
         document.getElementById('choice-section').style.display = 'flex';
     }
 
-    function escolherOpcao(opt) {
+    window.escolherOpcao = function(opt) {
         let textoConsequencia = entrevistaAtual.acao(opt);
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO") || textoConsequencia.includes("ESCÂNDALO") || textoConsequencia.includes("FALÊNCIA");
 
@@ -684,7 +663,7 @@
         atualizarUI();
     }
 
-    function fecharJanelaConsequencia() {
+    window.fecharJanelaConsequencia = function() {
         document.getElementById('choice-section').style.display = 'none';
         document.getElementById('action-area').style.display = 'block';
         if (p.age < 39) abrirMercado(); else finalizarCarreira();
@@ -725,12 +704,12 @@
         }
     }
 
-    function aceitarTransf(c, strVal, numVal, salK) { 
+    window.aceitarTransf = function(c, strVal, numVal, salK) { 
         p.club = c; p.salario = salK * 1000; p.teamChemistry = p.perks.capitao ? 30 : 0; 
         document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; 
     }
     
-    function ficarNoTime() { 
+    window.ficarNoTime = function() { 
         if(p.club !== "Sem Clube") { p.teamChemistry += 20; p.salario = Math.floor(p.salario * 1.10); }
         document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; 
     }
@@ -751,7 +730,8 @@
         checarRecordes();
     }
 
-    function checarRecordes() {
+    // SALVANDO NO FIREBASE (RANKING GLOBAL)
+    async function checarRecordes() {
         let playerID = `${p.origin} ${p.archetype.toUpperCase()}`;
         if(p.prime > records.ovr.val) records.ovr = { val: p.prime, name: playerID };
         if(p.totals.gol > records.gol.val) records.gol = { val: p.totals.gol, name: playerID };
@@ -759,11 +739,38 @@
         
         document.getElementById('rk-ovr-val').innerText = records.ovr.val;
         document.getElementById('rk-gol-val').innerText = records.gol.val;
+
+        if(db) {
+            try {
+                await addDoc(collection(db, "hall_da_fama_vmax"), {
+                    nome: playerID, ovr: p.prime, gols: p.totals.gol, data: new Date()
+                });
+            } catch (e) { console.error("Erro Firebase Gravação:", e); }
+        }
     }
 
-    function abrirRanking() { mostrarTabRank('local'); document.getElementById('modal-rank').style.display = 'flex'; }
-    function fecharRanking() { document.getElementById('modal-rank').style.display = 'none'; }
+    window.abrirRanking = function() { window.mostrarTabRank('local'); document.getElementById('modal-rank').style.display = 'flex'; }
+    window.fecharRanking = function() { document.getElementById('modal-rank').style.display = 'none'; }
     
+    async function carregarRankingGlobal() {
+        if(!db) return;
+        document.getElementById('gb-ovr').innerText = "Carregando Nuvem...";
+        document.getElementById('gb-gols').innerText = "Carregando Nuvem...";
+        try {
+            const qOvr = query(collection(db, "hall_da_fama_vmax"), orderBy("ovr", "desc"), limit(1));
+            const snapOvr = await getDocs(qOvr);
+            if (!snapOvr.empty) { let d = snapOvr.docs[0].data(); document.getElementById('gb-ovr').innerText = `${d.nome} (${d.ovr})`; }
+
+            const qGols = query(collection(db, "hall_da_fama_vmax"), orderBy("gols", "desc"), limit(1));
+            const snapGols = await getDocs(qGols);
+            if (!snapGols.empty) { let d = snapGols.docs[0].data(); document.getElementById('gb-gols').innerText = `${d.nome} (${d.gols})`; }
+        } catch(e) {
+            console.error(e);
+            document.getElementById('gb-ovr').innerText = "Erro ao buscar do Firebase.";
+            document.getElementById('gb-gols').innerText = "Erro ao buscar do Firebase.";
+        }
+    }
+
     try { 
         document.getElementById('rk-ovr-val').innerText = records.ovr.val; 
         document.getElementById('rk-gol-val').innerText = records.gol.val; 
