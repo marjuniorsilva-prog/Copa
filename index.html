@@ -527,10 +527,24 @@
         let multiplierMkt = p.perks.marketing ? 1.5 : 1;
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
         
+        // NOVO CÁLCULO DE EVOLUÇÃO (DIFICULTANDO CHEGAR AO NÍVEL 99)
         if (p.age <= 27) { 
-            let g = Math.floor(Math.random() * 6) + 4; 
-            g += p.staff.trainer; 
-            p.sho += g; p.dri += g; p.pas += g; p.pac += (g-1); p.phy += (g-1); 
+            let g = 0;
+            if (p.age <= 18) g = Math.floor(Math.random() * 4) + 4;      // Evolui de 4 a 7
+            else if (p.age <= 21) g = Math.floor(Math.random() * 3) + 2; // Evolui de 2 a 4
+            else if (p.age <= 24) g = Math.floor(Math.random() * 2) + 1; // Evolui de 1 a 2
+            else g = Math.floor(Math.random() * 2);                      // Evolui de 0 a 1 no auge
+
+            // SOFT CAP: Se já for uma estrela (OVR >= 86), é muito mais difícil subir
+            if (p.ovr >= 86) g = Math.floor(g / 2);
+
+            // Nerf no Preparador: Agora ele dá no máximo +1 extra (20% de chance por nível)
+            let chanceBonus = p.staff.trainer * 0.20; 
+            if (Math.random() < chanceBonus) g += 1;
+
+            p.sho += g; p.dri += g; p.pas += g; 
+            p.pac += Math.max(0, g - 1); 
+            p.phy += Math.max(0, g - 1); 
         } 
         else if (p.age >= 30) {
             let quedaPac = p.perks.motorzinho ? 1 : (p.archetype === 'ponta' ? 3 : 5); 
