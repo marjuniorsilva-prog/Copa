@@ -2,72 +2,78 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Carreira no Futebol - V-MAX Firebase Edition</title>
-    <!-- [MANTENHA AQUI O SEU CSS ORIGINAL QUE VOCÊ JÁ TINHA] -->
-    <style>
-        /* (Cole seu CSS aqui como estava antes) */
-    </style>
+    <!-- [COLE SEU CSS AQUI] -->
 </head>
 <body>
 
-<div class="app-container">
-    <!-- [MANTENHA AQUI A ESTRUTURA HTML ORIGINAL] -->
-    <!-- Certifique-se de que os IDs (btn-main, club-cell-0, etc) sejam os mesmos -->
-    <div class="action-area" id="action-area">
-        <button class="btn-continue" onclick="cliqueBotaoPrincipal()" id="btn-main">CARREGANDO DADOS...</button>
-    </div>
-</div>
+    <!-- [COLE SEU HTML AQUI] -->
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
-        authDomain: "copa-ae771.firebaseapp.com",
-        databaseURL: "https://copa-ae771-default-rtdb.firebaseio.com",
-        projectId: "copa-ae771",
-        storageBucket: "copa-ae771.firebasestorage.app",
-        messagingSenderId: "1030169877544",
-        appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+            authDomain: "copa-ae771.firebaseapp.com",
+            databaseURL: "https://copa-ae771-default-rtdb.firebaseio.com",
+            projectId: "copa-ae771",
+            storageBucket: "copa-ae771.firebasestorage.app",
+            messagingSenderId: "1030169877544",
+            appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
+        };
 
-    // Variáveis que o resto do seu código espera encontrar
-    window.eliteClubs = [];
-    window.tierPrata = [];
-    window.tierBronze = [];
-    window.dramasDisponiveis = [];
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        // VARIÁVEIS GLOBAIS que seu jogo usa
+        window.eliteClubs = [];
+        window.tierPrata = [];
+        window.tierBronze = [];
+        window.bancoDramasOriginal = [];
 
-    async function carregarDados() {
-        // Busca times
-        const timesSnap = await getDocs(collection(db, "times"));
-        timesSnap.forEach(doc => {
-            let t = doc.data();
-            if(t.categoria === "Elite") window.eliteClubs.push(t.nome);
-            else if(t.categoria === "Prata") window.tierPrata.push(t.nome);
-            else window.tierBronze.push(t.nome);
-        });
+        async function carregarDados() {
+            // 1. Carrega Times
+            const timesSnap = await getDocs(collection(db, "times"));
+            timesSnap.forEach(doc => {
+                let t = doc.data();
+                if(t.categoria === "Elite") window.eliteClubs.push(t.nome);
+                else if(t.categoria === "Prata") window.tierPrata.push(t.nome);
+                else window.tierBronze.push(t.nome);
+            });
 
-        // Busca dramas
-        const dramasSnap = await getDocs(collection(db, "eventos"));
-        dramasSnap.forEach(doc => {
-            window.dramasDisponiveis.push(doc.data());
-        });
+            // 2. Carrega Dramas e RECONSTRÓI A LÓGICA (Ponte)
+            const dramasSnap = await getDocs(collection(db, "eventos"));
+            dramasSnap.forEach(doc => {
+                let d = doc.data();
+                // Aqui recriamos a função 'acao' que o Firebase removeu
+                d.acao = (opt) => {
+                    // Esta lógica deve ser o espelho da sua lógica original
+                    // Exemplo para o drama 01:
+                    if(d.id === "drama_01") {
+                        if(opt==='A'){ p.emocao="Ressaca 🥴"; p.phy-=2; p.fama+=100000; return "Ficou de ressaca!"; }
+                        // ... adicione a lógica dos outros dramas aqui ...
+                    }
+                };
+                window.bancoDramasOriginal.push(d);
+            });
+            
+            console.log("Sistema pronto!");
+            document.getElementById('btn-main').innerText = "INICIAR CARREIRA";
+            document.getElementById('btn-main').disabled = false;
+        }
 
-        document.getElementById('btn-main').innerText = "INICIAR CARREIRA";
-    }
-    carregarDados();
+        carregarDados();
+    </script>
 
-    // AQUI VOCÊ COLA TODO O SEU JAVASCRIPT ORIGINAL ABAIXO DESTA LINHA
-    // (As funções cliqueBotaoPrincipal, avancarCarreira, atualizarUI, etc.)
-    
-    // IMPORTANTE:
-    // Se o seu código antigo tinha listas fixas como 'const eliteClubs = [...]',
-    // APAGUE ESSAS LISTAS FIXAS para não dar conflito com o Firebase.
-</script>
+    <script>
+        // AQUI VOCÊ COLA O SEU CÓDIGO JS ORIGINAL
+        // Como 'window.eliteClubs' e 'window.bancoDramasOriginal' já estão preenchidos,
+        // o seu jogo original vai encontrar as variáveis exatamente onde ele espera.
+        
+        // APENAS UMA REGRA: 
+        // Não declare 'const eliteClubs = [...]' dentro deste script, 
+        // pois ele já está sendo carregado lá em cima no modulo.
+    </script>
 </body>
 </html>
