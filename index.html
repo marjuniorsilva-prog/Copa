@@ -224,7 +224,6 @@
     </div>
 
     <div class="action-area" id="action-area">
-        <!-- BOTÃO INICIA DESABILITADO -->
         <button class="btn-continue" onclick="cliqueBotaoPrincipal()" id="btn-main" disabled>CARREGANDO DADOS DA NUVEM...</button>
     </div>
 
@@ -297,7 +296,7 @@
 </div>
 
 <script type="module">
-    // INTEGRANDO FIREBASE V12 DENTRO DO MESMO BLOCO DO JOGO
+    // INTEGRANDO FIREBASE V12
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -316,14 +315,11 @@
         db = getFirestore(app);
     } catch(e) { console.error("Erro no Firebase", e); }
 
-    // ARRAYS VAZIAS (Serão preenchidas pela nuvem)
     let eliteClubs = [];
     let tierPrata = [];
     let tierBronze = [];
     let bancoDramasOriginal = [];
 
-    // DADOS DO JOGO
-    const countryMap = { "🇧🇷": "BRASIL", "🇦🇷": "ARGENTINA", "🇺🇾": "URUGUAI", "🇪🇸": "ESPANHA", "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "INGLATERRA", "🇮🇹": "ITÁLIA", "🇩🇪": "ALEMANHA", "🇫🇷": "FRANÇA", "🇵🇹": "PORTUGAL" };
     const houseUpgrades = [ { name: "Casa dos Pais", price: 0 }, { name: "Apto Centro", price: 1000000 }, { name: "Condomínio", price: 5000000 }, { name: "Mansão", price: 20000000 } ];
     const carUpgrades = [ { name: "Bicicleta", price: 0 }, { name: "Sedan", price: 150000 }, { name: "Esportivo", price: 600000 }, { name: "Supercarro", price: 3000000 } ];
 
@@ -356,7 +352,6 @@
         dramasDisponiveis.sort(() => Math.random() - 0.5); 
     }
 
-    // EXPONDO AS FUNÇÕES PARA O HTML
     window.cliqueBotaoPrincipal = function() {
         if(currentStep === 0 && p.archetype === "") document.getElementById('modal-arq').style.display = 'flex';
         else avancarCarreira();
@@ -376,7 +371,6 @@
         if(p.archetype === 'matador') { p.sho += 10; p.phy += 6; document.getElementById('hdr-arq').innerText = "⚽ PIVÔ"; }
         if(p.archetype === 'armador') { p.pas += 10; p.dri += 4; document.getElementById('hdr-arq').innerText = "🪄 MEIO"; }
 
-        // Sorteando o time inicial das arrays carregadas do Firebase
         p.club = p.isProdigy ? tierPrata[Math.floor(Math.random()*tierPrata.length)] : tierBronze[Math.floor(Math.random()*tierBronze.length)];
         p.salario = p.isProdigy ? 15000 : 3000;
         p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
@@ -519,7 +513,6 @@
             exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado nos últimos anos.");
         }
 
-        if (p.staff.psycho >= 3) p.emocao = "Focado 🧘";
         if(p.club !== "Sem Clube") p.teamChemistry -= 10; 
 
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
@@ -527,18 +520,15 @@
         let multiplierMkt = p.perks.marketing ? 1.5 : 1;
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
         
-        // NOVO CÁLCULO DE EVOLUÇÃO (DIFICULTANDO CHEGAR AO NÍVEL 99)
         if (p.age <= 27) { 
             let g = 0;
-            if (p.age <= 18) g = Math.floor(Math.random() * 4) + 4;      // Evolui de 4 a 7
-            else if (p.age <= 21) g = Math.floor(Math.random() * 3) + 2; // Evolui de 2 a 4
-            else if (p.age <= 24) g = Math.floor(Math.random() * 2) + 1; // Evolui de 1 a 2
-            else g = Math.floor(Math.random() * 2);                      // Evolui de 0 a 1 no auge
+            if (p.age <= 18) g = Math.floor(Math.random() * 4) + 4;      
+            else if (p.age <= 21) g = Math.floor(Math.random() * 3) + 2; 
+            else if (p.age <= 24) g = Math.floor(Math.random() * 2) + 1; 
+            else g = Math.floor(Math.random() * 2);                      
 
-            // SOFT CAP: Se já for uma estrela (OVR >= 86), é muito mais difícil subir
             if (p.ovr >= 86) g = Math.floor(g / 2);
 
-            // Nerf no Preparador: Agora ele dá no máximo +1 extra (20% de chance por nível)
             let chanceBonus = p.staff.trainer * 0.20; 
             if (Math.random() < chanceBonus) g += 1;
 
@@ -557,11 +547,12 @@
         let apps3y = 140; 
         if(p.club === "Sem Clube") apps3y = 0;
 
-        let performanceDelta = (p.ovr - leagueDifficulty) / 40; 
-        let golBase = Math.max(0.1, 0.35 + performanceDelta); 
-        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.4 + 0.8));
-        let assBase = Math.max(0.1, 0.20 + performanceDelta);
-        let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.4 + 0.8));
+        let performanceDelta = (p.ovr - leagueDifficulty) / 35; 
+        let golBase = Math.max(0.18, 0.38 + performanceDelta); 
+        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.3 + 0.85));
+        
+        let assBase = Math.max(0.12, 0.24 + performanceDelta); 
+        let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.3 + 0.85));
 
         if(p.archetype === 'matador') gol3y = Math.floor(gol3y * 1.3);
         if(p.archetype === 'armador') ass3y = Math.floor(ass3y * 1.3);
@@ -599,6 +590,8 @@
             rival.bdor += 1; rivalGanhouBdor = true;
         }
 
+        if (p.staff.psycho >= 3 || p.totals.bdor > 0 || p.totals.wc > 0) p.emocao = "Focado 🧘";
+
         document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(p.club, "");
         document.getElementById(`stats-titles-${currentStep}`).innerText = `${tDom3y}/${tInt3y}`;
         document.getElementById(`stats-goals-${currentStep}`).innerText = gol3y;
@@ -634,7 +627,6 @@
         document.getElementById('action-area').style.display = 'none';
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
         
-        // Adaptado para ler da nuvem
         document.getElementById('btn-a').innerHTML = "<b>A)</b> " + entrevistaAtual.A_texto;
         document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B_texto;
         document.getElementById('btn-c').innerHTML = "<b>C)</b> " + entrevistaAtual.C_texto;
@@ -645,7 +637,6 @@
     }
 
     window.escolherOpcao = function(opt) {
-        // Adaptado para aplicar a consequência lida do banco
         let efs = entrevistaAtual[opt + '_efeitos'];
         let textoConsequencia = entrevistaAtual[opt + '_msg'];
 
@@ -659,7 +650,6 @@
             if(efs.teamChemistry === "zerar") p.teamChemistry = 0;
             if(efs.rescisao) { p.club = "Sem Clube"; p.salario = 0; }
             
-            // Regras especiais que dependem do jogador na hora
             if(efs.riscoCurandeiro) {
                 if(p.banco < 100000) { textoConsequencia = "Você não tem dinheiro! Foi obrigado a operar."; }
                 else {
@@ -753,6 +743,10 @@
         if(p.banco < 0) cargoFinal = "Falido / Influencer Menor";
         document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML(cargoFinal, "");
         
+        if (p.totals.dom + p.totals.int > 5 || p.banco > 15000000 || p.staff.psycho >= 4) {
+            p.emocao = "Realizado 😎";
+        }
+        
         let veredito = p.totals.bdor > 0 ? "👑 LENDÁRIO! Você escreveu seu nome na história do futebol." : "⚽ GRANDE CARREIRA. Um atleta memorável.";
         if(p.club === "Sem Clube") veredito = "❌ FIM MELANCÓLICO. Você saiu do futebol pela porta dos fundos.";
         
@@ -760,6 +754,7 @@
         document.getElementById('event-section').style.display = 'block';
         document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">INICIAR NOVA CARREIRA</button>`;
         
+        atualizarUI(); 
         checarRecordes();
     }
 
@@ -808,7 +803,6 @@
         document.getElementById('rk-gol-val').innerText = records.gol.val; 
     } catch(e){}
 
-    // ESTA FUNÇÃO RODA ASSIM QUE O JOGO ABRE PARA BUSCAR OS DADOS NA NUVEM
     async function iniciarCarregamentoFirebase() {
         try {
             const timesSnap = await getDocs(collection(db, "times"));
@@ -824,7 +818,6 @@
                 bancoDramasOriginal.push(doc.data());
             });
 
-            // Tudo foi carregado, libera o botão do jogo!
             document.getElementById('btn-main').innerText = "INICIAR CARREIRA";
             document.getElementById('btn-main').disabled = false;
         } catch(e) {
