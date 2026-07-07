@@ -1,38 +1,44 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Carreira no Futebol - V-MAX Cloud Edition</title>
+    <!-- [Mantenha todo o seu CSS original aqui] -->
+</head>
+<body>
+    <!-- [Mantenha todo o seu HTML original aqui] -->
 
-// ... [Mantenha sua config do firebaseConfig aqui] ...
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-const db = getFirestore(initializeApp(firebaseConfig));
-let dramasDoFirebase = []; // Onde guardaremos os dramas baixados
+    const firebaseConfig = { /* Sua config aqui */ };
+    const db = getFirestore(initializeApp(firebaseConfig));
 
-// Função para baixar dramas da nuvem e iniciar o jogo
-async function carregarDramasDoFirebase() {
-    dramasDoFirebase = [];
-    const querySnapshot = await getDocs(collection(db, "eventos"));
-    querySnapshot.forEach((doc) => {
-        dramasDoFirebase.push(doc.data());
-    });
-    console.log("Dramas carregados da nuvem:", dramasDoFirebase.length);
-}
+    // Listas vazias - serão preenchidas pelo Firebase
+    let eliteClubs = [];
+    let tierPrata = [];
+    let tierBronze = [];
 
-// Chame esta função ao iniciar o jogo
-carregarDramasDoFirebase();
+    // FUNÇÃO QUE LIMPA O HTML E BUSCA DO BANCO
+    async function carregarDadosDoBanco() {
+        const snapshot = await getDocs(collection(db, "times"));
+        snapshot.forEach((doc) => {
+            let time = doc.data();
+            if (time.categoria === "Elite") eliteClubs.push(time.nome);
+            else if (time.categoria === "Prata") tierPrata.push(time.nome);
+            else tierBronze.push(time.nome);
+        });
+        console.log("Times carregados da nuvem com sucesso!");
+    }
 
-// Ajuste na função que abre a entrevista
-function abrirEntrevista() {
-    if(dramasDoFirebase.length === 0) return;
-    
-    // Pega um drama aleatório da lista que baixamos
-    entrevistaAtual = dramasDoFirebase[Math.floor(Math.random() * dramasDoFirebase.length)];
-    
-    document.getElementById('action-area').style.display = 'none';
-    document.getElementById('choice-text').innerText = entrevistaAtual.texto;
-    
-    // Preenche os botões com os dados que vieram do banco
-    document.getElementById('btn-a').innerHTML = "<b>A)</b> " + entrevistaAtual.A_texto;
-    document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B_texto;
-    document.getElementById('btn-c').innerHTML = "<b>C)</b> " + entrevistaAtual.C_texto;
-    
-    document.getElementById('choice-section').style.display = 'flex';
-}
+    // Inicia o carregamento assim que a página abre
+    carregarDadosDoBanco();
+
+    // --- O RESTANTE DO SEU CÓDIGO (avancarCarreira, atualizarUI, etc) ---
+    // Como as listas eliteClubs, tierPrata e tierBronze agora são globais 
+    // e já estarão preenchidas quando o jogador clicar em iniciar, 
+    // seu sistema continuará funcionando perfeitamente!
+</script>
+</body>
+</html>
