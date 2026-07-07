@@ -1,44 +1,45 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Minha Carreira no Futebol - V-MAX Cloud Edition</title>
-    <!-- [Mantenha todo o seu CSS original aqui] -->
-</head>
-<body>
-    <!-- [Mantenha todo o seu HTML original aqui] -->
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-    const firebaseConfig = { /* Sua config aqui */ };
-    const db = getFirestore(initializeApp(firebaseConfig));
+    const firebaseConfig = {
+      apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+      authDomain: "copa-ae771.firebaseapp.com",
+      projectId: "copa-ae771",
+      storageBucket: "copa-ae771.firebasestorage.app",
+      messagingSenderId: "1030169877544",
+      appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
+    };
 
-    // Listas vazias - serão preenchidas pelo Firebase
-    let eliteClubs = [];
-    let tierPrata = [];
-    let tierBronze = [];
+    let db;
+    let eliteClubs = [], tierPrata = [], tierBronze = [];
+    let dramasDisponiveis = [];
 
-    // FUNÇÃO QUE LIMPA O HTML E BUSCA DO BANCO
-    async function carregarDadosDoBanco() {
-        const snapshot = await getDocs(collection(db, "times"));
-        snapshot.forEach((doc) => {
-            let time = doc.data();
-            if (time.categoria === "Elite") eliteClubs.push(time.nome);
-            else if (time.categoria === "Prata") tierPrata.push(time.nome);
-            else tierBronze.push(time.nome);
+    async function inicializarJogo() {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+
+        // 1. Carrega Times do Firebase
+        const timesSnap = await getDocs(collection(db, "times"));
+        timesSnap.forEach(doc => {
+            let t = doc.data();
+            if(t.categoria === "Elite") eliteClubs.push(t.nome);
+            else if(t.categoria === "Prata") tierPrata.push(t.nome);
+            else tierBronze.push(t.nome);
         });
-        console.log("Times carregados da nuvem com sucesso!");
+
+        // 2. Carrega Dramas do Firebase
+        const dramasSnap = await getDocs(collection(db, "eventos"));
+        dramasSnap.forEach(doc => {
+            dramasDisponiveis.push(doc.data());
+        });
+        
+        console.log("Sistema Cloud carregado! Times:", eliteClubs.length, "Dramas:", dramasDisponiveis.length);
     }
 
-    // Inicia o carregamento assim que a página abre
-    carregarDadosDoBanco();
+    inicializarJogo();
 
-    // --- O RESTANTE DO SEU CÓDIGO (avancarCarreira, atualizarUI, etc) ---
-    // Como as listas eliteClubs, tierPrata e tierBronze agora são globais 
-    // e já estarão preenchidas quando o jogador clicar em iniciar, 
-    // seu sistema continuará funcionando perfeitamente!
+    // ... [Mantenha aqui as suas funções de lógica do jogo] ...
+    // DICA: Na sua função 'abrirEntrevista', agora use:
+    // entrevistaAtual = dramasDisponiveis[Math.floor(Math.random() * dramasDisponiveis.length)];
 </script>
-</body>
-</html>
