@@ -3,69 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalador de Times no Firebase</title>
+    <title>Instalador de Dramas no Firebase</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; flex-direction: column; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 100%; }
         h1 { color: #1e293b; font-size: 24px; }
         p { color: #475569; font-size: 14px; margin-bottom: 20px; }
-        button {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-        }
-        button:hover { background: #1d4ed8; }
+        button { background: #8b5cf6; color: white; border: none; padding: 15px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; }
+        button:hover { background: #7c3aed; }
         button:disabled { background: #94a3b8; cursor: not-allowed; }
-        #status {
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #b91c1c;
-            word-wrap: break-word;
-        }
+        #status { margin-top: 20px; font-weight: bold; font-size: 14px; word-wrap: break-word; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>⚽ Instalador de Times</h1>
-        <p>Conectando ao Firebase para gravar os times das 7 maiores ligas.</p>
-        <button id="btn-instalar">🚀 CLIQUE AQUI PARA INSTALAR</button>
+        <h1>🎭 Instalador de Dramas</h1>
+        <p>Conectando ao Firebase para gravar os Acontecimentos da Carreira.</p>
+        <button id="btn-instalar">🚀 CLIQUE AQUI PARA INSTALAR DRAMAS</button>
         <div id="status"></div>
     </div>
 
     <script type="module">
-        // Usando uma versão extremamente estável do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+        // Sua configuração
         const firebaseConfig = {
             apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
             authDomain: "copa-ae771.firebaseapp.com",
+            databaseURL: "https://copa-ae771-default-rtdb.firebaseio.com",
             projectId: "copa-ae771",
             storageBucket: "copa-ae771.firebasestorage.app",
             messagingSenderId: "1030169877544",
@@ -85,69 +52,113 @@
             btn.disabled = true;
         }
 
-        const listaTimes = [
-            // Premier League
-            { id: "eng_mancity", nome: "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
-            { id: "eng_arsenal", nome: "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
-            { id: "eng_astonvilla", nome: "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Prata" },
-            { id: "eng_crystalpalace", nome: "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
-            // La Liga
-            { id: "esp_realmadrid", nome: "Real Madrid 🇪🇸", categoria: "Elite" },
-            { id: "esp_barcelona", nome: "Barcelona 🇪🇸", categoria: "Elite" },
-            { id: "esp_sevilla", nome: "Sevilla 🇪🇸", categoria: "Prata" },
-            { id: "esp_getafe", nome: "Getafe 🇪🇸", categoria: "Bronze" },
-            // Serie A
-            { id: "ita_inter", nome: "Inter de Milão 🇮🇹", categoria: "Elite" },
-            { id: "ita_juventus", nome: "Juventus 🇮🇹", categoria: "Elite" },
-            { id: "ita_roma", nome: "Roma 🇮🇹", categoria: "Prata" },
-            { id: "ita_monza", nome: "Monza 🇮🇹", categoria: "Bronze" },
-            // Bundesliga
-            { id: "ale_bayern", nome: "Bayern de Munique 🇩🇪", categoria: "Elite" },
-            { id: "ale_dortmund", nome: "Borussia Dortmund 🇩🇪", categoria: "Elite" },
-            { id: "ale_wolfsburg", nome: "Wolfsburg 🇩🇪", categoria: "Prata" },
-            { id: "ale_augsburg", nome: "Augsburg 🇩🇪", categoria: "Bronze" },
-            // Ligue 1
-            { id: "fra_psg", nome: "PSG 🇫🇷", categoria: "Elite" },
-            { id: "fra_marseille", nome: "Olympique Marseille 🇫🇷", categoria: "Prata" },
-            { id: "fra_toulouse", nome: "Toulouse 🇫🇷", categoria: "Bronze" },
-            // Brasileirão
-            { id: "bra_flamengo", nome: "Flamengo 🇧🇷", categoria: "Prata" },
-            { id: "bra_palmeiras", nome: "Palmeiras 🇧🇷", categoria: "Prata" },
-            { id: "bra_vitoria", nome: "Vitória 🇧🇷", categoria: "Bronze" },
-            // Portugal
-            { id: "por_benfica", nome: "Benfica 🇵🇹", categoria: "Prata" },
-            { id: "por_porto", nome: "Porto 🇵🇹", categoria: "Prata" },
-            { id: "por_estoril", nome: "Estoril 🇵🇹", categoria: "Bronze" }
+        // Os dramas adaptados para salvar na nuvem
+        const listaDramas = [
+            {
+                id: "drama_01",
+                texto: "🍷 FARRA NOTURNA: Véspera de um jogo e os 'parças' chamam pra balada VIP.",
+                A_texto: "Ir até o amanhecer.",
+                A_msg: "Ficou de ressaca! Perdeu atributos físicos, mas ganhou seguidores.",
+                A_efeitos: { emocao: "Ressaca 🥴", phy: -2, fama: 100000 },
+                B_texto: "Dormir cedo e focar.",
+                B_msg: "Profissionalismo! Foco total e ganhou +1 OVR.",
+                B_efeitos: { ovr: 1, emocao: "Focado 🧘" },
+                C_texto: "Ir, mas beber só água.",
+                C_msg: "Fez média sem muito desgaste.",
+                C_efeitos: {}
+            },
+            {
+                id: "drama_02",
+                texto: "🚑 LESÃO GRAVE: Médico recomenda cirurgia, curandeiro cobra €100k por milagre.",
+                A_texto: "Cirurgia segura.",
+                A_msg: "Perdeu ritmo (-2), mas o joelho está seguro para o futuro.",
+                A_efeitos: { pac: -2 },
+                B_texto: "Pagar curandeiro (€100k).",
+                B_msg: "Foi um risco absurdo! O resultado foi imprevisível.",
+                B_efeitos: { banco: -100000, riscoCurandeiro: true }, // Adicionamos uma flag especial
+                C_texto: "Jogar com dor no sacrifício.",
+                C_msg: "Estourou o joelho de vez! Queda brusca de atributos.",
+                C_efeitos: { ovr: -4, emocao: "Triste 😢" }
+            },
+            {
+                id: "drama_03",
+                texto: "💰 MÁFIA DE APOSTAS: Oferecem €1.5M para você forçar um cartão vermelho no 1º tempo.",
+                A_texto: "Aceitar a grana.",
+                A_msg: "Pegou a grana, mas o tribunal desconfiou. A torcida te odeia e a culpa te consome.",
+                A_efeitos: { banco: 1500000, fama: -2000000, emocao: "Triste 😢" },
+                B_texto: "Recusar e denunciar à TV.",
+                B_msg: "HERÓI DA INTEGRIDADE! Ganhou fama mundial pela denúncia.",
+                B_efeitos: { fama: 1500000, emocao: "Alegre 😁" },
+                C_texto: "Recusar em silêncio.",
+                C_msg: "Manteve-se limpo e seguro.",
+                C_efeitos: {}
+            },
+            {
+                id: "drama_04",
+                texto: "👟 PATROCÍNIO TÓXICO: Marca paga €2M, mas a chuteira machuca seu pé.",
+                A_texto: "Assinar pelo dinheiro.",
+                A_msg: "Ficou rico, mas as bolhas no pé te deixaram mais lento (-3 Ritmo).",
+                A_efeitos: { banco: 2000000, pac: -3 },
+                B_texto: "Recusar o acordo.",
+                B_msg: "Foco na carreira! Manteve a agilidade (+1 OVR).",
+                B_efeitos: { ovr: 1, emocao: "Focado 🧘" },
+                C_texto: "Usar escondido sua velha pintada.",
+                C_msg: "A marca descobriu a fraude. Escândalo! Perdeu parte do dinheiro e fãs.",
+                C_efeitos: { banco: 500000, fama: -500000 }
+            },
+            {
+                id: "drama_05",
+                texto: "📉 QUEBRA DA BOLSA: Seu fundo derreteu com a 'Moeda Cachorrinho'.",
+                A_texto: "Vender com prejuízo.",
+                A_msg: "Assumiu o prejuízo. O fundo caiu pela metade.",
+                A_efeitos: { riscoBolsa: "vender" }, 
+                B_texto: "Apostar o dobro.",
+                B_msg: "Uma verdadeira montanha russa financeira!",
+                B_efeitos: { riscoBolsa: "apostar" },
+                C_texto: "Processar o corretor.",
+                C_msg: "Recuperou parte na justiça e ganhou visibilidade na mídia.",
+                C_efeitos: { riscoBolsa: "processar", fama: 200000 }
+            },
+            {
+                id: "drama_06",
+                texto: "🤬 CRISE DE VESTIÁRIO: O técnico te barrou injustamente para colocar o 'queridinho' dele.",
+                A_texto: "Reclamar na imprensa.",
+                A_msg: "O grupo rachou. O clima está horrível e seu entrosamento zerou.",
+                A_efeitos: { emocao: "Triste 😢", teamChemistry: "zerar" },
+                B_texto: "Abaixar a cabeça e treinar mais.",
+                B_msg: "Resiliência! Você calou a boca dele nos treinos e voltou destruindo (+2 OVR).",
+                B_efeitos: { ovr: 2, emocao: "Focado 🧘" },
+                C_texto: "Exigir rescisão de contrato.",
+                C_msg: "A diretoria apoiou o técnico. Você rescindiu contrato e está desempregado!",
+                C_efeitos: { rescisao: true }
+            }
         ];
 
         btn.addEventListener("click", async () => {
             btn.disabled = true;
             status.style.color = "#b45309";
-            status.innerText = "⏳ Conectando e gravando times...";
+            status.innerText = "⏳ Conectando e gravando eventos na coleção 'eventos'...";
 
             let sucessos = 0;
             let erroDetectado = "";
 
-            for (let time of listaTimes) {
+            for (let drama of listaDramas) {
                 try {
-                    await setDoc(doc(db, "times", time.id), {
-                        nome: time.nome,
-                        categoria: time.categoria
-                    });
+                    await setDoc(doc(db, "eventos", drama.id), drama);
                     sucessos++;
                 } catch (error) {
                     erroDetectado = error.message;
-                    break; // Para o loop se der erro para podermos ver
+                    break;
                 }
             }
 
             if (erroDetectado !== "") {
                 status.style.color = "#b91c1c";
-                status.innerText = "❌ FALHOU! O Firebase recusou a conexão. O erro foi: \n\n" + erroDetectado + "\n\n👉 Veja o Passo 2 na conversa!";
+                status.innerText = "❌ FALHOU! Erro: " + erroDetectado;
                 btn.disabled = false;
             } else {
                 status.style.color = "#15803d";
-                status.innerText = "✅ PERFEITO! Todos os times foram salvos com sucesso!";
+                status.innerText = "✅ PERFEITO! A coleção 'eventos' foi criada e populada.";
             }
         });
     </script>
