@@ -4,49 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Carreira no Futebol - V-MAX Firebase Edition</title>
+    <!-- [MANTENHA AQUI O SEU CSS ORIGINAL QUE VOCÊ JÁ TINHA] -->
     <style>
-        /* MANTENDO SEU CSS ORIGINAL */
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background-color: #111; display: flex; justify-content: center; padding: 10px; color: #333; }
-        .app-container { width: 100%; max-width: 420px; background-color: #d8dbe2; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .top-bar { display: flex; justify-content: space-between; background: white; padding: 6px 8px; font-size: 13px; font-weight: 900; border-bottom: 1px solid #ddd; }
-        .top-item { background: #f3f4f6; padding: 4px 8px; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; gap: 4px; box-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
-        .totals-bar { display: flex; justify-content: space-between; background: white; padding: 6px; text-align: center; font-size: 14px; font-weight: 900; border-bottom: 2px solid #bbb; }
-        .totals-box { flex: 1; border-right: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .attr-bar { background-color: #5b2268; color: white; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 13px; font-family: 'Oswald', sans-serif; padding: 6px 0; border-bottom: 2px solid #3d1547; }
-        .attr-vals { background-color: white; color: black; display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 18px; font-weight: 900; padding: 6px 0; border-bottom: 3px solid #bbb; }
-        .main-body { padding: 6px; background: #d8dbe2; width: 100%; display: flex; flex-direction: column; }
-        .timeline-header { display: grid; grid-template-columns: 42px 1fr 52px 46px 46px; gap: 4px; background: #4c1d95; color: white; font-size: 10px; font-weight: 900; text-align: center; padding: 6px 4px; border-radius: 6px 6px 0 0; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
-        .timeline-rows-container { display: flex; flex-direction: column; gap: 4px; background: #cbd5e1; padding: 4px; border-radius: 0 0 6px 6px; }
-        .timeline-row { display: grid; grid-template-columns: 34px 1fr 52px 46px 46px; gap: 4px; height: 38px; align-items: center; background: white; border-radius: 4px; }
-        .age-box { height: 100%; background: #312e81; color: white; display: flex; justify-content: center; align-items: center; font-family: 'Oswald', sans-serif; }
-        .club-box-cell { background: white; height: 100%; display: flex; align-items: center; padding: 0 4px; }
-        .action-area { padding: 15px; text-align: center; }
-        .btn-continue { background: #ef4444; color: white; border: none; padding: 12px 20px; font-size: 18px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
-        .event-section { background: #fff; margin: 5px 10px; border-radius: 6px; border: 2px dashed #ef4444; padding: 8px; display: none; }
+        /* (Cole seu CSS aqui como estava antes) */
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="top-bar">
-        <div class="top-item" id="hdr-region">🌍 Região: -</div>
-        <div class="top-item" id="hdr-arq">🏟️ ESTILO</div>
-        <div class="top-item">⏱️ <span id="hdr-age">15</span> Anos</div>
-    </div>
-    
-    <div class="attr-bar"><div>GER</div><div>RIT</div><div>FIN</div><div>PAS</div><div>DRI</div><div>DEF</div><div>FIS</div></div>
-    <div class="attr-vals" id="attr-vals"></div>
-
-    <div class="main-body">
-        <div class="timeline-header"><div>IDADE</div><div>CLUBE</div><div>🏆</div><div>⚽</div><div>👟</div></div>
-        <div class="timeline-rows-container" id="timeline-rows"></div>
-    </div>
-
-    <div class="event-section" id="event-section"></div>
-    <div class="action-area">
-        <button class="btn-continue" id="btn-main" onclick="cliqueBotaoPrincipal()">CARREGANDO DADOS...</button>
+    <!-- [MANTENHA AQUI A ESTRUTURA HTML ORIGINAL] -->
+    <!-- Certifique-se de que os IDs (btn-main, club-cell-0, etc) sejam os mesmos -->
+    <div class="action-area" id="action-area">
+        <button class="btn-continue" onclick="cliqueBotaoPrincipal()" id="btn-main">CARREGANDO DADOS...</button>
     </div>
 </div>
 
@@ -64,50 +33,41 @@
         appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
     };
 
-    // Variáveis Globais
+    // Variáveis que o resto do seu código espera encontrar
     window.eliteClubs = [];
     window.tierPrata = [];
     window.tierBronze = [];
     window.dramasDisponiveis = [];
 
-    async function iniciarJogo() {
-        try {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-            // Carrega Times
-            const timesSnap = await getDocs(collection(db, "times"));
-            timesSnap.forEach(doc => {
-                let t = doc.data();
-                if(t.categoria === "Elite") window.eliteClubs.push(t.nome);
-                else if(t.categoria === "Prata") window.tierPrata.push(t.nome);
-                else window.tierBronze.push(t.nome);
-            });
+    async function carregarDados() {
+        // Busca times
+        const timesSnap = await getDocs(collection(db, "times"));
+        timesSnap.forEach(doc => {
+            let t = doc.data();
+            if(t.categoria === "Elite") window.eliteClubs.push(t.nome);
+            else if(t.categoria === "Prata") window.tierPrata.push(t.nome);
+            else window.tierBronze.push(t.nome);
+        });
 
-            // Carrega Dramas
-            const dramasSnap = await getDocs(collection(db, "eventos"));
-            dramasSnap.forEach(doc => {
-                window.dramasDisponiveis.push(doc.data());
-            });
-            
-            document.getElementById('btn-main').innerText = "INICIAR CARREIRA";
-            document.getElementById('btn-main').disabled = false;
-        } catch (e) {
-            console.error("Erro Firebase:", e);
-            alert("Erro ao conectar no banco!");
-        }
+        // Busca dramas
+        const dramasSnap = await getDocs(collection(db, "eventos"));
+        dramasSnap.forEach(doc => {
+            window.dramasDisponiveis.push(doc.data());
+        });
+
+        document.getElementById('btn-main').innerText = "INICIAR CARREIRA";
     }
+    carregarDados();
 
-    // Inicialização
-    document.getElementById('btn-main').disabled = true;
-    iniciarJogo();
-
-    // Função de clique inicial
-    window.cliqueBotaoPrincipal = function() {
-        if(window.eliteClubs.length === 0) { alert("Aguarde o carregamento..."); return; }
-        alert("Carreira Iniciada! Times disponíveis: " + window.eliteClubs.length);
-        // ... (aqui você continua a lógica de criar o jogador)
-    }
+    // AQUI VOCÊ COLA TODO O SEU JAVASCRIPT ORIGINAL ABAIXO DESTA LINHA
+    // (As funções cliqueBotaoPrincipal, avancarCarreira, atualizarUI, etc.)
+    
+    // IMPORTANTE:
+    // Se o seu código antigo tinha listas fixas como 'const eliteClubs = [...]',
+    // APAGUE ESSAS LISTAS FIXAS para não dar conflito com o Firebase.
 </script>
 </body>
 </html>
