@@ -775,6 +775,187 @@
         document.getElementById('rk-ovr-val').innerText = records.ovr.val; 
         document.getElementById('rk-gol-val').innerText = records.gol.val; 
     } catch(e){}
+    // --- SCRIPT MÁGICO PARA SUBIR TIMES PARA O FIREBASE ---
+// Você pode apagar este bloco inteiro do seu HTML depois que rodar o jogo uma vez e os times aparecerem no Firebase.
+
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+window.subirTimesAutomatico = async function() {
+    const listaTimes = [
+        // 🏴󠁧󠁢󠁥󠁮󠁧󠁿 PREMIER LEAGUE (Inglaterra)
+        { id: "eng_mancity", nome: "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
+        { id: "eng_arsenal", nome: "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
+        { id: "eng_liverpool", nome: "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
+        { id: "eng_chelsea", nome: "Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
+        { id: "eng_manutd", nome: "Manchester Utd 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
+        { id: "eng_tottenham", nome: "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Elite" },
+        { id: "eng_astonvilla", nome: "Aston Villa 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Prata" },
+        { id: "eng_newcastle", nome: "Newcastle 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Prata" },
+        { id: "eng_westham", nome: "West Ham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Prata" },
+        { id: "eng_brighton", nome: "Brighton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Prata" },
+        { id: "eng_fulham", nome: "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Prata" },
+        { id: "eng_crystalpalace", nome: "Crystal Palace 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_bournemouth", nome: "Bournemouth 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_everton", nome: "Everton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_brentford", nome: "Brentford 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_nottmforest", nome: "Nott'm Forest 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_wolves", nome: "Wolves 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_southampton", nome: "Southampton 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_leicester", nome: "Leicester 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+        { id: "eng_ipswich", nome: "Ipswich Town 🏴󠁧󠁢󠁥󠁮󠁧󠁿", categoria: "Bronze" },
+
+        // 🇪🇸 LA LIGA (Espanha)
+        { id: "esp_realmadrid", nome: "Real Madrid 🇪🇸", categoria: "Elite" },
+        { id: "esp_barcelona", nome: "Barcelona 🇪🇸", categoria: "Elite" },
+        { id: "esp_atletico", nome: "Atlético de Madrid 🇪🇸", categoria: "Elite" },
+        { id: "esp_sevilla", nome: "Sevilla 🇪🇸", categoria: "Prata" },
+        { id: "esp_realsociedad", nome: "Real Sociedad 🇪🇸", categoria: "Prata" },
+        { id: "esp_athletic", nome: "Athletic Bilbao 🇪🇸", categoria: "Prata" },
+        { id: "esp_villarreal", nome: "Villarreal 🇪🇸", categoria: "Prata" },
+        { id: "esp_betis", nome: "Real Betis 🇪🇸", categoria: "Prata" },
+        { id: "esp_valencia", nome: "Valencia 🇪🇸", categoria: "Prata" },
+        { id: "esp_girona", nome: "Girona 🇪🇸", categoria: "Prata" },
+        { id: "esp_celta", nome: "Celta de Vigo 🇪🇸", categoria: "Bronze" },
+        { id: "esp_osasuna", nome: "Osasuna 🇪🇸", categoria: "Bronze" },
+        { id: "esp_alaves", nome: "Alavés 🇪🇸", categoria: "Bronze" },
+        { id: "esp_getafe", nome: "Getafe 🇪🇸", categoria: "Bronze" },
+        { id: "esp_mallorca", nome: "Mallorca 🇪🇸", categoria: "Bronze" },
+        { id: "esp_laspalmas", nome: "Las Palmas 🇪🇸", categoria: "Bronze" },
+        { id: "esp_rayo", nome: "Rayo Vallecano 🇪🇸", categoria: "Bronze" },
+        { id: "esp_valladolid", nome: "Valladolid 🇪🇸", categoria: "Bronze" },
+        { id: "esp_leganes", nome: "Leganés 🇪🇸", categoria: "Bronze" },
+        { id: "esp_espanyol", nome: "Espanyol 🇪🇸", categoria: "Bronze" },
+
+        // 🇮🇹 SERIE A (Itália)
+        { id: "ita_inter", nome: "Inter de Milão 🇮🇹", categoria: "Elite" },
+        { id: "ita_milan", nome: "Milan 🇮🇹", categoria: "Elite" },
+        { id: "ita_juventus", nome: "Juventus 🇮🇹", categoria: "Elite" },
+        { id: "ita_napoli", nome: "Napoli 🇮🇹", categoria: "Elite" },
+        { id: "ita_atalanta", nome: "Atalanta 🇮🇹", categoria: "Elite" },
+        { id: "ita_roma", nome: "Roma 🇮🇹", categoria: "Prata" },
+        { id: "ita_lazio", nome: "Lazio 🇮🇹", categoria: "Prata" },
+        { id: "ita_fiorentina", nome: "Fiorentina 🇮🇹", categoria: "Prata" },
+        { id: "ita_torino", nome: "Torino 🇮🇹", categoria: "Prata" },
+        { id: "ita_bologna", nome: "Bologna 🇮🇹", categoria: "Prata" },
+        { id: "ita_genoa", nome: "Genoa 🇮🇹", categoria: "Bronze" },
+        { id: "ita_monza", nome: "Monza 🇮🇹", categoria: "Bronze" },
+        { id: "ita_lecce", nome: "Lecce 🇮🇹", categoria: "Bronze" },
+        { id: "ita_udinese", nome: "Udinese 🇮🇹", categoria: "Bronze" },
+        { id: "ita_verona", nome: "Verona 🇮🇹", categoria: "Bronze" },
+        { id: "ita_empoli", nome: "Empoli 🇮🇹", categoria: "Bronze" },
+        { id: "ita_cagliari", nome: "Cagliari 🇮🇹", categoria: "Bronze" },
+        { id: "ita_parma", nome: "Parma 🇮🇹", categoria: "Bronze" },
+        { id: "ita_como", nome: "Como 🇮🇹", categoria: "Bronze" },
+        { id: "ita_venezia", nome: "Venezia 🇮🇹", categoria: "Bronze" },
+
+        // 🇩🇪 BUNDESLIGA (Alemanha)
+        { id: "ale_bayern", nome: "Bayern de Munique 🇩🇪", categoria: "Elite" },
+        { id: "ale_dortmund", nome: "Borussia Dortmund 🇩🇪", categoria: "Elite" },
+        { id: "ale_leverkusen", nome: "Bayer Leverkusen 🇩🇪", categoria: "Elite" },
+        { id: "ale_leipzig", nome: "RB Leipzig 🇩🇪", categoria: "Elite" },
+        { id: "ale_stuttgart", nome: "Stuttgart 🇩🇪", categoria: "Prata" },
+        { id: "ale_frankfurt", nome: "Eintracht Frankfurt 🇩🇪", categoria: "Prata" },
+        { id: "ale_wolfsburg", nome: "Wolfsburg 🇩🇪", categoria: "Prata" },
+        { id: "ale_gladbach", nome: "Borussia M'gladbach 🇩🇪", categoria: "Prata" },
+        { id: "ale_freiburg", nome: "Freiburg 🇩🇪", categoria: "Prata" },
+        { id: "ale_hoffenheim", nome: "Hoffenheim 🇩🇪", categoria: "Prata" },
+        { id: "ale_werder", nome: "Werder Bremen 🇩🇪", categoria: "Bronze" },
+        { id: "ale_augsburg", nome: "Augsburg 🇩🇪", categoria: "Bronze" },
+        { id: "ale_heidenheim", nome: "Heidenheim 🇩🇪", categoria: "Bronze" },
+        { id: "ale_mainz", nome: "Mainz 05 🇩🇪", categoria: "Bronze" },
+        { id: "ale_union", nome: "Union Berlin 🇩🇪", categoria: "Bronze" },
+        { id: "ale_bochum", nome: "Bochum 🇩🇪", categoria: "Bronze" },
+        { id: "ale_stpauli", nome: "St. Pauli 🇩🇪", categoria: "Bronze" },
+        { id: "ale_kiel", nome: "Holstein Kiel 🇩🇪", categoria: "Bronze" },
+
+        // 🇫🇷 LIGUE 1 (França)
+        { id: "fra_psg", nome: "PSG 🇫🇷", categoria: "Elite" },
+        { id: "fra_monaco", nome: "Monaco 🇫🇷", categoria: "Prata" },
+        { id: "fra_marseille", nome: "Olympique Marseille 🇫🇷", categoria: "Prata" },
+        { id: "fra_lyon", nome: "Lyon 🇫🇷", categoria: "Prata" },
+        { id: "fra_lille", nome: "Lille 🇫🇷", categoria: "Prata" },
+        { id: "fra_lens", nome: "Lens 🇫🇷", categoria: "Prata" },
+        { id: "fra_rennes", nome: "Rennes 🇫🇷", categoria: "Prata" },
+        { id: "fra_nice", nome: "Nice 🇫🇷", categoria: "Prata" },
+        { id: "fra_brest", nome: "Brest 🇫🇷", categoria: "Prata" },
+        { id: "fra_reims", nome: "Reims 🇫🇷", categoria: "Bronze" },
+        { id: "fra_toulouse", nome: "Toulouse 🇫🇷", categoria: "Bronze" },
+        { id: "fra_montpellier", nome: "Montpellier 🇫🇷", categoria: "Bronze" },
+        { id: "fra_strasbourg", nome: "Strasbourg 🇫🇷", categoria: "Bronze" },
+        { id: "fra_nantes", nome: "Nantes 🇫🇷", categoria: "Bronze" },
+        { id: "fra_lehavre", nome: "Le Havre 🇫🇷", categoria: "Bronze" },
+        { id: "fra_auxerre", nome: "Auxerre 🇫🇷", categoria: "Bronze" },
+        { id: "fra_angers", nome: "Angers 🇫🇷", categoria: "Bronze" },
+        { id: "fra_stetienne", nome: "Saint-Étienne 🇫🇷", categoria: "Bronze" },
+
+        // 🇧🇷 BRASILEIRÃO (Brasil)
+        { id: "bra_flamengo", nome: "Flamengo 🇧🇷", categoria: "Prata" },
+        { id: "bra_palmeiras", nome: "Palmeiras 🇧🇷", categoria: "Prata" },
+        { id: "bra_saopaulo", nome: "São Paulo 🇧🇷", categoria: "Prata" },
+        { id: "bra_atleticomg", nome: "Atlético-MG 🇧🇷", categoria: "Prata" },
+        { id: "bra_botafogo", nome: "Botafogo 🇧🇷", categoria: "Prata" },
+        { id: "bra_gremio", nome: "Grêmio 🇧🇷", categoria: "Prata" },
+        { id: "bra_internacional", nome: "Internacional 🇧🇷", categoria: "Prata" },
+        { id: "bra_fluminense", nome: "Fluminense 🇧🇷", categoria: "Prata" },
+        { id: "bra_cruzeiro", nome: "Cruzeiro 🇧🇷", categoria: "Prata" },
+        { id: "bra_athleticopr", nome: "Athletico-PR 🇧🇷", categoria: "Prata" },
+        { id: "bra_fortaleza", nome: "Fortaleza 🇧🇷", categoria: "Prata" },
+        { id: "bra_corinthians", nome: "Corinthians 🇧🇷", categoria: "Prata" },
+        { id: "bra_bahia", nome: "Bahia 🇧🇷", categoria: "Bronze" },
+        { id: "bra_vasco", nome: "Vasco 🇧🇷", categoria: "Bronze" },
+        { id: "bra_bragantino", nome: "Red Bull Bragantino 🇧🇷", categoria: "Prata" },
+        { id: "bra_vitoria", nome: "Vitória 🇧🇷", categoria: "Bronze" },
+        { id: "bra_juventude", nome: "Juventude 🇧🇷", categoria: "Bronze" },
+        { id: "bra_criciuma", nome: "Criciúma 🇧🇷", categoria: "Bronze" },
+        { id: "bra_cuiaba", nome: "Cuiabá 🇧🇷", categoria: "Bronze" },
+        { id: "bra_atleticogo", nome: "Atlético-GO 🇧🇷", categoria: "Bronze" },
+
+        // 🇵🇹 PRIMEIRA LIGA (Portugal)
+        { id: "por_benfica", nome: "Benfica 🇵🇹", categoria: "Prata" },
+        { id: "por_porto", nome: "Porto 🇵🇹", categoria: "Prata" },
+        { id: "por_sporting", nome: "Sporting 🇵🇹", categoria: "Prata" },
+        { id: "por_braga", nome: "Braga 🇵🇹", categoria: "Prata" },
+        { id: "por_vitoria", nome: "Vitória de Guimarães 🇵🇹", categoria: "Bronze" },
+        { id: "por_moreirense", nome: "Moreirense 🇵🇹", categoria: "Bronze" },
+        { id: "por_arouca", nome: "Arouca 🇵🇹", categoria: "Bronze" },
+        { id: "por_famalicao", nome: "Famalicão 🇵🇹", categoria: "Bronze" },
+        { id: "por_casapia", nome: "Casa Pia 🇵🇹", categoria: "Bronze" },
+        { id: "por_nacional", nome: "Nacional 🇵🇹", categoria: "Bronze" },
+        { id: "por_santaclara", nome: "Santa Clara 🇵🇹", categoria: "Bronze" },
+        { id: "por_estoril", nome: "Estoril 🇵🇹", categoria: "Bronze" },
+        { id: "por_estrela", nome: "Estrela da Amadora 🇵🇹", categoria: "Bronze" },
+        { id: "por_boavista", nome: "Boavista 🇵🇹", categoria: "Bronze" },
+        { id: "por_gilvicente", nome: "Gil Vicente 🇵🇹", categoria: "Bronze" },
+        { id: "por_farense", nome: "Farense 🇵🇹", categoria: "Bronze" },
+        { id: "por_rioave", nome: "Rio Ave 🇵🇹", categoria: "Bronze" },
+        { id: "por_avs", nome: "AVS 🇵🇹", categoria: "Bronze" }
+    ];
+
+    let contador = 0;
+    document.getElementById('event-section').style.display = 'block';
+    document.getElementById('event-section').innerHTML = "⏳ Enviando times para o Firebase... Aguarde.";
+
+    for (let time of listaTimes) {
+        try {
+            await setDoc(doc(db, "times", time.id), {
+                nome: time.nome,
+                categoria: time.categoria
+            });
+            contador++;
+        } catch (error) {
+            console.error("Erro ao subir time: ", time.nome, error);
+        }
+    }
+    document.getElementById('event-section').innerHTML = `✅ Sucesso! ${contador} times foram gravados no banco de dados. Você já pode apagar este script do código.`;
+    setTimeout(() => { document.getElementById('event-section').style.display = 'none'; }, 6000);
+}
+
+// Criando um botão temporário na tela para você disparar o script
+const btnSubir = document.createElement("button");
+btnSubir.innerText = "🚀 CLIQUE AQUI PARA SUBIR OS TIMES PRO FIREBASE";
+btnSubir.style = "background: #2563eb; color: white; padding: 15px; width: 100%; font-weight: bold; font-size: 16px; border: none; cursor: pointer;";
+btnSubir.onclick = window.subirTimesAutomatico;
+document.querySelector(".action-area").prepend(btnSubir);
 </script>
 </body>
 </html>
