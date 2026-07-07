@@ -1,45 +1,65 @@
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Carreira no Futebol - V-MAX Seguro</title>
+    <!-- [Mantenha seu CSS original aqui] -->
+</head>
+<body>
+    
+    <!-- [Mantenha todo o seu HTML original aqui] -->
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
-      authDomain: "copa-ae771.firebaseapp.com",
-      projectId: "copa-ae771",
-      storageBucket: "copa-ae771.firebasestorage.app",
-      messagingSenderId: "1030169877544",
-      appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
-    };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    let db;
-    let eliteClubs = [], tierPrata = [], tierBronze = [];
-    let dramasDisponiveis = [];
+        // Configuração
+        const firebaseConfig = {
+            apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+            authDomain: "copa-ae771.firebaseapp.com",
+            databaseURL: "https://copa-ae771-default-rtdb.firebaseio.com",
+            projectId: "copa-ae771",
+            storageBucket: "copa-ae771.firebasestorage.app",
+            messagingSenderId: "1030169877544",
+            appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
+        };
 
-    async function inicializarJogo() {
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
+        // Variáveis globais para o jogo
+        window.eliteClubs = [];
+        window.tierPrata = [];
+        window.tierBronze = [];
+        window.dramasDisponiveis = [];
 
-        // 1. Carrega Times do Firebase
-        const timesSnap = await getDocs(collection(db, "times"));
-        timesSnap.forEach(doc => {
-            let t = doc.data();
-            if(t.categoria === "Elite") eliteClubs.push(t.nome);
-            else if(t.categoria === "Prata") tierPrata.push(t.nome);
-            else tierBronze.push(t.nome);
-        });
+        // Conecta ao Firebase
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
 
-        // 2. Carrega Dramas do Firebase
-        const dramasSnap = await getDocs(collection(db, "eventos"));
-        dramasSnap.forEach(doc => {
-            dramasDisponiveis.push(doc.data());
-        });
-        
-        console.log("Sistema Cloud carregado! Times:", eliteClubs.length, "Dramas:", dramasDisponiveis.length);
-    }
+            async function carregarDados() {
+                // Carrega Times
+                const timesSnap = await getDocs(collection(db, "times"));
+                timesSnap.forEach(doc => {
+                    let t = doc.data();
+                    if(t.categoria === "Elite") window.eliteClubs.push(t.nome);
+                    else if(t.categoria === "Prata") window.tierPrata.push(t.nome);
+                    else window.tierBronze.push(t.nome);
+                });
 
-    inicializarJogo();
+                // Carrega Dramas
+                const dramasSnap = await getDocs(collection(db, "eventos"));
+                dramasSnap.forEach(doc => {
+                    window.dramasDisponiveis.push(doc.data());
+                });
+                
+                console.log("Dados carregados da nuvem!");
+            }
+            
+            carregarDados();
+        } catch (e) {
+            console.error("Firebase falhou, mas o jogo vai seguir mesmo assim:", e);
+        }
+    </script>
 
-    // ... [Mantenha aqui as suas funções de lógica do jogo] ...
-    // DICA: Na sua função 'abrirEntrevista', agora use:
-    // entrevistaAtual = dramasDisponiveis[Math.floor(Math.random() * dramasDisponiveis.length)];
-</script>
+    <!-- O resto das suas funções JS vem aqui -->
+</body>
+</html>
