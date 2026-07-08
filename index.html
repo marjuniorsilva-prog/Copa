@@ -100,7 +100,7 @@
 
 <div class="app-container">
     <div class="top-bar">
-        <div class="top-item" id="hdr-region">🌍 Região: -</div>
+        <div class="top-item" id="hdr-region" style="min-width:130px; text-align:center;">🌍 Região: -</div>
         <div class="top-item" id="hdr-arq">🏟️ ESTILO</div>
         <div class="top-item">⏱️ <span id="hdr-age">15</span> Anos</div>
         <div class="top-item" id="hdr-mood">🧠 Focado 🧘</div>
@@ -237,7 +237,7 @@
             <div class="rank-title">ESCOLHA SEU ARQUÉTIPO INICIAL</div>
             <div class="arq-card" onclick="selecionarArq('ponta')">⚡ Ponta Veloz<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+8 Ritmo, +6 Drible. Tende a fazer mais assistências.</div></div>
             <div class="arq-card" onclick="selecionarArq('matador')">⚽ Centroavante<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Finalização, +6 Físico. Garantia de mais gols.</div></div>
-            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro que traz títulos ao time.</div></div>
+            <div class="arq-card" onclick="selecionarArq('armador')">🪄 Armador<div style="font-size:10px; font-weight:normal; color:#555; margin-top:2px;">+10 Passe, +4 Drible. O cérebro que traz titles ao time.</div></div>
         </div>
     </div>
 
@@ -305,13 +305,13 @@
         { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Quebra a defesa sozinho e gera muitos gols individuais.' }
     ];
 
-    const randomStarNames = ["Haaland", "Mbappé", "Vini Jr.", "Bellingham", "Lamine Yamal", "Musiala", "Foden", "Rodri"];
+    const randomStarNames = ["Haaland", "Mbappé", "Vini Jr.", "Bellingham", "Lamine Yamal", "Musiala", "Foden", "Rodri", "Saka", "Kane"];
 
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000,
-        club: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
+        club: "", isProdigy: false, origin: "", archetype: "", selecao: "Nenhuma", teamChemistry: 0, // ✅ Adicionado selecao
         staff: { psycho: 0, pr: 0 }, traits: [], investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
-        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
+        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, ca: 0, bdor: 0, yc: 0, rc: 0 } // ✅ Adicionado ca (Copa America)
     };
     
     let rival = { nome: "O Prodígio", ovr: 72, gols: 0, bdor: 0, ativo: false };
@@ -347,7 +347,6 @@
         else p.club = "Sem Clube";
         
         p.salario = p.isProdigy ? 15000 : 3000; p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
-        document.getElementById('hdr-region').innerText = `🌍 ${p.origin}`;
         
         let r_nomes = ["Mbappé V2", "H. Kane Jr.", "El Pibe", "Robô Nórdico"];
         rival.nome = r_nomes[Math.floor(Math.random()*r_nomes.length)];
@@ -355,7 +354,7 @@
     }
     
     function initGrid() {
-        p.age = 15; p.banco = 1000000; p.teamChemistry = 0; p.fama = 5000; p.staff = { psycho: 0, pr: 0 }; p.traits = [];
+        p.age = 15; p.banco = 1000000; p.teamChemistry = 0; p.fama = 5000; p.staff = { psycho: 0, pr: 0 }; p.traits = []; p.selecao = "Nenhuma";
         currentStep = 0; initPlayer(); inicializarDramas();
         const container = document.getElementById('timeline-rows'); container.innerHTML = '';
         ages.forEach((a, index) => {
@@ -379,6 +378,10 @@
         document.getElementById('hdr-age').innerText = p.age; if(p.ovr > p.prime && penalty === 0) p.prime = p.ovr;
         let passe = p.age > 35 ? 0 : Math.floor((Math.pow(p.ovr, 2.5) / 1000) * (1 + (p.fama/20000000)));
         
+        // ✅ UI da Região agora exibe a Seleção Dinâmica!
+        let txtSelecao = p.selecao !== "Nenhuma" ? ` (${p.selecao})` : "";
+        document.getElementById('hdr-region').innerText = `🌍 ${p.origin}${txtSelecao}`;
+
         document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0 || p.club==="Sem Clube") ? "Livre" : "€" + passe + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco); document.getElementById('hdr-fama').innerText = formatFama(p.fama); document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
         
@@ -434,6 +437,14 @@
         let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
         if(p.club === "Sem Clube") leagueDifficulty = 50;
 
+        // ✅ SELEÇÕES DINÂMICAS: Passando pela base ou pulando para Principal se for Fenômeno
+        if (p.ovr >= 85 || (p.ovr >= 82 && p.age <= 18)) p.selecao = "Principal"; 
+        else if (p.age <= 17 && p.ovr >= 65) p.selecao = "Sub-17";
+        else if (p.age <= 20 && p.ovr >= 70) p.selecao = "Sub-20";
+        else if (p.age <= 23 && p.ovr >= 75) p.selecao = "Olímpica";
+        else if (p.ovr >= 80) p.selecao = "Principal";
+        else p.selecao = "Nenhuma";
+
         if (p.age <= 24 && p.traits.length < 2 && Math.random() < 0.25) {
             let availableTraits = traitsList.filter(t => !p.traits.some(pt => pt.id === t.id));
             if (availableTraits.length > 0) { let newT = availableTraits[Math.floor(Math.random() * availableTraits.length)]; p.traits.push(newT); exibirMensagemTopo(`🌟 TALENTO DESCOBERTO: ${newT.name}!`); }
@@ -463,9 +474,8 @@
 
         let apps3y = 140; if(p.club === "Sem Clube") apps3y = 0;
 
-        // ✅ AUMENTO DA MÉDIA DE GOLS E ASSISTÊNCIAS
         let performanceDelta = (p.ovr - leagueDifficulty) / 30; 
-        let golBase = Math.max(0.25, 0.45 + performanceDelta); // Muito mais gols
+        let golBase = Math.max(0.25, 0.45 + performanceDelta); 
         let assBase = Math.max(0.15, 0.28 + performanceDelta); 
 
         if(p.traits.some(t => t.id === 'falta')) golBase += 0.05;
@@ -483,7 +493,7 @@
 
         p.totals.app += apps3y; p.totals.gol += gol3y; p.totals.ass += ass3y;
         
-        let tDom3y = 0, tInt3y = 0, wcWon = 0;
+        let tDom3y = 0, tInt3y = 0, wcWon = 0, caWon = 0;
         if(p.club !== "Sem Clube") {
             for(let i=0; i<3; i++) {
                 if(p.ovr + (p.teamChemistry/2) > leagueDifficulty - 5 && Math.random() > 0.4) tDom3y++;
@@ -493,9 +503,12 @@
             p.totals.dom += tDom3y; p.totals.int += tInt3y; p.totals.cont += tInt3y;
         }
         
-        if (p.ovr >= 80) p.isConvocado = true;
-        if (p.isConvocado && p.age >= 21) {
-             let wcChance = (p.ovr > 88) ? 0.30 : (p.ovr > 80 ? 0.10 : 0.05);
+        // ✅ EVENTOS DE SELEÇÃO (Copa América e Copa do Mundo)
+        if (p.selecao === "Principal") {
+             let caChance = (p.ovr > 88) ? 0.35 : (p.ovr > 80 ? 0.15 : 0.05);
+             if (Math.random() < caChance) { caWon = 1; p.totals.ca += 1; p.totals.cont += 1; }
+             
+             let wcChance = (p.ovr > 89) ? 0.25 : (p.ovr > 82 ? 0.08 : 0.02);
              if (Math.random() < wcChance) { wcWon = 1; p.totals.wc += 1; }
         }
 
@@ -505,6 +518,7 @@
             premioTitulos += tDom3y * premioBase; premioTitulos += tInt3y * (premioBase * 3);
         }
         if(wcWon > 0) premioTitulos += 5000000;
+        if(caWon > 0) premioTitulos += 2000000;
         p.banco += premioTitulos; 
 
         let fameBonusPR = 1 + (p.staff.pr * 0.15);
@@ -521,20 +535,19 @@
         document.getElementById(`stats-assists-${currentStep}`).innerText = ass3y;
         atualizarUI();
 
-        // ✅ LÓGICA DE SUSPENSE DA BOLA DE OURO
+        // ✅ LÓGICA DE SUSPENSE DA BOLA DE OURO (Critérios Completos)
         let rivalScore = (rival.ovr * 2) + rival.gols + (Math.random() * 30);
         
-        // Condição mais fácil para ser indicado (Top 5)
-        let indicadoBdor = (p.club !== "Sem Clube" && p.ovr >= 83 && gol3y >= 45) || (p.ovr >= 80 && tInt3y > 0 && gol3y >= 30);
+        window.myBdorScore = (p.ovr * 2) + gol3y + ass3y + (tInt3y * 20) + (caWon * 25) + (wcWon * 50);
+        let indicadoBdor = (p.club !== "Sem Clube" && p.ovr >= 83 && gol3y >= 45) || (p.ovr >= 80 && tInt3y > 0 && gol3y >= 30) || wcWon > 0 || caWon > 0;
         
         window.tempBdorData = { rivalGanhou: false, gol3y: gol3y, rivalGols: rival.gols, tInt3y: tInt3y, wcWon: wcWon };
 
         if(indicadoBdor) {
-            let myScore = (p.ovr * 2) + gol3y + (tInt3y * 20) + (wcWon * 50);
-            let topScores = [myScore, rivalScore, rivalScore - 15, rivalScore - 25, rivalScore - 35];
-            topScores.sort((a,b) => b - a); // Maior para menor
+            let topScores = [window.myBdorScore, rivalScore, rivalScore - 15, rivalScore - 25, rivalScore - 35];
+            topScores.sort((a,b) => b - a); 
             
-            window.posicaoBdor = topScores.indexOf(myScore) + 1;
+            window.posicaoBdor = topScores.indexOf(window.myBdorScore) + 1;
             
             document.getElementById('action-area').style.display = 'none';
             document.getElementById('bdor-section').style.display = 'flex';
@@ -542,7 +555,7 @@
             document.getElementById('btn-reveal-bdor').style.display = 'block';
             document.getElementById('btn-close-bdor').style.display = 'none';
         } else {
-            // Se não for indicado, checa se o rival ganhou por fora
+            // ✅ CORREÇÃO: O RIVAL SÓ GANHA AQUI SE O JOGADOR NÃO FOR INDICADO E ELE TIVER MÉDIA ALTA
             if (rival.ovr > 86 && rival.gols > gol3y && Math.random() > 0.4) {
                 rival.bdor += 1; window.tempBdorData.rivalGanhou = true;
             }
@@ -550,33 +563,50 @@
         }
     }
 
-    // ✅ FUNÇÃO DE SUSPENSE
+    // ✅ FUNÇÃO DE SUSPENSE SEM NOMES REPETIDOS
     window.iniciarRevelacaoBdor = function() {
         document.getElementById('btn-reveal-bdor').style.display = 'none';
         let resDiv = document.getElementById('bdor-results');
         resDiv.innerHTML = "Lendo os votos da France Football...<br>";
         resDiv.style.display = 'block';
 
-        let getRandomStar = () => randomStarNames[Math.floor(Math.random() * randomStarNames.length)];
+        // Embaralha a lista de nomes base para não repetir
+        let nomesSorteio = [...randomStarNames].sort(() => Math.random() - 0.5);
+        let finalistas = [];
+        
+        finalistas.push({ nome: "VOCÊ", score: window.myBdorScore });
+        finalistas.push({ nome: rival.nome, score: (rival.ovr * 2) + rival.gols + (Math.random() * 30) });
 
-        setTimeout(() => { resDiv.innerHTML += `<div class="bdor-result-line"><b>5º Lugar:</b> ${window.posicaoBdor === 5 ? 'VOCÊ' : getRandomStar()}</div>`; }, 1000);
-        setTimeout(() => { resDiv.innerHTML += `<div class="bdor-result-line"><b>4º Lugar:</b> ${window.posicaoBdor === 4 ? 'VOCÊ' : getRandomStar()}</div>`; }, 2000);
-        setTimeout(() => { resDiv.innerHTML += `<div class="bdor-result-line"><b>3º Lugar:</b> ${window.posicaoBdor === 3 ? 'VOCÊ' : getRandomStar()}</div>`; }, 3000);
-        setTimeout(() => { resDiv.innerHTML += `<div class="bdor-result-line"><b>2º Lugar:</b> ${window.posicaoBdor === 2 ? 'VOCÊ' : rival.nome}</div>`; }, 4500);
-        setTimeout(() => { 
-            let ganhador = window.posicaoBdor === 1 ? "VOCÊ!" : (window.posicaoBdor === 2 ? rival.nome : getRandomStar());
-            resDiv.innerHTML += `<div class="bdor-result-line" style="color:#d97706; font-size:18px;">🏆 <b>1º LUGAR:</b> ${ganhador}</div>`; 
-            
-            if (window.posicaoBdor === 1) {
-                p.totals.bdor += 1; p.fama += 5000000;
-                window.tempBdorData.euGanhei = true;
-            } else if (window.posicaoBdor === 2 || window.posicaoBdor > 2) {
-                rival.bdor += 1; window.tempBdorData.rivalGanhou = true;
-            }
+        while(finalistas.length < 5) {
+            let nomeExtra = nomesSorteio.pop();
+            finalistas.push({ nome: nomeExtra, score: Math.floor(Math.random() * window.myBdorScore + 20) });
+        }
+        
+        // Ordena exatamente pela pontuação real
+        finalistas.sort((a,b) => b.score - a.score);
 
-            document.getElementById('btn-close-bdor').style.display = 'block';
-            atualizarUI();
-        }, 6500);
+        let posicoes = ["5º Lugar", "4º Lugar", "3º Lugar", "2º Lugar", "1º Lugar"];
+        
+        // Loop de revelação do menor pro maior (de trás pra frente no array)
+        finalistas.reverse().forEach((f, i) => {
+            setTimeout(() => { 
+                let corDestaque = (i === 4) ? "#d97706" : "#333";
+                let fonteDestaque = (i === 4) ? "18px" : "15px";
+                resDiv.innerHTML += `<div class="bdor-result-line" style="color:${corDestaque}; font-size:${fonteDestaque};"><b>${posicoes[i]}:</b> ${f.nome}</div>`; 
+                
+                // Se for o 1º lugar, aplica os prêmios corretos!
+                if(i === 4) {
+                    if (f.nome === "VOCÊ") {
+                        p.totals.bdor += 1; p.fama += 5000000;
+                        window.tempBdorData.euGanhei = true;
+                    } else if (f.nome === rival.nome) {
+                        rival.bdor += 1; window.tempBdorData.rivalGanhou = true;
+                    }
+                    document.getElementById('btn-close-bdor').style.display = 'block';
+                    atualizarUI();
+                }
+            }, (i + 1) * 1500); // 1.5s entre cada posição
+        });
     }
 
     window.fecharBdor = function() {
@@ -628,7 +658,6 @@
             if(efs.teamChemistry === "zerar") p.teamChemistry = 0;
             if(efs.rescisao) { p.club = "Sem Clube"; p.salario = 0; }
             
-            // ✅ TRANSFERÊNCIA FORÇADA POR AMOR DA TORCIDA
             if(efs.forcarElite) {
                 let novoClube = eliteClubs.length > 0 ? eliteClubs[Math.floor(Math.random() * eliteClubs.length)] : "Real Madrid 🇪🇸";
                 p.club = novoClube; p.salario = 120000; p.teamChemistry = 0;
