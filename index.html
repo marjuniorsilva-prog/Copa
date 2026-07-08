@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Carreira no Futebol - V-MAX Firebase Edition</title>
+    <title>Minha Carreira no Futebol - V-MAX Elite Edition</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
@@ -113,7 +113,7 @@
     </div>
     <div class="top-bar" style="background: #fdfdfd; border-top: none; font-size: 12px; padding: 4px 8px;">
         <div style="color: #b45309; font-weight: bold;">💶 Passe: <span id="hdr-value">-</span></div>
-        <div style="color: #16a34a; font-weight: 900;">💰 <span id="hdr-bank">€0</span></div>
+        <div style="color: #16a34a; font-weight: 900;">💰 <span id="hdr-bank">€1.0M</span></div>
         <div style="color: #2563eb; font-weight: bold;">📣 Fama: <span id="hdr-fama">10k</span></div>
     </div>
 
@@ -331,9 +331,10 @@
     };
     const prChances = [0, 20, 40, 60, 80, 100]; 
 
+    // CONFIGURAÇÃO ECONÔMICA E STATUS INICIAL
     let p = {
-        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 0, maxFeeNum: 0, maxFeeStr: "€0m",
-        club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
+        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000, // ✅ Conta inicia com 1 milhão
+        maxFeeNum: 0, maxFeeStr: "€0m", club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
         sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
         staff: { trainer: 0, agent: 0, psycho: 0, pr: 0 }, 
         relacao: "Solteiro", investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
@@ -363,15 +364,36 @@
     }
 
     function initPlayer() {
-        p.isProdigy = Math.random() > 0.60; 
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 8) + 78 : Math.floor(Math.random() * 6) + 68;
+        let sorte = Math.random() * 100;
+        let baseOvr = 0;
+
+        // ✅ LÓGICA DE PROBABILIDADES DE NASCIMENTO
+        if (sorte <= 1) {
+            baseOvr = Math.floor(Math.random() * 3) + 89; // 1%: 89-91
+            p.isProdigy = true;
+        } else if (sorte <= 5) {
+            baseOvr = Math.floor(Math.random() * 3) + 86; // 4%: 86-88
+            p.isProdigy = true;
+        } else if (sorte <= 20) {
+            baseOvr = Math.floor(Math.random() * 4) + 82; // 15%: 82-85
+            p.isProdigy = true;
+        } else {
+            baseOvr = Math.floor(Math.random() * 11) + 68; // 80%: 68-78
+            p.isProdigy = false;
+        }
+
         p.ovr = baseOvr; p.prime = baseOvr; p.pac = baseOvr; p.sho = baseOvr; p.pas = baseOvr; p.dri = baseOvr; p.def = 40; p.phy = baseOvr;
 
         if(p.archetype === 'ponta') { p.pac += 8; p.dri += 6; document.getElementById('hdr-arq').innerText = "⚡ PONTA"; }
         if(p.archetype === 'matador') { p.sho += 10; p.phy += 6; document.getElementById('hdr-arq').innerText = "⚽ PIVÔ"; }
         if(p.archetype === 'armador') { p.pas += 10; p.dri += 4; document.getElementById('hdr-arq').innerText = "🪄 MEIO"; }
 
-        p.club = p.isProdigy ? tierPrata[Math.floor(Math.random()*tierPrata.length)] : tierBronze[Math.floor(Math.random()*tierBronze.length)];
+        if(tierPrata.length > 0 && tierBronze.length > 0) {
+            p.club = p.isProdigy ? tierPrata[Math.floor(Math.random()*tierPrata.length)] : tierBronze[Math.floor(Math.random()*tierBronze.length)];
+        } else {
+            p.club = "Sem Clube";
+        }
+        
         p.salario = p.isProdigy ? 15000 : 3000;
         p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
         document.getElementById('hdr-region').innerText = `🌍 ${p.origin}`;
@@ -382,7 +404,7 @@
     }
     
     function initGrid() {
-        p.age = 15; p.banco = 0; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
+        p.age = 15; p.banco = 1000000; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
         p.perks = { capitao: false, motorzinho: false, marketing: false };
         p.staff = { trainer: 0, agent: 0, psycho: 0, pr: 0 };
         currentStep = 0; initPlayer(); inicializarDramas();
@@ -400,13 +422,17 @@
 
     function atualizarUI() {
         ['pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
-        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.archetype === 'matador' ? 2 : 0);
-        p.ovr = Math.min(99, calcOvr + Math.floor(p.teamChemistry / 20)); 
+        
+        // ✅ DEBUFF DE MORAL APLICADO AO CÁLCULO GERAL
+        let penalty = (p.emocao === "Triste 😢" || p.emocao === "Ressaca 🥴") ? 5 : 0;
+        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.archetype === 'matador' ? 2 : 0) - penalty;
+        
+        p.ovr = Math.max(30, Math.min(99, calcOvr + Math.floor(p.teamChemistry / 20))); 
 
-        let ovrHTML = `<div class="ovr-col"><span style="color:#15803d">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime ? 'inline' : 'none'}">⬆</span></div>`;
+        let ovrHTML = `<div class="ovr-col"><span style="color:${penalty > 0 ? '#b91c1c' : '#15803d'}">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime && penalty === 0 ? 'inline' : 'none'}">⬆</span></div>`;
         document.getElementById('attr-vals').innerHTML = `${ovrHTML}<div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
         
-        document.getElementById('hdr-age').innerText = p.age; if(p.ovr > p.prime) p.prime = p.ovr;
+        document.getElementById('hdr-age').innerText = p.age; if(p.ovr > p.prime && penalty === 0) p.prime = p.ovr;
         let passe = p.age > 35 ? 0 : Math.floor((Math.pow(p.ovr, 2.5) / 1000) * (1 + (p.fama/20000000)));
         
         document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0 || p.club==="Sem Clube") ? "Livre" : "€" + passe + "M";
@@ -513,7 +539,13 @@
             exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado nos últimos anos.");
         }
 
-        if(p.club !== "Sem Clube") p.teamChemistry -= 10; 
+        // ✅ PENALIDADE DE TRISTEZA APLICADA NO ENTROSAMENTO
+        if (p.emocao === "Triste 😢" || p.emocao === "Ressaca 🥴") {
+            p.teamChemistry -= 20;
+            exibirMensagemTopo("📉 Sua tristeza afetou seu rendimento nos treinos e com o elenco!");
+        } else if (p.club !== "Sem Clube") {
+            p.teamChemistry -= 10; 
+        }
 
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
         
