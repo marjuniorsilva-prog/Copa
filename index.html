@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Carreira no Futebol - V-MAX Elite Edition</title>
+    <title>Minha Carreira no Futebol - V-MAX Realism Edition</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
@@ -53,7 +53,7 @@
         .bottom-title { background: #5b2268; color: white; font-size: 13px; font-weight: 900; padding: 4px; font-family: 'Oswald', sans-serif; border-radius: 4px 4px 0 0; letter-spacing: 1px;}
         .trophy-grid { display: flex; justify-content: space-around; padding-top: 10px; font-size: 22px; font-weight: 900; align-items: center;}
         
-        .lifestyle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 5px 10px 10px 10px; }
+        .lifestyle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 5px 10px 10px 10px; }
         .life-wrapper { border-radius: 6px; overflow: hidden; border: 2px solid #5b2268; background: white; display: flex; flex-direction: column;}
         .life-title { background: #5b2268; color: white; font-size: 12px; font-weight: 900; text-align: center; padding: 2px; font-family: 'Oswald', sans-serif;}
         .life-photo { height: 55px; width: 100%; background-size: cover; background-position: center; position: relative;}
@@ -95,11 +95,9 @@
         .rival-box { text-align: center; background: #fee2e2; border: 2px solid #b91c1c; border-radius: 8px; padding: 10px; margin-bottom: 10px;}
         .rival-name { font-size: 18px; font-weight: 900; color: #7f1d1d; font-family: 'Oswald', sans-serif;}
         .rival-stats { display: flex; justify-content: space-around; margin-top: 10px; font-weight: bold; color: #991b1b;}
-        
-        .perk-item { display: flex; justify-content: space-between; align-items: center; background: #f3f4f6; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1;}
-        .perk-info { flex-grow: 1; } .perk-title { font-weight: 900; font-size: 14px; color: #4c1d95;} .perk-desc { font-size: 10px; color: #555;}
-        .btn-buy-perk { background: #fbbf24; border: none; padding: 6px 12px; border-radius: 4px; font-weight: 900; cursor: pointer;}
-        .perk-owned { background: #15803d; color: white; padding: 6px 12px; border-radius: 4px; font-weight: 900; font-size: 12px;}
+
+        .trait-item { background: #f3f4f6; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; }
+        .trait-title { font-weight: 900; font-size: 14px; color: #4c1d95;} .trait-desc { font-size: 11px; color: #555; margin-top: 2px;}
     </style>
 </head>
 <body>
@@ -176,10 +174,8 @@
     </div>
 
     <div class="office-section" id="office-panel">
-        <div class="office-title">ESCRITÓRIO & STAFF (NÍVEIS 0 A 5)</div>
+        <div class="office-title">ESCRITÓRIO E STAFF (NÍVEIS 0 A 5)</div>
         <div class="office-grid">
-            <div class="office-btn" onclick="uparStaff('trainer')">🏋️ Prep. Físico (Nív.<span id="lvl-trainer">0</span>)<br><span style="font-weight:normal;">Alavanca OVR</span><br><span id="cst-trainer" style="color:#15803d">€500k</span></div>
-            <div class="office-btn" onclick="uparStaff('agent')">💼 Empresário (Nív.<span id="lvl-agent">0</span>)<br><span style="font-weight:normal;">Melhora Salários</span><br><span id="cst-agent" style="color:#15803d">€1.0M</span></div>
             <div class="office-btn" onclick="uparStaff('psycho')">🧠 Psicólogo (Nív.<span id="lvl-psycho">0</span>)<br><span style="font-weight:normal;">Melhora a Moral</span><br><span id="cst-psycho" style="color:#15803d">€250k</span></div>
             <div class="office-btn" onclick="uparStaff('pr')">📢 Assessoria (Nív.<span id="lvl-pr">0</span>)<br><span style="font-weight:normal;">Blindagem PR</span><br><span id="cst-pr" style="color:#15803d">€250k</span></div>
         </div>
@@ -211,8 +207,7 @@
 
     <div class="lifestyle-grid">
         <div class="life-wrapper"><div class="life-title">MORADIA</div><div class="life-photo" id="photo-house"><div class="life-text" id="text-house">Casa</div></div><div class="life-btn" id="btn-buy-house" onclick="comprarPatrimonio('house')">Melhorar</div></div>
-        <div class="life-wrapper"><div class="life-title">VEÍCULO</div><div class="life-photo" id="photo-car"><div class="life-text" id="text-car">Bicicleta</div></div><div class="life-btn" id="btn-buy-car" onclick="comprarPatrimonio('car')">Melhorar</div></div>
-        <div class="life-wrapper"><div class="life-title">VIDA SOCIAL</div><div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80')"><div class="life-text" id="text-social">Solteiro</div></div><div class="life-btn" style="background:#2563eb; color:white; font-weight:bold; cursor:default;" id="btn-social">Estável</div></div>
+        <div class="life-wrapper"><div class="life-title">VEÍCULO</div><div class="life-photo" id="photo-car"><div class="life-text" id="text-car">Carro</div></div><div class="life-btn" id="btn-buy-car" onclick="comprarPatrimonio('car')">Melhorar</div></div>
         <div class="life-wrapper">
             <div class="life-title">FINANÇAS</div>
             <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&q=80')"><div class="life-text" id="text-finance">Fundo: €0</div></div>
@@ -227,7 +222,7 @@
         <button class="btn-continue" onclick="cliqueBotaoPrincipal()" id="btn-main" disabled>CARREGANDO DADOS DA NUVEM...</button>
     </div>
 
-    <button class="btn-rank" style="background:#8b5cf6; color:white;" onclick="abrirPerks()">🌟 ÁRVORE DE HABILIDADES (SP: <span id="hdr-sp-btn">0</span>)</button>
+    <button class="btn-rank" style="background:#8b5cf6; color:white;" onclick="abrirPerks()">🌟 MEUS TALENTOS ÚNICOS</button>
     <button class="btn-rank" onclick="abrirRanking()">🏆 HALL DA FAMA (LOCAL E GLOBAL)</button>
 
     <div class="modal" id="modal-arq" style="background: rgba(10,15,30,0.96);">
@@ -241,33 +236,9 @@
 
     <div class="modal" id="modal-perks">
         <div class="modal-content">
-            <div class="rank-title" style="color:#4c1d95;">🌟 HABILIDADES ESPECIAIS</div>
-            <p style="text-align:center; font-size:12px; margin-bottom:15px;">Pontos Disponíveis (SP): <b id="modal-sp-val" style="font-size:16px;">0</b></p>
-            
-            <div class="perk-item">
-                <div class="perk-info">
-                    <div class="perk-title">🛡️ Capitão Nato (1 SP)</div>
-                    <div class="perk-desc">Ganha 30% de Entrosamento instantâneo ao mudar de clube.</div>
-                </div>
-                <div id="btn-perk-cap" class="btn-buy-perk" onclick="comprarPerk('capitao')">COMPRAR</div>
-            </div>
-            
-            <div class="perk-item">
-                <div class="perk-info">
-                    <div class="perk-title">⚙️ Motorzinho (2 SP)</div>
-                    <div class="perk-desc">Atrasa severamente a queda de Físico e Ritmo após os 30 anos.</div>
-                </div>
-                <div id="btn-perk-mot" class="btn-buy-perk" onclick="comprarPerk('motorzinho')">COMPRAR</div>
-            </div>
-            
-            <div class="perk-item">
-                <div class="perk-info">
-                    <div class="perk-title">📸 Rei do Marketing (2 SP)</div>
-                    <div class="perk-desc">Multiplica em 1.5x todo dinheiro de Patrocínio e Fama ganha.</div>
-                </div>
-                <div id="btn-perk-mkt" class="btn-buy-perk" onclick="comprarPerk('marketing')">COMPRAR</div>
-            </div>
-
+            <div class="rank-title" style="color:#4c1d95;">🌟 MEUS TALENTOS</div>
+            <p style="text-align:center; font-size:12px; margin-bottom:15px;">Talentos são raros e despertados naturalmente através de seus treinos em campo!</p>
+            <div id="traits-list"></div>
             <button class="btn-close" onclick="fecharPerks()">FECHAR</button>
         </div>
     </div>
@@ -296,7 +267,6 @@
 </div>
 
 <script type="module">
-    // INTEGRANDO FIREBASE V12
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -320,24 +290,44 @@
     let tierBronze = [];
     let bancoDramasOriginal = [];
 
-    const houseUpgrades = [ { name: "Casa dos Pais", price: 0 }, { name: "Apto Centro", price: 1000000 }, { name: "Condomínio", price: 5000000 }, { name: "Mansão", price: 20000000 } ];
-    const carUpgrades = [ { name: "Bicicleta", price: 0 }, { name: "Sedan", price: 150000 }, { name: "Esportivo", price: 600000 }, { name: "Supercarro", price: 3000000 } ];
+    // VALORES REALISTAS PARA CASAS E CARROS (6 NÍVEIS)
+    const houseUpgrades = [ 
+        { name: "Casa Simples", price: 0 }, 
+        { name: "Apto Classe Média", price: 300000 }, 
+        { name: "Cobertura Premium", price: 1500000 }, 
+        { name: "Mansão Padrão", price: 5000000 }, 
+        { name: "Mansão de Luxo", price: 15000000 },
+        { name: "Ilha Privativa", price: 35000000 } 
+    ];
+    const carUpgrades = [ 
+        { name: "Carro Popular", price: 0 }, 
+        { name: "SUV de Luxo", price: 150000 }, 
+        { name: "Esportivo Premium", price: 400000 }, 
+        { name: "Supercarro (V8)", price: 1200000 },
+        { name: "Hypercarro Exclusivo", price: 4000000 },
+        { name: "Coleção Milionária", price: 12000000 } 
+    ];
 
     const custoSff = {
-        trainer: [0, 500000, 1500000, 3000000, 5000000, 10000000],
-        agent:   [0, 1000000, 2500000, 5000000, 8000000, 15000000],
         psycho:  [0, 250000,  750000,  1500000, 3000000, 5000000],
         pr:      [0, 250000,  1000000, 3000000, 5000000, 10000000]
     };
     const prChances = [0, 20, 40, 60, 80, 100]; 
 
-    // CONFIGURAÇÃO ECONÔMICA E STATUS INICIAL
+    // LISTA DE TALENTOS ÚNICOS POSSÍVEIS
+    const traitsList = [
+        { id: 'falta', name: '🎯 Mestre da Falta', desc: 'Sempre guarda de bola parada. Aumenta volume de gols.' },
+        { id: 'penalti', name: '🥶 Cobrador Oficial', desc: 'Frio e calculista na marca da cal. Garante gols extras.' },
+        { id: 'cabeceio', name: '🚁 Rei do Espaço', desc: 'Diferenciado no cabeceio. Ganha todas pelo alto.' },
+        { id: 'arrancada', name: '🚀 Arrancada Forte', desc: 'Sai na cara do gol com frequência. Mais gols e assistências.' },
+        { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Quebra a defesa sozinho e gera muitos gols individuais.' }
+    ];
+
     let p = {
-        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000, // ✅ Conta inicia com 1 milhão
+        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000,
         maxFeeNum: 0, maxFeeStr: "€0m", club: "", transferFee: "", isProdigy: false, origin: "", archetype: "", isConvocado: false, teamChemistry: 0,
-        sp: 0, perks: { capitao: false, motorzinho: false, marketing: false },
-        staff: { trainer: 0, agent: 0, psycho: 0, pr: 0 }, 
-        relacao: "Solteiro", investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
+        staff: { psycho: 0, pr: 0 }, traits: [], 
+        investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
@@ -367,20 +357,10 @@
         let sorte = Math.random() * 100;
         let baseOvr = 0;
 
-        // ✅ LÓGICA DE PROBABILIDADES DE NASCIMENTO
-        if (sorte <= 1) {
-            baseOvr = Math.floor(Math.random() * 3) + 89; // 1%: 89-91
-            p.isProdigy = true;
-        } else if (sorte <= 5) {
-            baseOvr = Math.floor(Math.random() * 3) + 86; // 4%: 86-88
-            p.isProdigy = true;
-        } else if (sorte <= 20) {
-            baseOvr = Math.floor(Math.random() * 4) + 82; // 15%: 82-85
-            p.isProdigy = true;
-        } else {
-            baseOvr = Math.floor(Math.random() * 11) + 68; // 80%: 68-78
-            p.isProdigy = false;
-        }
+        if (sorte <= 1) { baseOvr = Math.floor(Math.random() * 3) + 89; p.isProdigy = true; } 
+        else if (sorte <= 5) { baseOvr = Math.floor(Math.random() * 3) + 86; p.isProdigy = true; } 
+        else if (sorte <= 20) { baseOvr = Math.floor(Math.random() * 4) + 82; p.isProdigy = true; } 
+        else { baseOvr = Math.floor(Math.random() * 11) + 68; p.isProdigy = false; }
 
         p.ovr = baseOvr; p.prime = baseOvr; p.pac = baseOvr; p.sho = baseOvr; p.pas = baseOvr; p.dri = baseOvr; p.def = 40; p.phy = baseOvr;
 
@@ -404,9 +384,8 @@
     }
     
     function initGrid() {
-        p.age = 15; p.banco = 1000000; p.sp = 0; p.teamChemistry = 0; p.fama = 5000;
-        p.perks = { capitao: false, motorzinho: false, marketing: false };
-        p.staff = { trainer: 0, agent: 0, psycho: 0, pr: 0 };
+        p.age = 15; p.banco = 1000000; p.teamChemistry = 0; p.fama = 5000;
+        p.staff = { psycho: 0, pr: 0 }; p.traits = [];
         currentStep = 0; initPlayer(); inicializarDramas();
         const container = document.getElementById('timeline-rows'); container.innerHTML = '';
         ages.forEach((a, index) => {
@@ -423,7 +402,6 @@
     function atualizarUI() {
         ['pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
         
-        // ✅ DEBUFF DE MORAL APLICADO AO CÁLCULO GERAL
         let penalty = (p.emocao === "Triste 😢" || p.emocao === "Ressaca 🥴") ? 5 : 0;
         let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.archetype === 'matador' ? 2 : 0) - penalty;
         
@@ -437,8 +415,6 @@
         
         document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0 || p.club==="Sem Clube") ? "Livre" : "€" + passe + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco);
-        document.getElementById('hdr-sp-btn').innerText = p.sp;
-        document.getElementById('modal-sp-val').innerText = p.sp;
         document.getElementById('hdr-fama').innerText = formatFama(p.fama);
         document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
         
@@ -454,7 +430,7 @@
         document.getElementById('maj-wc').innerText = p.totals.wc; 
         document.getElementById('maj-bdor').innerText = p.totals.bdor;
         
-        ['trainer', 'agent', 'psycho', 'pr'].forEach(tipo => {
+        ['psycho', 'pr'].forEach(tipo => {
             document.getElementById(`lvl-${tipo}`).innerText = p.staff[tipo];
             let nextLvl = p.staff[tipo] + 1;
             let cstSpan = document.getElementById(`cst-${tipo}`);
@@ -467,16 +443,12 @@
             }
         });
 
-        let btnCap = document.getElementById('btn-perk-cap'); if(p.perks.capitao && btnCap) btnCap.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
-        let btnMot = document.getElementById('btn-perk-mot'); if(p.perks.motorzinho && btnMot) btnMot.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
-        let btnMkt = document.getElementById('btn-perk-mkt'); if(p.perks.marketing && btnMkt) btnMkt.outerHTML = `<div class="perk-owned">ADQUIRIDO</div>`;
-
         let h = houseUpgrades[p.houseTier]; document.getElementById('text-house').innerText = h.name;
-        if(p.houseTier < 3) document.getElementById('btn-buy-house').innerText = "Melhorar (" + formatMoeda(houseUpgrades[p.houseTier+1].price) + ")";
+        if(p.houseTier < 5) document.getElementById('btn-buy-house').innerText = "Melhorar (" + formatMoeda(houseUpgrades[p.houseTier+1].price) + ")";
         else document.getElementById('btn-buy-house').innerText = "Máximo";
 
         let c = carUpgrades[p.carTier]; document.getElementById('text-car').innerText = c.name;
-        if(p.carTier < 3) document.getElementById('btn-buy-car').innerText = "Melhorar (" + formatMoeda(carUpgrades[p.carTier+1].price) + ")";
+        if(p.carTier < 5) document.getElementById('btn-buy-car').innerText = "Melhorar (" + formatMoeda(carUpgrades[p.carTier+1].price) + ")";
         else document.getElementById('btn-buy-car').innerText = "Máximo";
 
         document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
@@ -484,25 +456,26 @@
 
     window.uparStaff = function(tipo) {
         let nextLvl = p.staff[tipo] + 1;
-        if (nextLvl > 5) { alert("Nível máximo já atingido para este profissional!"); return; }
+        if (nextLvl > 5) { alert("Nível máximo já atingido!"); return; }
         let custo = custoSff[tipo][nextLvl];
         if (p.banco >= custo) {
             p.banco -= custo; p.staff[tipo] = nextLvl; atualizarUI(); exibirMensagemTopo("✅ Staff evoluído com sucesso!");
         } else {
-            alert("Dinheiro insuficiente para melhorar este setor do seu staff!");
+            alert("Dinheiro insuficiente!");
         }
     }
 
-    window.comprarPerk = function(tipo) {
-        let custo = tipo === 'capitao' ? 1 : 2;
-        if(p.sp >= custo && !p.perks[tipo]) {
-            p.sp -= custo; p.perks[tipo] = true;
-            if(tipo === 'capitao') p.teamChemistry = Math.max(p.teamChemistry, 30);
-            exibirMensagemTopo(`✨ Habilidade Adquirida!`); atualizarUI();
-        } else alert("Pontos SP insuficientes!");
+    window.abrirPerks = function() { 
+        let listaHTML = "";
+        if(p.traits.length === 0) listaHTML = "<p style='text-align:center; color:#555;'>Nenhum talento descoberto ainda.</p>";
+        else {
+            p.traits.forEach(t => {
+                listaHTML += `<div class="trait-item"><div class="trait-title">${t.name}</div><div class="trait-desc">${t.desc}</div></div>`;
+            });
+        }
+        document.getElementById('traits-list').innerHTML = listaHTML;
+        document.getElementById('modal-perks').style.display = 'flex'; 
     }
-
-    window.abrirPerks = function() { document.getElementById('modal-perks').style.display = 'flex'; }
     window.fecharPerks = function() { document.getElementById('modal-perks').style.display = 'none'; }
     
     window.mostrarTabRank = function(tab) {
@@ -513,8 +486,8 @@
 
     window.investirFundo = function(valor) { if(p.banco >= valor) { p.banco -= valor; p.investido += valor; atualizarUI(); } }
     window.comprarPatrimonio = function(tipo) {
-        if(tipo === 'house' && p.houseTier < 3) { let next = houseUpgrades[p.houseTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.houseTier++; } }
-        if(tipo === 'car' && p.carTier < 3) { let next = carUpgrades[p.carTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.carTier++; } }
+        if(tipo === 'house' && p.houseTier < 5) { let next = houseUpgrades[p.houseTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.houseTier++; } }
+        if(tipo === 'car' && p.carTier < 5) { let next = carUpgrades[p.carTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.carTier++; } }
         atualizarUI();
     }
 
@@ -523,35 +496,43 @@
         let partes = clubeStr.trim().split(" "); let flag = partes.pop(); let nomeClube = partes.join(" ");
         return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">${flag}</span><div class="club-info"><span class="c-name">${nomeClube}</span></div>${feeTag}</div>`;
     }
-    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 5000); }
+    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 6000); }
 
     function avancarCarreira() {
         if (p.age >= 39) { finalizarCarreira(); return; }
         
         if (currentStep === 0) { currentStep = 1; p.age = 18; } 
-        else { p.age += 3; currentStep++; p.teamChemistry += 15; p.sp += 1; }
+        else { p.age += 3; currentStep++; p.teamChemistry += 15; }
 
         let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
         if(p.club === "Sem Clube") leagueDifficulty = 50;
+
+        // Descoberta Aleatória de Talentos (até os 24 anos)
+        if (p.age <= 24 && p.traits.length < 2 && Math.random() < 0.25) {
+            let availableTraits = traitsList.filter(t => !p.traits.some(pt => pt.id === t.id));
+            if (availableTraits.length > 0) {
+                let newT = availableTraits[Math.floor(Math.random() * availableTraits.length)];
+                p.traits.push(newT);
+                exibirMensagemTopo(`🌟 TALENTO DESCOBERTO: ${newT.name}! Isso impactará seu rendimento.`);
+            }
+        }
 
         if (p.club !== "Sem Clube" && p.ovr < leagueDifficulty - 10 && p.age > 21) {
             p.club = "Sem Clube"; p.salario = 0; p.teamChemistry = 0;
             exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado nos últimos anos.");
         }
 
-        // ✅ PENALIDADE DE TRISTEZA APLICADA NO ENTROSAMENTO
         if (p.emocao === "Triste 😢" || p.emocao === "Ressaca 🥴") {
             p.teamChemistry -= 20;
-            exibirMensagemTopo("📉 Sua tristeza afetou seu rendimento nos treinos e com o elenco!");
         } else if (p.club !== "Sem Clube") {
             p.teamChemistry -= 10; 
         }
 
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
+        p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08));
         
-        let multiplierMkt = p.perks.marketing ? 1.5 : 1;
-        p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08)) * multiplierMkt;
-        
+        // Evolução Natural Baseada no Clube
+        let isElite = eliteClubs.includes(p.club);
         if (p.age <= 27) { 
             let g = 0;
             if (p.age <= 18) g = Math.floor(Math.random() * 4) + 4;      
@@ -561,19 +542,19 @@
 
             if (p.ovr >= 86) g = Math.floor(g / 2);
 
-            let chanceBonus = p.staff.trainer * 0.20; 
-            if (Math.random() < chanceBonus) g += 1;
+            let chanceBonusInfraestrutura = isElite ? 0.40 : (tierPrata.includes(p.club) ? 0.20 : 0.05); 
+            if (Math.random() < chanceBonusInfraestrutura) g += 1;
 
             p.sho += g; p.dri += g; p.pas += g; 
             p.pac += Math.max(0, g - 1); 
             p.phy += Math.max(0, g - 1); 
         } 
         else if (p.age >= 30) {
-            let quedaPac = p.perks.motorzinho ? 1 : (p.archetype === 'ponta' ? 3 : 5); 
-            quedaPac -= Math.floor(p.staff.trainer / 2);
+            let quedaPac = p.archetype === 'ponta' ? 5 : 7; 
+            if(isElite) quedaPac -= 2; // Tratamento médico de ponta
             if(quedaPac < 0) quedaPac = 0;
             p.pac -= quedaPac; 
-            p.phy -= Math.max(0, 2 - Math.floor(p.staff.trainer / 2)); 
+            p.phy -= Math.max(0, 3 - (isElite ? 1 : 0)); 
         }
 
         let apps3y = 140; 
@@ -581,9 +562,16 @@
 
         let performanceDelta = (p.ovr - leagueDifficulty) / 35; 
         let golBase = Math.max(0.18, 0.38 + performanceDelta); 
-        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.3 + 0.85));
-        
         let assBase = Math.max(0.12, 0.24 + performanceDelta); 
+
+        // Aplicação de Talentos Únicos
+        if(p.traits.some(t => t.id === 'falta')) golBase += 0.05;
+        if(p.traits.some(t => t.id === 'penalti')) golBase += 0.06;
+        if(p.traits.some(t => t.id === 'cabeceio')) golBase += 0.05;
+        if(p.traits.some(t => t.id === 'arrancada')) { golBase += 0.04; assBase += 0.03; }
+        if(p.traits.some(t => t.id === 'driblador')) { golBase += 0.06; }
+
+        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.3 + 0.85));
         let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.3 + 0.85));
 
         if(p.archetype === 'matador') gol3y = Math.floor(gol3y * 1.3);
@@ -609,15 +597,25 @@
              if (Math.random() < wcChance) { wcWon = 1; p.totals.wc += 1; }
         }
 
+        // Sistema de Premiação
+        let premioTitulos = 0;
+        if(p.club !== "Sem Clube") {
+            let premioBase = eliteClubs.includes(p.club) ? 2000000 : (tierPrata.includes(p.club) ? 500000 : 100000);
+            premioTitulos += tDom3y * premioBase;
+            premioTitulos += tInt3y * (premioBase * 3);
+        }
+        if(wcWon > 0) premioTitulos += 5000000;
+        p.banco += premioTitulos; // Adiciona direto na conta
+
         let fameBonusPR = 1 + (p.staff.pr * 0.15);
-        p.fama += ((gol3y * 5000) + (tInt3y * 150000)) * multiplierMkt * fameBonusPR;
+        p.fama += ((gol3y * 5000) + (tInt3y * 150000)) * fameBonusPR;
         
         rival.ovr += p.age < 27 ? 4 : (p.age > 33 ? -2 : 1);
         rival.gols = Math.floor((rival.ovr * 0.4) * 3 + (Math.random() * 40)); 
         
         let ganhouBdor = false; let rivalGanhouBdor = false;
         if (p.club !== "Sem Clube" && p.ovr >= 85 && gol3y > rival.gols && tInt3y > 0 && ((gol3y + ass3y) > 90 || (wcWon > 0 && gol3y > 60))) { 
-            p.totals.bdor += 1; ganhouBdor = true; p.sp += 1; p.fama += 5000000;
+            p.totals.bdor += 1; ganhouBdor = true; p.fama += 5000000;
         } else if (rival.ovr > 86 && rival.gols > gol3y && Math.random() > 0.4) {
             rival.bdor += 1; rivalGanhouBdor = true;
         }
@@ -729,8 +727,9 @@
         let list = document.getElementById('offer-list'); list.innerHTML = "";
         
         let pool = [];
-        if(p.club === "Sem Clube" || p.ovr < 72) pool = tierBronze;
-        else if (p.ovr >= 85 || (p.ovr >= 82 && p.staff.agent >= 3)) pool = eliteClubs; 
+        // LÓGICA DE TRANSFERÊNCIA PURAMENTE POR MÉRITO DE OVR
+        if(p.club === "Sem Clube" || p.ovr < 75) pool = tierBronze;
+        else if (p.ovr >= 85) pool = eliteClubs; 
         else pool = tierPrata;
 
         for(let i=0; i<2; i++) {
@@ -742,9 +741,6 @@
             if(eliteClubs.includes(c)) salBase = Math.floor(p.ovr * 1.5) + (p.fama > 5000000 ? 50 : 0);
             if(c.includes("🇸🇦") && p.ovr > 80) salBase *= 3; 
             if(salBase < 3) salBase = 3;
-            
-            let bonusAgent = 1 + (p.staff.agent * 0.10); 
-            salBase = Math.floor(salBase * bonusAgent);
 
             list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">Sálário: €${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar (€${val}M)</div></div>`;
         }
@@ -760,7 +756,7 @@
     }
 
     window.aceitarTransf = function(c, strVal, numVal, salK) { 
-        p.club = c; p.salario = salK * 1000; p.teamChemistry = p.perks.capitao ? 30 : 0; 
+        p.club = c; p.salario = salK * 1000; p.teamChemistry = 0; // Entrosamento zera ao mudar
         document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; 
     }
     
