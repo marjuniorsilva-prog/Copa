@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background-color: #111; display: flex; justify-content: center; padding: 10px; color: #333;}
+        body { background-color: #111; display: flex; justify-content: center; padding: 10px; color: #333; transition: background-color 0.8s; }
         
         .app-container { width: 100%; max-width: 420px; background-color: #d8dbe2; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
         
@@ -93,11 +93,49 @@
 
         .bdor-result-line { padding: 8px; border-bottom: 1px solid #ddd; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ==========================================
+           ESTILOS DO NOVO MODO SAF / MANAGER
+        ========================================== */
+        .manager-bg { background-color: #0f172a; color: #f8fafc; }
+        #modo-manager { display: none; flex-direction: column; width: 100%; height: 100%; animation: fadeIn 1s; }
+
+        .saf-header { background: linear-gradient(135deg, #1e293b, #0f172a); border-bottom: 3px solid #fbbf24; padding: 15px 10px; text-align: center; }
+        .saf-title { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 900; color: #fbbf24; text-transform: uppercase; letter-spacing: 1px; }
+        .saf-subtitle { font-size: 12px; color: #cbd5e1; font-weight: bold; margin-top: 4px; }
+
+        .saf-stats-bar { display: flex; justify-content: space-between; background: #1e293b; padding: 10px; font-size: 13px; font-weight: 900; border-bottom: 1px solid #334155; }
+        .saf-stat { display: flex; flex-direction: column; align-items: center; width: 33%; }
+        .saf-stat span:first-child { font-size: 10px; color: #94a3b8; text-transform: uppercase; }
+        .saf-stat span:last-child { font-size: 16px; color: #10b981; }
+
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
+        .dash-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .dash-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #3b82f6; }
+        .dash-card.finance::before { background: #10b981; }
+        .dash-card.stadium::before { background: #f59e0b; }
+        .dash-card.market::before { background: #8b5cf6; }
+
+        .dash-title { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 900; color: #f8fafc; margin-bottom: 5px; }
+        .dash-info { font-size: 11px; color: #cbd5e1; margin-bottom: 8px; line-height: 1.4; }
+        .dash-btn { background: #334155; color: white; border: none; padding: 6px; font-size: 10px; font-weight: 900; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .dash-btn:hover { background: #fbbf24; color: #0f172a; }
+
+        .saf-timeline-header { background: #fbbf24; color: #0f172a; display: grid; grid-template-columns: 50px 1fr 60px 70px; gap: 4px; font-size: 10px; font-weight: 900; text-align: center; padding: 6px 4px; font-family: 'Oswald', sans-serif; margin: 0 10px; border-radius: 6px 6px 0 0; }
+        .saf-timeline-rows { display: flex; flex-direction: column; gap: 4px; background: #1e293b; padding: 6px; margin: 0 10px 10px 10px; border-radius: 0 0 6px 6px; border: 1px solid #334155; border-top: none; }
+        .saf-row { display: grid; grid-template-columns: 50px 1fr 60px 70px; gap: 4px; align-items: center; background: #0f172a; border-radius: 4px; padding: 4px 0; font-size: 11px; color: white; text-align: center; border: 1px solid #334155; }
+        .saf-year { font-weight: 900; color: #fbbf24; font-family: 'Oswald', sans-serif; }
+        .saf-div { font-weight: bold; text-align: left; padding-left: 5px; }
+        .saf-pos { color: #38bdf8; font-weight: bold; }
+        .saf-profit { color: #10b981; font-weight: bold; }
+
+        .btn-simulate-saf { background: #fbbf24; color: #0f172a; border: none; padding: 15px; font-size: 18px; font-weight: 900; border-radius: 8px; cursor: pointer; margin: 0 10px 10px 10px; box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3); font-family: 'Oswald', sans-serif; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<!-- MODO CARREIRA DE JOGADOR -->
+<div id="modo-carreira" class="app-container">
     <div class="top-bar">
         <div class="top-item" id="hdr-region" style="min-width:130px; text-align:center;">🌍 Região: -</div>
         <div class="top-item" id="hdr-arq">🏟️ ESTILO</div>
@@ -271,6 +309,86 @@
     </div>
 </div>
 
+<!-- ==============================================
+     MODO SAF / MANAGER (NOVO) 
+=============================================== -->
+<div id="modo-manager" class="app-container manager-bg">
+    <div class="saf-header">
+        <div class="saf-title">👑 V-MAX SPORTS GROUP</div>
+        <div class="saf-subtitle" id="saf-club-name">Clube: Adquirindo Franquia...</div>
+    </div>
+
+    <div class="saf-stats-bar">
+        <div class="saf-stat">
+            <span>Caixa SAF</span>
+            <span id="saf-caixa">€0M</span>
+        </div>
+        <div class="saf-stat">
+            <span>Reputação</span>
+            <span id="saf-rep" style="color:#fbbf24">⭐⭐</span>
+        </div>
+        <div class="saf-stat">
+            <span>Temporada</span>
+            <span id="saf-ano" style="color:#f8fafc">Ano 1</span>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- Card de Elenco -->
+        <div class="dash-card">
+            <div class="dash-title">👕 ELENCO</div>
+            <div class="dash-info">
+                Força Geral (OVR): <b id="saf-ovr-time">72</b><br>
+                Status: <b id="saf-craque">Em formação</b><br>
+            </div>
+            <button class="dash-btn" onclick="alert('Sistema de Tática e Elenco em breve!')">Tática & Elenco</button>
+        </div>
+
+        <!-- Card Financeiro & Estádio -->
+        <div class="dash-card finance">
+            <div class="dash-title">🏟️ INFRAESTRUTURA</div>
+            <div class="dash-info">
+                Estádio: <b>Nível 1</b> (15k Lug.)<br>
+                Base: <b>Nível 1</b><br>
+                Patrocínio: <b id="saf-patrocinio">Master - Série C</b>
+            </div>
+            <button class="dash-btn" style="background:#065f46" onclick="alert('Melhoria de Estádio em breve!')">Melhorar Clube</button>
+        </div>
+
+        <!-- Card de Mercado -->
+        <div class="dash-card market" style="grid-column: span 2;">
+            <div class="dash-title" style="display:flex; justify-content:space-between;">
+                <span>🛒 MERCADO DA BOLA</span>
+                <span style="font-size:10px; background:#ef4444; padding:2px 6px; border-radius:4px;">JANELA ABERTA</span>
+            </div>
+            <div class="dash-info">Pesquise talentos, aposte em jovens da base ou compre o craque mundial para ganhar a Libertadores.</div>
+            <button class="dash-btn" style="background:#5b21b6; padding:10px; font-size: 12px;" onclick="alert('Painel de Mercado de Transferências em breve!')">ACESSAR MERCADO</button>
+        </div>
+    </div>
+
+    <!-- Tabela de Histórico do Clube -->
+    <div class="saf-timeline-header">
+        <div>ANO</div>
+        <div style="text-align: left; padding-left: 5px;">DIVISÃO</div>
+        <div>POSIÇÃO</div>
+        <div>LUCRO/PREJU</div>
+    </div>
+    <div class="saf-timeline-rows" id="saf-history">
+        <!-- Linha Placeholder -->
+        <div class="saf-row">
+            <div class="saf-year">1º</div>
+            <div class="saf-div">Aguardando Temporada...</div>
+            <div class="saf-pos">-</div>
+            <div class="saf-profit">-</div>
+        </div>
+    </div>
+
+    <button class="btn-simulate-saf" onclick="alert('Motor de Simulação SAF em construção!')">AVANÇAR TEMPORADA</button>
+</div>
+
+<!-- ==============================================
+     JAVASCRIPT E LÓGICA DO JOGO
+=============================================== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
@@ -289,7 +407,6 @@
 
     let eliteClubs = []; let tierPrata = []; let tierBronze = []; let bancoDramasOriginal = [];
 
-    // ✅ BANCO DE DRAMAS LOCAL SUPER COMPLETO (Se o seu Firebase falhar ou tiver poucos itens, este assume)
     const bancoDramasReserva = [
         { texto: "Um investidor misterioso oferece injetar €5M na sua conta pessoal em troca de 30% dos seus direitos de imagem futuros.", A_texto: "Aceitar a bolada imediatamente.", A_msg: "Dinheiro na conta! Mas a sua assessoria odeia o contrato amador.", A_efeitos: { banco: 5000000, fama: -100000 } },
         { texto: "Você foi pego na balada na véspera de uma final continental de clubes.", A_texto: "Dizer que estava jantando com a família.", A_msg: "Ninguém acreditou. Clima péssimo com os companheiros.", A_efeitos: { teamChemistry: -30, emocao: "Triste 😢" } },
@@ -313,7 +430,6 @@
         { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Quebra a defense sozinho e gera muitos gols individuais.' }
     ];
 
-    // ✅ BANCO COGUMELO AMPLIADO - SEM DUPLICATAS DE MBAPPÉ
     const randomStarNames = [
         "Vinícius Jr.", "Bellingham", "Haaland", "Rodri", "Musiala", "Wirtz", "Lamine Yamal", 
         "Foden", "Saka", "Harry Kane", "De Bruyne", "Mohamed Salah", "Cole Palmer", "Lautaro Martínez", 
@@ -366,7 +482,6 @@
         
         p.salario = p.isProdigy ? 15000 : 3000; p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
         
-        // Garante que o nome do Rival não entre em conflito direto com as estrelas mundiais padrão
         let r_nomes = ["Robô Cósmico", "H. Kane Jr.", "El Pibe V2", "Nórdico Veloz"];
         rival.nome = r_nomes[Math.floor(Math.random()*r_nomes.length)];
         rival.ovr = baseOvr + 4; rival.ativo = true;
@@ -455,7 +570,6 @@
         let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
         if(p.club === "Sem Clube") leagueDifficulty = 50;
 
-        // ✅ CONVOCADO DINAMICAMENTE
         if (p.ovr >= 85 || (p.ovr >= 82 && p.age <= 18)) p.selecao = "Principal"; 
         else if (p.age <= 17 && p.ovr >= 65) p.selecao = "Sub-17";
         else if (p.age <= 20 && p.ovr >= 70) p.selecao = "Sub-20";
@@ -546,7 +660,6 @@
         
         if (p.staff.psycho >= 3 || p.totals.bdor > 0 || p.totals.wc > 0) p.emocao = "Focado 🧘";
 
-        // ✅ EXIBE O CLUBE E A SELEÇÃO ATUAL DIRETAMENTE NA SUA LINHA DO TEMPO DA TABELA
         let txtLinhaClube = p.club;
         if(p.selecao !== "Nenhuma") {
             txtLinhaClube += ` + 🇧🇷 ${p.selecao}`;
@@ -581,7 +694,6 @@
         }
     }
 
-    // ✅ REVELAÇÃO DA BOLA DE OURO TOTALMENTE BLINDADA CONTRA REPETIÇÕES E CLONES
     window.iniciarRevelacaoBdor = function() {
         document.getElementById('btn-reveal-bdor').style.display = 'none';
         let resDiv = document.getElementById('bdor-results');
@@ -596,7 +708,6 @@
 
         while(finalistas.length < 5) {
             let nomeExtra = nomesSorteio.pop();
-            // Evita duplicar qualquer nome que já esteja nos finalistas ou que seja parecido com o rival
             if(nomeExtra !== rival.nome && !finalistas.find(f => f.nome === nomeExtra)) {
                 finalistas.push({ nome: nomeExtra, score: Math.floor(Math.random() * (window.myBdorScore * 0.9) + 20) });
             }
@@ -658,7 +769,6 @@
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
         document.getElementById('btn-a').innerHTML = "<b>A)</b> " + entrevistaAtual.A_texto;
         
-        // Se o drama for menor e não tiver as 3 opções criadas, esconde os botões extras vazios
         if(entrevistaAtual.B_texto) {
             document.getElementById('btn-b').style.display = "block";
             document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B_texto;
@@ -698,7 +808,7 @@
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO");
         if (precisaPR && p.staff.pr > 0) {
             let chanceAbafar = prChances[p.staff.pr]; 
-            if (Math.random() * 100 <= chanceAbafar) { p.emocao = "Focado 🧘"; textoConsequencia += `<br><br><span style='color:#15803d'>📢 Sua assessoria abafou a crisis!</span>`; } 
+            if (Math.random() * 100 <= chanceAbafar) { p.emocao = "Focado 🧘"; textoConsequencia += `<br><br><span style='color:#15803d'>📢 Sua assessoria abafou a crise!</span>`; } 
             else textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise vazou.</span>`;
         }
         
@@ -766,9 +876,42 @@
         if (p.totals.dom + p.totals.int > 5 || p.banco > 15000000 || p.staff.psycho >= 4) p.emocao = "Realizado 😎";
         let veredito = p.totals.bdor > 0 ? "👑 LENDÁRIO! Você escreveu seu nome na história do futebol." : "⚽ GRANDE CARREIRA. Um atleta memorável.";
         if(p.club === "Sem Clube") veredito = "❌ FIM MELANCÓLICO. Você saiu do futebol pela porta dos fundos.";
+        
         document.getElementById('event-section').innerHTML = `🏁 FIM DE JOGO!<br>${veredito}<br><br>Sua fortuna final (Conta + Fundo): <b>${formatMoeda(p.banco + p.investido)}</b>`;
-        document.getElementById('event-section').style.display = 'block'; document.getElementById('action-area').innerHTML = `<button class="btn-continue" onclick="location.reload()">INICIAR NOVA CARREIRA</button>`;
+        document.getElementById('event-section').style.display = 'block'; 
+        
+        // BOTÕES FINAIS: NOVA CARREIRA OU MODO SAF
+        document.getElementById('action-area').innerHTML = `
+            <button class="btn-continue" style="background:#8b5cf6;" onclick="iniciarModoSAF()">TORNAR-SE DONO SAF</button>
+            <button class="btn-continue" style="margin-top:10px; background:#1e293b; font-size:14px;" onclick="location.reload()">NOVA CARREIRA DE JOGADOR</button>
+        `;
+        
         atualizarUI(); checarRecordes();
+    }
+
+    // ==========================================
+    // TRANSIÇÃO PARA O MODO SAF / MANAGER
+    // ==========================================
+    window.iniciarModoSAF = function() {
+        // Esconde a carreira de jogador e muda a cor de fundo do app
+        document.getElementById('modo-carreira').style.display = 'none';
+        document.body.style.backgroundColor = '#0f172a'; 
+        
+        // Transfere a fortuna do jogador para o caixa da SAF
+        let fortunaFinal = p.banco + p.investido;
+        document.getElementById('saf-caixa').innerText = formatMoeda(fortunaFinal);
+        
+        // Define a divisão inicial com base no dinheiro
+        let divisao = "Série C 🇧🇷";
+        let ovrInicial = 68;
+        if(fortunaFinal > 150000000) { divisao = "Série A 🇧🇷"; ovrInicial = 78; }
+        else if(fortunaFinal > 50000000) { divisao = "Série B 🇧🇷"; ovrInicial = 73; }
+        
+        document.getElementById('saf-club-name').innerText = `Clube: V-MAX SAF (${divisao})`;
+        document.getElementById('saf-ovr-time').innerText = ovrInicial;
+        
+        // Mostra o painel do Dono
+        document.getElementById('modo-manager').style.display = 'flex';
     }
 
     async function checarRecordes() {
@@ -802,7 +945,6 @@
             const dramasSnap = await getDocs(collection(db, "eventos"));
             dramasSnap.forEach(doc => { bancoDramasOriginal.push(doc.data()); });
             
-            console.log("Firebase carregado com sucesso. Eventos encontrados: ", bancoDramasOriginal.length);
             document.getElementById('btn-main').innerText = "INICIAR CARREIRA"; document.getElementById('btn-main').disabled = false;
         } catch(e) { 
             console.warn("Usando banco de dados local reserva devido a timeout/restrição de rede na nuvem.");
