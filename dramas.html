@@ -2,31 +2,18 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uploader de Dramas - V-MAX</title>
-    <style>
-        body { background-color: #111; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-        .box { background: #1e293b; padding: 30px; border-radius: 12px; max-width: 600px; margin: auto; border: 2px solid #3b82f6; }
-        h1 { color: #fbbf24; }
-        button { background: #ef4444; color: white; font-size: 20px; font-weight: bold; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
-        button:hover { background: #dc2626; }
-        #status { margin-top: 20px; font-size: 18px; font-weight: bold; color: #10b981; }
-    </style>
+    <title>Upload Dramas Especiais - V-MAX</title>
 </head>
-<body>
+<body style="background:#111; color:white; text-align:center; padding:50px; font-family:sans-serif;">
 
-    <div class="box">
-        <h1>☁️ Uploader de Dramas V-MAX</h1>
-        <p>Este script vai enviar 20 novos eventos aleatórios e complexos para a sua coleção "eventos" no Firebase.</p>
-        <button id="btn-upload" onclick="iniciarUpload()">Subir Eventos para a Nuvem</button>
-        <div id="status"></div>
-    </div>
+    <h1>☁️ Uploader de Dramas: Amor e Ódio</h1>
+    <button onclick="iniciarUpload()" style="background:#ef4444; color:white; padding:15px; font-size:18px; cursor:pointer;">SUBIR DRAMAS PARA O FIREBASE</button>
+    <p id="status"></p>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-    // Suas credenciais do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
       authDomain: "copa-ae771.firebaseapp.com",
@@ -36,224 +23,66 @@
       appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = getFirestore(initializeApp(firebaseConfig));
 
-    // MEGA LISTA DE DRAMAS
-    const novosDramas = [
+    const dramasForcaElite = [
         {
-            texto: "Um sheik excêntrico oferece €10 Milhões de patrocínio, mas exige que você comemore seus gols imitando um camelo.",
-            A_texto: "Aceitar a grana e passar vergonha mundial.",
-            A_msg: "Você encheu os bolsos, mas virou o maior meme da internet. ESCÂNDALO: Sua fama despencou e seu moral foi pro buraco.",
-            A_efeitos: { banco: 10000000, fama: -2000000, emocao: "Triste 😢" },
-            B_texto: "Recusar educadamente.",
-            B_msg: "Você manteve a dignidade e o foco no futebol. A mídia elogiou sua postura profissional.",
-            B_efeitos: { fama: 500000, emocao: "Focado 🧘" },
-            C_texto: "Zombar da proposta nas redes sociais.",
-            C_msg: "O sheik ficou furioso e usou a influência dele para atrapalhar seu clube! O entrosamento do time despencou.",
-            C_efeitos: { fama: 1000000, teamChemistry: -30, emocao: "Triste 😢" }
+            texto: "Um vídeo seu fazendo embaixadinhas com uma tampinha de garrafa na rua viralizou mundialmente e bateu 1 Bilhão de views!",
+            A_texto: "Aproveitar o hype e se declarar ao Real Madrid.",
+            A_msg: "LOUCURA MUNDIAL! Florentino Pérez adorou o vídeo e mandou te comprar na mesma hora!",
+            A_efeitos: { forcarElite: true, fama: 20000000, emocao: "Focado 🧘" },
+            B_texto: "Ignorar o vídeo e treinar.",
+            B_msg: "Você perdeu a chance da sua vida de ir para um gigante, mas ganhou atributos.",
+            B_efeitos: { ovr: 1, dri: 2, emocao: "Focado 🧘" },
+            C_texto: "Vender o vídeo como NFT.",
+            C_msg: "Você encheu os bolsos de dinheiro, mas a galera da internet te cancelou.",
+            C_efeitos: { banco: 5000000, fama: -3000000, emocao: "Triste 😢" }
         },
         {
-            texto: "Véspera de final de campeonato. Um 'parça' alugou uma mansão e te chamou para uma festa VIP secreta.",
-            A_texto: "Ir só por uma horinha...",
-            A_msg: "Você bebeu demais, foi flagrado saindo às 5h da manhã e jogou mal a final. PÉSSIMO: A torcida quer sua cabeça!",
-            A_efeitos: { ovr: -2, phy: -3, teamChemistry: -40, emocao: "Ressaca 🥴" },
-            B_texto: "Ficar no hotel e focar na recuperação.",
-            B_msg: "Você dormiu cedo, entrou voando em campo e destruiu o jogo! Ganhou atributos.",
-            B_efeitos: { ovr: 1, pac: 1, emocao: "Focado 🧘" },
-            C_texto: "Denunciar a festa para o treinador.",
-            C_msg: "O treinador cancelou a festa, mas o elenco inteiro agora te odeia por ser 'X-9'.",
-            C_efeitos: { teamChemistry: "zerar", emocao: "Triste 😢" }
+            texto: "A torcida organizada invadiu o CT do seu clube cobrando resultados após uma sequência de derrotas.",
+            A_texto: "Chamar os líderes para a porrada.",
+            A_msg: "PÉSSIMO! Você agrediu um torcedor. O clube rescindiu seu contrato e você saiu fugido do país.",
+            A_efeitos: { rescisao: true, fama: -2000000, emocao: "Ressaca 🥴" },
+            B_texto: "Dar a cara a tapa e prometer títulos.",
+            B_msg: "Você botou moral. O elenco se inspirou e o entrosamento explodiu!",
+            B_efeitos: { teamChemistry: 40, emocao: "Focado 🧘" },
+            C_texto: "Se esconder no porta-malas do roupeiro.",
+            C_msg: "Você foi filmado chorando no porta-malas. A mídia acabou com sua reputação e seu moral despencou.",
+            C_efeitos: { fama: -5000000, teamChemistry: -30, emocao: "Triste 😢" }
         },
         {
-            texto: "Você sente uma dor aguda no joelho que a equipe médica tradicional diz precisar de cirurgia (6 meses fora).",
-            A_texto: "Procurar o 'Curandeiro das Montanhas' (€100k).",
-            A_msg: "Vamos ver no que vai dar esse tratamento alternativo...",
-            A_efeitos: { riscoCurandeiro: true },
-            B_texto: "Fazer a cirurgia e focar na recuperação.",
-            B_msg: "Você perdeu a temporada e perdeu atributos físicos, mas sua cabeça está no lugar.",
-            B_efeitos: { phy: -4, pac: -3, ovr: -2, emocao: "Focado 🧘" },
-            C_texto: "Jogar no sacrifício à base de infiltrações.",
-            C_msg: "PÉSSIMO: Seu joelho estourou de vez no meio do jogo. Perda brutal de físico e velocidade.",
-            C_efeitos: { phy: -8, pac: -8, ovr: -4, emocao: "Triste 😢" }
+            texto: "Você doou secretamente metade do seu salário para salvar o hospital infantil da cidade, mas a notícia vazou.",
+            A_texto: "Dizer que não fez nada demais.",
+            A_msg: "O mundo se apaixonou pela sua humildade. Um gigante europeu amou seu perfil de 'bom moço' e te comprou!",
+            A_efeitos: { forcarElite: true, fama: 15000000, emocao: "Focado 🧘" },
+            B_texto: "Exigir uma estátua na porta do hospital.",
+            B_msg: "Que vexame... As pessoas viram que era só pelo ego. A fama até subiu, mas a torcida te detesta.",
+            B_efeitos: { fama: 1000000, teamChemistry: -20, emocao: "Triste 😢" },
+            C_texto: "Processar quem vazou a notícia.",
+            C_msg: "Você arrumou briga com a mídia local por nada.",
+            C_efeitos: { emocao: "Ressaca 🥴" }
         },
         {
-            texto: "O craque veterano do time não toca a bola para você de jeito nenhum e te critica na imprensa.",
-            A_texto: "Sair na mão com ele no vestiário.",
-            A_msg: "ESCÂNDALO! Vocês brigaram feio. A diretoria te puniu com uma multa pesada, mas ele passou a te respeitar.",
-            A_efeitos: { banco: -500000, fama: 2000000, teamChemistry: 10, emocao: "Focado 🧘" },
-            B_texto: "Ficar quieto e engolir o sapo.",
-            B_msg: "Você abaixou a cabeça. Seu moral caiu e o time sente que você não tem perfil de líder.",
-            B_efeitos: { teamChemistry: -15, emocao: "Triste 😢" },
-            C_texto: "Pedir rescisão de contrato imediatamente!",
-            C_msg: "Você forçou a saída do clube e agora está desempregado!",
-            C_efeitos: { rescisao: true, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "Seu colega de time lançou uma nova Criptomoeda ('BolaCoin') e pediu para você investir seu Fundo de Finanças.",
-            A_texto: "Apostar pesado na Criptomoeda dele.",
-            A_msg: "Rolando os dados da bolsa...",
-            A_efeitos: { riscoBolsa: "apostar" },
-            B_texto: "Vender suas cotas rapidamente.",
-            B_msg: "Você sacou rápido com medo. Seu Fundo foi reduzido pela metade.",
-            B_efeitos: { riscoBolsa: "vender", emocao: "Focado 🧘" },
-            C_texto: "Processar o colega por fraude financeira.",
-            C_msg: "ESCÂNDALO! A justiça congelou parte do seu fundo e o clima no time ficou insustentável.",
-            C_efeitos: { riscoBolsa: "processar", teamChemistry: "zerar", emocao: "Triste 😢" }
-        },
-        {
-            texto: "Uma produtora de Hollywood quer gravar um filme de ação com você no meio da temporada.",
-            A_texto: "Aceitar a proposta (Ganha €5M).",
-            A_msg: "O filme foi um sucesso de bilheteria, mas você perdeu muitos treinos e seu condicionamento físico despencou.",
-            A_efeitos: { banco: 5000000, fama: 10000000, phy: -3, pac: -2, emocao: "Ressaca 🥴" },
-            B_texto: "Recusar e focar na carreira.",
-            B_msg: "Sua dedicação inspirou o elenco! O entrosamento melhorou consideravelmente.",
-            B_efeitos: { teamChemistry: 20, emocao: "Focado 🧘" },
-            C_texto: "Exigir gravar apenas nas folgas.",
-            C_msg: "Você não descansou nada o ano todo. Fama aumentou, mas você estourou fisicamente.",
-            C_efeitos: { fama: 3000000, phy: -5, ovr: -1, emocao: "Triste 😢" }
-        },
-        {
-            texto: "Fiscais da Receita Federal bateram na sua mansão alegando sonegação de impostos do seu empresário.",
-            A_texto: "Pagar a multa gigantesca para abafar o caso.",
-            A_msg: "Você desembolsou uma fortuna, mas limpou seu nome e evitou dor de cabeça.",
-            A_efeitos: { banco: -3000000, emocao: "Focado 🧘" },
-            B_texto: "Ir para a Justiça e brigar.",
-            B_msg: "ESCÂNDALO! O processo vazou na mídia. Você teve as contas bloqueadas e perdeu a concentração.",
-            B_efeitos: { fama: -500000, teamChemistry: -10, emocao: "Triste 😢" },
-            C_texto: "Culpar o clube publicamente.",
-            C_msg: "PÉSSIMO: A diretoria se irritou e rompeu o seu contrato por justa causa!",
-            C_efeitos: { rescisao: true, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "Sua patrocinadora de chuteiras está exigindo que você use um modelo novo e extremamente desconfortável.",
-            A_texto: "Usar a chuteira e honrar o contrato.",
-            A_msg: "Você ganhou o bônus, mas a chuteira te encheu de bolhas e piorou muito sua velocidade.",
-            A_efeitos: { banco: 1500000, pac: -3, dri: -2, emocao: "Triste 😢" },
-            B_texto: "Romper o contrato e usar a chuteira velha.",
-            B_msg: "Você tomou uma multa financeira, mas jogou leve e livre, melhorando seu controle de bola.",
-            B_efeitos: { banco: -800000, dri: 2, pac: 1, emocao: "Focado 🧘" },
-            C_texto: "Cortar a chuteira por dentro escondido.",
-            C_msg: "A marca descobriu, rescindiu o contrato e vazou fotos. PÉSSIMO: Risco de escândalo de PR.",
-            C_efeitos: { fama: -2000000, banco: -500000, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "Um torcedor invade o campo com uma faca na direção do árbitro durante um clássico pegado.",
-            A_texto: "Entrar na frente e desarmar o invasor.",
-            A_msg: "HERÓI MUNDIAL! Você salvou o juiz. Sua fama explodiu no planeta inteiro e virou lenda.",
-            A_efeitos: { fama: 25000000, emocao: "Focado 🧘", teamChemistry: 20 },
-            B_texto: "Sair correndo para o vestiário.",
-            B_msg: "Ninguém te julgou por tentar se salvar, mas a experiência foi traumática.",
-            B_efeitos: { emocao: "Triste 😢", teamChemistry: -5 },
-            C_texto: "Ficar paralisado no meio do campo.",
-            C_msg: "Os seguranças resolveram a situação, mas você ficou com fama de covarde na mídia local.",
-            C_efeitos: { fama: -500000, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "Após uma derrota dura, você é parado na blitz da lei seca com seu Supercarro.",
-            A_texto: "Fugir da blitz em alta velocidade.",
-            A_msg: "ESCÂNDALO! Você bateu o carro, virou caso de polícia e seu clube rescindiu seu contrato sumariamente!",
-            A_efeitos: { rescisao: true, fama: -5000000, ovr: -3, emocao: "Ressaca 🥴" },
-            B_texto: "Assumir a culpa e pedir desculpas públicas.",
-            B_msg: "A mídia te massacrou, mas o treinador respeitou você ser homem o suficiente para assumir o erro.",
-            B_efeitos: { fama: -1000000, banco: -250000, emocao: "Triste 😢" },
-            C_texto: "Pagar um 'por fora' para o guarda.",
-            C_msg: "Você se safou no momento, mas um jornalista filmou tudo de longe. ESCÂNDALO DE CORRUPÇÃO!",
-            C_efeitos: { fama: -3000000, teamChemistry: -25, emocao: "Triste 😢" }
-        },
-        {
-            texto: "Seu clube está à beira da falência e pede para você reduzir seu salário pela metade para salvar a equipe.",
-            A_texto: "Aceitar a redução por amor à camisa.",
-            A_msg: "Você se tornou o maior ídolo da história da torcida! Entrosamento máximo.",
-            A_efeitos: { fama: 15000000, teamChemistry: 50, emocao: "Focado 🧘" },
-            B_texto: "Recusar. Negócios são negócios.",
-            B_msg: "Você garantiu sua grana, mas o vestiário rachou e a torcida te vaia todo jogo.",
-            B_efeitos: { teamChemistry: -30, emocao: "Triste 😢" },
-            C_texto: "Forçar saída de graça na justiça.",
-            C_msg: "Você foi embora, deixou o time quebrar e agora é considerado o maior traidor do país.",
-            C_efeitos: { rescisao: true, fama: -4000000, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "Fim do ano. Você está concorrendo a um prêmio importante, mas o presidente do clube pede para você elogiar o filho dele, que é bagre, no discurso.",
-            A_texto: "Elogiar o filho dele publicamente.",
-            A_msg: "A mídia riu de você, mas o presidente te deu um belo bônus em dinheiro.",
-            A_efeitos: { banco: 2000000, fama: -500000, emocao: "Triste 😢" },
-            B_texto: "Ignorar o presidente e fazer seu próprio discurso.",
-            B_msg: "O presidente odiou, mas você manteve sua autenticidade.",
-            B_efeitos: { teamChemistry: -15, emocao: "Focado 🧘" },
-            C_texto: "Criticar o filho dele ao vivo na premiação.",
-            C_msg: "Você gerou um caos absoluto no clube! A diretoria te encostou no banco de reservas.",
-            C_efeitos: { fama: 2000000, teamChemistry: -40, ovr: -2, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "A seleção foi eliminada vergonhosamente na Copa e a imprensa está colocando toda a culpa nas suas costas.",
-            A_texto: "Ir para as redes sociais brigar com jornalistas.",
-            A_msg: "FALÊNCIA DE PR! A mídia iniciou uma campanha contra você. Patrocinadores fugiram.",
-            A_efeitos: { fama: -5000000, banco: -1000000, emocao: "Ressaca 🥴" },
-            B_texto: "Dar uma entrevista assumindo a culpa.",
-            B_msg: "Foi um período duro, mas assumir o fardo protegeu os jovens do time. Entrosamento subiu.",
-            B_efeitos: { teamChemistry: 20, emocao: "Focado 🧘" },
-            C_texto: "Culpar o treinador da Seleção publicamente.",
-            C_msg: "O treinador foi demitido, mas você ficou tachado como derrubador de técnico.",
-            C_efeitos: { fama: -1000000, teamChemistry: -10, emocao: "Triste 😢" }
-        },
-        {
-            texto: "Você descobre que a comida do refeitório do clube está causando intoxicação no elenco por corte de custos da diretoria.",
-            A_texto: "Bancar comida de luxo do próprio bolso para o time.",
-            A_msg: "Você gastou uma fortuna, mas o elenco inteiro agora jogaria a vida por você!",
-            A_efeitos: { banco: -800000, teamChemistry: 40, phy: 1, emocao: "Focado 🧘" },
-            B_texto: "Comer no seu restaurante favorito e ignorar o resto.",
-            B_msg: "Você ficou bem, mas o time todo passou mal durante o jogo. Queda brutal de rendimento coletivo.",
-            B_efeitos: { teamChemistry: -30, emocao: "Triste 😢" },
-            C_texto: "Vazar a história para a imprensa.",
-            C_msg: "ESCÂNDALO! A diretoria foi investigada e o presidente renunciou, mas o clima ficou péssimo.",
-            C_efeitos: { fama: 1000000, teamChemistry: -20, emocao: "Ressaca 🥴" }
-        },
-        {
-            texto: "No aquecimento para uma semi-final de Champions League, você torce o tornozelo.",
-            A_texto: "Esconder a dor e jogar no sacrifício.",
-            A_msg: "Você fez um jogo medíocre, prejudicou o time e agravou muito a lesão. PÉSSIMO!",
-            A_efeitos: { ovr: -3, pac: -4, phy: -5, teamChemistry: -15, emocao: "Triste 😢" },
-            B_texto: "Pedir para sair e botar o reserva.",
-            B_msg: "O reserva fez o gol da vitória. Você perdeu os holofotes, mas protegeu seu físico.",
-            B_efeitos: { fama: -500000, teamChemistry: 10, emocao: "Focado 🧘" },
-            C_texto: "Tomar uma injeção de dor cavalar do médico.",
-            C_msg: "Você não sentiu nada, destruiu o jogo, mas descobriu depois que a injeção era doping! ESCÂNDALO!",
-            C_efeitos: { ovr: 1, fama: -8000000, rescisao: true, emocao: "Ressaca 🥴" }
+            texto: "Véspera de clássico. O principal jogador do time adversário provocou você e a sua mãe no Twitter.",
+            A_texto: "Dar uma entrada criminosa nele no jogo.",
+            A_msg: "ESCÂNDALO! Você quebrou a perna dele e pegou 1 ano de suspensão. O clube rasgou seu contrato.",
+            A_efeitos: { rescisao: true, ovr: -3, emocao: "Triste 😢" },
+            B_texto: "Responder no Twitter com memes.",
+            B_msg: "A internet foi à loucura! Você engajou milhões e aumentou sua popularidade.",
+            B_efeitos: { fama: 5000000, emocao: "Focado 🧘" },
+            C_texto: "Responder em campo com Gols.",
+            C_msg: "Você destruiu no clássico. Ganhou bônus de OVR!",
+            C_efeitos: { ovr: 1, sho: 2, teamChemistry: 20, emocao: "Focado 🧘" }
         }
     ];
 
     window.iniciarUpload = async function() {
-        const btn = document.getElementById("btn-upload");
         const status = document.getElementById("status");
-        
-        btn.disabled = true;
-        btn.innerText = "Enviando...";
-        status.style.color = "white";
-        status.innerText = "Iniciando conexão com Firebase...";
-
-        let sucessoCount = 0;
-
+        status.innerText = "Enviando novos dramas...";
         try {
-            const eventosRef = collection(db, "eventos");
-            
-            for (let i = 0; i < novosDramas.length; i++) {
-                await addDoc(eventosRef, novosDramas[i]);
-                sucessoCount++;
-                status.innerText = `Enviado ${sucessoCount} de ${novosDramas.length} dramas...`;
-            }
-
-            status.style.color = "#10b981"; // Verde
-            status.innerText = "✅ SUCESSO! Todos os " + sucessoCount + " dramas foram enviados. Pode fechar esta página e jogar.";
-            btn.innerText = "FINALIZADO";
-
-        } catch (error) {
-            console.error("Erro no upload:", error);
-            status.style.color = "#ef4444"; // Vermelho
-            status.innerText = "❌ ERRO: Verifique o console do navegador. Detalhe: " + error.message;
-            btn.disabled = false;
-            btn.innerText = "Tentar Novamente";
-        }
+            for (let d of dramasForcaElite) await addDoc(collection(db, "eventos"), d);
+            status.innerHTML = "✅ Sucesso! Efeitos 'forcarElite' e 'rescisao' no banco de dados!";
+        } catch (e) { status.innerText = "Erro: " + e; }
     }
 </script>
 </body>
