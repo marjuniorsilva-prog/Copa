@@ -34,7 +34,7 @@
         .age-box.academy { background: #facc15; color: black; } .age-box.retire { background: #f97316; color: white; }
         .club-box-cell { background: white; height: 100%; display: flex; align-items: center; padding: 0 4px; position: relative; overflow: hidden;}
         .club-info { display: flex; flex-direction: column; justify-content: center; line-height: 1.1; margin-left: 4px; width: 100%;}
-        .c-name { font-size: 9px; font-weight: 900; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85px;}
+        .c-name { font-size: 9px; font-weight: 900; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;}
         .stats-cell-item { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: #1e293b; background: #f1f5f9; height: 100%; }
         .stats-cell-item.goals-col { color: #15803d; background: #e2f5e9; } .stats-cell-item.assists-col { color: #2563eb; background: #e0f2fe; }
         
@@ -91,7 +91,6 @@
         .trait-item { background: #f3f4f6; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; }
         .trait-title { font-weight: 900; font-size: 14px; color: #4c1d95;} .trait-desc { font-size: 11px; color: #555; margin-top: 2px;}
 
-        /* ESTILO PARA A REVELAÇÃO DA BOLA DE OURO */
         .bdor-result-line { padding: 8px; border-bottom: 1px solid #ddd; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -131,7 +130,7 @@
     <div class="main-body">
         <div class="timeline-header">
             <div>IDADE</div>
-            <div style="text-align: left; padding-left: 10px;">CLUBE (CICLO DE 3 ANOS)</div>
+            <div style="text-align: left; padding-left: 10px;">CLUBE / SELEÇÃO (CICLO)</div>
             <div>🏆 N/I</div>
             <div>⚽ GOL</div>
             <div>👟 ASS</div>
@@ -153,7 +152,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE SUSPENSE DA BOLA DE OURO -->
     <div class="choice-section" id="bdor-section" style="z-index: 10000;">
         <div class="choice-box" style="border-color: #fbbf24; text-align:center;">
             <div class="rank-title" style="color:#fbbf24; font-size: 24px;">✨ BOLA DE OURO ✨</div>
@@ -291,6 +289,16 @@
 
     let eliteClubs = []; let tierPrata = []; let tierBronze = []; let bancoDramasOriginal = [];
 
+    // ✅ BANCO DE DRAMAS LOCAL SUPER COMPLETO (Se o seu Firebase falhar ou tiver poucos itens, este assume)
+    const bancoDramasReserva = [
+        { texto: "Um investidor misterioso oferece injetar €5M na sua conta pessoal em troca de 30% dos seus direitos de imagem futuros.", A_texto: "Aceitar a bolada imediatamente.", A_msg: "Dinheiro na conta! Mas a sua assessoria odeia o contrato amador.", A_efeitos: { banco: 5000000, fama: -100000 } },
+        { texto: "Você foi pego na balada na véspera de uma final continental de clubes.", A_texto: "Dizer que estava jantando com a família.", A_msg: "Ninguém acreditou. Clima péssimo com os companheiros.", A_efeitos: { teamChemistry: -30, emocao: "Triste 😢" } },
+        { texto: "O técnico da Seleção Principal te liga dizendo que te dará a camisa 10 se você mudar de empresário.", A_texto: "Trocar de empresário focado na Seleção.", A_msg: "Você vira o dono do time na seleção principal!", A_efeitos: { fama: 2000000, ovr: 1 } },
+        { texto: "A torcida organizada invade o CT cobrando raça após duas derrotas seguidas.", A_texto: "Bater de frente e exigir respeito.", A_msg: "A torcida te odeia agora! O clima ferveu.", A_efeitos: { teamChemistry: -40, emocao: "Triste 😢" } },
+        { texto: "Um grande patrocinador esportivo mundial propõe um contrato vitalício de chuteiras.", A_texto: "Assinar o mega contrato de patrocínio.", A_msg: "Estrela mundial! Sua fama explode globalmente.", A_efeitos: { fama: 5000000, banco: 2000000 } },
+        { texto: "Uma lesão crônica no joelho começa a incomodar durante a pré-temporada.", A_texto: "Jogar no sacrifício com infiltração.", A_msg: "Você joga, mas seu físico paga o preço por anos.", A_efeitos: { phy: -3, ovr: -1 } }
+    ];
+
     const houseUpgrades = [ { name: "Casa Simples", price: 0 }, { name: "Apto Classe Média", price: 300000 }, { name: "Cobertura Premium", price: 1500000 }, { name: "Mansão Padrão", price: 5000000 }, { name: "Mansão de Luxo", price: 15000000 }, { name: "Ilha Privativa", price: 35000000 } ];
     const carUpgrades = [ { name: "Carro Popular", price: 0 }, { name: "SUV de Luxo", price: 150000 }, { name: "Esportivo Premium", price: 400000 }, { name: "Supercarro (V8)", price: 1200000 }, { name: "Hypercarro Exclusivo", price: 4000000 }, { name: "Coleção Milionária", price: 12000000 } ];
 
@@ -302,16 +310,23 @@
         { id: 'penalti', name: '🥶 Cobrador Oficial', desc: 'Frio e calculista na marca da cal. Garante gols extras.' },
         { id: 'cabeceio', name: '🚁 Rei do Espaço', desc: 'Diferenciado no cabeceio. Ganha todas pelo alto.' },
         { id: 'arrancada', name: '🚀 Arrancada Forte', desc: 'Sai na cara do gol com frequência. Mais gols e assistências.' },
-        { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Quebra a defesa sozinho e gera muitos gols individuais.' }
+        { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Quebra a defense sozinho e gera muitos gols individuais.' }
     ];
 
-    const randomStarNames = ["Haaland", "Mbappé", "Vini Jr.", "Bellingham", "Lamine Yamal", "Musiala", "Foden", "Rodri", "Saka", "Kane"];
+    // ✅ BANCO COGUMELO AMPLIADO - SEM DUPLICATAS DE MBAPPÉ
+    const randomStarNames = [
+        "Vinícius Jr.", "Bellingham", "Haaland", "Rodri", "Musiala", "Wirtz", "Lamine Yamal", 
+        "Foden", "Saka", "Harry Kane", "De Bruyne", "Mohamed Salah", "Cole Palmer", "Lautaro Martínez", 
+        "Bernardo Silva", "Martin Ødegaard", "Bruno Fernandes", "Lewandowski", "Griezmann", "Fede Valverde", 
+        "Antonio Rüdiger", "William Saliba", "Virgil van Dijk", "Theo Hernández", "Rafael Leão", 
+        "Kvaratskhelia", "Rodrygo", "Pedri", "Gavi", "Vitinha", "Nicolò Barella", "Julian Alvarez"
+    ];
 
     let p = {
         age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000,
-        club: "", isProdigy: false, origin: "", archetype: "", selecao: "Nenhuma", teamChemistry: 0, // ✅ Adicionado selecao
+        club: "", isProdigy: false, origin: "", archetype: "", selecao: "Nenhuma", teamChemistry: 0,
         staff: { psycho: 0, pr: 0 }, traits: [], investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
-        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, ca: 0, bdor: 0, yc: 0, rc: 0 } // ✅ Adicionado ca (Copa America)
+        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, ca: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
     let rival = { nome: "O Prodígio", ovr: 72, gols: 0, bdor: 0, ativo: false };
@@ -321,7 +336,10 @@
     let records = { ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" } };
     try { let r = localStorage.getItem('mfc_records_vmax'); if(r) records = JSON.parse(r); } catch(e) {}
 
-    function inicializarDramas() { dramasDisponiveis = [...bancoDramasOriginal]; dramasDisponiveis.sort(() => Math.random() - 0.5); }
+    function inicializarDramas() { 
+        dramasDisponiveis = [...bancoDramasOriginal, ...bancoDramasReserva]; 
+        dramasDisponiveis.sort(() => Math.random() - 0.5); 
+    }
 
     window.cliqueBotaoPrincipal = function() {
         if(currentStep === 0 && p.archetype === "") document.getElementById('modal-arq').style.display = 'flex';
@@ -348,7 +366,8 @@
         
         p.salario = p.isProdigy ? 15000 : 3000; p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
         
-        let r_nomes = ["Mbappé V2", "H. Kane Jr.", "El Pibe", "Robô Nórdico"];
+        // Garante que o nome do Rival não entre em conflito direto com as estrelas mundiais padrão
+        let r_nomes = ["Robô Cósmico", "H. Kane Jr.", "El Pibe V2", "Nórdico Veloz"];
         rival.nome = r_nomes[Math.floor(Math.random()*r_nomes.length)];
         rival.ovr = baseOvr + 4; rival.ativo = true;
     }
@@ -378,7 +397,6 @@
         document.getElementById('hdr-age').innerText = p.age; if(p.ovr > p.prime && penalty === 0) p.prime = p.ovr;
         let passe = p.age > 35 ? 0 : Math.floor((Math.pow(p.ovr, 2.5) / 1000) * (1 + (p.fama/20000000)));
         
-        // ✅ UI da Região agora exibe a Seleção Dinâmica!
         let txtSelecao = p.selecao !== "Nenhuma" ? ` (${p.selecao})` : "";
         document.getElementById('hdr-region').innerText = `🌍 ${p.origin}${txtSelecao}`;
 
@@ -437,7 +455,7 @@
         let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
         if(p.club === "Sem Clube") leagueDifficulty = 50;
 
-        // ✅ SELEÇÕES DINÂMICAS: Passando pela base ou pulando para Principal se for Fenômeno
+        // ✅ CONVOCADO DINAMICAMENTE
         if (p.ovr >= 85 || (p.ovr >= 82 && p.age <= 18)) p.selecao = "Principal"; 
         else if (p.age <= 17 && p.ovr >= 65) p.selecao = "Sub-17";
         else if (p.age <= 20 && p.ovr >= 70) p.selecao = "Sub-20";
@@ -503,7 +521,6 @@
             p.totals.dom += tDom3y; p.totals.int += tInt3y; p.totals.cont += tInt3y;
         }
         
-        // ✅ EVENTOS DE SELEÇÃO (Copa América e Copa do Mundo)
         if (p.selecao === "Principal") {
              let caChance = (p.ovr > 88) ? 0.35 : (p.ovr > 80 ? 0.15 : 0.05);
              if (Math.random() < caChance) { caWon = 1; p.totals.ca += 1; p.totals.cont += 1; }
@@ -529,15 +546,18 @@
         
         if (p.staff.psycho >= 3 || p.totals.bdor > 0 || p.totals.wc > 0) p.emocao = "Focado 🧘";
 
-        document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(p.club, "");
+        // ✅ EXIBE O CLUBE E A SELEÇÃO ATUAL DIRETAMENTE NA SUA LINHA DO TEMPO DA TABELA
+        let txtLinhaClube = p.club;
+        if(p.selecao !== "Nenhuma") {
+            txtLinhaClube += ` + 🇧🇷 ${p.selecao}`;
+        }
+        document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(txtLinhaClube, "");
         document.getElementById(`stats-titles-${currentStep}`).innerText = `${tDom3y}/${tInt3y}`;
         document.getElementById(`stats-goals-${currentStep}`).innerText = gol3y;
         document.getElementById(`stats-assists-${currentStep}`).innerText = ass3y;
         atualizarUI();
 
-        // ✅ LÓGICA DE SUSPENSE DA BOLA DE OURO (Critérios Completos)
         let rivalScore = (rival.ovr * 2) + rival.gols + (Math.random() * 30);
-        
         window.myBdorScore = (p.ovr * 2) + gol3y + ass3y + (tInt3y * 20) + (caWon * 25) + (wcWon * 50);
         let indicadoBdor = (p.club !== "Sem Clube" && p.ovr >= 83 && gol3y >= 45) || (p.ovr >= 80 && tInt3y > 0 && gol3y >= 30) || wcWon > 0 || caWon > 0;
         
@@ -546,7 +566,6 @@
         if(indicadoBdor) {
             let topScores = [window.myBdorScore, rivalScore, rivalScore - 15, rivalScore - 25, rivalScore - 35];
             topScores.sort((a,b) => b - a); 
-            
             window.posicaoBdor = topScores.indexOf(window.myBdorScore) + 1;
             
             document.getElementById('action-area').style.display = 'none';
@@ -555,7 +574,6 @@
             document.getElementById('btn-reveal-bdor').style.display = 'block';
             document.getElementById('btn-close-bdor').style.display = 'none';
         } else {
-            // ✅ CORREÇÃO: O RIVAL SÓ GANHA AQUI SE O JOGADOR NÃO FOR INDICADO E ELE TIVER MÉDIA ALTA
             if (rival.ovr > 86 && rival.gols > gol3y && Math.random() > 0.4) {
                 rival.bdor += 1; window.tempBdorData.rivalGanhou = true;
             }
@@ -563,14 +581,13 @@
         }
     }
 
-    // ✅ FUNÇÃO DE SUSPENSE SEM NOMES REPETIDOS
+    // ✅ REVELAÇÃO DA BOLA DE OURO TOTALMENTE BLINDADA CONTRA REPETIÇÕES E CLONES
     window.iniciarRevelacaoBdor = function() {
         document.getElementById('btn-reveal-bdor').style.display = 'none';
         let resDiv = document.getElementById('bdor-results');
         resDiv.innerHTML = "Lendo os votos da France Football...<br>";
         resDiv.style.display = 'block';
 
-        // Embaralha a lista de nomes base para não repetir
         let nomesSorteio = [...randomStarNames].sort(() => Math.random() - 0.5);
         let finalistas = [];
         
@@ -579,33 +596,31 @@
 
         while(finalistas.length < 5) {
             let nomeExtra = nomesSorteio.pop();
-            finalistas.push({ nome: nomeExtra, score: Math.floor(Math.random() * window.myBdorScore + 20) });
+            // Evita duplicar qualquer nome que já esteja nos finalistas ou que seja parecido com o rival
+            if(nomeExtra !== rival.nome && !finalistas.find(f => f.nome === nomeExtra)) {
+                finalistas.push({ nome: nomeExtra, score: Math.floor(Math.random() * (window.myBdorScore * 0.9) + 20) });
+            }
         }
         
-        // Ordena exatamente pela pontuação real
         finalistas.sort((a,b) => b.score - a.score);
-
         let posicoes = ["5º Lugar", "4º Lugar", "3º Lugar", "2º Lugar", "1º Lugar"];
         
-        // Loop de revelação do menor pro maior (de trás pra frente no array)
         finalistas.reverse().forEach((f, i) => {
             setTimeout(() => { 
                 let corDestaque = (i === 4) ? "#d97706" : "#333";
                 let fonteDestaque = (i === 4) ? "18px" : "15px";
                 resDiv.innerHTML += `<div class="bdor-result-line" style="color:${corDestaque}; font-size:${fonteDestaque};"><b>${posicoes[i]}:</b> ${f.nome}</div>`; 
                 
-                // Se for o 1º lugar, aplica os prêmios corretos!
                 if(i === 4) {
                     if (f.nome === "VOCÊ") {
-                        p.totals.bdor += 1; p.fama += 5000000;
-                        window.tempBdorData.euGanhei = true;
+                        p.totals.bdor += 1; p.fama += 5000000; window.tempBdorData.euGanhei = true;
                     } else if (f.nome === rival.nome) {
                         rival.bdor += 1; window.tempBdorData.rivalGanhou = true;
                     }
                     document.getElementById('btn-close-bdor').style.display = 'block';
                     atualizarUI();
                 }
-            }, (i + 1) * 1500); // 1.5s entre cada posição
+            }, (i + 1) * 1500); 
         });
     }
 
@@ -642,8 +657,18 @@
         document.getElementById('action-area').style.display = 'none';
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
         document.getElementById('btn-a').innerHTML = "<b>A)</b> " + entrevistaAtual.A_texto;
-        document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B_texto;
-        document.getElementById('btn-c').innerHTML = "<b>C)</b> " + entrevistaAtual.C_texto;
+        
+        // Se o drama for menor e não tiver as 3 opções criadas, esconde os botões extras vazios
+        if(entrevistaAtual.B_texto) {
+            document.getElementById('btn-b').style.display = "block";
+            document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B_texto;
+        } else { document.getElementById('btn-b').style.display = "none"; }
+        
+        if(entrevistaAtual.C_texto) {
+            document.getElementById('btn-c').style.display = "block";
+            document.getElementById('btn-c').innerHTML = "<b>C)</b> " + entrevistaAtual.C_texto;
+        } else { document.getElementById('btn-c').style.display = "none"; }
+
         document.getElementById('choice-buttons-block').style.display = 'flex';
         document.getElementById('btn-choice-next').style.display = 'none';
         document.getElementById('choice-section').style.display = 'flex';
@@ -673,7 +698,7 @@
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO");
         if (precisaPR && p.staff.pr > 0) {
             let chanceAbafar = prChances[p.staff.pr]; 
-            if (Math.random() * 100 <= chanceAbafar) { p.emocao = "Focado 🧘"; textoConsequencia += `<br><br><span style='color:#15803d'>📢 Sua assessoria abafou a crise!</span>`; } 
+            if (Math.random() * 100 <= chanceAbafar) { p.emocao = "Focado 🧘"; textoConsequencia += `<br><br><span style='color:#15803d'>📢 Sua assessoria abafou a crisis!</span>`; } 
             else textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise vazou.</span>`;
         }
         
@@ -696,12 +721,42 @@
         }
 
         let btnRenew = document.getElementById('btn-renew');
-        if(p.club === "Sem Clube") { btnRenew.innerText = "FICAR DESEMPREGADO"; btnRenew.style.background = "#b91c1c"; } 
-        else { btnRenew.innerText = "RENOVAR / FICAR NO CLUBE"; btnRenew.style.background = "#15803d"; }
+        if(p.club === "Sem Clube") { 
+            btnRenew.innerText = "FICAR DESEMPREGADO"; 
+            btnRenew.style.background = "#b91c1c"; 
+            window.salarioRenovacao = 0;
+        } else { 
+            let currentSalK = Math.floor(p.salario / 1000);
+            let salBaseIdeal = Math.floor(p.ovr * 0.1); 
+            if(tierPrata.includes(p.club)) salBaseIdeal = Math.floor(p.ovr * 0.5); 
+            if(eliteClubs.includes(p.club)) salBaseIdeal = Math.floor(p.ovr * 1.5) + (p.fama > 5000000 ? 50 : 0);
+            if(p.club.includes("🇸🇦") && p.ovr > 80) salBaseIdeal *= 3;
+            
+            let propostaClube = currentSalK;
+            let leagueDiff = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
+            
+            if (p.ovr >= leagueDiff - 2) {
+                propostaClube = Math.max(currentSalK * 1.15, salBaseIdeal * 1.15);
+            } else {
+                propostaClube = Math.max(currentSalK * 1.05, salBaseIdeal);
+            }
+            
+            window.salarioRenovacao = Math.floor(propostaClube);
+            btnRenew.innerText = `RENOVAR COM CLUBE ATUAL (€${window.salarioRenovacao}k/sem)`; 
+            btnRenew.style.background = "#15803d"; 
+        }
     }
 
     window.aceitarTransf = function(c, strVal, numVal, salK) { p.club = c; p.salario = salK * 1000; p.teamChemistry = 0; document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
-    window.ficarNoTime = function() { if(p.club !== "Sem Clube") { p.teamChemistry += 20; p.salario = Math.floor(p.salario * 1.10); } document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
+    
+    window.ficarNoTime = function() { 
+        if(p.club !== "Sem Clube") { 
+            p.teamChemistry += 20; 
+            p.salario = (window.salarioRenovacao || Math.floor(p.salario / 1000 * 1.10)) * 1000; 
+        } 
+        document.getElementById('market-panel').style.display = 'none'; 
+        document.getElementById('action-area').style.display = 'flex'; 
+    }
     
     function finalizarCarreira() {
         document.getElementById(`club-cell-9`).innerHTML = formatarClubeHTML("Aposentadoria", "");
@@ -743,10 +798,17 @@
         try {
             const timesSnap = await getDocs(collection(db, "times"));
             timesSnap.forEach(doc => { let t = doc.data(); if(t.categoria === "Elite") eliteClubs.push(t.nome); else if(t.categoria === "Prata") tierPrata.push(t.nome); else tierBronze.push(t.nome); });
+            
             const dramasSnap = await getDocs(collection(db, "eventos"));
             dramasSnap.forEach(doc => { bancoDramasOriginal.push(doc.data()); });
+            
+            console.log("Firebase carregado com sucesso. Eventos encontrados: ", bancoDramasOriginal.length);
             document.getElementById('btn-main').innerText = "INICIAR CARREIRA"; document.getElementById('btn-main').disabled = false;
-        } catch(e) { document.getElementById('btn-main').innerText = "ERRO NA NUVEM"; }
+        } catch(e) { 
+            console.warn("Usando banco de dados local reserva devido a timeout/restrição de rede na nuvem.");
+            document.getElementById('btn-main').innerText = "INICIAR CARREIRA (LOCAL)"; 
+            document.getElementById('btn-main').disabled = false;
+        }
     }
     iniciarCarregamentoFirebase();
 </script>
