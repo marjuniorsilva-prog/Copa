@@ -91,33 +91,44 @@
         .trait-item { background: #f3f4f6; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; }
         .trait-title { font-weight: 900; font-size: 14px; color: #4c1d95;} .trait-desc { font-size: 11px; color: #555; margin-top: 2px;}
 
-        .bdor-result-line { padding: 10px; border-bottom: 1px solid #ddd; animation: fadeIn 0.5s; font-size: 13px;}
-        .bdor-result-line b { font-size: 14px; }
+        .bdor-result-line { padding: 8px; border-bottom: 1px solid #ddd; animation: fadeIn 0.5s; font-size: 13px;}
         .bdor-stats-sub { display: block; font-size: 11px; color: #555; margin-top: 3px; font-weight: bold; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MODO SAF / MANAGER */
+        /* ==========================================
+           ESTILOS DO NOVO MODO SAF / MANAGER
+        ========================================== */
         .manager-bg { background-color: #0f172a; color: #f8fafc; }
         #modo-manager { display: none; flex-direction: column; width: 100%; height: 100%; animation: fadeIn 1s; }
+
         .saf-header { background: linear-gradient(135deg, #1e293b, #0f172a); border-bottom: 3px solid #fbbf24; padding: 15px 10px; text-align: center; }
         .saf-title { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 900; color: #fbbf24; text-transform: uppercase; letter-spacing: 1px; }
         .saf-subtitle { font-size: 12px; color: #cbd5e1; font-weight: bold; margin-top: 4px; }
+
         .saf-stats-bar { display: flex; justify-content: space-between; background: #1e293b; padding: 10px; font-size: 13px; font-weight: 900; border-bottom: 1px solid #334155; }
         .saf-stat { display: flex; flex-direction: column; align-items: center; width: 33%; }
         .saf-stat span:first-child { font-size: 10px; color: #94a3b8; text-transform: uppercase; }
         .saf-stat span:last-child { font-size: 16px; color: #10b981; }
+
         .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
         .dash-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
         .dash-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #3b82f6; }
         .dash-card.finance::before { background: #10b981; }
         .dash-card.market::before { background: #8b5cf6; }
+
         .dash-title { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 900; color: #f8fafc; margin-bottom: 5px; }
         .dash-info { font-size: 11px; color: #cbd5e1; margin-bottom: 8px; line-height: 1.4; }
         .dash-btn { background: #334155; color: white; border: none; padding: 6px; font-size: 10px; font-weight: 900; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
         .dash-btn:hover { background: #fbbf24; color: #0f172a; }
+
         .saf-timeline-header { background: #fbbf24; color: #0f172a; display: grid; grid-template-columns: 50px 1fr 60px 70px; gap: 4px; font-size: 10px; font-weight: 900; text-align: center; padding: 6px 4px; font-family: 'Oswald', sans-serif; margin: 0 10px; border-radius: 6px 6px 0 0; }
         .saf-timeline-rows { display: flex; flex-direction: column; gap: 4px; background: #1e293b; padding: 6px; margin: 0 10px 10px 10px; border-radius: 0 0 6px 6px; border: 1px solid #334155; border-top: none; }
         .saf-row { display: grid; grid-template-columns: 50px 1fr 60px 70px; gap: 4px; align-items: center; background: #0f172a; border-radius: 4px; padding: 4px 0; font-size: 11px; color: white; text-align: center; border: 1px solid #334155; }
+        .saf-year { font-weight: 900; color: #fbbf24; font-family: 'Oswald', sans-serif; }
+        .saf-div { font-weight: bold; text-align: left; padding-left: 5px; }
+        .saf-pos { color: #38bdf8; font-weight: bold; }
+        .saf-profit { color: #10b981; font-weight: bold; }
+
         .btn-simulate-saf { background: #fbbf24; color: #0f172a; border: none; padding: 15px; font-size: 18px; font-weight: 900; border-radius: 8px; cursor: pointer; margin: 0 10px 10px 10px; box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3); font-family: 'Oswald', sans-serif; text-transform: uppercase; }
     </style>
 </head>
@@ -189,7 +200,6 @@
         </div>
     </div>
 
-    <!-- NOVA TELA DO RIVAL DETALHADA -->
     <div class="choice-section" id="rival-section">
         <div class="choice-box" style="border-color: #b91c1c;">
             <div class="rank-title" style="color:#b91c1c;">⚔️ O GRANDE RIVAL</div>
@@ -226,9 +236,18 @@
     <div class="bottom-section">
         <div class="bottom-title">GRANDES CONQUISTAS DA CARREIRA</div>
         <div class="trophy-grid">
-            <div style="display:flex; flex-direction:column; align-items:center;"><span id="icone-continente" style="font-size:18px;">🏆</span><span id="maj-cont">0</span></div>
-            <div style="display:flex; flex-direction:column; align-items:center;"><span style="font-size:18px;">🏆 Mundial</span><span id="maj-wc">0</span></div>
-            <div style="display:flex; flex-direction:column; align-items:center;"><span style="font-size:18px;">✨ B. Ouro</span><span id="maj-bdor">0</span></div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span id="icone-continente" style="font-size:18px;">🏆</span>
+                <span id="maj-cont">0</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span style="font-size:18px;">🏆 Mundial</span>
+                <span id="maj-wc">0</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span style="font-size:18px;">✨ B. Ouro</span>
+                <span id="maj-bdor">0</span>
+            </div>
         </div>
     </div>
 
@@ -237,7 +256,7 @@
         <div class="life-wrapper"><div class="life-title">VEÍCULO</div><div class="life-photo" id="photo-car"><div class="life-text" id="text-car">Carro</div></div><div class="life-btn" id="btn-buy-car" onclick="comprarPatrimonio('car')">Melhorar</div></div>
         <div class="life-wrapper">
             <div class="life-title">FINANÇAS</div>
-            <div class="life-photo" style="background-color: #0f172a;"><div class="life-text" id="text-finance">Fundo: €0</div></div>
+            <div class="life-photo" style="background-image: url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&q=80')"><div class="life-text" id="text-finance">Fundo: €0</div></div>
             <div class="finance-buttons">
                 <button class="finance-btn-half" style="background:#16a34a; border-right:1px solid #14532d;" onclick="investirFundo(1000000)">+ €1M</button>
                 <button class="finance-btn-half" style="background:#15803d;" onclick="investirFundo(10000000)">+ €10M</button>
@@ -264,7 +283,7 @@
     <div class="modal" id="modal-perks">
         <div class="modal-content">
             <div class="rank-title" style="color:#4c1d95;">🌟 MEUS TALENTOS</div>
-            <p style="text-align:center; font-size:12px; margin-bottom:15px;">Talentos despertados em campo!</p>
+            <p style="text-align:center; font-size:12px; margin-bottom:15px;">Talentos são raros e despertados naturalmente através de seus treinos em campo!</p>
             <div id="traits-list"></div>
             <button class="btn-close" onclick="fecharPerks()">FECHAR</button>
         </div>
@@ -275,11 +294,13 @@
             <div class="rank-title">🏆 HALL DA FAMA</div>
             <div style="display:flex; justify-content:space-around; margin-bottom:10px;">
                 <button style="padding:4px 8px; font-weight:bold; cursor:pointer;" onclick="mostrarTabRank('local')">LOCAL</button>
-                <button style="padding:4px 8px; font-weight:bold; cursor:pointer; background:#1e293b; color:white;" onclick="mostrarTabRank('global')">GLOBAL</button>
+                <button style="padding:4px 8px; font-weight:bold; cursor:pointer; background:#1e293b; color:white;" onclick="mostrarTabRank('global')">GLOBAL (NUVEM)</button>
             </div>
             <div id="rank-local-content">
-                <div class="rank-row"><div class="rank-label">👑 Maior OVR</div><div class="rank-val"><span id="rk-ovr-val">0</span></div></div>
-                <div class="rank-row"><div class="rank-label">⚽ A Máquina</div><div class="rank-val"><span id="rk-gol-val">0</span></div></div>
+                <div class="rank-row"><div class="rank-label">👑 Maior Geral (Auge)</div><div class="rank-val"><span id="rk-ovr-val">0</span> <span class="rank-player" id="rk-ovr-name">-</span></div></div>
+                <div class="rank-row"><div class="rank-label">⚽ A Máquina (Gols)</div><div class="rank-val"><span id="rk-gol-val">0</span> <span class="rank-player" id="rk-gol-name">-</span></div></div>
+                <div class="rank-row"><div class="rank-label">✨ Rei da B. Ouro</div><div class="rank-val"><span id="rk-bdor-val">0</span> <span class="rank-player" id="rk-bdor-name">-</span></div></div>
+                <div class="rank-row"><div class="rank-label">💸 Maior Venda</div><div class="rank-val"><span id="rk-fee-val">€0m</span> <span class="rank-player" id="rk-fee-name">-</span></div></div>
             </div>
             <div id="rank-global-content" style="display:none; text-align:center; font-size:12px; padding:10px; background:#f1f5f9;">
                 <p><b>Top 1 Global (Maior OVR):</b> <br><span id="gb-ovr" style="font-size:16px; font-weight:bold; color:#5b2268;">Carregando...</span></p>
@@ -292,7 +313,7 @@
 </div>
 
 <!-- ==============================================
-     MODO SAF / MANAGER 
+     MODO SAF / MANAGER (NOVO) 
 =============================================== -->
 <div id="modo-manager" class="app-container manager-bg">
     <div class="saf-header">
@@ -321,8 +342,7 @@
             <div class="dash-title">👕 ELENCO</div>
             <div class="dash-info">
                 Força Geral (OVR): <b id="saf-ovr-time">72</b><br>
-                Status: <b>Em formação</b><br>
-                Salários: <b style="color:#ef4444" id="saf-salario">€1.2M/mês</b>
+                Status: <b id="saf-craque">Em formação</b><br>
             </div>
             <button class="dash-btn" onclick="alert('Sistema de Tática e Elenco em breve!')">Tática & Elenco</button>
         </div>
@@ -331,9 +351,9 @@
         <div class="dash-card finance">
             <div class="dash-title">🏟️ INFRAESTRUTURA</div>
             <div class="dash-info">
-                Estádio: <b id="saf-lvl-estadio">Nível 1</b><br>
-                Base: <b id="saf-lvl-base">Nível 1</b><br>
-                Patrocínio: <b id="saf-patrocinio">Empresa Local</b>
+                Estádio: <b>Nível 1</b> (15k Lug.)<br>
+                Base: <b>Nível 1</b><br>
+                Patrocínio: <b id="saf-patrocinio">Master - Série C</b>
             </div>
             <button class="dash-btn" style="background:#065f46" onclick="alert('Melhoria de Estádio em breve!')">Melhorar Clube</button>
         </div>
@@ -344,7 +364,7 @@
                 <span>🛒 MERCADO DA BOLA</span>
                 <span style="font-size:10px; background:#ef4444; padding:2px 6px; border-radius:4px;">JANELA ABERTA</span>
             </div>
-            <div class="dash-info">Pesquise talentos, aposte em jovens da base ou compre o craque mundial.</div>
+            <div class="dash-info">Pesquise talentos, aposte em jovens da base ou compre o craque mundial para ganhar a Libertadores.</div>
             <button class="dash-btn" style="background:#5b21b6; padding:10px; font-size: 12px;" onclick="alert('Painel de Mercado de Transferências em breve!')">ACESSAR MERCADO</button>
         </div>
     </div>
@@ -357,6 +377,7 @@
         <div>LUCRO/PREJU</div>
     </div>
     <div class="saf-timeline-rows" id="saf-history">
+        <!-- Linha Placeholder -->
         <div class="saf-row">
             <div class="saf-year">1º</div>
             <div class="saf-div">Aguardando Temporada...</div>
@@ -375,19 +396,27 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-    const firebaseConfig = { apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk", authDomain: "copa-ae771.firebaseapp.com", projectId: "copa-ae771", storageBucket: "copa-ae771.firebasestorage.app", messagingSenderId: "1030169877544", appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d" };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+      authDomain: "copa-ae771.firebaseapp.com",
+      projectId: "copa-ae771",
+      storageBucket: "copa-ae771.firebasestorage.app",
+      messagingSenderId: "1030169877544",
+      appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
+    };
 
     let app, db;
     try { app = initializeApp(firebaseConfig); db = getFirestore(app); } catch(e) { console.error("Erro Firebase", e); }
 
-    let eliteClubs = ["Real Madrid 🇪🇸", "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Bayern Munich 🇩🇪", "PSG 🇫🇷", "Barcelona 🇪🇸", "Liverpool 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿"]; 
-    let tierPrata = ["Roma 🇮🇹", "Borussia 🇩🇪", "Napoli 🇮🇹", "Tottenham 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Milan 🇮🇹", "Inter 🇮🇹", "Flamengo 🇧🇷", "Palmeiras 🇧🇷"]; 
-    let tierBronze = ["Monza 🇮🇹", "Augsburg 🇩🇪", "Vitória 🇧🇷", "Getafe 🇪🇸", "Fulham 🏴󠁧󠁢󠁥󠁮󠁧󠁿"]; 
-    let bancoDramasOriginal = [];
+    let eliteClubs = []; let tierPrata = []; let tierBronze = []; let bancoDramasOriginal = [];
 
     const bancoDramasReserva = [
-        { texto: "Um investidor misterioso oferece injetar €5M na sua conta pessoal em troca de 30% dos seus direitos de imagem.", A_texto: "Aceitar a bolada.", A_msg: "Dinheiro na conta! Mas a sua assessoria odeia o contrato.", A_efeitos: { banco: 5000000, fama: -100000 } },
-        { texto: "A torcida organizada invade o CT cobrando raça após duas derrotas seguidas.", A_texto: "Bater de frente e exigir respeito.", A_msg: "A torcida te odeia agora! O clima ferveu.", A_efeitos: { teamChemistry: -40, emocao: "Triste 😢" } }
+        { texto: "Um investidor misterioso oferece injetar €5M na sua conta pessoal em troca de 30% dos seus direitos de imagem futuros.", A_texto: "Aceitar a bolada imediatamente.", A_msg: "Dinheiro na conta! Mas a sua assessoria odeia o contrato amador.", A_efeitos: { banco: 5000000, fama: -100000 } },
+        { texto: "Você foi pego na balada na véspera de uma final continental de clubes.", A_texto: "Dizer que estava jantando com a família.", A_msg: "Ninguém acreditou. Clima péssimo com os companheiros.", A_efeitos: { teamChemistry: -30, emocao: "Triste 😢" } },
+        { texto: "O técnico da Seleção Principal te liga dizendo que te dará a camisa 10 se você mudar de empresário.", A_texto: "Trocar de empresário focado na Seleção.", A_msg: "Você vira o dono do time na seleção principal!", A_efeitos: { fama: 2000000, ovr: 1 } },
+        { texto: "A torcida organizada invade o CT cobrando raça após duas derrotas seguidas.", A_texto: "Bater de frente e exigir respeito.", A_msg: "A torcida te odeia agora! O clima ferveu.", A_efeitos: { teamChemistry: -40, emocao: "Triste 😢" } },
+        { texto: "Um grande patrocinador esportivo mundial propõe um contrato vitalício de chuteiras.", A_texto: "Assinar o mega contrato de patrocínio.", A_msg: "Estrela mundial! Sua fama explode globalmente.", A_efeitos: { fama: 5000000, banco: 2000000 } },
+        { texto: "Uma lesão crônica no joelho começa a incomodar durante a pré-temporada.", A_texto: "Jogar no sacrifício com infiltração.", A_msg: "Você joga, mas seu físico paga o preço por anos.", A_efeitos: { phy: -3, ovr: -1 } }
     ];
 
     const houseUpgrades = [ { name: "Casa Simples", price: 0 }, { name: "Apto Classe Média", price: 300000 }, { name: "Cobertura Premium", price: 1500000 }, { name: "Mansão Padrão", price: 5000000 }, { name: "Mansão de Luxo", price: 15000000 }, { name: "Ilha Privativa", price: 35000000 } ];
@@ -397,29 +426,55 @@
     const prChances = [0, 20, 40, 60, 80, 100]; 
 
     const traitsList = [
-        { id: 'falta', name: '🎯 Mestre da Falta', desc: 'Aumenta volume de gols.' },
-        { id: 'penalti', name: '🥶 Cobrador Oficial', desc: 'Frio e calculista. Garante gols extras.' },
-        { id: 'cabeceio', name: '🚁 Rei do Espaço', desc: 'Ganha todas pelo alto.' },
-        { id: 'arrancada', name: '🚀 Arrancada Forte', desc: 'Sai na cara do gol. Mais gols e assistências.' },
-        { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Gera muitos gols individuais e chances claras.' }
+        { id: 'falta', name: '🎯 Mestre da Falta', desc: 'Sempre guarda de bola parada. Aumenta volume de gols.' },
+        { id: 'penalti', name: '🥶 Cobrador Oficial', desc: 'Frio e calculista na marca da cal. Garante gols extras.' },
+        { id: 'cabeceio', name: '🚁 Rei do Espaço', desc: 'Diferenciado no cabeceio. Ganha todas pelo alto.' },
+        { id: 'arrancada', name: '🚀 Arrancada Forte', desc: 'Sai na cara do gol com frequência. Mais gols e assistências.' },
+        { id: 'driblador', name: '🕺 Driblador Nato', desc: 'Quebra a defense sozinho e gera muitos gols individuais.' }
     ];
 
-    const randomStarNames = ["Vinícius Jr.", "Bellingham", "Haaland", "Rodri", "Musiala", "Lamine Yamal", "Harry Kane", "De Bruyne", "Mbappé", "Foden", "Wirtz", "Saka"];
+    const randomStarNames = [
+        "Vinícius Jr.", "Bellingham", "Haaland", "Rodri", "Musiala", "Wirtz", "Lamine Yamal", 
+        "Foden", "Saka", "Harry Kane", "De Bruyne", "Mohamed Salah", "Cole Palmer", "Lautaro Martínez", 
+        "Bernardo Silva", "Martin Ødegaard", "Bruno Fernandes", "Lewandowski", "Griezmann", "Fede Valverde", 
+        "Antonio Rüdiger", "William Saliba", "Virgil van Dijk", "Theo Hernández", "Rafael Leão", 
+        "Kvaratskhelia", "Rodrygo", "Pedri", "Gavi", "Vitinha", "Nicolò Barella", "Julian Alvarez"
+    ];
 
-    // --- CÉREBRO DA SAF (NOVO MODO) ---
-    let saf = { ativo: false, temporada: 1, caixa: 0, divisaoAtual: "Série C 🇧🇷", ovrTime: 68, reputacao: 2, infra: { estadio: 1, base: 1 }, folhaSalarial: 1200000, patrocinio: { nome: "Empresa Local", valorAno: 2500000 }, historico: [] };
+    // Cérebro do Modo SAF / Manager
+    let saf = {
+        ativo: false,
+        temporada: 1,
+        caixa: 0,
+        divisaoAtual: "Série C 🇧🇷",
+        ovrTime: 68,
+        reputacao: 2, 
+        infra: { estadio: 1, base: 1 },
+        folhaSalarial: 1200000, 
+        patrocinio: { nome: "Empresa Local", valorAno: 2500000 },
+        historico: []
+    };
 
-    let p = { age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000, club: "", isProdigy: false, origin: "", archetype: "", selecao: "Nenhuma", teamChemistry: 0, staff: { psycho: 0, pr: 0 }, traits: [], investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0, totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, ca: 0, bdor: 0, yc: 0, rc: 0 } };
+    let p = {
+        age: 15, ovr: 0, pac: 0, sho: 0, pas: 0, dri: 0, def: 0, phy: 0, prime: 0, banco: 1000000,
+        club: "", isProdigy: false, origin: "", archetype: "", selecao: "Nenhuma", teamChemistry: 0,
+        staff: { psycho: 0, pr: 0 }, traits: [], investido: 0, salario: 3000, emocao: "Focado 🧘", fama: 10000, houseTier: 0, carTier: 0,
+        totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, ca: 0, bdor: 0, yc: 0, rc: 0 }
+    };
     
-    // O NOVO RIVAL DETALHADO
-    let rival = { nome: "Nórdico Veloz", club: "Manchester City 🏴󠁧󠁢󠁥󠁮󠁧󠁿", ovr: 72, gols: 0, ass: 0, tDom: 0, tInt: 0, bdor: 0, ativo: false };
+    // VARIÁVEL DO RIVAL ATUALIZADA (COMPLETA)
+    let rival = { nome: "O Prodígio", club: "Real Madrid 🇪🇸", ovr: 72, gols: 0, ass: 0, tDom: 0, tInt: 0, bdor: 0, ativo: false };
     
     const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
     let currentStep = 0; let entrevistaAtual = null; let dramasDisponiveis = []; 
 
     let records = { ovr: { val: 0, name: "-" }, gol: { val: 0, name: "-" }, bdor: { val: 0, name: "-" }, wc: { val: 0, name: "-" }, fee: { val: 0, str: "€0m", name: "-" } };
+    try { let r = localStorage.getItem('mfc_records_vmax'); if(r) records = JSON.parse(r); } catch(e) {}
 
-    function inicializarDramas() { dramasDisponiveis = [...bancoDramasOriginal, ...bancoDramasReserva]; dramasDisponiveis.sort(() => Math.random() - 0.5); }
+    function inicializarDramas() { 
+        dramasDisponiveis = [...bancoDramasOriginal, ...bancoDramasReserva]; 
+        dramasDisponiveis.sort(() => Math.random() - 0.5); 
+    }
 
     window.cliqueBotaoPrincipal = function() {
         if(currentStep === 0 && p.archetype === "") document.getElementById('modal-arq').style.display = 'flex';
@@ -429,23 +484,34 @@
     window.selecionarArq = function(tipo) { p.archetype = tipo; document.getElementById('modal-arq').style.display = 'none'; initGrid(); document.getElementById('btn-main').innerText = "AVANÇAR 3 ANOS DA CARREIRA"; }
 
     function initPlayer() {
-        let baseOvr = p.isProdigy ? Math.floor(Math.random() * 4) + 82 : Math.floor(Math.random() * 11) + 68;
+        let sorte = Math.random() * 100; let baseOvr = 0;
+        if (sorte <= 1) { baseOvr = Math.floor(Math.random() * 3) + 89; p.isProdigy = true; } 
+        else if (sorte <= 5) { baseOvr = Math.floor(Math.random() * 3) + 86; p.isProdigy = true; } 
+        else if (sorte <= 20) { baseOvr = Math.floor(Math.random() * 4) + 82; p.isProdigy = true; } 
+        else { baseOvr = Math.floor(Math.random() * 11) + 68; p.isProdigy = false; }
+
         p.ovr = baseOvr; p.prime = baseOvr; p.pac = baseOvr; p.sho = baseOvr; p.pas = baseOvr; p.dri = baseOvr; p.def = 40; p.phy = baseOvr;
 
         if(p.archetype === 'ponta') { p.pac += 8; p.dri += 6; document.getElementById('hdr-arq').innerText = "⚡ PONTA"; }
         if(p.archetype === 'matador') { p.sho += 10; p.phy += 6; document.getElementById('hdr-arq').innerText = "⚽ PIVÔ"; }
         if(p.archetype === 'armador') { p.pas += 10; p.dri += 4; document.getElementById('hdr-arq').innerText = "🪄 MEIO"; }
 
-        p.club = tierBronze[Math.floor(Math.random()*tierBronze.length)]; p.salario = 3000; p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
+        if(tierPrata.length > 0 && tierBronze.length > 0) p.club = p.isProdigy ? tierPrata[Math.floor(Math.random()*tierPrata.length)] : tierBronze[Math.floor(Math.random()*tierBronze.length)];
+        else p.club = "Sem Clube";
+        
+        p.salario = p.isProdigy ? 15000 : 3000; p.origin = (Math.random() > 0.5) ? "Europa" : "Am. do Sul";
         
         let r_nomes = ["Robô Cósmico", "H. Kane Jr.", "El Pibe V2", "Nórdico Veloz"];
         rival.nome = r_nomes[Math.floor(Math.random()*r_nomes.length)];
-        rival.club = eliteClubs[Math.floor(Math.random()*eliteClubs.length)];
-        rival.ovr = baseOvr + 4; rival.ativo = true;
+        rival.ovr = baseOvr + 4; 
+        rival.club = eliteClubs.length > 0 ? eliteClubs[Math.floor(Math.random()*eliteClubs.length)] : "Real Madrid 🇪🇸";
+        rival.ass = 0; rival.tDom = 0; rival.tInt = 0; rival.bdor = 0;
+        rival.ativo = true;
     }
     
     function initGrid() {
-        p.age = 15; currentStep = 0; initPlayer(); inicializarDramas();
+        p.age = 15; p.banco = 1000000; p.teamChemistry = 0; p.fama = 5000; p.staff = { psycho: 0, pr: 0 }; p.traits = []; p.selecao = "Nenhuma";
+        currentStep = 0; initPlayer(); inicializarDramas();
         const container = document.getElementById('timeline-rows'); container.innerHTML = '';
         ages.forEach((a, index) => {
             let boxClass = "age-box" + (a === "Base" ? " academy" : "") + ((a === "Apadr" || a === "Trein") ? " retire" : "");
@@ -459,102 +525,178 @@
 
     function atualizarUI() {
         ['pac','sho','pas','dri','def','phy'].forEach(attr => { if(p[attr] > 99) p[attr] = 99; if(p[attr] < 30) p[attr] = 30; });
-        let penalty = (p.emocao === "Triste 😢") ? 5 : 0;
-        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) - penalty;
+        let penalty = (p.emocao === "Triste 😢" || p.emocao === "Ressaca 🥴") ? 5 : 0;
+        let calcOvr = Math.floor((p.pac + p.sho + p.pas + p.dri + p.phy) / 5) + (p.archetype === 'matador' ? 2 : 0) - penalty;
         p.ovr = Math.max(30, Math.min(99, calcOvr + Math.floor(p.teamChemistry / 20))); 
 
-        let ovrHTML = `<div class="ovr-col"><span style="color:${penalty > 0 ? '#b91c1c' : '#15803d'}">${p.ovr}</span></div>`;
+        let ovrHTML = `<div class="ovr-col"><span style="color:${penalty > 0 ? '#b91c1c' : '#15803d'}">${p.ovr}</span><span class="ovr-arrow" style="display:${p.ovr >= p.prime && penalty === 0 ? 'inline' : 'none'}">⬆</span></div>`;
         document.getElementById('attr-vals').innerHTML = `${ovrHTML}<div>${p.pac}</div><div>${p.sho}</div><div>${p.pas}</div><div>${p.dri}</div><div>${p.def}</div><div>${p.phy}</div>`;
         document.getElementById('hdr-age').innerText = p.age; if(p.ovr > p.prime && penalty === 0) p.prime = p.ovr;
         let passe = p.age > 35 ? 0 : Math.floor((Math.pow(p.ovr, 2.5) / 1000) * (1 + (p.fama/20000000)));
         
-        let txtSelecao = p.selecao !== "Nenhuma" ? ` (${p.selecao})` : ""; document.getElementById('hdr-region').innerText = `🌍 ${p.origin}${txtSelecao}`;
+        let txtSelecao = p.selecao !== "Nenhuma" ? ` (${p.selecao})` : "";
+        document.getElementById('hdr-region').innerText = `🌍 ${p.origin}${txtSelecao}`;
+
         document.getElementById('hdr-value').innerText = (p.age === 15 || passe === 0 || p.club==="Sem Clube") ? "Livre" : "€" + passe + "M";
         document.getElementById('hdr-bank').innerText = formatMoeda(p.banco); document.getElementById('hdr-fama').innerText = formatFama(p.fama); document.getElementById('hdr-mood').innerText = `🧠 ${p.emocao}`;
         
         document.getElementById('tot-app').innerText = p.totals.app; document.getElementById('tot-dom').innerText = p.totals.dom; document.getElementById('tot-int').innerText = p.totals.int;
-        document.getElementById('tot-gol').innerText = p.totals.gol; document.getElementById('tot-ass').innerText = p.totals.ass; document.getElementById('maj-cont').innerText = p.totals.cont; document.getElementById('maj-bdor').innerText = p.totals.bdor;
+        document.getElementById('tot-gol').innerText = p.totals.gol; document.getElementById('tot-ass').innerText = p.totals.ass; document.getElementById('tot-yc').innerText = p.totals.yc; document.getElementById('tot-rc').innerText = p.totals.rc;
+        document.getElementById('maj-cont').innerText = p.totals.cont; document.getElementById('maj-wc').innerText = p.totals.wc; document.getElementById('maj-bdor').innerText = p.totals.bdor;
         
         ['psycho', 'pr'].forEach(tipo => {
             document.getElementById(`lvl-${tipo}`).innerText = p.staff[tipo]; let nextLvl = p.staff[tipo] + 1; let cstSpan = document.getElementById(`cst-${tipo}`);
             if(nextLvl <= 5) { cstSpan.innerText = formatMoeda(custoSff[tipo][nextLvl]); cstSpan.style.color = "#15803d"; } else { cstSpan.innerText = "MÁXIMO"; cstSpan.style.color = "#b91c1c"; }
         });
+
+        let h = houseUpgrades[p.houseTier]; document.getElementById('text-house').innerText = h.name;
+        if(p.houseTier < 5) document.getElementById('btn-buy-house').innerText = "Melhorar (" + formatMoeda(houseUpgrades[p.houseTier+1].price) + ")"; else document.getElementById('btn-buy-house').innerText = "Máximo";
+
+        let c = carUpgrades[p.carTier]; document.getElementById('text-car').innerText = c.name;
+        if(p.carTier < 5) document.getElementById('btn-buy-car').innerText = "Melhorar (" + formatMoeda(carUpgrades[p.carTier+1].price) + ")"; else document.getElementById('btn-buy-car').innerText = "Máximo";
         document.getElementById('text-finance').innerText = "Fundo: " + formatMoeda(p.investido);
     }
 
-    window.uparStaff = function(tipo) { let nextLvl = p.staff[tipo] + 1; let custo = custoSff[tipo][nextLvl]; if (p.banco >= custo && nextLvl <= 5) { p.banco -= custo; p.staff[tipo] = nextLvl; atualizarUI(); } }
-    window.abrirPerks = function() { document.getElementById('modal-perks').style.display = 'flex'; }
+    window.uparStaff = function(tipo) {
+        let nextLvl = p.staff[tipo] + 1; if (nextLvl > 5) { alert("Nível máximo já atingido!"); return; }
+        let custo = custoSff[tipo][nextLvl];
+        if (p.banco >= custo) { p.banco -= custo; p.staff[tipo] = nextLvl; atualizarUI(); exibirMensagemTopo("✅ Staff evoluído com sucesso!"); } else alert("Dinheiro insuficiente!");
+    }
+
+    window.abrirPerks = function() { 
+        let listaHTML = "";
+        if(p.traits.length === 0) listaHTML = "<p style='text-align:center; color:#555;'>Nenhum talento descoberto ainda.</p>";
+        else { p.traits.forEach(t => { listaHTML += `<div class="trait-item"><div class="trait-title">${t.name}</div><div class="trait-desc">${t.desc}</div></div>`; }); }
+        document.getElementById('traits-list').innerHTML = listaHTML; document.getElementById('modal-perks').style.display = 'flex'; 
+    }
     window.fecharPerks = function() { document.getElementById('modal-perks').style.display = 'none'; }
-    window.mostrarTabRank = function(tab) { document.getElementById('rank-local-content').style.display = tab === 'local' ? 'block' : 'none'; document.getElementById('rank-global-content').style.display = tab === 'global' ? 'block' : 'none'; }
+    window.mostrarTabRank = function(tab) { document.getElementById('rank-local-content').style.display = tab === 'local' ? 'block' : 'none'; document.getElementById('rank-global-content').style.display = tab === 'global' ? 'block' : 'none'; if(tab === 'global' && db) carregarRankingGlobal(); }
     window.investirFundo = function(valor) { if(p.banco >= valor) { p.banco -= valor; p.investido += valor; atualizarUI(); } }
-    window.comprarPatrimonio = function(tipo) { atualizarUI(); }
+    window.comprarPatrimonio = function(tipo) {
+        if(tipo === 'house' && p.houseTier < 5) { let next = houseUpgrades[p.houseTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.houseTier++; } }
+        if(tipo === 'car' && p.carTier < 5) { let next = carUpgrades[p.carTier+1]; if(p.banco >= next.price) { p.banco -= next.price; p.carTier++; } }
+        atualizarUI();
+    }
 
     function formatarClubeHTML(clubeStr, feeTag) {
         if(clubeStr === "Sem Clube" || clubeStr === "Aposentadoria") return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">❌</span><div class="club-info"><span class="c-name" style="color:red;">${clubeStr}</span></div></div>`;
         let partes = clubeStr.trim().split(" "); let flag = partes.pop(); let nomeClube = partes.join(" ");
         return `<div style="display:flex; align-items:center; height:100%; width:100%;"><span style="font-size:14px; margin-right:4px;">${flag}</span><div class="club-info"><span class="c-name">${nomeClube}</span></div>${feeTag}</div>`;
     }
+    function exibirMensagemTopo(msg) { const ev = document.getElementById('event-section'); ev.innerHTML = msg; ev.style.display = 'block'; setTimeout(() => { ev.style.display = 'none'; }, 6000); }
 
     function avancarCarreira() {
         if (p.age >= 39) { finalizarCarreira(); return; }
         
         if (currentStep === 0) { currentStep = 1; p.age = 18; } else { p.age += 3; currentStep++; p.teamChemistry += 15; }
         let leagueDifficulty = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
+        if(p.club === "Sem Clube") leagueDifficulty = 50;
 
-        if (p.ovr >= 85) p.selecao = "Principal"; else if (p.ovr >= 70) p.selecao = "Olímpica"; else p.selecao = "Nenhuma";
-        if (p.club !== "Sem Clube") p.teamChemistry -= 10; 
+        if (p.ovr >= 85 || (p.ovr >= 82 && p.age <= 18)) p.selecao = "Principal"; 
+        else if (p.age <= 17 && p.ovr >= 65) p.selecao = "Sub-17";
+        else if (p.age <= 20 && p.ovr >= 70) p.selecao = "Sub-20";
+        else if (p.age <= 23 && p.ovr >= 75) p.selecao = "Olímpica";
+        else if (p.ovr >= 80) p.selecao = "Principal";
+        else p.selecao = "Nenhuma";
+
+        if (p.age <= 24 && p.traits.length < 2 && Math.random() < 0.25) {
+            let availableTraits = traitsList.filter(t => !p.traits.some(pt => pt.id === t.id));
+            if (availableTraits.length > 0) { let newT = availableTraits[Math.floor(Math.random() * availableTraits.length)]; p.traits.push(newT); exibirMensagemTopo(`🌟 TALENTO DESCOBERTO: ${newT.name}!`); }
+        }
+
+        if (p.club !== "Sem Clube" && p.ovr < leagueDifficulty - 10 && p.age > 21) { p.club = "Sem Clube"; p.salario = 0; p.teamChemistry = 0; exibirMensagemTopo("❌ DISPENSADO! Você não rendeu o esperado."); }
+
+        if (p.emocao === "Triste 😢" || p.emocao === "Ressaca 🥴") p.teamChemistry -= 20; else if (p.club !== "Sem Clube") p.teamChemistry -= 10; 
+
         if(p.investido > 0) p.investido += Math.floor(p.investido * 0.15); 
         p.banco += ((p.salario * 150) + Math.floor(p.fama * 0.08));
         
-        // Crescimento de Stats
-        if (p.age <= 27) { let g = p.age <= 21 ? 3 : 1; p.sho += g; p.dri += g; p.pas += g; p.pac += g; p.phy += g; } 
+        let isElite = eliteClubs.includes(p.club);
+        if (p.age <= 27) { 
+            let g = 0;
+            if (p.age <= 18) g = Math.floor(Math.random() * 4) + 4; else if (p.age <= 21) g = Math.floor(Math.random() * 3) + 2; else if (p.age <= 24) g = Math.floor(Math.random() * 2) + 1; else g = Math.floor(Math.random() * 2);                      
+            if (p.ovr >= 86) g = Math.floor(g / 2);
+            let chanceBonusInfraestrutura = isElite ? 0.40 : (tierPrata.includes(p.club) ? 0.20 : 0.05); 
+            if (Math.random() < chanceBonusInfraestrutura) g += 1;
+            p.sho += g; p.dri += g; p.pas += g; p.pac += Math.max(0, g - 1); p.phy += Math.max(0, g - 1); 
+        } else if (p.age >= 30) {
+            let quedaPac = p.archetype === 'ponta' ? 5 : 7; 
+            if(isElite) quedaPac -= 2; 
+            if(quedaPac < 0) quedaPac = 0;
+            p.pac -= quedaPac; p.phy -= Math.max(0, 3 - (isElite ? 1 : 0)); 
+        }
 
-        let apps3y = p.club === "Sem Clube" ? 0 : 140;
+        let apps3y = 140; if(p.club === "Sem Clube") apps3y = 0;
+
         let performanceDelta = (p.ovr - leagueDifficulty) / 30; 
-        let golBase = Math.max(0.20, 0.40 + performanceDelta); 
-        let assBase = Math.max(0.15, 0.30 + performanceDelta); 
+        let golBase = Math.max(0.25, 0.45 + performanceDelta); 
+        let assBase = Math.max(0.15, 0.28 + performanceDelta); 
 
-        if(p.archetype === 'matador') golBase += 0.2;
-        if(p.archetype === 'armador') assBase += 0.2;
-        if(p.archetype === 'ponta') { golBase += 0.1; assBase += 0.15; }
+        if(p.traits.some(t => t.id === 'falta')) golBase += 0.05;
+        if(p.traits.some(t => t.id === 'penalti')) golBase += 0.06;
+        if(p.traits.some(t => t.id === 'cabeceio')) golBase += 0.05;
+        if(p.traits.some(t => t.id === 'arrancada')) { golBase += 0.04; assBase += 0.03; }
+        if(p.traits.some(t => t.id === 'driblador')) { golBase += 0.06; }
 
-        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.2 + 0.9));
-        let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.2 + 0.9));
+        let gol3y = Math.floor(apps3y * golBase * (Math.random() * 0.3 + 0.85));
+        let ass3y = Math.floor(apps3y * assBase * (Math.random() * 0.3 + 0.85));
+
+        if(p.archetype === 'matador') gol3y = Math.floor(gol3y * 1.3);
+        if(p.archetype === 'armador') ass3y = Math.floor(ass3y * 1.3);
         if(p.club === "Sem Clube") { gol3y = 0; ass3y = 0; }
 
         p.totals.app += apps3y; p.totals.gol += gol3y; p.totals.ass += ass3y;
         
-        let tDom3y = 0, tInt3y = 0, wcWon = 0;
+        let tDom3y = 0, tInt3y = 0, wcWon = 0, caWon = 0;
         if(p.club !== "Sem Clube") {
             for(let i=0; i<3; i++) {
                 if(p.ovr + (p.teamChemistry/2) > leagueDifficulty - 5 && Math.random() > 0.4) tDom3y++;
                 if(eliteClubs.includes(p.club) && p.ovr >= 82 && Math.random() > 0.5) tInt3y++;
-                else if(tierPrata.includes(p.club) && p.ovr >= 78 && Math.random() > 0.8) tInt3y++;
+                else if(tierPrata.includes(p.club) && p.ovr >= 78 && Math.random() > 0.7) tInt3y++;
             }
             p.totals.dom += tDom3y; p.totals.int += tInt3y; p.totals.cont += tInt3y;
         }
         
-        if (p.selecao === "Principal" && p.ovr > 89 && Math.random() > 0.75) { wcWon = 1; p.totals.wc += 1; }
+        if (p.selecao === "Principal") {
+             let caChance = (p.ovr > 88) ? 0.35 : (p.ovr > 80 ? 0.15 : 0.05);
+             if (Math.random() < caChance) { caWon = 1; p.totals.ca += 1; p.totals.cont += 1; }
+             
+             let wcChance = (p.ovr > 89) ? 0.25 : (p.ovr > 82 ? 0.08 : 0.02);
+             if (Math.random() < wcChance) { wcWon = 1; p.totals.wc += 1; }
+        }
 
-        let fameBonus = 1 + (p.staff.pr * 0.15); p.fama += ((gol3y * 5000) + (tInt3y * 150000)) * fameBonus;
+        let premioTitulos = 0;
+        if(p.club !== "Sem Clube") {
+            let premioBase = eliteClubs.includes(p.club) ? 2000000 : (tierPrata.includes(p.club) ? 500000 : 100000);
+            premioTitulos += tDom3y * premioBase; premioTitulos += tInt3y * (premioBase * 3);
+        }
+        if(wcWon > 0) premioTitulos += 5000000;
+        if(caWon > 0) premioTitulos += 2000000;
+        p.banco += premioTitulos; 
+
+        let fameBonusPR = 1 + (p.staff.pr * 0.15);
+        p.fama += ((gol3y * 5000) + (tInt3y * 150000)) * fameBonusPR;
         
+        if (p.staff.psycho >= 3 || p.totals.bdor > 0 || p.totals.wc > 0) p.emocao = "Focado 🧘";
+
         // --- EVOLUÇÃO E ESTATÍSTICAS REAIS DO RIVAL ---
-        rival.ovr += p.age < 27 ? 3 : (p.age > 33 ? -2 : 1);
-        rival.gols = Math.floor((rival.ovr * 0.45) * 3 + (Math.random() * 30)); 
+        rival.ovr += p.age < 27 ? 4 : (p.age > 33 ? -2 : 1);
+        rival.gols = Math.floor((rival.ovr * 0.4) * 3 + (Math.random() * 40)); 
         rival.ass = Math.floor(rival.gols * 0.35); // Dá assistência proporcional
         rival.tDom = Math.floor(Math.random() * 3);
-        rival.tInt = Math.random() > 0.5 ? 1 : 0; // Maior chance porque está na elite
-        if(rival.ovr > 90 && Math.random() > 0.3) rival.tInt = 2; // Máquina de títulos
+        rival.tInt = Math.random() > 0.5 ? 1 : 0; 
+        if(rival.ovr > 90 && Math.random() > 0.3) rival.tInt = 2; // Rival forte ganha mais
 
-        document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(p.club + (p.selecao !== "Nenhuma" ? ` + 🇧🇷` : ""), "");
+        let txtLinhaClube = p.club;
+        if(p.selecao !== "Nenhuma") txtLinhaClube += ` + 🇧🇷 ${p.selecao}`;
+        document.getElementById(`club-cell-${currentStep}`).innerHTML = formatarClubeHTML(txtLinhaClube, "");
         document.getElementById(`stats-titles-${currentStep}`).innerText = `${tDom3y}/${tInt3y}`;
         document.getElementById(`stats-goals-${currentStep}`).innerText = gol3y;
         document.getElementById(`stats-assists-${currentStep}`).innerText = ass3y;
         atualizarUI();
 
-        // --- A NOVA FÓRMULA JUSTA DA BOLA DE OURO ---
-        // Gols valem 1, Assistência 1.5, Título Internacional 20, Nacional 5. OVR tem peso pequeno (0.5)
-        let myScoreObj = gol3y + (ass3y * 1.5) + (tInt3y * 20) + (tDom3y * 5) + (wcWon * 50) + (p.ovr * 0.5);
+        // --- NOVA FÓRMULA DA BOLA DE OURO ---
+        let myScoreObj = gol3y + (ass3y * 1.5) + (tInt3y * 20) + (tDom3y * 5) + (wcWon * 50) + (caWon * 25) + (p.ovr * 0.5);
         let rivalScoreObj = rival.gols + (rival.ass * 1.5) + (rival.tInt * 20) + (rival.tDom * 5) + (rival.ovr * 0.5);
         
         window.tempBdorData = { 
@@ -563,7 +705,8 @@
             meuGols: gol3y, meuAss: ass3y, meuTits: tInt3y + tDom3y 
         };
 
-        if(myScoreObj > 120 || rivalScoreObj > 120) {
+        // Só abre a premiação se alguém tiver pontuação de temporada absurda ou título de Copa
+        if(myScoreObj > 110 || rivalScoreObj > 110 || wcWon > 0 || caWon > 0) {
             document.getElementById('action-area').style.display = 'none';
             document.getElementById('bdor-section').style.display = 'flex';
             document.getElementById('bdor-results').style.display = 'none';
@@ -583,20 +726,20 @@
         let nomesSorteio = [...randomStarNames].sort(() => Math.random() - 0.5);
         let finalistas = [];
         
-        // Insere o Jogador e o Rival Real com seus Scores
         finalistas.push({ nome: "VOCÊ", score: window.tempBdorData.meuScore, g: window.tempBdorData.meuGols, a: window.tempBdorData.meuAss, t: window.tempBdorData.meuTits, c: p.club });
         finalistas.push({ nome: rival.nome, score: window.tempBdorData.rivalScore, g: rival.gols, a: rival.ass, t: rival.tInt + rival.tDom, c: rival.club });
 
-        // Gera 3 NPCs competitivos com estatísticas simuladas
         while(finalistas.length < 5) {
             let nNome = nomesSorteio.pop();
-            let nClub = eliteClubs[Math.floor(Math.random() * eliteClubs.length)];
-            let nG = Math.floor(Math.random() * 50) + 60; // 60 a 110 gols
-            let nA = Math.floor(Math.random() * 20) + 20; // 20 a 40 ass
+            let nClub = eliteClubs.length > 0 ? eliteClubs[Math.floor(Math.random() * eliteClubs.length)] : "Elite Europeia";
+            let nG = Math.floor(Math.random() * 50) + 50; 
+            let nA = Math.floor(Math.random() * 20) + 15; 
             let nT = Math.floor(Math.random() * 3);
-            let nScore = nG + (nA * 1.5) + (nT * 15) + 40; // Score fake próximo ao real
+            let nScore = nG + (nA * 1.5) + (nT * 15) + 40; 
             
-            if(nNome !== rival.nome) finalistas.push({ nome: nNome, score: nScore, g: nG, a: nA, t: nT, c: nClub });
+            if(nNome !== rival.nome && !finalistas.find(f => f.nome === nNome)) {
+                finalistas.push({ nome: nNome, score: nScore, g: nG, a: nA, t: nT, c: nClub });
+            }
         }
         
         finalistas.sort((a,b) => b.score - a.score);
@@ -608,9 +751,9 @@
                 let color = isMe ? "#d97706" : (i===4 ? "#1e40af" : "#333");
                 
                 resDiv.innerHTML += `
-                <div class="bdor-result-line" style="color:${color};">
-                    <b>${posicoes[i]} Lugar: ${f.nome}</b>
-                    <span class="bdor-stats-sub">Estatísticas: ${f.g}G | ${f.a}A | ${f.t}🏆 (${f.c})</span>
+                <div class="bdor-result-line" style="color:${color}; padding: 8px 0; border-bottom: 1px solid #ddd; font-size: 13px;">
+                    <b style="font-size: 14px;">${posicoes[i]} Lugar: ${f.nome}</b><br>
+                    <span style="font-size: 11px; color: #555; font-weight: bold;">Estats: ${f.g}G | ${f.a}A | ${f.t}🏆 (${f.c})</span>
                 </div>`; 
                 
                 if(i === 4) {
@@ -623,8 +766,6 @@
         });
     }
 
-    window.fecharBdor = function() { document.getElementById('bdor-section').style.display = 'none'; mostrarRival(); }
-
     function mostrarRival() {
         document.getElementById('riv-name').innerText = rival.nome;
         document.getElementById('riv-ovr').innerText = rival.ovr;
@@ -636,69 +777,184 @@
         
         let txt = "A corrida pelo topo segue acirrada!";
         if(window.tempBdorData.euGanhei) txt = "✨ VOCÊ FOI DECISIVO E LEVOU A BOLA DE OURO!";
-        else if (window.tempBdorData.rivalGanhou) txt = "🤬 SEU RIVAL VENCEU! Os números e títulos dele falaram mais alto.";
+        else if (window.tempBdorData.rivalGanhou) { txt = "🤬 SEU RIVAL VENCEU! Os números e títulos dele falaram mais alto."; p.emocao = "Triste 😢"; }
         
         document.getElementById('riv-text').innerText = txt;
         document.getElementById('rival-section').style.display = 'flex';
         atualizarUI();
     }
 
-    window.fecharRival = function() { document.getElementById('rival-section').style.display = 'none'; if (Math.random() < 0.6) abrirEntrevista(); else abrirMercado(); }
+    window.fecharBdor = function() {
+        document.getElementById('bdor-section').style.display = 'none';
+        mostrarRival();
+    }
+
+    window.fecharRival = function() {
+        document.getElementById('rival-section').style.display = 'none';
+        if (Math.random() < 0.8 && dramasDisponiveis.length > 0) abrirEntrevista();
+        else { if (p.age < 39) abrirMercado(); else finalizarCarreira(); }
+    }
 
     function abrirEntrevista() {
         if(dramasDisponiveis.length === 0) inicializarDramas(); 
         entrevistaAtual = dramasDisponiveis.pop();
+        
         document.getElementById('action-area').style.display = 'none';
         document.getElementById('choice-text').innerText = entrevistaAtual.texto;
         document.getElementById('btn-a').innerHTML = "<b>A)</b> " + entrevistaAtual.A_texto;
-        document.getElementById('choice-buttons-block').style.display = 'flex'; document.getElementById('btn-choice-next').style.display = 'none'; document.getElementById('choice-section').style.display = 'flex';
+        
+        if(entrevistaAtual.B_texto) {
+            document.getElementById('btn-b').style.display = "block";
+            document.getElementById('btn-b').innerHTML = "<b>B)</b> " + entrevistaAtual.B_texto;
+        } else { document.getElementById('btn-b').style.display = "none"; }
+        
+        if(entrevistaAtual.C_texto) {
+            document.getElementById('btn-c').style.display = "block";
+            document.getElementById('btn-c').innerHTML = "<b>C)</b> " + entrevistaAtual.C_texto;
+        } else { document.getElementById('btn-c').style.display = "none"; }
+
+        document.getElementById('choice-buttons-block').style.display = 'flex';
+        document.getElementById('btn-choice-next').style.display = 'none';
+        document.getElementById('choice-section').style.display = 'flex';
     }
 
     window.escolherOpcao = function(opt) {
-        let efs = entrevistaAtual[opt + '_efeitos']; let txt = entrevistaAtual[opt + '_msg'];
-        if(efs) { if(efs.ovr) p.ovr += efs.ovr; if(efs.banco) p.banco += efs.banco; if(efs.emocao) p.emocao = efs.emocao; }
-        document.getElementById('choice-text').innerHTML = txt; document.getElementById('choice-buttons-block').style.display = 'none'; document.getElementById('btn-choice-next').style.display = 'block'; atualizarUI();
+        let efs = entrevistaAtual[opt + '_efeitos']; let textoConsequencia = entrevistaAtual[opt + '_msg'];
+
+        if(efs) {
+            if(efs.ovr) p.ovr += efs.ovr; if(efs.phy) p.phy += efs.phy; if(efs.pac) p.pac += efs.pac;
+            if(efs.banco) p.banco += efs.banco; if(efs.fama) p.fama += efs.fama; if(efs.emocao) p.emocao = efs.emocao;
+            if(efs.teamChemistry === "zerar") p.teamChemistry = 0;
+            if(efs.rescisao) { p.club = "Sem Clube"; p.salario = 0; }
+            
+            if(efs.forcarElite) {
+                let novoClube = eliteClubs.length > 0 ? eliteClubs[Math.floor(Math.random() * eliteClubs.length)] : "Real Madrid 🇪🇸";
+                p.club = novoClube; p.salario = 120000; p.teamChemistry = 0;
+                textoConsequencia += `<br><br><span style='color:#15803d'>🚀 <b>FENÔMENO MUNDIAL:</b> A fama foi tanta que o <b>${novoClube}</b> te contratou imediatamente!</span>`;
+            }
+
+            if(efs.riscoCurandeiro) {
+                if(p.banco < 100000) textoConsequencia = "Você não tem dinheiro! Foi obrigado a operar.";
+                else { p.banco -= 100000; if(Math.random()>0.5){ p.ovr+=2; textoConsequencia = "Milagre! A acupuntura curou rápido (+2 OVR)."; } else { p.ovr-=3; textoConsequencia = "Piorou a lesão! Caiu seu nível de jogo."; } }
+            }
+        }
+
+        let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoConsequencia.includes("PÉSSIMO");
+        if (precisaPR && p.staff.pr > 0) {
+            let chanceAbafar = prChances[p.staff.pr]; 
+            if (Math.random() * 100 <= chanceAbafar) { p.emocao = "Focado 🧘"; textoConsequencia += `<br><br><span style='color:#15803d'>📢 Sua assessoria abafou a crise!</span>`; } 
+            else textoConsequencia += `<br><br><span style='color:#b91c1c'>📉 <b>FALHA NA ASSESSORIA:</b> A crise vazou.</span>`;
+        }
+        
+        document.getElementById('choice-text').innerHTML = textoConsequencia; document.getElementById('choice-buttons-block').style.display = 'none'; document.getElementById('btn-choice-next').style.display = 'block'; atualizarUI();
     }
 
-    window.fecharJanelaConsequencia = function() { document.getElementById('choice-section').style.display = 'none'; abrirMercado(); }
+    window.fecharJanelaConsequencia = function() { document.getElementById('choice-section').style.display = 'none'; document.getElementById('action-area').style.display = 'block'; if (p.age < 39) abrirMercado(); else finalizarCarreira(); }
 
     function abrirMercado() {
-        if (p.age >= 39) { finalizarCarreira(); return; }
         document.getElementById('action-area').style.display = 'none'; document.getElementById('market-panel').style.display = 'block';
         let list = document.getElementById('offer-list'); list.innerHTML = "";
-        let pool = p.ovr >= 85 ? eliteClubs : tierPrata;
+        let pool = [];
+        if(p.club === "Sem Clube" || p.ovr < 75) pool = tierBronze; else if (p.ovr >= 85) pool = eliteClubs; else pool = tierPrata;
+
         for(let i=0; i<2; i++) {
-            let c = pool[Math.floor(Math.random() * pool.length)]; 
-            let salBase = Math.floor(p.ovr * 0.1); if(eliteClubs.includes(c)) salBase = Math.floor(p.ovr * 1.5);
-            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">€${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', ${salBase})">Aceitar Proposta</div></div>`;
+            let c = pool[Math.floor(Math.random() * pool.length)]; let val = Math.floor(Math.random() * 30) + (p.ovr > 85 ? 40 : 5);
+            let salBase = Math.floor(p.ovr * 0.1); if(tierPrata.includes(c)) salBase = Math.floor(p.ovr * 0.5); if(eliteClubs.includes(c)) salBase = Math.floor(p.ovr * 1.5) + (p.fama > 5000000 ? 50 : 0);
+            if(c && c.includes("🇸🇦") && p.ovr > 80) salBase *= 3; if(salBase < 3) salBase = 3;
+            list.innerHTML += `<div class="offer-row"><div class="offer-club">${c}</div><div class="offer-sal">Sálário: €${salBase}k/sem</div><div class="offer-val" onclick="aceitarTransf('${c}', '${val}M', ${val}, ${salBase})">🤝 Aceitar (€${val}M)</div></div>`;
         }
-        window.salarioRenovacao = Math.floor(p.salario / 1000 * 1.10);
-        document.getElementById('btn-renew').innerText = `RENOVAR COM CLUBE ATUAL (€${window.salarioRenovacao}k/sem)`; 
+
+        let btnRenew = document.getElementById('btn-renew');
+        if(p.club === "Sem Clube") { 
+            btnRenew.innerText = "FICAR DESEMPREGADO"; 
+            btnRenew.style.background = "#b91c1c"; 
+            window.salarioRenovacao = 0;
+        } else { 
+            let currentSalK = Math.floor(p.salario / 1000);
+            let salBaseIdeal = Math.floor(p.ovr * 0.1); 
+            if(tierPrata.includes(p.club)) salBaseIdeal = Math.floor(p.ovr * 0.5); 
+            if(eliteClubs.includes(p.club)) salBaseIdeal = Math.floor(p.ovr * 1.5) + (p.fama > 5000000 ? 50 : 0);
+            if(p.club && p.club.includes("🇸🇦") && p.ovr > 80) salBaseIdeal *= 3;
+            
+            let propostaClube = currentSalK;
+            let leagueDiff = eliteClubs.includes(p.club) ? 88 : (tierPrata.includes(p.club) ? 76 : 65);
+            
+            if (p.ovr >= leagueDiff - 2) {
+                propostaClube = Math.max(currentSalK * 1.15, salBaseIdeal * 1.15);
+            } else {
+                propostaClube = Math.max(currentSalK * 1.05, salBaseIdeal);
+            }
+            
+            window.salarioRenovacao = Math.floor(propostaClube);
+            btnRenew.innerText = `RENOVAR COM CLUBE ATUAL (€${window.salarioRenovacao}k/sem)`; 
+            btnRenew.style.background = "#15803d"; 
+        }
     }
 
-    window.aceitarTransf = function(c, salK) { p.club = c; p.salario = salK * 1000; p.teamChemistry = 0; document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
-    window.ficarNoTime = function() { p.teamChemistry += 20; p.salario = window.salarioRenovacao * 1000; document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
+    window.aceitarTransf = function(c, strVal, numVal, salK) { p.club = c; p.salario = salK * 1000; p.teamChemistry = 0; document.getElementById('market-panel').style.display = 'none'; document.getElementById('action-area').style.display = 'flex'; }
+    
+    window.ficarNoTime = function() { 
+        if(p.club !== "Sem Clube") { 
+            p.teamChemistry += 20; 
+            p.salario = (window.salarioRenovacao || Math.floor(p.salario / 1000 * 1.10)) * 1000; 
+        } 
+        document.getElementById('market-panel').style.display = 'none'; 
+        document.getElementById('action-area').style.display = 'flex'; 
+    }
     
     function finalizarCarreira() {
         document.getElementById(`club-cell-9`).innerHTML = formatarClubeHTML("Aposentadoria", "");
-        document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML("Dono de SAF", "");
-        document.getElementById('event-section').innerHTML = `🏁 FIM DE CARREIRA!<br>Sua fortuna: <b>${formatMoeda(p.banco + p.investido)}</b>`;
+        let cargoFinal = p.banco > 20000000 ? "Empresário/Dono SAF" : "Treinador / Comentarista";
+        if(p.banco < 0) cargoFinal = "Falido / Influencer Menor";
+        document.getElementById(`club-cell-10`).innerHTML = formatarClubeHTML(cargoFinal, "");
+        if (p.totals.dom + p.totals.int > 5 || p.banco > 15000000 || p.staff.psycho >= 4) p.emocao = "Realizado 😎";
+        let veredito = p.totals.bdor > 0 ? "👑 LENDÁRIO! Você escreveu seu nome na história do futebol." : "⚽ GRANDE CARREIRA. Um atleta memorável.";
+        if(p.club === "Sem Clube") veredito = "❌ FIM MELANCÓLICO. Você saiu do futebol pela porta dos fundos.";
+        
+        document.getElementById('event-section').innerHTML = `🏁 FIM DE JOGO!<br>${veredito}<br><br>Sua fortuna final (Conta + Fundo): <b>${formatMoeda(p.banco + p.investido)}</b>`;
         document.getElementById('event-section').style.display = 'block'; 
         
-        document.getElementById('action-area').innerHTML = `<button class="btn-continue" style="background:#8b5cf6;" onclick="iniciarModoSAF()">TORNAR-SE DONO SAF</button>`;
-        document.getElementById('action-area').style.display = 'flex'; atualizarUI();
+        // BOTÕES FINAIS: NOVA CARREIRA OU MODO SAF
+        document.getElementById('action-area').innerHTML = `
+            <button class="btn-continue" style="background:#8b5cf6;" onclick="iniciarModoSAF()">TORNAR-SE DONO SAF</button>
+            <button class="btn-continue" style="margin-top:10px; background:#1e293b; font-size:14px;" onclick="location.reload()">NOVA CARREIRA DE JOGADOR</button>
+        `;
+        
+        atualizarUI(); checarRecordes();
     }
 
     // ==========================================
-    // INICIAÇÃO DO MODO SAF / MANAGER
+    // TRANSIÇÃO PARA O MODO SAF / MANAGER
     // ==========================================
     window.iniciarModoSAF = function() {
-        document.getElementById('modo-carreira').style.display = 'none'; document.body.style.backgroundColor = '#0f172a'; 
-        saf.ativo = true; saf.caixa = p.banco + p.investido;
-        if(saf.caixa > 150000000) { saf.divisaoAtual = "Série A 🇧🇷"; saf.ovrTime = 78; saf.reputacao = 4; saf.folhaSalarial = 8500000; saf.patrocinio = { nome: "Multinacional Master", valorAno: 15000000 }; }
-        else if(saf.caixa > 50000000) { saf.divisaoAtual = "Série B 🇧🇷"; saf.ovrTime = 73; saf.reputacao = 3; saf.folhaSalarial = 3500000; saf.patrocinio = { nome: "Marca Nacional", valorAno: 6000000 }; }
+        document.getElementById('modo-carreira').style.display = 'none';
+        document.body.style.backgroundColor = '#0f172a'; 
         
-        atualizarTelaSAF(); document.getElementById('modo-manager').style.display = 'flex';
+        saf.ativo = true;
+        saf.caixa = p.banco + p.investido;
+        
+        if(saf.caixa > 150000000) { 
+            saf.divisaoAtual = "Série A 🇧🇷"; 
+            saf.ovrTime = 78; 
+            saf.reputacao = 4;
+            saf.folhaSalarial = 8500000;
+            saf.patrocinio = { nome: "Multinacional Master", valorAno: 15000000 };
+        } else if(saf.caixa > 50000000) { 
+            saf.divisaoAtual = "Série B 🇧🇷"; 
+            saf.ovrTime = 73; 
+            saf.reputacao = 3;
+            saf.folhaSalarial = 3500000;
+            saf.patrocinio = { nome: "Marca Nacional", valorAno: 6000000 };
+        } else {
+            saf.divisaoAtual = "Série C 🇧🇷"; 
+            saf.ovrTime = 68; 
+            saf.reputacao = 2;
+            saf.folhaSalarial = 1200000;
+            saf.patrocinio = { nome: "Empresa Local", valorAno: 2500000 };
+        }
+        
+        atualizarTelaSAF();
+        document.getElementById('modo-manager').style.display = 'flex';
     }
 
     function atualizarTelaSAF() {
@@ -706,14 +962,51 @@
         document.getElementById('saf-caixa').innerText = formatMoeda(saf.caixa);
         document.getElementById('saf-ano').innerText = `Ano ${saf.temporada}`;
         document.getElementById('saf-rep').innerText = "⭐".repeat(saf.reputacao);
+        
         document.getElementById('saf-ovr-time').innerText = saf.ovrTime;
-        document.getElementById('saf-salario').innerText = `€${(saf.folhaSalarial/1000000).toFixed(1)}M/mês`;
-        document.getElementById('saf-lvl-estadio').innerText = `Nível ${saf.infra.estadio}`;
-        document.getElementById('saf-lvl-base').innerText = `Nível ${saf.infra.base}`;
-        document.getElementById('saf-patrocinio').innerHTML = `${saf.patrocinio.nome} <span style="color:#10b981">(+€${(saf.patrocinio.valorAno/1000000).toFixed(1)}M)</span>`;
+        document.querySelector('.dash-card:nth-child(1) .dash-info').innerHTML = `Força Geral (OVR): <b>${saf.ovrTime}</b><br>Craque: <b>Em formação</b><br>Salários: <b style="color:#ef4444">€${(saf.folhaSalarial/1000000).toFixed(1)}M/mês</b>`;
+        document.querySelector('.dash-card.finance .dash-info').innerHTML = `Estádio: <b>Nível ${saf.infra.estadio}</b><br>Base: <b>Nível ${saf.infra.base}</b><br>Patrocínio: <b>${saf.patrocinio.nome}</b> (<span style="color:#10b981">+€${(saf.patrocinio.valorAno/1000000).toFixed(1)}M/ano</span>)`;
     }
 
-    document.getElementById('btn-main').innerText = "INICIAR CARREIRA (LOCAL)"; document.getElementById('btn-main').disabled = false;
+    async function checarRecordes() {
+        let playerID = `${p.origin} ${p.archetype.toUpperCase()}`;
+        if(p.prime > records.ovr.val) records.ovr = { val: p.prime, name: playerID }; if(p.totals.gol > records.gol.val) records.gol = { val: p.totals.gol, name: playerID };
+        try { localStorage.setItem('mfc_records_vmax', JSON.stringify(records)); } catch(e) {}
+        document.getElementById('rk-ovr-val').innerText = records.ovr.val; document.getElementById('rk-gol-val').innerText = records.gol.val;
+        if(db) try { await addDoc(collection(db, "hall_da_fama_vmax"), { nome: playerID, ovr: p.prime, gols: p.totals.gol, data: new Date() }); } catch (e) { console.error(e); }
+    }
+
+    window.abrirRanking = function() { window.mostrarTabRank('local'); document.getElementById('modal-rank').style.display = 'flex'; }
+    window.fecharRanking = function() { document.getElementById('modal-rank').style.display = 'none'; }
+    
+    async function carregarRankingGlobal() {
+        if(!db) return; document.getElementById('gb-ovr').innerText = "Carregando Nuvem..."; document.getElementById('gb-gols').innerText = "Carregando Nuvem...";
+        try {
+            const qOvr = query(collection(db, "hall_da_fama_vmax"), orderBy("ovr", "desc"), limit(1)); const snapOvr = await getDocs(qOvr);
+            if (!snapOvr.empty) { let d = snapOvr.docs[0].data(); document.getElementById('gb-ovr').innerText = `${d.nome} (${d.ovr})`; }
+            const qGols = query(collection(db, "hall_da_fama_vmax"), orderBy("gols", "desc"), limit(1)); const snapGols = await getDocs(qGols);
+            if (!snapGols.empty) { let d = snapGols.docs[0].data(); document.getElementById('gb-gols').innerText = `${d.nome} (${d.gols})`; }
+        } catch(e) { document.getElementById('gb-ovr').innerText = "Erro ao buscar."; document.getElementById('gb-gols').innerText = "Erro ao buscar."; }
+    }
+
+    try { document.getElementById('rk-ovr-val').innerText = records.ovr.val; document.getElementById('rk-gol-val').innerText = records.gol.val; } catch(e){}
+
+    async function iniciarCarregamentoFirebase() {
+        try {
+            const timesSnap = await getDocs(collection(db, "times"));
+            timesSnap.forEach(doc => { let t = doc.data(); if(t.categoria === "Elite") eliteClubs.push(t.nome); else if(t.categoria === "Prata") tierPrata.push(t.nome); else tierBronze.push(t.nome); });
+            
+            const dramasSnap = await getDocs(collection(db, "eventos"));
+            dramasSnap.forEach(doc => { bancoDramasOriginal.push(doc.data()); });
+            
+            document.getElementById('btn-main').innerText = "INICIAR CARREIRA"; document.getElementById('btn-main').disabled = false;
+        } catch(e) { 
+            console.warn("Usando banco de dados local reserva devido a timeout/restrição de rede na nuvem.");
+            document.getElementById('btn-main').innerText = "INICIAR CARREIRA (LOCAL)"; 
+            document.getElementById('btn-main').disabled = false;
+        }
+    }
+    iniciarCarregamentoFirebase();
 </script>
 </body>
 </html>
