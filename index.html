@@ -441,18 +441,10 @@
         "Kvaratskhelia", "Rodrygo", "Pedri", "Gavi", "Vitinha", "Nicolò Barella", "Julian Alvarez"
     ];
 
-    // Cérebro do Modo SAF / Manager
     let saf = {
-        ativo: false,
-        temporada: 1,
-        caixa: 0,
-        divisaoAtual: "Série C 🇧🇷",
-        ovrTime: 68,
-        reputacao: 2, 
-        infra: { estadio: 1, base: 1 },
-        folhaSalarial: 1200000, 
-        patrocinio: { nome: "Empresa Local", valorAno: 2500000 },
-        historico: []
+        ativo: false, temporada: 1, caixa: 0, divisaoAtual: "Série C 🇧🇷", ovrTime: 68,
+        reputacao: 2, infra: { estadio: 1, base: 1 }, folhaSalarial: 1200000, 
+        patrocinio: { nome: "Empresa Local", valorAno: 2500000 }, historico: []
     };
 
     let p = {
@@ -462,7 +454,6 @@
         totals: { dom: 0, int: 0, app: 0, gol: 0, ass: 0, cont: 0, wc: 0, ca: 0, bdor: 0, yc: 0, rc: 0 }
     };
     
-    // VARIÁVEL DO RIVAL ATUALIZADA (COMPLETA)
     let rival = { nome: "O Prodígio", club: "Real Madrid 🇪🇸", ovr: 72, gols: 0, ass: 0, tDom: 0, tInt: 0, bdor: 0, ativo: false };
     
     const ages = ["Base", 18, 21, 24, 27, 30, 33, 36, 39, "Apadr", "Trein"];
@@ -630,14 +621,12 @@
 
         let apps3y = 140; if(p.club === "Sem Clube") apps3y = 0;
 
-        // --- INICIO DA CORREÇÃO DE PRODUÇÃO E CENTROAVANTE ---
         let multiProducao = isElite ? 0.6 : (isPrata ? 0.75 : 0.9);
         let rendimentoBase = (p.ovr / 100); 
 
         let baseGol = (rendimentoBase * 0.9) * multiProducao;
         let baseAss = (rendimentoBase * 0.6) * multiProducao;
 
-        // Bônus controlados para os Arquétipos, direto na base
         if(p.archetype === 'matador') { baseGol *= 1.15; baseAss *= 0.8; } 
         else if (p.archetype === 'armador') { baseAss *= 1.25; baseGol *= 0.8; }
 
@@ -647,22 +636,29 @@
         if(p.traits.some(t => t.id === 'arrancada')) { baseGol += 0.04; baseAss += 0.03; }
         if(p.traits.some(t => t.id === 'driblador')) { baseGol += 0.06; }
 
-        // Tetos por Temporada (Garante Realismo - Impede 180 gols)
         let tetoGolsTemporada = isElite ? 40 : 25; 
         if(p.ovr >= 95) tetoGolsTemporada = 50; 
         let tetoAssistsTemporada = 20;
 
         let gol3y = 0; let ass3y = 0;
         if(apps3y > 0) {
-            // Usa Math.min para travar os gols no teto se o cálculo passar da realidade
             gol3y = Math.floor(Math.min(apps3y * baseGol, tetoGolsTemporada * 3) * (Math.random() * 0.2 + 0.9));
             ass3y = Math.floor(Math.min(apps3y * baseAss, tetoAssistsTemporada * 3) * (Math.random() * 0.2 + 0.9));
         }
 
-        // Penalidade de Juventude
-        if (p.age <= 18) { gol3y = Math.floor(gol3y * 0.5); ass3y = Math.floor(ass3y * 0.5); } 
-        else if (p.age === 21) { gol3y = Math.floor(gol3y * 0.8); }
-        // --- FIM DA CORREÇÃO DE PRODUÇÃO E CENTROAVANTE ---
+        // --- EXCEÇÃO PARA JOGADORES RAROS E PRODÍGIOS ---
+        let youthPenalty = 1.0;
+        if (p.age <= 18) {
+            // Se for prodígio ou já tiver OVR 82+, o corte é de apenas 15%. Se for comum, cai pela metade.
+            youthPenalty = (p.isProdigy || p.ovr >= 82) ? 0.85 : 0.5; 
+        } else if (p.age === 21) {
+            // Aos 21, o prodígio joga sem limites. O comum ainda sofre 20% de inconstância.
+            youthPenalty = (p.isProdigy || p.ovr >= 85) ? 1.0 : 0.8; 
+        }
+
+        gol3y = Math.floor(gol3y * youthPenalty);
+        ass3y = Math.floor(ass3y * youthPenalty);
+        // --- FIM DA EXCEÇÃO ---
 
         p.totals.app += apps3y; p.totals.gol += gol3y; p.totals.ass += ass3y;
         
@@ -816,7 +812,6 @@
         if(dramasDisponiveis.length === 0) inicializarDramas(); 
         entrevistaAtual = dramasDisponiveis.pop();
         
-        // --- PROTEÇÃO CONTRA EVENTOS QUEBRADOS DO FIREBASE ---
         if(!entrevistaAtual || !entrevistaAtual.A_texto) {
             fecharJanelaConsequencia();
             return;
@@ -842,7 +837,6 @@
     }
 
     window.escolherOpcao = function(opt) {
-        // --- PROTEÇÃO DE LEITURA DAS CHAVES DO FIREBASE ---
         let efs = entrevistaAtual[opt + '_efeitos'] || {}; 
         let textoConsequencia = entrevistaAtual[opt + '_msg'] || "Escolha registrada pelo clube.";
 
@@ -864,7 +858,6 @@
             }
         }
 
-        // --- PROTEÇÃO DO INCLUDES PARA EVITAR CRASH ---
         let textoSeguro = textoConsequencia ? textoConsequencia.toString() : "";
         let precisaPR = p.emocao === "Ressaca 🥴" || p.emocao === "Triste 😢" || textoSeguro.includes("PÉSSIMO");
         
@@ -1021,10 +1014,9 @@
             timesSnap.forEach(doc => { let t = doc.data(); if(t.categoria === "Elite") eliteClubs.push(t.nome); else if(t.categoria === "Prata") tierPrata.push(t.nome); else tierBronze.push(t.nome); });
             
             const dramasSnap = await getDocs(collection(db, "eventos"));
-            // --- PROTEÇÃO AO CARREGAR O FIREBASE ---
             dramasSnap.forEach(doc => { 
                 let d = doc.data();
-                if(d && d.A_texto) { // Só carrega o drama se ele tiver estrutura válida
+                if(d && d.A_texto) { 
                     bancoDramasOriginal.push(d); 
                 }
             });
