@@ -3,188 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V-MAX Club Manager</title>
+    <title>V-MAX Club Manager - PRO</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Oswald:wght@500;700&display=swap');
 
         :root {
-            --bg-dark: #0f172a;
+            --bg-base: #0f172a;
             --bg-panel: #1e293b;
             --bg-card: #334155;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #3b82f6;
             --success: #10b981;
+            --warning: #f59e0b;
             --danger: #ef4444;
-            --gold: #fbbf24;
+            --sidebar-width: 260px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 10px; }
+        /* SCROLLBAR CUSTOMIZADA */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* SIDEBAR LATERAL FIXA */
+        .sidebar { width: var(--sidebar-width); background: var(--bg-panel); border-right: 1px solid var(--bg-card); display: flex; flex-direction: column; }
+        .brand { padding: 25px 20px; border-bottom: 1px solid var(--bg-card); }
+        .brand h1 { font-family: 'Oswald', sans-serif; font-size: 28px; color: var(--accent); letter-spacing: 1px; }
+        .brand span { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 2px; }
         
-        .manager-container { width: 100%; max-width: 480px; background-color: var(--bg-panel); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #475569;}
-
-        /* HEADER DO CLUBE */
-        .club-header { background: linear-gradient(135deg, #1e3a8a, #0f172a); padding: 20px 15px; text-align: center; border-bottom: 3px solid var(--gold); position: relative;}
-        .club-name { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
-        .club-div { font-size: 13px; color: #cbd5e1; font-weight: 600; background: rgba(255,255,255,0.1); display: inline-block; padding: 4px 10px; border-radius: 20px;}
-        .manager-name { position: absolute; top: 10px; right: 15px; font-size: 11px; color: var(--text-muted); font-weight: bold;}
-
-        /* NAVEGAÇÃO TIPO ERP */
-        .nav-bar { display: flex; background: #0f172a; padding: 5px; border-bottom: 1px solid var(--bg-card); overflow-x: auto; scrollbar-width: none;}
-        .nav-btn { flex: 1; min-width: 80px; background: transparent; border: none; color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 10px 5px; cursor: pointer; transition: 0.3s; border-radius: 6px; text-align: center;}
-        .nav-btn.active { background: var(--accent); color: white; }
-        .nav-btn:hover:not(.active) { background: var(--bg-card); color: white; }
-
-        /* ÁREA PRINCIPAL / DASHBOARD */
-        .main-content { padding: 15px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* WIDGETS GERAIS */
-        .widget { background: var(--bg-card); border-radius: 8px; padding: 12px; border: 1px solid #475569; position: relative; overflow: hidden;}
-        .widget-title { font-family: 'Oswald', sans-serif; font-size: 14px; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;}
-        .widget-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); }
-        .widget.finance .widget-accent { background: var(--success); }
-        .widget.match .widget-accent { background: var(--danger); }
-
-        /* RESUMO DA PRÓXIMA PARTIDA */
-        .match-card { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #475569;}
-        .team-badge { text-align: center; width: 40%;}
-        .team-badge h4 { font-family: 'Oswald', sans-serif; font-size: 14px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        .team-ovr { font-size: 12px; color: var(--gold); font-weight: bold; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;}
-        .match-vs { width: 20%; text-align: center; font-size: 11px; color: var(--text-muted); font-weight: bold; display: flex; flex-direction: column; gap: 5px;}
-        .btn-play { background: var(--danger); color: white; border: none; padding: 8px; font-weight: 900; border-radius: 4px; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase;}
-        .btn-play:disabled { background: #64748b; cursor: not-allowed; }
-
-        /* GRID FINANCEIRO E DE DADOS */
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .data-box { background: #1e293b; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #475569;}
-        .data-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: bold; margin-bottom: 4px;}
-        .data-value { font-size: 16px; font-weight: 700; font-family: 'Oswald', sans-serif;}
-        .text-green { color: var(--success); } .text-red { color: var(--danger); }
-
-        /* LISTA ESTILO TABELA (ELENCO/CLASSIFICAÇÃO) */
-        .list-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #475569; font-size: 12px; align-items: center;}
-        .list-row:last-child { border-bottom: none; padding-bottom: 0; }
-        .list-col-main { font-weight: bold; flex-grow: 1; display: flex; flex-direction: column;}
-        .list-col-sub { font-size: 10px; color: var(--text-muted); font-weight: normal;}
-        .list-col-val { font-family: 'Oswald', sans-serif; color: var(--gold); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; min-width: 30px; text-align: center;}
+        .nav-menu { flex-grow: 1; padding: 20px 0; overflow-y: auto; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; }
+        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-main); }
+        .nav-item.active { background: rgba(59, 130, 246, 0.15); color: var(--accent); border-left-color: var(--accent); }
         
-        .action-btn { background: var(--accent); width: 100%; color: white; border: none; padding: 12px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; margin-top: 10px;}
+        /* ÁREA PRINCIPAL */
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         
-        #loading-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; font-family: 'Oswald', sans-serif; color: var(--gold); font-size: 20px;}
+        /* HEADER TOPO */
+        .top-header { height: 70px; background: var(--bg-panel); border-bottom: 1px solid var(--bg-card); display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
+        .club-info-top h2 { font-family: 'Oswald', sans-serif; font-size: 22px; color: var(--text-main); }
+        .club-info-top p { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+        .header-stats { display: flex; gap: 20px; }
+        .stat-badge { background: var(--bg-card); padding: 8px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border: 1px solid #475569;}
+        
+        /* CONTEÚDO DINÂMICO */
+        .content-area { padding: 30px; overflow-y: auto; flex-grow: 1; }
+        .tab-pane { display: none; animation: fadeIn 0.4s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* GRIDS DE LAYOUT DESKTOP */
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .panel { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--bg-card); padding: 20px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bg-card); padding-bottom: 15px; margin-bottom: 15px; }
+        .panel-title { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* TABELA DE CLASSIFICAÇÃO COMPLETA */
+        .league-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .league-table th { text-align: left; padding: 10px; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid var(--bg-card); }
+        .league-table td { padding: 12px 10px; border-bottom: 1px solid var(--bg-card); font-weight: 600; }
+        .league-table tr:hover { background: rgba(255,255,255,0.02); }
+        .col-center { text-align: center; }
+
+        /* ELENCO E TÁTICA */
+        .squad-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .player-card { background: var(--bg-card); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; }
+        .player-info h4 { font-size: 14px; margin-bottom: 4px; }
+        .player-info p { font-size: 11px; color: var(--text-muted); }
+        .player-stats { text-align: right; }
+        .player-ovr { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--success); }
+        .stamina-bar { width: 60px; height: 6px; background: #0f172a; border-radius: 3px; margin-top: 5px; overflow: hidden; }
+        .stamina-fill { height: 100%; background: var(--success); width: 100%; }
+
+        /* BOTÃO DE AÇÃO GLOBAL */
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+        .btn-primary:hover { background: #2563eb; }
+
+        /* TELA DE LOADING */
+        #global-loader { position: fixed; inset: 0; background: var(--bg-base); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 24px; }
     </style>
 </head>
 <body>
 
-<div class="manager-container">
-    <div id="loading-screen">Sincronizando com Banco de Dados...</div>
+<div id="global-loader">Sincronizando Banco de Dados...</div>
 
-    <!-- Cabeçalho Principal -->
-    <header class="club-header">
-        <div class="manager-name">Treinador: Marcelo</div>
-        <div class="club-name" id="ui-club-name">Carregando...</div>
-        <div class="club-div" id="ui-club-league">Buscando Liga...</div>
+<!-- SIDEBAR FIXA -->
+<aside class="sidebar">
+    <div class="brand">
+        <h1>V-MAX PRO</h1>
+        <span>Manager System</span>
+    </div>
+    <nav class="nav-menu">
+        <div class="nav-item active" onclick="switchTab('dashboard', this)">📺 Dashboard & Liga</div>
+        <div class="nav-item" onclick="switchTab('tactics', this)">⚽ Tática & Elenco</div>
+        <div class="nav-item" onclick="switchTab('training', this)">💪 Treino & D.M.</div>
+        <div class="nav-item" onclick="switchTab('finance', this)">🏢 Finanças & Patrocínio</div>
+        <div class="nav-item" onclick="switchTab('market', this)">🛒 Mercado da Bola</div>
+    </nav>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<div class="main-wrapper">
+    
+    <!-- HEADER -->
+    <header class="top-header">
+        <div class="club-info-top">
+            <h2 id="ui-club-name">Carregando Clube...</h2>
+            <p id="ui-club-league">Buscando Liga...</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-badge">💰 <span id="ui-balance" style="color: var(--success);">€ 0</span></div>
+            <div class="stat-badge">👥 <span id="ui-payroll" style="color: var(--danger);">€ 0/mês</span></div>
+            <button class="btn-primary" onclick="avancarRodada()">Avançar Rodada ▶</button>
+        </div>
     </header>
 
-    <!-- Navegação (Abas) -->
-    <nav class="nav-bar">
-        <button class="nav-btn active" onclick="switchTab('dashboard')">Visão Geral</button>
-        <button class="nav-btn" onclick="switchTab('squad')">Elenco</button>
-        <button class="nav-btn" onclick="switchTab('market')">Mercado</button>
-        <button class="nav-btn" onclick="switchTab('finance')">Finanças</button>
-    </nav>
-
-    <!-- CONTEÚDO: DASHBOARD (VISÃO GERAL) -->
-    <main class="main-content tab-content active" id="tab-dashboard">
+    <!-- CONTEÚDO DAS ABAS -->
+    <main class="content-area">
         
-        <!-- Próxima Partida -->
-        <div class="widget match">
-            <div class="widget-accent"></div>
-            <div class="widget-title">Próxima Partida <span>Rodada 1</span></div>
-            <div class="match-card">
-                <div class="team-badge">
-                    <h4 id="ui-home-team">V-MAX FC</h4>
-                    <span class="team-ovr" id="ui-home-ovr">OVR --</span>
+        <!-- ABA: DASHBOARD & LIGA -->
+        <div id="tab-dashboard" class="tab-pane active">
+            <div class="dashboard-grid">
+                
+                <!-- Coluna Esquerda: Tabela -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Tabela de Classificação Completa</h3>
+                    </div>
+                    <table class="league-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Clube</th>
+                                <th class="col-center">PTS</th>
+                                <th class="col-center">J</th>
+                                <th class="col-center">V</th>
+                                <th class="col-center">E</th>
+                                <th class="col-center">D</th>
+                                <th class="col-center">SG</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ui-league-table">
+                            <!-- Injetado via JS -->
+                            <tr>
+                                <td>1</td><td><strong style="color: var(--accent);">V-MAX FC</strong></td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td>
+                            </tr>
+                            <tr>
+                                <td>2</td><td>XV de Piracicaba</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="match-vs">
-                    <span>CASA</span>
-                    <button class="btn-play" onclick="simularPartida()" id="btn-simular">SIMULAR</button>
+
+                <!-- Coluna Direita: Próximo Jogo & Lideres -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="panel">
+                        <div class="panel-header"><h3 class="panel-title">Próxima Partida</h3></div>
+                        <div style="text-align: center; padding: 10px 0;">
+                            <h4 style="font-size: 20px; font-family: 'Oswald', sans-serif;" id="ui-next-match">V-MAX FC vs Adversário</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Rodada 1 - Estádio V-MAX</p>
+                        </div>
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-header"><h3 class="panel-title">Estatísticas da Liga</h3></div>
+                        <div style="font-size: 13px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--bg-card);">
+                                <span>⚽ Artilheiro:</span> <strong>Aguardando Jogos...</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>🛡️ Maior Desarme:</span> <strong>Aguardando Jogos...</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="team-badge">
-                    <h4 id="ui-away-team">XV de Piracicaba</h4>
-                    <span class="team-ovr" id="ui-away-ovr" style="color: #cbd5e1;">OVR --</span>
-                </div>
+
             </div>
         </div>
 
-        <!-- Indicadores de Performance -->
-        <div class="data-grid">
-            <div class="widget">
-                <div class="data-label">Formação Tática</div>
-                <div class="data-value" style="color: var(--accent);" id="ui-tatica">--</div>
-            </div>
-            <div class="widget">
-                <div class="data-label">Status do Elenco</div>
-                <div class="data-value text-green" id="ui-total-jogadores">-- Jogadores</div>
-            </div>
-        </div>
-
-        <!-- Caixa e Finanças Resumo -->
-        <div class="widget finance">
-            <div class="widget-accent"></div>
-            <div class="widget-title">Caixa do Clube <span>Ver Finanças</span></div>
-            <div class="data-grid">
-                <div class="data-box">
-                    <div class="data-label">Saldo Atual</div>
-                    <div class="data-value text-green" id="ui-balance">€ 0</div>
-                </div>
-                <div class="data-box">
-                    <div class="data-label">Folha Salarial (Mês)</div>
-                    <div class="data-value text-red" id="ui-payroll">€ 0</div>
+        <!-- ABA: TÁTICA E ELENCO -->
+        <div id="tab-tactics" class="tab-pane">
+            <div class="panel" style="margin-bottom: 20px;">
+                <div class="panel-header">
+                    <h3 class="panel-title">Formação Tática</h3>
+                    <select id="ui-formation-select" style="background: var(--bg-base); color: var(--text-main); border: 1px solid var(--bg-card); padding: 8px; border-radius: 4px;">
+                        <option value="4-3-3">4-3-3 Ofensivo</option>
+                        <option value="4-4-2">4-4-2 Clássico</option>
+                        <option value="3-5-2">3-5-2 Controle de Meio</option>
+                        <option value="5-3-2">5-3-2 Retranca</option>
+                    </select>
                 </div>
             </div>
-        </div>
-    </main>
 
-    <!-- CONTEÚDO: ELENCO E TÁTICAS -->
-    <main class="main-content tab-content" id="tab-squad">
-        <div class="widget">
-            <div class="widget-accent" style="background: var(--gold);"></div>
-            <div class="widget-title">Resumo do Elenco</div>
-            <div class="data-grid" style="margin-bottom: 15px;">
-                <div class="data-box"><div class="data-label">Força Geral (Média)</div><div class="data-value" style="color: var(--gold);" id="ui-squad-ovr">OVR --</div></div>
-                <div class="data-box"><div class="data-label">Formação</div><div class="data-value" id="ui-squad-tatica">--</div></div>
+            <h3 class="panel-title" style="margin-bottom: 15px;">Plantel Principal (11 Titulares)</h3>
+            <div class="squad-grid" id="ui-squad-grid">
+                <!-- Injetado via JS do Firebase -->
             </div>
-            <div class="widget-title" style="font-size: 11px;">Jogadores do Plantel</div>
-            
-            <div id="ui-squad-list">
-                <!-- Preenchido via Firebase -->
-            </div>
-            
         </div>
-    </main>
 
-    <!-- CONTEÚDO: MERCADO DA BOLA -->
-    <main class="main-content tab-content" id="tab-market">
-        <div class="widget">
-            <div class="widget-accent" style="background: #8b5cf6;"></div>
-            <div class="widget-title">Janela de Transferências</div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Em breve: Aqui você listará jogadores de outros times para fazer ofertas diretas ao clube deles.</p>
-            <div id="ui-market-list"></div>
+        <!-- OUTRAS ABAS (Placeholders estruturais) -->
+        <div id="tab-training" class="tab-pane">
+            <div class="panel"><h3 class="panel-title">Centro de Treinamento e Departamento Médico</h3><p style="margin-top: 15px; color: var(--text-muted);">Aqui você definirá a intensidade do treino. Treinos intensos evoluem os jogadores mais rápido, mas reduzem a Stamina e geram lesões graves.</p></div>
         </div>
-    </main>
+        <div id="tab-finance" class="tab-pane">
+            <div class="panel"><h3 class="panel-title">Gestão de Patrocínios e Bilheteria</h3><p style="margin-top: 15px; color: var(--text-muted);">Assine contratos. Cumpra metas para receber o prêmio final ou perca receita se for rebaixado.</p></div>
+        </div>
+        <div id="tab-market" class="tab-pane">
+            <div class="panel"><h3 class="panel-title">Mercado da Bola Nacional e Internacional</h3><p style="margin-top: 15px; color: var(--text-muted);">Busque atletas filtrados por OVR, Posição e Valor de Passe.</p></div>
+        </div>
 
-    <!-- CONTEÚDO: FINANÇAS E ESTÁDIO -->
-    <main class="main-content tab-content" id="tab-finance">
-        <div class="widget finance">
-            <div class="widget-accent"></div>
-            <div class="widget-title">Gestão Financeira & Patrimônio</div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Em breve: Controle de ingressos e upgrades do estádio.</p>
-        </div>
     </main>
 </div>
 
@@ -192,7 +223,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-    // Suas credenciais do Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
         authDomain: "copa-ae771.firebaseapp.com",
@@ -205,13 +235,12 @@
     let meuElenco = [];
     let folhaSalarial = 0;
 
-    // Conecta e busca os dados logo que a tela abre
     async function inicializarJogo() {
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             
-            // 1. Busca os dados do seu time (V-MAX FC)
+            // 1. Dados do Clube
             const timeRef = doc(db, "manager_times", "t_vmax");
             const timeSnap = await getDoc(timeRef);
             
@@ -219,65 +248,51 @@
                 meuTime = timeSnap.data();
                 document.getElementById('ui-club-name').innerText = meuTime.nome;
                 document.getElementById('ui-balance').innerText = formatMoeda(meuTime.orcamento);
-                document.getElementById('ui-tatica').innerText = meuTime.tatica;
-                document.getElementById('ui-squad-tatica').innerText = meuTime.tatica;
-                document.getElementById('ui-home-team').innerText = meuTime.nome;
-                document.getElementById('ui-home-ovr').innerText = "OVR " + meuTime.ovr_base;
                 
-                // Busca o nome da liga
-                const ligaSnap = await getDoc(doc(db, "manager_ligas", meuTime.liga_id));
-                if(ligaSnap.exists()) {
-                    document.getElementById('ui-club-league').innerText = ligaSnap.data().nome + " - Temp. 1";
+                // Define tática no select
+                const selectTatica = document.getElementById('ui-formation-select');
+                for(let i=0; i<selectTatica.options.length; i++){
+                    if(selectTatica.options[i].value === meuTime.tatica) selectTatica.selectedIndex = i;
                 }
+                
+                const ligaSnap = await getDoc(doc(db, "manager_ligas", meuTime.liga_id));
+                if(ligaSnap.exists()) document.getElementById('ui-club-league').innerText = ligaSnap.data().nome;
             }
 
-            // 2. Busca o elenco do seu time
+            // 2. Montar Grid do Elenco
             const qJogadores = query(collection(db, "manager_jogadores"), where("time_id", "==", "t_vmax"));
             const jogadoresSnap = await getDocs(qJogadores);
             
-            let listaHTML = "";
-            let somaOvr = 0;
-
+            let gridHTML = "";
             jogadoresSnap.forEach((doc) => {
                 let jog = doc.data();
                 meuElenco.push(jog);
                 folhaSalarial += jog.salario_mensal;
-                somaOvr += jog.ovr;
 
-                // Monta a linha do jogador para a aba Elenco
-                listaHTML += `
-                <div class="list-row">
-                    <span class="list-col-main">
-                        ${jog.posicao} - ${jog.nome} 
-                        <span class="list-col-sub">Idade: ${jog.idade} | Salário: ${formatMoeda(jog.salario_mensal)}/m</span>
-                    </span>
-                    <span class="list-col-val">${jog.ovr}</span>
+                // Físico inicial 100% (Você vai manipular isso no DM depois)
+                let stamina = 100;
+                let corStamina = stamina > 70 ? 'var(--success)' : (stamina > 40 ? 'var(--warning)' : 'var(--danger)');
+
+                gridHTML += `
+                <div class="player-card">
+                    <div class="player-info">
+                        <h4>${jog.posicao} - ${jog.nome}</h4>
+                        <p>Idade: ${jog.idade} | ${formatMoeda(jog.salario_mensal)}/m</p>
+                    </div>
+                    <div class="player-stats">
+                        <div class="player-ovr">${jog.ovr}</div>
+                        <div class="stamina-bar" title="Físico: ${stamina}%"><div class="stamina-fill" style="width: ${stamina}%; background: ${corStamina};"></div></div>
+                    </div>
                 </div>`;
             });
 
-            // Atualiza os dados calculados na tela
-            document.getElementById('ui-squad-list').innerHTML = listaHTML;
-            document.getElementById('ui-payroll').innerText = formatMoeda(folhaSalarial);
-            document.getElementById('ui-total-jogadores').innerText = meuElenco.length + " Jogadores";
-            
-            if(meuElenco.length > 0) {
-                let mediaOvr = Math.floor(somaOvr / meuElenco.length);
-                document.getElementById('ui-squad-ovr').innerText = "OVR " + mediaOvr;
-            }
-
-            // 3. Puxa um adversário temporário para a tela inicial
-            const advSnap = await getDoc(doc(db, "manager_times", "t_xvpiracicaba"));
-            if(advSnap.exists()) {
-                document.getElementById('ui-away-team').innerText = advSnap.data().nome;
-                document.getElementById('ui-away-ovr').innerText = "OVR " + advSnap.data().ovr_base;
-            }
-
-            // Esconde a tela de carregamento
-            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('ui-squad-grid').innerHTML = gridHTML;
+            document.getElementById('ui-payroll').innerText = formatMoeda(folhaSalarial) + "/mês";
+            document.getElementById('global-loader').style.display = 'none';
 
         } catch (error) {
-            console.error("Erro ao puxar dados:", error);
-            document.getElementById('loading-screen').innerHTML = "<span style='color:red;'>Erro de Conexão com o Firebase. Verifique o console.</span>";
+            console.error(error);
+            document.getElementById('global-loader').innerHTML = "<span style='color:var(--danger);'>Erro crítico ao conectar no banco de dados.</span>";
         }
     }
 
@@ -288,26 +303,18 @@
         return "€ " + num;
     }
 
-    window.switchTab = function(tabId) {
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        event.target.classList.add('active');
+    window.switchTab = function(tabId, element) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+        
+        element.classList.add('active');
         document.getElementById('tab-' + tabId).classList.add('active');
     }
 
-    window.simularPartida = function() {
-        let btn = document.getElementById('btn-simular');
-        btn.innerText = "SIMULANDO...";
-        btn.disabled = true;
-        
-        setTimeout(() => {
-            alert("A base de dados já está conectada! O próximo passo será construirmos o algoritmo tático para definir os placares.");
-            btn.innerText = "SIMULAR";
-            btn.disabled = false;
-        }, 1500);
+    window.avancarRodada = function() {
+        alert("O motor da Liga simulará todas as partidas desta divisão, aplicará o desgaste físico aos jogadores, calculará lesões, atualizará a tabela de classificação e a artilharia!");
     }
 
-    // Inicia tudo ao carregar a página
     window.onload = inicializarJogo;
 </script>
 </body>
