@@ -57,6 +57,7 @@
         .team-ovr { font-size: 12px; color: var(--gold); font-weight: bold; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;}
         .match-vs { width: 20%; text-align: center; font-size: 11px; color: var(--text-muted); font-weight: bold; display: flex; flex-direction: column; gap: 5px;}
         .btn-play { background: var(--danger); color: white; border: none; padding: 8px; font-weight: 900; border-radius: 4px; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase;}
+        .btn-play:disabled { background: #64748b; cursor: not-allowed; }
 
         /* GRID FINANCEIRO E DE DADOS */
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -68,20 +69,25 @@
         /* LISTA ESTILO TABELA (ELENCO/CLASSIFICAÇÃO) */
         .list-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #475569; font-size: 12px; align-items: center;}
         .list-row:last-child { border-bottom: none; padding-bottom: 0; }
-        .list-col-main { font-weight: bold; flex-grow: 1;}
+        .list-col-main { font-weight: bold; flex-grow: 1; display: flex; flex-direction: column;}
+        .list-col-sub { font-size: 10px; color: var(--text-muted); font-weight: normal;}
         .list-col-val { font-family: 'Oswald', sans-serif; color: var(--gold); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; min-width: 30px; text-align: center;}
         
         .action-btn { background: var(--accent); width: 100%; color: white; border: none; padding: 12px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; margin-top: 10px;}
+        
+        #loading-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; font-family: 'Oswald', sans-serif; color: var(--gold); font-size: 20px;}
     </style>
 </head>
 <body>
 
 <div class="manager-container">
+    <div id="loading-screen">Sincronizando com Banco de Dados...</div>
+
     <!-- Cabeçalho Principal -->
     <header class="club-header">
         <div class="manager-name">Treinador: Marcelo</div>
-        <div class="club-name" id="ui-club-name">V-MAX FC</div>
-        <div class="club-div" id="ui-club-league">Série D 🇧🇷 - Temporada 1</div>
+        <div class="club-name" id="ui-club-name">Carregando...</div>
+        <div class="club-div" id="ui-club-league">Buscando Liga...</div>
     </header>
 
     <!-- Navegação (Abas) -->
@@ -102,15 +108,15 @@
             <div class="match-card">
                 <div class="team-badge">
                     <h4 id="ui-home-team">V-MAX FC</h4>
-                    <span class="team-ovr">OVR 68</span>
+                    <span class="team-ovr" id="ui-home-ovr">OVR --</span>
                 </div>
                 <div class="match-vs">
                     <span>CASA</span>
-                    <button class="btn-play" onclick="simularPartida()">SIMULAR</button>
+                    <button class="btn-play" onclick="simularPartida()" id="btn-simular">SIMULAR</button>
                 </div>
                 <div class="team-badge">
                     <h4 id="ui-away-team">XV de Piracicaba</h4>
-                    <span class="team-ovr" style="color: #cbd5e1;">OVR 65</span>
+                    <span class="team-ovr" id="ui-away-ovr" style="color: #cbd5e1;">OVR --</span>
                 </div>
             </div>
         </div>
@@ -118,12 +124,12 @@
         <!-- Indicadores de Performance -->
         <div class="data-grid">
             <div class="widget">
-                <div class="data-label">Posição na Liga</div>
-                <div class="data-value" style="color: var(--accent);">1º Lugar</div>
+                <div class="data-label">Formação Tática</div>
+                <div class="data-value" style="color: var(--accent);" id="ui-tatica">--</div>
             </div>
             <div class="widget">
-                <div class="data-label">Moral do Elenco</div>
-                <div class="data-value text-green">Excelente</div>
+                <div class="data-label">Status do Elenco</div>
+                <div class="data-value text-green" id="ui-total-jogadores">-- Jogadores</div>
             </div>
         </div>
 
@@ -134,11 +140,11 @@
             <div class="data-grid">
                 <div class="data-box">
                     <div class="data-label">Saldo Atual</div>
-                    <div class="data-value text-green" id="ui-balance">€ 1.500.000</div>
+                    <div class="data-value text-green" id="ui-balance">€ 0</div>
                 </div>
                 <div class="data-box">
                     <div class="data-label">Folha Salarial (Mês)</div>
-                    <div class="data-value text-red" id="ui-payroll">€ 120.000</div>
+                    <div class="data-value text-red" id="ui-payroll">€ 0</div>
                 </div>
             </div>
         </div>
@@ -150,17 +156,15 @@
             <div class="widget-accent" style="background: var(--gold);"></div>
             <div class="widget-title">Resumo do Elenco</div>
             <div class="data-grid" style="margin-bottom: 15px;">
-                <div class="data-box"><div class="data-label">Força Titular</div><div class="data-value" style="color: var(--gold);">OVR 68</div></div>
-                <div class="data-box"><div class="data-label">Formação</div><div class="data-value">4-3-3</div></div>
+                <div class="data-box"><div class="data-label">Força Geral (Média)</div><div class="data-value" style="color: var(--gold);" id="ui-squad-ovr">OVR --</div></div>
+                <div class="data-box"><div class="data-label">Formação</div><div class="data-value" id="ui-squad-tatica">--</div></div>
             </div>
-            <div class="widget-title" style="font-size: 11px;">Principais Jogadores</div>
+            <div class="widget-title" style="font-size: 11px;">Jogadores do Plantel</div>
+            
             <div id="ui-squad-list">
-                <!-- Preenchido via JS -->
-                <div class="list-row"><span class="list-col-main">1. Goleiro Titular</span><span class="list-col-val">67</span></div>
-                <div class="list-row"><span class="list-col-main">9. Centroavante (Craque)</span><span class="list-col-val">71</span></div>
-                <div class="list-row"><span class="list-col-main">10. Meia Armador</span><span class="list-col-val">69</span></div>
+                <!-- Preenchido via Firebase -->
             </div>
-            <button class="action-btn">Gerenciar Tática</button>
+            
         </div>
     </main>
 
@@ -169,26 +173,8 @@
         <div class="widget">
             <div class="widget-accent" style="background: #8b5cf6;"></div>
             <div class="widget-title">Janela de Transferências</div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Busque peças para reforçar seu elenco. O seu orçamento dita o nível da contratação.</p>
-            
-            <div id="ui-market-list">
-                <!-- Preenchido via JS -->
-                <div class="list-row">
-                    <div style="display: flex; flex-direction: column;">
-                        <span class="list-col-main">Zagueiro Xerife</span>
-                        <span style="font-size: 10px; color: var(--danger);">Passe: € 300k | Salário: € 15k/m</span>
-                    </div>
-                    <button style="background: var(--success); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">COMPRAR</button>
-                </div>
-                <div class="list-row">
-                    <div style="display: flex; flex-direction: column;">
-                        <span class="list-col-main">Ponta Rápido</span>
-                        <span style="font-size: 10px; color: var(--danger);">Passe: € 500k | Salário: € 22k/m</span>
-                    </div>
-                    <button style="background: var(--success); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">COMPRAR</button>
-                </div>
-            </div>
-            <button class="action-btn" style="background: #8b5cf6;">Buscar Olheiros</button>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Em breve: Aqui você listará jogadores de outros times para fazer ofertas diretas ao clube deles.</p>
+            <div id="ui-market-list"></div>
         </div>
     </main>
 
@@ -197,47 +183,132 @@
         <div class="widget finance">
             <div class="widget-accent"></div>
             <div class="widget-title">Gestão Financeira & Patrimônio</div>
-            <div class="data-grid" style="margin-bottom: 15px;">
-                <div class="data-box"><div class="data-label">Patrocínio Atual</div><div class="data-value text-green">€ 500k/ano</div></div>
-                <div class="data-box"><div class="data-label">Renda Estádio/Jogo</div><div class="data-value text-green">€ 35k</div></div>
-            </div>
-            
-            <div class="widget-title" style="font-size: 11px; margin-top: 15px;">Melhorias de Infraestrutura</div>
-            <div class="list-row">
-                <div style="display: flex; flex-direction: column;">
-                    <span class="list-col-main">🏟️ Estádio (Nível 1)</span>
-                    <span style="font-size: 10px; color: var(--text-muted);">Capacidade: 10.000 Lugares</span>
-                </div>
-                <button style="background: #475569; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 10px;">EXPANDIR (€ 2M)</button>
-            </div>
-            <div class="list-row">
-                <div style="display: flex; flex-direction: column;">
-                    <span class="list-col-main">🏫 Categoria de Base (Nível 1)</span>
-                    <span style="font-size: 10px; color: var(--text-muted);">Gera jovens OVR 55-62</span>
-                </div>
-                <button style="background: #475569; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 10px;">MELHORAR (€ 1.5M)</button>
-            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Em breve: Controle de ingressos e upgrades do estádio.</p>
         </div>
     </main>
-
 </div>
 
-<script>
-    // Sistema simples de navegação entre as abas (Estilo painel de gestão)
-    function switchTab(tabId) {
-        // Remove a classe 'active' de todos os botões e conteúdos
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    // Suas credenciais do Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+        authDomain: "copa-ae771.firebaseapp.com",
+        projectId: "copa-ae771",
+        appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
+    };
+
+    let app, db;
+    let meuTime = {};
+    let meuElenco = [];
+    let folhaSalarial = 0;
+
+    // Conecta e busca os dados logo que a tela abre
+    async function inicializarJogo() {
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            
+            // 1. Busca os dados do seu time (V-MAX FC)
+            const timeRef = doc(db, "manager_times", "t_vmax");
+            const timeSnap = await getDoc(timeRef);
+            
+            if (timeSnap.exists()) {
+                meuTime = timeSnap.data();
+                document.getElementById('ui-club-name').innerText = meuTime.nome;
+                document.getElementById('ui-balance').innerText = formatMoeda(meuTime.orcamento);
+                document.getElementById('ui-tatica').innerText = meuTime.tatica;
+                document.getElementById('ui-squad-tatica').innerText = meuTime.tatica;
+                document.getElementById('ui-home-team').innerText = meuTime.nome;
+                document.getElementById('ui-home-ovr').innerText = "OVR " + meuTime.ovr_base;
+                
+                // Busca o nome da liga
+                const ligaSnap = await getDoc(doc(db, "manager_ligas", meuTime.liga_id));
+                if(ligaSnap.exists()) {
+                    document.getElementById('ui-club-league').innerText = ligaSnap.data().nome + " - Temp. 1";
+                }
+            }
+
+            // 2. Busca o elenco do seu time
+            const qJogadores = query(collection(db, "manager_jogadores"), where("time_id", "==", "t_vmax"));
+            const jogadoresSnap = await getDocs(qJogadores);
+            
+            let listaHTML = "";
+            let somaOvr = 0;
+
+            jogadoresSnap.forEach((doc) => {
+                let jog = doc.data();
+                meuElenco.push(jog);
+                folhaSalarial += jog.salario_mensal;
+                somaOvr += jog.ovr;
+
+                // Monta a linha do jogador para a aba Elenco
+                listaHTML += `
+                <div class="list-row">
+                    <span class="list-col-main">
+                        ${jog.posicao} - ${jog.nome} 
+                        <span class="list-col-sub">Idade: ${jog.idade} | Salário: ${formatMoeda(jog.salario_mensal)}/m</span>
+                    </span>
+                    <span class="list-col-val">${jog.ovr}</span>
+                </div>`;
+            });
+
+            // Atualiza os dados calculados na tela
+            document.getElementById('ui-squad-list').innerHTML = listaHTML;
+            document.getElementById('ui-payroll').innerText = formatMoeda(folhaSalarial);
+            document.getElementById('ui-total-jogadores').innerText = meuElenco.length + " Jogadores";
+            
+            if(meuElenco.length > 0) {
+                let mediaOvr = Math.floor(somaOvr / meuElenco.length);
+                document.getElementById('ui-squad-ovr').innerText = "OVR " + mediaOvr;
+            }
+
+            // 3. Puxa um adversário temporário para a tela inicial
+            const advSnap = await getDoc(doc(db, "manager_times", "t_xvpiracicaba"));
+            if(advSnap.exists()) {
+                document.getElementById('ui-away-team').innerText = advSnap.data().nome;
+                document.getElementById('ui-away-ovr').innerText = "OVR " + advSnap.data().ovr_base;
+            }
+
+            // Esconde a tela de carregamento
+            document.getElementById('loading-screen').style.display = 'none';
+
+        } catch (error) {
+            console.error("Erro ao puxar dados:", error);
+            document.getElementById('loading-screen').innerHTML = "<span style='color:red;'>Erro de Conexão com o Firebase. Verifique o console.</span>";
+        }
+    }
+
+    // Auxiliares
+    function formatMoeda(num) {
+        if(num >= 1000000) return "€ " + (num/1000000).toFixed(2) + "M";
+        if(num >= 1000) return "€ " + (num/1000).toFixed(0) + "k";
+        return "€ " + num;
+    }
+
+    window.switchTab = function(tabId) {
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-
-        // Adiciona a classe 'active' ao botão clicado e ao conteúdo correspondente
         event.target.classList.add('active');
         document.getElementById('tab-' + tabId).classList.add('active');
     }
 
-    // Função placeholder para o botão de simular partida
-    function simularPartida() {
-        alert("Motor de simulação tática será acionado! Cruzando dados de OVR vs OVR do banco de dados...");
+    window.simularPartida = function() {
+        let btn = document.getElementById('btn-simular');
+        btn.innerText = "SIMULANDO...";
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            alert("A base de dados já está conectada! O próximo passo será construirmos o algoritmo tático para definir os placares.");
+            btn.innerText = "SIMULAR";
+            btn.disabled = false;
+        }, 1500);
     }
+
+    // Inicia tudo ao carregar a página
+    window.onload = inicializarJogo;
 </script>
 </body>
 </html>
