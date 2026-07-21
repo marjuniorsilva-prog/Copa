@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V-MAX Club Manager - PRO</title>
+    <title>V-MAX PRO - Sistema de Gestão de Clube</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Oswald:wght@500;700&display=swap');
 
@@ -23,13 +23,12 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SCROLLBAR CUSTOMIZADA */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-base); }
         ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* SIDEBAR LATERAL FIXA */
+        /* ======== SIDEBAR ======== */
         .sidebar { width: var(--sidebar-width); background: var(--bg-panel); border-right: 1px solid var(--bg-card); display: flex; flex-direction: column; }
         .brand { padding: 25px 20px; border-bottom: 1px solid var(--bg-card); }
         .brand h1 { font-family: 'Oswald', sans-serif; font-size: 28px; color: var(--accent); letter-spacing: 1px; }
@@ -40,58 +39,71 @@
         .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-main); }
         .nav-item.active { background: rgba(59, 130, 246, 0.15); color: var(--accent); border-left-color: var(--accent); }
         
-        /* ÁREA PRINCIPAL */
+        /* ======== ÁREA PRINCIPAL ======== */
         .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER TOPO */
         .top-header { height: 70px; background: var(--bg-panel); border-bottom: 1px solid var(--bg-card); display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
-        .club-info-top h2 { font-family: 'Oswald', sans-serif; font-size: 22px; color: var(--text-main); }
+        .club-info-top h2 { font-family: 'Oswald', sans-serif; font-size: 22px; color: var(--text-main); text-transform: uppercase; }
         .club-info-top p { font-size: 12px; color: var(--text-muted); font-weight: 600; }
         .header-stats { display: flex; gap: 20px; }
         .stat-badge { background: var(--bg-card); padding: 8px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border: 1px solid #475569;}
         
-        /* CONTEÚDO DINÂMICO */
-        .content-area { padding: 30px; overflow-y: auto; flex-grow: 1; }
+        .content-area { padding: 30px; overflow-y: auto; flex-grow: 1; position: relative; }
         .tab-pane { display: none; animation: fadeIn 0.4s ease; }
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* GRIDS DE LAYOUT DESKTOP */
+        /* ======== GRIDS E PAINÉIS ======== */
         .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
         .panel { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--bg-card); padding: 20px; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bg-card); padding-bottom: 15px; margin-bottom: 15px; }
         .panel-title { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* TABELA DE CLASSIFICAÇÃO COMPLETA */
         .league-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .league-table th { text-align: left; padding: 10px; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid var(--bg-card); }
         .league-table td { padding: 12px 10px; border-bottom: 1px solid var(--bg-card); font-weight: 600; }
         .league-table tr:hover { background: rgba(255,255,255,0.02); }
         .col-center { text-align: center; }
 
-        /* ELENCO E TÁTICA */
-        .squad-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .squad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
         .player-card { background: var(--bg-card); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; }
         .player-info h4 { font-size: 14px; margin-bottom: 4px; }
         .player-info p { font-size: 11px; color: var(--text-muted); }
-        .player-stats { text-align: right; }
         .player-ovr { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--success); }
-        .stamina-bar { width: 60px; height: 6px; background: #0f172a; border-radius: 3px; margin-top: 5px; overflow: hidden; }
-        .stamina-fill { height: 100%; background: var(--success); width: 100%; }
 
-        /* BOTÃO DE AÇÃO GLOBAL */
-        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 1px; width: 100%; }
         .btn-primary:hover { background: #2563eb; }
+        .btn-play { background: var(--success); } .btn-play:hover { background: #059669; }
 
-        /* TELA DE LOADING */
+        /* ======== MOTOR DE JOGO AO VIVO ======== */
+        .live-match-container { display: flex; flex-direction: column; height: 100%; border: 1px solid var(--bg-card); border-radius: 10px; overflow: hidden; }
+        .scoreboard { background: linear-gradient(to bottom, #1e3a8a, #0f172a); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); }
+        .team-score { text-align: center; width: 30%; }
+        .team-score h2 { font-family: 'Oswald', sans-serif; font-size: 24px; margin: 0; }
+        .score-center { width: 40%; text-align: center; }
+        .score-numbers { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 900; color: var(--warning); margin-bottom: 5px; }
+        .time-box { background: var(--danger); color: white; padding: 4px 12px; border-radius: 20px; font-weight: 900; font-size: 14px; font-family: monospace; display: inline-block;}
+        
+        .match-body { display: flex; flex-grow: 1; background: var(--bg-base); min-height: 400px;}
+        .events-panel { width: 65%; padding: 15px; border-right: 1px solid var(--bg-card); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .event-line { padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 500; animation: slideIn 0.3s ease; border-left: 3px solid var(--accent); background: var(--bg-panel); }
+        .event-line.goal { border-left-color: var(--success); background: rgba(16, 185, 129, 0.1); color: var(--success); font-weight: 700; font-size: 14px; }
+        .event-line.card { border-left-color: var(--warning); }
+        .event-time { font-family: monospace; font-weight: bold; margin-right: 8px; color: var(--text-muted); }
+        
+        .tactics-panel { width: 35%; padding: 20px; background: var(--bg-panel); display: flex; flex-direction: column; gap: 15px; }
+        .stance-btn { background: var(--bg-card); border: 1px solid #475569; color: white; padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; transition: 0.2s; }
+        .stance-btn.active.attack { background: #166534; border-color: #22c55e; }
+        .stance-btn.active.neutral { background: #1e3a8a; border-color: var(--accent); }
+        .stance-btn.active.defend { background: #7f1d1d; border-color: var(--danger); }
+
         #global-loader { position: fixed; inset: 0; background: var(--bg-base); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 24px; }
     </style>
 </head>
 <body>
 
-<div id="global-loader">Sincronizando Banco de Dados...</div>
+<div id="global-loader">Conectando ao Banco de Dados (Firebase)...</div>
 
-<!-- SIDEBAR FIXA -->
 <aside class="sidebar">
     <div class="brand">
         <h1>V-MAX PRO</h1>
@@ -100,120 +112,101 @@
     <nav class="nav-menu">
         <div class="nav-item active" onclick="switchTab('dashboard', this)">📺 Dashboard & Liga</div>
         <div class="nav-item" onclick="switchTab('tactics', this)">⚽ Tática & Elenco</div>
-        <div class="nav-item" onclick="switchTab('training', this)">💪 Treino & D.M.</div>
-        <div class="nav-item" onclick="switchTab('finance', this)">🏢 Finanças & Patrocínio</div>
-        <div class="nav-item" onclick="switchTab('market', this)">🛒 Mercado da Bola</div>
+        <div class="nav-item" style="color: var(--success);" onclick="switchTab('live-match', this)">🔴 Ir para o Jogo Ao Vivo</div>
     </nav>
 </aside>
 
-<!-- ÁREA PRINCIPAL -->
 <div class="main-wrapper">
-    
-    <!-- HEADER -->
     <header class="top-header">
         <div class="club-info-top">
-            <h2 id="ui-club-name">Carregando Clube...</h2>
-            <p id="ui-club-league">Buscando Liga...</p>
+            <h2 id="ui-club-name">Carregando...</h2>
+            <p id="ui-club-league">Aguarde...</p>
         </div>
         <div class="header-stats">
             <div class="stat-badge">💰 <span id="ui-balance" style="color: var(--success);">€ 0</span></div>
             <div class="stat-badge">👥 <span id="ui-payroll" style="color: var(--danger);">€ 0/mês</span></div>
-            <button class="btn-primary" onclick="avancarRodada()">Avançar Rodada ▶</button>
         </div>
     </header>
 
-    <!-- CONTEÚDO DAS ABAS -->
     <main class="content-area">
         
-        <!-- ABA: DASHBOARD & LIGA -->
+        <!-- ================= DASHBOARD ================= -->
         <div id="tab-dashboard" class="tab-pane active">
             <div class="dashboard-grid">
-                
-                <!-- Coluna Esquerda: Tabela -->
                 <div class="panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Tabela de Classificação Completa</h3>
-                    </div>
+                    <div class="panel-header"><h3 class="panel-title">Tabela de Classificação</h3></div>
                     <table class="league-table">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Clube</th>
-                                <th class="col-center">PTS</th>
-                                <th class="col-center">J</th>
-                                <th class="col-center">V</th>
-                                <th class="col-center">E</th>
-                                <th class="col-center">D</th>
-                                <th class="col-center">SG</th>
-                            </tr>
+                            <tr><th>#</th><th>Clube</th><th class="col-center">PTS</th><th class="col-center">J</th><th class="col-center">V</th><th class="col-center">SG</th></tr>
                         </thead>
                         <tbody id="ui-league-table">
-                            <!-- Injetado via JS -->
-                            <tr>
-                                <td>1</td><td><strong style="color: var(--accent);">V-MAX FC</strong></td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td>
-                            </tr>
-                            <tr>
-                                <td>2</td><td>XV de Piracicaba</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td>
-                            </tr>
+                            <tr><td>1</td><td><strong style="color: var(--accent);" id="tb-myteam">V-MAX FC</strong></td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td></tr>
+                            <tr><td>2</td><td id="tb-awayteam">XV de Piracicaba</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td><td class="col-center">0</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Coluna Direita: Próximo Jogo & Lideres -->
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     <div class="panel">
                         <div class="panel-header"><h3 class="panel-title">Próxima Partida</h3></div>
                         <div style="text-align: center; padding: 10px 0;">
-                            <h4 style="font-size: 20px; font-family: 'Oswald', sans-serif;" id="ui-next-match">V-MAX FC vs Adversário</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Rodada 1 - Estádio V-MAX</p>
-                        </div>
-                    </div>
-                    
-                    <div class="panel">
-                        <div class="panel-header"><h3 class="panel-title">Estatísticas da Liga</h3></div>
-                        <div style="font-size: 13px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--bg-card);">
-                                <span>⚽ Artilheiro:</span> <strong>Aguardando Jogos...</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>🛡️ Maior Desarme:</span> <strong>Aguardando Jogos...</strong>
-                            </div>
+                            <h4 style="font-size: 20px; font-family: 'Oswald', sans-serif;" id="ui-next-match">V-MAX FC vs XV de Piracicaba</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Rodada 1 - Estádio Local</p>
+                            <button class="btn-primary btn-play" onclick="switchTab('live-match', document.querySelectorAll('.nav-item')[2])">Jogar Partida ▶</button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- ABA: TÁTICA E ELENCO -->
+        <!-- ================= ELENCO ================= -->
         <div id="tab-tactics" class="tab-pane">
             <div class="panel" style="margin-bottom: 20px;">
                 <div class="panel-header">
-                    <h3 class="panel-title">Formação Tática</h3>
-                    <select id="ui-formation-select" style="background: var(--bg-base); color: var(--text-main); border: 1px solid var(--bg-card); padding: 8px; border-radius: 4px;">
-                        <option value="4-3-3">4-3-3 Ofensivo</option>
-                        <option value="4-4-2">4-4-2 Clássico</option>
-                        <option value="3-5-2">3-5-2 Controle de Meio</option>
-                        <option value="5-3-2">5-3-2 Retranca</option>
-                    </select>
+                    <h3 class="panel-title">Formação Tática Atual</h3>
+                    <div style="font-weight: bold; color: var(--accent);" id="ui-formation">4-3-3</div>
                 </div>
             </div>
-
-            <h3 class="panel-title" style="margin-bottom: 15px;">Plantel Principal (11 Titulares)</h3>
             <div class="squad-grid" id="ui-squad-grid">
-                <!-- Injetado via JS do Firebase -->
+                <!-- Jogadores injetados pelo Firebase -->
             </div>
         </div>
 
-        <!-- OUTRAS ABAS (Placeholders estruturais) -->
-        <div id="tab-training" class="tab-pane">
-            <div class="panel"><h3 class="panel-title">Centro de Treinamento e Departamento Médico</h3><p style="margin-top: 15px; color: var(--text-muted);">Aqui você definirá a intensidade do treino. Treinos intensos evoluem os jogadores mais rápido, mas reduzem a Stamina e geram lesões graves.</p></div>
-        </div>
-        <div id="tab-finance" class="tab-pane">
-            <div class="panel"><h3 class="panel-title">Gestão de Patrocínios e Bilheteria</h3><p style="margin-top: 15px; color: var(--text-muted);">Assine contratos. Cumpra metas para receber o prêmio final ou perca receita se for rebaixado.</p></div>
-        </div>
-        <div id="tab-market" class="tab-pane">
-            <div class="panel"><h3 class="panel-title">Mercado da Bola Nacional e Internacional</h3><p style="margin-top: 15px; color: var(--text-muted);">Busque atletas filtrados por OVR, Posição e Valor de Passe.</p></div>
+        <!-- ================= JOGO AO VIVO ================= -->
+        <div id="tab-live-match" class="tab-pane">
+            <div class="live-match-container">
+                <div class="scoreboard">
+                    <div class="team-score">
+                        <h2 id="match-home-name">V-MAX FC</h2>
+                        <span style="font-size: 12px; color: var(--text-muted);">Casa <span id="match-home-ovr"></span></span>
+                    </div>
+                    <div class="score-center">
+                        <div class="score-numbers"><span id="score-home">0</span> - <span id="score-away">0</span></div>
+                        <div class="time-box" id="match-clock">00:00</div>
+                    </div>
+                    <div class="team-score">
+                        <h2 id="match-away-name">XV de Piracicaba</h2>
+                        <span style="font-size: 12px; color: var(--text-muted);">Fora <span id="match-away-ovr"></span></span>
+                    </div>
+                </div>
+
+                <div class="match-body">
+                    <div class="events-panel" id="match-events">
+                        <div class="event-line"><span class="event-time">00'</span> Preparativos finais. Aguardando o apito inicial!</div>
+                    </div>
+                    
+                    <div class="tactics-panel">
+                        <div style="font-family: 'Oswald', sans-serif; color: var(--warning); border-bottom: 1px solid var(--bg-card); padding-bottom: 10px;">INSTRUÇÕES À BEIRA DO CAMPO</div>
+                        <button class="stance-btn attack" onclick="mudarPostura('attack', this)"><span>Tudo pro Ataque</span> <span>⚔️</span></button>
+                        <button class="stance-btn neutral active" onclick="mudarPostura('neutral', this)"><span>Equilibrado</span> <span>⚖️</span></button>
+                        <button class="stance-btn defend" onclick="mudarPostura('defend', this)"><span>Retranca Total</span> <span>🛡️</span></button>
+                        
+                        <div style="margin-top: auto;">
+                            <button class="btn-primary btn-play" id="btn-start-match" onclick="iniciarPartida()">▶ Apito Inicial</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
@@ -232,46 +225,59 @@
 
     let app, db;
     let meuTime = {};
+    let advTime = {};
     let meuElenco = [];
-    let folhaSalarial = 0;
+    let atacantes = [];
+    let meias = [];
+    let zagueiros = [];
 
-    async function inicializarJogo() {
+    // Variáveis do Jogo Ao Vivo
+    let relogio = 0; let timerId = null; let golCasa = 0; let golFora = 0; let postura = "neutral"; let jogoRolando = false;
+
+    async function inicializarERP() {
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             
-            // 1. Dados do Clube
+            // Busca o seu time
             const timeRef = doc(db, "manager_times", "t_vmax");
             const timeSnap = await getDoc(timeRef);
             
             if (timeSnap.exists()) {
                 meuTime = timeSnap.data();
                 document.getElementById('ui-club-name').innerText = meuTime.nome;
+                document.getElementById('tb-myteam').innerText = meuTime.nome;
+                document.getElementById('match-home-name').innerText = meuTime.nome;
+                document.getElementById('match-home-ovr').innerText = "(OVR " + meuTime.ovr_base + ")";
                 document.getElementById('ui-balance').innerText = formatMoeda(meuTime.orcamento);
-                
-                // Define tática no select
-                const selectTatica = document.getElementById('ui-formation-select');
-                for(let i=0; i<selectTatica.options.length; i++){
-                    if(selectTatica.options[i].value === meuTime.tatica) selectTatica.selectedIndex = i;
-                }
-                
-                const ligaSnap = await getDoc(doc(db, "manager_ligas", meuTime.liga_id));
-                if(ligaSnap.exists()) document.getElementById('ui-club-league').innerText = ligaSnap.data().nome;
+                document.getElementById('ui-formation').innerText = meuTime.tatica;
             }
 
-            // 2. Montar Grid do Elenco
+            // Busca Adversário (Exemplo fixo para a primeira rodada)
+            const advRef = doc(db, "manager_times", "t_xvpiracicaba");
+            const advSnap = await getDoc(advRef);
+            if(advSnap.exists()) {
+                advTime = advSnap.data();
+                document.getElementById('ui-next-match').innerText = `${meuTime.nome} vs ${advTime.nome}`;
+                document.getElementById('tb-awayteam').innerText = advTime.nome;
+                document.getElementById('match-away-name').innerText = advTime.nome;
+                document.getElementById('match-away-ovr').innerText = "(OVR " + advTime.ovr_base + ")";
+            }
+
+            // Busca Seu Elenco Real
             const qJogadores = query(collection(db, "manager_jogadores"), where("time_id", "==", "t_vmax"));
             const jogadoresSnap = await getDocs(qJogadores);
             
-            let gridHTML = "";
+            let gridHTML = ""; let folha = 0;
             jogadoresSnap.forEach((doc) => {
                 let jog = doc.data();
                 meuElenco.push(jog);
-                folhaSalarial += jog.salario_mensal;
+                folha += jog.salario_mensal;
 
-                // Físico inicial 100% (Você vai manipular isso no DM depois)
-                let stamina = 100;
-                let corStamina = stamina > 70 ? 'var(--success)' : (stamina > 40 ? 'var(--warning)' : 'var(--danger)');
+                // Separa os jogadores por posição para a narração
+                if(jog.posicao === 'ATA') atacantes.push(jog.nome);
+                else if(jog.posicao === 'MEI' || jog.posicao === 'VOL') meias.push(jog.nome);
+                else zagueiros.push(jog.nome);
 
                 gridHTML += `
                 <div class="player-card">
@@ -279,15 +285,13 @@
                         <h4>${jog.posicao} - ${jog.nome}</h4>
                         <p>Idade: ${jog.idade} | ${formatMoeda(jog.salario_mensal)}/m</p>
                     </div>
-                    <div class="player-stats">
-                        <div class="player-ovr">${jog.ovr}</div>
-                        <div class="stamina-bar" title="Físico: ${stamina}%"><div class="stamina-fill" style="width: ${stamina}%; background: ${corStamina};"></div></div>
-                    </div>
+                    <div class="player-ovr">${jog.ovr}</div>
                 </div>`;
             });
 
             document.getElementById('ui-squad-grid').innerHTML = gridHTML;
-            document.getElementById('ui-payroll').innerText = formatMoeda(folhaSalarial) + "/mês";
+            document.getElementById('ui-payroll').innerText = formatMoeda(folha) + "/mês";
+            
             document.getElementById('global-loader').style.display = 'none';
 
         } catch (error) {
@@ -296,26 +300,124 @@
         }
     }
 
-    // Auxiliares
+    // ========== NAVEGAÇÃO ==========
+    window.switchTab = function(tabId, element) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
     function formatMoeda(num) {
         if(num >= 1000000) return "€ " + (num/1000000).toFixed(2) + "M";
         if(num >= 1000) return "€ " + (num/1000).toFixed(0) + "k";
         return "€ " + num;
     }
 
-    window.switchTab = function(tabId, element) {
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+    // ========== MOTOR DE JOGO AO VIVO ==========
+    const elClock = document.getElementById('match-clock');
+    const elEvents = document.getElementById('match-events');
+    const elScoreH = document.getElementById('score-home');
+    const elScoreA = document.getElementById('score-away');
+    const btnStart = document.getElementById('btn-start-match');
+
+    window.mudarPostura = function(novaPostura, btnElement) {
+        document.querySelectorAll('.stance-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        postura = novaPostura;
+        let t = document.getElementById('ui-club-name').innerText;
         
-        element.classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
+        let msg = `O técnico pede equilíbrio em campo.`;
+        if(postura === 'attack') msg = `${t} vai com tudo pro ataque! Linhas avançadas.`;
+        if(postura === 'defend') msg = `${t} estaciona o ônibus na zaga! O time se fecha completamente.`;
+        if(jogoRolando) narrarEvento(msg, 'normal');
     }
 
-    window.avancarRodada = function() {
-        alert("O motor da Liga simulará todas as partidas desta divisão, aplicará o desgaste físico aos jogadores, calculará lesões, atualizará a tabela de classificação e a artilharia!");
+    window.iniciarPartida = function() {
+        if (jogoRolando) {
+            clearInterval(timerId);
+            jogoRolando = false;
+            btnStart.innerText = "▶ RETOMAR JOGO";
+            btnStart.style.background = "var(--success)";
+        } else {
+            if (relogio >= 90) return;
+            jogoRolando = true;
+            btnStart.innerText = "⏸ PAUSAR JOGO";
+            btnStart.style.background = "var(--danger)";
+            
+            if(relogio === 0) narrarEvento("Bola rolando! Começa a partida.", "normal");
+            timerId = setInterval(gameLoop, 350); // 350ms = 1 minuto no jogo
+        }
     }
 
-    window.onload = inicializarJogo;
+    function gameLoop() {
+        relogio++;
+        elClock.innerText = relogio.toString().padStart(2, '0') + ":00";
+        calcularMinuto();
+
+        if (relogio >= 90) {
+            clearInterval(timerId);
+            jogoRolando = false;
+            narrarEvento("FIM DE JOGO! Apita o árbitro.", "normal");
+            btnStart.innerText = "PARTIDA ENCERRADA";
+            btnStart.disabled = true;
+            btnStart.style.background = "var(--bg-card)";
+        }
+    }
+
+    function calcularMinuto() {
+        let chanceEvento = Math.random();
+        
+        if (chanceEvento < 0.08) {
+            let ataqueCasa = Math.random();
+            let bonusAtaque = 0.5; // OVR iguais = 50%
+            
+            // Calcula diferença de OVR
+            let diffOvr = (meuTime.ovr_base || 65) - (advTime.ovr_base || 65);
+            bonusAtaque += (diffOvr * 0.02); // 2% de vantagem por ponto de OVR
+            
+            // Modificador Tático (Postura)
+            if(postura === 'attack') bonusAtaque += 0.15; 
+            if(postura === 'defend') bonusAtaque -= 0.15; 
+            
+            if (ataqueCasa < bonusAtaque) {
+                // Seu Time ataca!
+                let jogNome = atacantes.length > 0 ? atacantes[Math.floor(Math.random() * atacantes.length)] : "O atacante";
+                let meiaNome = meias.length > 0 ? meias[Math.floor(Math.random() * meias.length)] : "O meia";
+
+                if (Math.random() < 0.25) { // Chance de gol
+                    golCasa++; elScoreH.innerText = golCasa;
+                    narrarEvento(`GOOOOOOOL! Passe sensacional de ${meiaNome} e finalização perfeita de <b>${jogNome}</b> para o fundo da rede!`, "goal");
+                } else {
+                    narrarEvento(`Quase! ${jogNome} chuta forte, mas a bola raspa a trave.`, "normal");
+                }
+            } else {
+                // Adversário ataca
+                let zagNome = zagueiros.length > 0 ? zagueiros[Math.floor(Math.random() * zagueiros.length)] : "O zagueiro";
+                
+                if (Math.random() < 0.20) { // Chance de gol
+                    golFora++; elScoreA.innerText = golFora;
+                    narrarEvento(`GOL DO ${advTime.nome}! Falha na marcação e eles não perdoam.`, "goal");
+                } else {
+                    if(postura === 'attack') narrarEvento(`Susto! A defesa estava exposta, mas o chute foi pra fora.`, "normal");
+                    else narrarEvento(`O adversário tenta furar a defesa, mas <b>${zagNome}</b> faz um desarme providencial!`, "normal");
+                }
+            }
+        } else if (chanceEvento > 0.98) {
+            let jogFalta = meuElenco.length > 0 ? meuElenco[Math.floor(Math.random() * meuElenco.length)].nome : "Um jogador";
+            narrarEvento(`Falta dura de ${jogFalta}! Cartão amarelo apresentado pelo juiz.`, "card");
+        }
+    }
+
+    function narrarEvento(texto, tipo) {
+        let div = document.createElement('div');
+        div.className = `event-line ${tipo}`;
+        div.innerHTML = `<span class="event-time">${relogio}'</span> ${texto}`;
+        elEvents.appendChild(div);
+        elEvents.scrollTop = elEvents.scrollHeight;
+    }
+
+    window.onload = inicializarERP;
 </script>
 </body>
 </html>
