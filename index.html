@@ -3,232 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V-MAX PRO - Gestão Completa</title>
+    <title>Soccer Manager PRO - Fundação</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Oswald:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;700&display=swap');
 
         :root {
-            --bg-base: #0f172a; --bg-panel: #1e293b; --bg-card: #334155;
+            --bg-dark: #0f172a; --bg-panel: #1e293b; --bg-input: #334155;
+            --accent: #3b82f6; --accent-hover: #2563eb;
+            --success: #10b981; --danger: #ef4444;
             --text-main: #f8fafc; --text-muted: #94a3b8;
-            --accent: #3b82f6; --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
-            --border: #475569; --pitch-green: #2f855a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
+        body { background: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        
+        .container { background: var(--bg-panel); width: 100%; max-width: 480px; padding: 40px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid #475569; position: relative; }
+        
+        .header-title { font-family: 'Oswald', sans-serif; font-size: 32px; color: var(--accent); text-align: center; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .header-subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
 
-        /* ======== TELAS (AUTH E APP) ======== */
-        #auth-screen { position: absolute; inset: 0; background: var(--bg-base); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
-        .auth-box { background: var(--bg-panel); padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .auth-box h1 { font-family: 'Oswald', sans-serif; color: var(--accent); text-align: center; margin-bottom: 20px; font-size: 32px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; text-transform: uppercase; }
-        .form-group input { width: 100%; padding: 12px; background: var(--bg-base); border: 1px solid var(--border); color: white; border-radius: 6px; font-size: 14px; }
-        .auth-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        
-        #app-screen { display: none; width: 100%; height: 100%; flex-direction: row; }
+        /* Formulários */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control { width: 100%; background: var(--bg-input); border: 1px solid #475569; color: var(--text-main); padding: 14px; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s; }
+        .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        select.form-control { appearance: none; cursor: pointer; }
 
-        /* ======== SIDEBAR ======== */
-        .sidebar { width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        .brand { padding: 25px 20px; border-bottom: 1px solid var(--border); }
-        .brand h1 { font-family: 'Oswald', sans-serif; font-size: 26px; color: var(--accent); }
-        .nav-menu { flex-grow: 1; padding: 15px 0; overflow-y: auto; display: flex; flex-direction: column; }
-        .nav-item { padding: 12px 20px; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px; }
-        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-main); }
-        .nav-item.active { background: rgba(59, 130, 246, 0.15); color: var(--accent); border-left-color: var(--accent); }
+        /* Telas (Alternância) */
+        #screen-auth { display: block; animation: fadeIn 0.4s; }
+        #screen-setup { display: none; animation: fadeIn 0.4s; }
+        #screen-success { display: none; text-align: center; animation: fadeIn 0.4s; }
         
-        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
-        
-        /* ======== HEADER ======== */
-        .top-header { background: var(--bg-panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; flex-shrink: 0; }
-        .club-info h2 { font-family: 'Oswald', sans-serif; font-size: 20px; text-transform: uppercase; margin-bottom: 4px; }
-        .header-stats { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .stat-badge { background: var(--bg-base); padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; border: 1px solid var(--border); }
-        .btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .btn-logout:hover { background: var(--danger); color: white; }
-
-        /* ======== ÁREA DE CONTEÚDO ======== */
-        .content-area { padding: 25px; overflow-y: auto; flex-grow: 1; }
-        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
-        .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        .panel { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border); padding: 20px; }
-        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 15px; }
-        .panel-title { font-family: 'Oswald', sans-serif; font-size: 16px; text-transform: uppercase; }
+        /* Botões */
+        .btn { width: 100%; border: none; padding: 15px; border-radius: 8px; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
 
-        /* ======== TABELA LIGA (20 TIMES) ======== */
-        .table-responsive { overflow-x: auto; max-height: 500px; }
-        .league-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 500px; }
-        .league-table th { position: sticky; top: 0; background: var(--bg-panel); text-align: left; padding: 10px; color: var(--text-muted); border-bottom: 2px solid var(--border); z-index: 2; }
-        .league-table td { padding: 10px; border-bottom: 1px solid var(--border); }
-        .league-table tr:hover { background: rgba(255,255,255,0.03); }
-        .col-center { text-align: center; }
-        .row-highlight { background: rgba(59, 130, 246, 0.15); font-weight: bold; }
-        .zone-libertadores { border-left: 3px solid var(--success); }
-        .zone-rebaixamento { border-left: 3px solid var(--danger); }
+        .link-btn { background: none; border: none; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 15px; width: 100%; transition: 0.2s; }
+        .link-btn:hover { color: white; }
 
-        /* ======== CAMPO TÁTICO & ELENCO ======== */
-        .tactics-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .error-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; font-weight: 500; min-height: 20px; }
         
-        .pitch-wrapper { flex: 1; min-width: 300px; display: flex; justify-content: center; align-items: center; background: var(--bg-base); border-radius: 8px; padding: 20px; border: 1px solid var(--border); }
-        .pitch { width: 100%; max-width: 320px; height: 450px; background: var(--pitch-green); border: 2px solid white; position: relative; border-radius: 4px; }
-        .pitch::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: white; transform: translateY(-50%); }
-        .pitch::after { content: ''; position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); }
-        .pitch-area-top { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 60px; border: 2px solid white; border-top: none; }
-        .pitch-area-bottom { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 60px; border: 2px solid white; border-bottom: none; }
-        
-        .player-dot { width: 36px; height: 36px; background: var(--bg-panel); border: 2px solid var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 5; }
-        .player-dot:hover { transform: translate(-50%, -50%) scale(1.1); background: var(--accent); color: white; }
-        .player-dot.selected { border-color: var(--warning); background: var(--warning); color: #000; box-shadow: 0 0 10px var(--warning); }
-        .player-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; font-size: 9px; white-space: nowrap; pointer-events: none; }
-
-        .bench-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; }
-        .bench-player { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 12px; border-radius: 6px; border-left: 4px solid var(--border); cursor: pointer; transition: 0.2s; }
-        .bench-player:hover { background: #475569; }
-        .bench-player.selected { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.1); }
-        
-        .swap-instructions { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent); padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; color: var(--accent); font-weight: 600; text-align: center; }
-
-        /* ======== BOTÕES ======== */
-        .btn { border: none; padding: 12px 20px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; width: 100%; }
-        .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: #2563eb; }
-        .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #059669; }
-
-        #global-loader { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 20px; }
-        
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
-            .brand { display: none; }
-            .nav-menu { flex-direction: row; padding: 0; overflow-x: auto; }
-            .nav-item { border-left: none; border-bottom: 3px solid transparent; padding: 15px; white-space: nowrap; }
-            .nav-item.active { border-bottom-color: var(--accent); }
-            .grid-layout { grid-template-columns: 1fr; }
-        }
+        /* Loader Overlays */
+        #loader { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.9); border-radius: 12px; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 20px; }
     </style>
 </head>
 <body>
 
-<div id="global-loader">Processando...</div>
+<div class="container">
+    <div id="loader">Aguarde...</div>
 
-<!-- TELA DE LOGIN / REGISTRO -->
-<div id="auth-screen">
-    <div class="auth-box">
-        <h1>V-MAX PRO</h1>
-        <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Crie sua conta ou faça login para salvar seu progresso na nuvem.</p>
+    <!-- TELA 1: AUTENTICAÇÃO -->
+    <div id="screen-auth">
+        <div class="header-title">SM Manager</div>
+        <div class="header-subtitle">Entre em campo e construa sua lenda.</div>
         
         <div class="form-group">
-            <label>E-mail</label>
-            <input type="email" id="auth-email" placeholder="tecnico@vmax.com">
+            <label>E-mail do Treinador</label>
+            <input type="email" id="auth-email" class="form-control" placeholder="seu@email.com">
         </div>
         <div class="form-group">
             <label>Senha</label>
-            <input type="password" id="auth-password" placeholder="******">
+            <input type="password" id="auth-pass" class="form-control" placeholder="••••••••">
         </div>
-        <div id="auth-error" style="color: var(--danger); font-size: 12px; text-align: center; margin-bottom: 10px; display: none;"></div>
         
-        <div class="auth-buttons">
-            <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
-            <button class="btn btn-success" onclick="criarConta()">Criar Conta</button>
-        </div>
+        <div class="error-msg" id="auth-error"></div>
+        
+        <button class="btn btn-primary" onclick="login()">Entrar no Painel</button>
+        <button class="link-btn" onclick="criarConta()">Não tem conta? Registre-se grátis</button>
     </div>
-</div>
 
-<!-- TELA PRINCIPAL DO JOGO -->
-<div id="app-screen">
-    <aside class="sidebar">
-        <div class="brand">
-            <h1>V-MAX PRO</h1>
-            <span>Manager System</span>
+    <!-- TELA 2: SETUP DO NOVO CLUBE (Apenas para novas contas) -->
+    <div id="screen-setup">
+        <div class="header-title">Novo Clube</div>
+        <div class="header-subtitle">Sua jornada rumo ao topo começa na última divisão.</div>
+        
+        <div class="form-group">
+            <label>Seu Nome (Treinador)</label>
+            <input type="text" id="setup-manager" class="form-control" placeholder="Ex: Marcelo Junior">
         </div>
-        <nav class="nav-menu">
-            <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Painel da Liga</div>
-            <div class="nav-item" onclick="switchTab('tactics', this)">👕 Tática e Elenco</div>
-        </nav>
-    </aside>
+        <div class="form-group">
+            <label>Nome do Clube</label>
+            <input type="text" id="setup-club" class="form-control" placeholder="Ex: Marbe FC">
+        </div>
+        <div class="form-group">
+            <label>Região Inicial</label>
+            <select id="setup-region" class="form-control">
+                <option value="br">Brasil (Começa na Série D)</option>
+                <option value="en">Inglaterra (Começa na League Two)</option>
+                <option value="es">Espanha (Começa na 3ª Divisão)</option>
+            </select>
+        </div>
 
-    <div class="main-wrapper">
-        <header class="top-header">
-            <div class="club-info">
-                <h2 id="ui-club-name">Meu Clube</h2>
-                <p id="ui-club-league">Série A - Temporada 1</p>
-            </div>
-            <div class="header-stats">
-                <div class="stat-badge">💰 <span id="ui-balance" style="color: var(--success);">€ 1.5M</span></div>
-                <button class="btn-logout" onclick="fazerLogout()">Sair da Conta</button>
-            </div>
-        </header>
+        <div class="error-msg" id="setup-error"></div>
 
-        <main class="content-area">
-            
-            <!-- === ABA: DASHBOARD / LIGA === -->
-            <div id="tab-dashboard" class="tab-pane active">
-                <div class="grid-layout">
-                    <div class="panel" style="grid-column: span 2 / auto;">
-                        <div class="panel-header">
-                            <h3 class="panel-title">Campeonato Nacional (20 Times)</h3>
-                            <button class="btn btn-primary" style="width: auto; padding: 8px 15px;" onclick="simularRodadaMassa()">▶ Simular Rodada Completa</button>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="league-table">
-                                <thead>
-                                    <tr><th>#</th><th>Clube</th><th class="col-center">PTS</th><th class="col-center">J</th><th class="col-center">V</th><th class="col-center">E</th><th class="col-center">D</th><th class="col-center">SG</th></tr>
-                                </thead>
-                                <tbody id="ui-league-table">
-                                    <!-- Preenchido via JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <button class="btn btn-success" onclick="fundarClube()">Fundar Clube Oficialmente</button>
+    </div>
 
-            <!-- === ABA: TÁTICA E ELENCO === -->
-            <div id="tab-tactics" class="tab-pane">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Prancheta Tática (4-3-3)</h3>
-                        <div style="font-size: 12px; color: var(--text-muted);">Para substituir, clique em um jogador no campo e depois em um no banco.</div>
-                    </div>
-                    
-                    <div class="swap-instructions" id="swap-msg">Nenhum jogador selecionado. Clique em um titular ou reserva.</div>
-
-                    <div class="tactics-container">
-                        <!-- CAMPO (ESQUERDA) -->
-                        <div class="pitch-wrapper">
-                            <div class="pitch" id="tactical-pitch">
-                                <div class="pitch-area-top"></div>
-                                <div class="pitch-area-bottom"></div>
-                                <!-- Jogadores injetados aqui via JS absoluto -->
-                            </div>
-                        </div>
-
-                        <!-- BANCO DE RESERVAS (DIREITA) -->
-                        <div class="bench-wrapper">
-                            <h4 style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px;">Banco de Reservas</h4>
-                            <div id="ui-bench-list">
-                                <!-- Reservas injetados aqui -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
+    <!-- TELA 3: SUCESSO -->
+    <div id="screen-success">
+        <div style="font-size: 60px; margin-bottom: 10px;">🏆</div>
+        <div class="header-title">Clube Registrado!</div>
+        <div class="header-subtitle">O banco de dados foi gerado com sucesso.</div>
+        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 25px;">Sua equipe foi alocada na última divisão. Você recebeu um orçamento base e um elenco inicial (OVR Baixo). Boa sorte na temporada!</p>
+        <button class="btn btn-primary" onclick="irParaJogo()">Acessar Painel de Gestão ▶</button>
     </div>
 </div>
 
 <script type="module">
-    // IMPORTANTE: Para o Firebase Auth funcionar, você precisa habilitar "Email/Password" no console do Firebase > Authentication > Sign-in method
+    // Integração Firebase Modular v9+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -241,266 +132,138 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    
+    let currentUID = null;
 
-    // ESTADO DO JOGO LOCAL
-    let currentUser = null;
-    let saveGame = null;
-    let jogadorSelecionado = null; // Para o sistema de Swap (Troca)
+    const elLoader = document.getElementById('loader');
+    const screenAuth = document.getElementById('screen-auth');
+    const screenSetup = document.getElementById('screen-setup');
+    const screenSuccess = document.getElementById('screen-success');
 
-    // DOM Elements
-    const screenAuth = document.getElementById('auth-screen');
-    const screenApp = document.getElementById('app-screen');
-    const loader = document.getElementById('global-loader');
-    const authError = document.getElementById('auth-error');
-    const pitch = document.getElementById('tactical-pitch');
-    const benchList = document.getElementById('ui-bench-list');
-    const swapMsg = document.getElementById('swap-msg');
-
-    // ==========================================
-    // 1. SISTEMA DE AUTENTICAÇÃO E SAVE STATE
-    // ==========================================
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            screenAuth.style.display = 'none';
-            screenApp.style.display = 'flex';
-            await carregarSaveDoUsuario(user.uid);
-        } else {
-            currentUser = null;
-            screenAuth.style.display = 'flex';
-            screenApp.style.display = 'none';
-        }
-    });
-
+    // ========== PASSO 1: AUTENTICAÇÃO ==========
     window.criarConta = async function() {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) return mostrarErro("Preencha email e senha.");
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-pass').value.trim();
+        const errObj = document.getElementById('auth-error');
         
-        loader.style.display = 'flex';
+        if(!email || !pass) return errObj.innerText = "Preencha e-mail e senha.";
+        if(pass.length < 6) return errObj.innerText = "A senha deve ter no mínimo 6 caracteres.";
+        
+        errObj.innerText = ""; elLoader.style.display = "flex"; elLoader.innerText = "Criando Conta...";
+        
         try {
             const cred = await createUserWithEmailAndPassword(auth, email, pass);
-            await criarSaveInicial(cred.user.uid);
-            loader.style.display = 'none';
+            currentUID = cred.user.uid;
+            
+            // Vai para a tela de fundação do clube
+            elLoader.style.display = "none";
+            screenAuth.style.display = "none";
+            screenSetup.style.display = "block";
         } catch (error) {
-            loader.style.display = 'none';
-            mostrarErro(error.message);
+            elLoader.style.display = "none";
+            errObj.innerText = "Erro ao registrar: " + error.message;
         }
     }
 
-    window.fazerLogin = async function() {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) return mostrarErro("Preencha email e senha.");
+    window.login = async function() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-pass').value.trim();
+        const errObj = document.getElementById('auth-error');
         
-        loader.style.display = 'flex';
+        if(!email || !pass) return errObj.innerText = "Preencha e-mail e senha.";
+        
+        errObj.innerText = ""; elLoader.style.display = "flex"; elLoader.innerText = "Autenticando...";
+        
         try {
-            await signInWithEmailAndPassword(auth, email, pass);
-            loader.style.display = 'none';
-        } catch (error) {
-            loader.style.display = 'none';
-            mostrarErro("Erro de login. Verifique as credenciais.");
-        }
-    }
-
-    window.fazerLogout = function() {
-        signOut(auth);
-    }
-
-    function mostrarErro(msg) {
-        authError.innerText = msg;
-        authError.style.display = 'block';
-    }
-
-    // ==========================================
-    // 2. LÓGICA DE DADOS (GERAÇÃO DE LIGA)
-    // ==========================================
-    async function criarSaveInicial(uid) {
-        // Quando cria a conta, gera uma liga completa e o elenco para o usuário
-        const timesNomes = ["V-MAX FC (Você)", "Flamengo", "Palmeiras", "São Paulo", "Corinthians", "Fluminense", "Grêmio", "Internacional", "Atlético-MG", "Cruzeiro", "Botafogo", "Vasco", "Athletico-PR", "Bahia", "Fortaleza", "Ceará", "Sport", "Vitória", "Goiás", "Coritiba"];
-        
-        let tabela = [];
-        timesNomes.forEach((nome, i) => {
-            tabela.push({ id: "t_"+i, nome: nome, p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, ovr: Math.floor(Math.random()*15)+70, isMe: i===0 });
-        });
-
-        // Gera 22 jogadores para o V-MAX FC
-        let elenco = [];
-        const posicoes = ["GOL", "GOL", "ZAG", "ZAG", "ZAG", "ZAG", "LAT", "LAT", "LAT", "LAT", "VOL", "VOL", "MEI", "MEI", "MEI", "ATA", "ATA", "ATA", "ATA", "ATA"];
-        posicoes.forEach((pos, i) => {
-            elenco.push({ id: "j_"+i, nome: "Jogador "+(i+1), posicao: pos, ovr: Math.floor(Math.random()*15)+65, isTitular: i < 11 });
-        });
-
-        const novoSave = { orcamento: 5000000, rodada: 1, liga: tabela, elenco: elenco };
-        await setDoc(doc(db, "manager_saves", uid), novoSave);
-    }
-
-    async function carregarSaveDoUsuario(uid) {
-        loader.style.display = 'flex';
-        const docSnap = await getDoc(doc(db, "manager_saves", uid));
-        if (docSnap.exists()) {
-            saveGame = docSnap.data();
-            renderizarTabela();
-            renderizarTatita();
-        } else {
-            await criarSaveInicial(uid); // Fallback se não existir
-            await carregarSaveDoUsuario(uid);
-        }
-        loader.style.display = 'none';
-    }
-
-    async function salvarProgresso() {
-        if(currentUser && saveGame) {
-            await setDoc(doc(db, "manager_saves", currentUser.uid), saveGame);
-        }
-    }
-
-    // ==========================================
-    // 3. UI: TABELA DA LIGA
-    // ==========================================
-    function renderizarTabela() {
-        // Ordena: Pontos > SG > Gols Pro
-        saveGame.liga.sort((a, b) => {
-            if (b.p !== a.p) return b.p - a.p;
-            if (b.sg !== a.sg) return b.sg - a.sg;
-            return b.gp - a.gp;
-        });
-
-        let html = "";
-        saveGame.liga.forEach((t, i) => {
-            let rowClass = t.isMe ? 'row-highlight' : '';
-            let zoneClass = i < 4 ? 'zone-libertadores' : (i > 15 ? 'zone-rebaixamento' : '');
+            const cred = await signInWithEmailAndPassword(auth, email, pass);
+            currentUID = cred.user.uid;
             
-            html += `
-            <tr class="${rowClass}">
-                <td class="${zoneClass}">${i + 1}</td>
-                <td><strong>${t.nome}</strong></td>
-                <td class="col-center" style="color:var(--accent); font-weight:bold;">${t.p}</td>
-                <td class="col-center">${t.j}</td>
-                <td class="col-center">${t.v}</td>
-                <td class="col-center">${t.e}</td>
-                <td class="col-center">${t.d}</td>
-                <td class="col-center"><strong>${t.sg}</strong></td>
-            </tr>`;
-        });
-        document.getElementById('ui-league-table').innerHTML = html;
-        document.getElementById('ui-balance').innerText = "€ " + (saveGame.orcamento/1000000).toFixed(1) + "M";
-    }
-
-    window.simularRodadaMassa = async function() {
-        loader.style.display = 'flex';
-        document.getElementById('global-loader').innerHTML = "Simulando 10 partidas da rodada...";
-
-        setTimeout(async () => {
-            // Lógica de simulação de rodada completa
-            for (let i = 0; i < saveGame.liga.length; i += 2) {
-                let t1 = saveGame.liga[i];
-                let t2 = saveGame.liga[i+1];
-                
-                // Simulação simples baseada em OVR
-                let forca1 = t1.ovr + (Math.random() * 20);
-                let forca2 = t2.ovr + (Math.random() * 20);
-                
-                let gol1 = Math.floor(Math.random() * (forca1 > forca2 ? 4 : 2));
-                let gol2 = Math.floor(Math.random() * (forca2 > forca1 ? 4 : 2));
-
-                t1.j++; t2.j++;
-                t1.gp += gol1; t1.gc += gol2; t1.sg = t1.gp - t1.gc;
-                t2.gp += gol2; t2.gc += gol1; t2.sg = t2.gp - t2.gc;
-
-                if (gol1 > gol2) { t1.v++; t1.p+=3; t2.d++; }
-                else if (gol2 > gol1) { t2.v++; t2.p+=3; t1.d++; }
-                else { t1.e++; t2.e++; t1.p+=1; t2.p+=1; }
-            }
-
-            saveGame.rodada++;
-            renderizarTabela();
-            await salvarProgresso();
+            // Verifica se o usuário já tem um clube criado
+            const saveRef = doc(db, "sm_saves", currentUID);
+            const saveSnap = await getDoc(saveRef);
             
-            document.getElementById('global-loader').innerHTML = "Processando...";
-            loader.style.display = 'none';
-        }, 1000);
-    }
-
-    // ==========================================
-    // 4. UI: SISTEMA DE TÁTICA (DRAG & DROP / SWAP)
-    // ==========================================
-    // Posições X e Y em % para o formato 4-3-3
-    const positions433 = [
-        { top: '85%', left: '50%' }, // GOL
-        { top: '65%', left: '20%' }, // LAT E
-        { top: '70%', left: '40%' }, // ZAG E
-        { top: '70%', left: '60%' }, // ZAG D
-        { top: '65%', left: '80%' }, // LAT D
-        { top: '45%', left: '50%' }, // VOL
-        { top: '35%', left: '30%' }, // MEI E
-        { top: '35%', left: '70%' }, // MEI D
-        { top: '15%', left: '20%' }, // ATA E
-        { top: '10%', left: '50%' }, // ATA C
-        { top: '15%', left: '80%' }  // ATA D
-    ];
-
-    function renderizarTatita() {
-        pitch.innerHTML = '<div class="pitch-area-top"></div><div class="pitch-area-bottom"></div>';
-        benchList.innerHTML = '';
-        
-        let titulares = saveGame.elenco.filter(j => j.isTitular);
-        let reservas = saveGame.elenco.filter(j => !j.isTitular);
-
-        // Renderiza Titulares no Campo
-        titulares.forEach((jog, index) => {
-            let posCoords = positions433[index] || { top: '50%', left: '50%' };
-            
-            let dot = document.createElement('div');
-            dot.className = `player-dot ${jogadorSelecionado && jogadorSelecionado.id === jog.id ? 'selected' : ''}`;
-            dot.style.top = posCoords.top;
-            dot.style.left = posCoords.left;
-            dot.innerHTML = jog.ovr + `<div class="player-label">${jog.posicao} - ${jog.nome.split(" ")[0]}</div>`;
-            dot.onclick = () => selecionarJogador(jog);
-            pitch.appendChild(dot);
-        });
-
-        // Renderiza Reservas no Banco
-        reservas.forEach(jog => {
-            let bRow = document.createElement('div');
-            bRow.className = `bench-player ${jogadorSelecionado && jogadorSelecionado.id === jog.id ? 'selected' : ''}`;
-            bRow.innerHTML = `<div><strong>${jog.posicao}</strong> - ${jog.nome}</div><span style="color:var(--success); font-weight:bold;">${jog.ovr}</span>`;
-            bRow.onclick = () => selecionarJogador(jog);
-            benchList.appendChild(bRow);
-        });
-    }
-
-    window.selecionarJogador = async function(jog) {
-        if (!jogadorSelecionado) {
-            // Primeiro clique (seleciona)
-            jogadorSelecionado = jog;
-            swapMsg.innerText = `Selecionado: ${jog.nome} (${jog.posicao}). Clique em outro jogador para trocar.`;
-            renderizarTatita();
-        } else {
-            // Segundo clique (faz a troca)
-            if (jogadorSelecionado.id !== jog.id) {
-                // Inverte os status de titularidade se um for titular e outro reserva
-                if (jogadorSelecionado.isTitular !== jog.isTitular) {
-                    let tempTitular = jogadorSelecionado.isTitular;
-                    jogadorSelecionado.isTitular = jog.isTitular;
-                    jog.isTitular = tempTitular;
-                }
-                swapMsg.innerText = `Troca realizada: ${jogadorSelecionado.nome} <-> ${jog.nome}. Suas táticas foram salvas.`;
-                await salvarProgresso();
+            elLoader.style.display = "none";
+            if (saveSnap.exists()) {
+                // Já tem clube, vai direto pro jogo
+                irParaJogo();
             } else {
-                swapMsg.innerText = "Seleção cancelada.";
+                // Não tem clube, vai para o setup
+                screenAuth.style.display = "none";
+                screenSetup.style.display = "block";
             }
-            jogadorSelecionado = null; // Reseta seleção
-            renderizarTatita();
+        } catch (error) {
+            elLoader.style.display = "none";
+            errObj.innerText = "Credenciais inválidas.";
         }
     }
 
-    // UTILS NAVEGAÇÃO
-    window.switchTab = function(tabId, element) {
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-        element.classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
+    // ========== PASSO 2: FUNDAÇÃO DO CLUBE ==========
+    window.fundarClube = async function() {
+        const treinador = document.getElementById('setup-manager').value.trim();
+        const clube = document.getElementById('setup-club').value.trim();
+        const regiao = document.getElementById('setup-region').value;
+        const errObj = document.getElementById('setup-error');
+
+        if(!treinador || !clube) return errObj.innerText = "Preencha todos os campos.";
+        
+        errObj.innerText = ""; elLoader.style.display = "flex"; elLoader.innerText = "Construindo Base de Dados...";
+
+        // Regras de negócio da última divisão
+        let orcamentoInicial = 500000; // 500 mil euros (clube pequeno)
+        let divisaoInicial = 4; // Ex: Série D
+        let nomeDivisao = "Série D Nacional";
+        
+        if(regiao === 'en') { orcamentoInicial = 800000; divisaoInicial = 4; nomeDivisao = "League Two"; }
+        if(regiao === 'es') { orcamentoInicial = 400000; divisaoInicial = 3; nomeDivisao = "Tercera División"; }
+
+        // Gerar Elenco de Baixa Qualidade (OVR 50 a 65)
+        let elencoGerado = [];
+        const posicoes = ["GOL", "GOL", "ZAG", "ZAG", "ZAG", "ZAG", "LAT", "LAT", "LAT", "LAT", "VOL", "VOL", "MEI", "MEI", "MEI", "ATA", "ATA", "ATA", "ATA", "ATA"];
+        
+        posicoes.forEach((pos, index) => {
+            let ovr = Math.floor(Math.random() * 15) + 50; // OVR entre 50 e 65
+            elencoGerado.push({
+                id: "j_" + Date.now() + index,
+                nome: "Atleta da Base " + (index + 1),
+                posicao: pos,
+                idade: Math.floor(Math.random() * 16) + 17, // 17 a 32 anos
+                ovr: ovr,
+                isTitular: index < 11 // Os primeiros 11 são titulares
+            });
+        });
+
+        // Estrutura do Save
+        const clubData = {
+            managerName: treinador,
+            clubName: clube,
+            region: regiao,
+            divisionLevel: divisaoInicial,
+            divisionName: nomeDivisao,
+            budget: orcamentoInicial,
+            formation: "4-4-2",
+            season: 1,
+            squad: elencoGerado,
+            createdAt: new Date().toISOString()
+        };
+
+        try {
+            // Grava no Firebase isolado por UID
+            await setDoc(doc(db, "sm_saves", currentUID), clubData);
+            
+            elLoader.style.display = "none";
+            screenSetup.style.display = "none";
+            screenSuccess.style.display = "block";
+        } catch (error) {
+            elLoader.style.display = "none";
+            errObj.innerText = "Erro ao gravar no banco de dados.";
+            console.error(error);
+        }
+    }
+
+    window.irParaJogo = function() {
+        // Redireciona para o painel principal (que vamos construir a seguir)
+        alert("O banco foi criado! O próximo passo é o arquivo 'painel.html' que vai ler este banco.");
+        // window.location.href = "painel.html";
     }
 </script>
 </body>
