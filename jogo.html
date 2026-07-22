@@ -2,606 +2,291 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Penalty Shooters - Modo Campeonato</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Manager PRO - Painel</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght=700;900&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { background: #05070f; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Ubuntu', sans-serif; }
-        
-        #gameContainer { position: relative; width: 100%; max-width: 850px; aspect-ratio: 16/9; background: #000; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 4px solid #1e293b; border-radius: 8px; }
-        canvas { width: 100%; height: 100%; display: block; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;700&display=swap');
 
-        /* Interface das Telas */
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(10, 15, 30, 0.98); color: white; z-index: 100; padding: 20px; }
-        h1 { font-size: 38px; color: #facc15; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.9); text-transform: uppercase; letter-spacing: 2px; }
-        
-        /* Tabela do Grupo */
-        .tournament-table { width: 90%; border-collapse: collapse; margin-bottom: 25px; background: #111827; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .tournament-table th, .tournament-table td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #1f2937; }
-        .tournament-table th { background: #1f2937; color: #facc15; font-size: 14px; text-transform: uppercase; }
-        .tournament-table tr.player-row { background: rgba(37, 99, 235, 0.25); border-left: 5px solid #2563eb; }
-        .tournament-table td.team-name { text-align: left; font-weight: bold; }
+        :root {
+            --bg-base: #0f172a; --bg-panel: #1e293b; --bg-card: #334155;
+            --text-main: #f8fafc; --text-muted: #94a3b8;
+            --accent: #3b82f6; --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+            --border: #475569;
+        }
 
-        .play-btn { background: linear-gradient(to bottom, #facc15, #eab308); color: #000; border: none; padding: 15px 45px; font-size: 20px; font-weight: 900; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 20px rgba(234,179,8,0.4); transition: transform 0.1s; text-transform: uppercase; }
-        .play-btn:active { transform: scale(0.96); }
-        .next-match-card { background: #1e293b; padding: 15px; border-radius: 8px; width: 90%; text-align: center; margin-bottom: 20px; border: 1px solid #334155; font-size: 16px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
+
+        /* ======== SIDEBAR ======== */
+        .sidebar { width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+        .brand { padding: 25px 20px; border-bottom: 1px solid var(--border); }
+        .brand h1 { font-family: 'Oswald', sans-serif; font-size: 26px; color: var(--accent); text-transform: uppercase; }
+        
+        .nav-menu { flex-grow: 1; padding: 15px 0; overflow-y: auto; display: flex; flex-direction: column; }
+        .nav-item { padding: 15px 20px; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-main); }
+        .nav-item.active { background: rgba(59, 130, 246, 0.15); color: var(--accent); border-left-color: var(--accent); }
+        
+        /* ======== ÁREA PRINCIPAL ======== */
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
+        
+        .top-header { background: var(--bg-panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; flex-shrink: 0; }
+        .club-info h2 { font-family: 'Oswald', sans-serif; font-size: 22px; text-transform: uppercase; margin-bottom: 4px; color: var(--warning); }
+        .club-info p { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+        .header-stats { display: flex; gap: 15px; align-items: center; }
+        .stat-badge { background: var(--bg-base); padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; border: 1px solid var(--border); color: var(--success); }
+        
+        .btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
+        .btn-logout:hover { background: var(--danger); color: white; }
+
+        /* ======== ABAS ======== */
+        .content-area { padding: 25px; overflow-y: auto; flex-grow: 1; }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ======== PAINÉIS ======== */
+        .grid-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .panel { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border); padding: 20px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 15px; }
+        .panel-title { font-family: 'Oswald', sans-serif; font-size: 18px; text-transform: uppercase; color: var(--text-main); }
+
+        /* ======== TABELA DA LIGA ======== */
+        .table-responsive { overflow-x: auto; max-height: 500px; }
+        .league-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+        .league-table th { position: sticky; top: 0; background: var(--bg-panel); text-align: left; padding: 12px 10px; color: var(--text-muted); border-bottom: 2px solid var(--border); z-index: 2; }
+        .league-table td { padding: 12px 10px; border-bottom: 1px solid var(--border); }
+        .league-table tr:hover { background: rgba(255,255,255,0.03); }
+        .col-center { text-align: center; }
+        .row-highlight { background: rgba(59, 130, 246, 0.15); font-weight: bold; border-left: 4px solid var(--accent); }
+        .zone-up { border-left: 3px solid var(--success); }
+        .zone-down { border-left: 3px solid var(--danger); }
+
+        /* ======== ELENCO ======== */
+        .squad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+        .player-card { background: var(--bg-card); padding: 15px; border-radius: 8px; border-left: 4px solid var(--success); display: flex; justify-content: space-between; align-items: center; }
+        .player-card.reserva { border-left-color: var(--text-muted); opacity: 0.8; }
+        .player-info h4 { font-size: 14px; margin-bottom: 4px; }
+        .player-info p { font-size: 11px; color: var(--text-muted); }
+        .player-ovr { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: var(--warning); background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 6px; }
+
+        #loader { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 24px; }
     </style>
 </head>
 <body>
 
-<div id="gameContainer">
-    <div id="startScreen" class="screen">
-        <h1>PENALTY CHAMPIONSHIP</h1>
-        <button class="play-btn" onclick="initAudio(); showTournament()">Iniciar Torneio</button>
-    </div>
+<div id="loader">Carregando Dados do Clube...</div>
 
-    <div id="tournamentScreen" class="screen" style="display: none;">
-        <h1>FASE DE GRUPOS - GRUPO A</h1>
-        <table class="tournament-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th style="text-align: left;">TIME</th>
-                    <th>P</th>
-                    <th>W</th>
-                    <th>L</th>
-                    <th>GD</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                </tbody>
-        </table>
-        <div class="next-match-card" id="nextMatchInfo">
-            Próximo confronto: LEÃO AZUL vs DESCALÇO
+<aside class="sidebar">
+    <div class="brand">
+        <h1 id="sidebar-club">Manager PRO</h1>
+    </div>
+    <nav class="nav-menu">
+        <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Tabela da Liga</div>
+        <div class="nav-item" onclick="switchTab('squad', this)">👕 Meu Elenco</div>
+        <div class="nav-item" style="color: var(--text-muted); cursor: not-allowed;">🛒 Mercado (Em Breve)</div>
+        <div class="nav-item" style="color: var(--text-muted); cursor: not-allowed;">⚽ Partida (Em Breve)</div>
+    </nav>
+</aside>
+
+<div class="main-wrapper">
+    <header class="top-header">
+        <div class="club-info">
+            <h2 id="ui-club-name">Buscando...</h2>
+            <p id="ui-club-league">Aguarde...</p>
         </div>
-        <button class="play-btn" id="btnNextMatch" onclick="initAudio(); startPenaltyMatch()">Jogar Partida</button>
-    </div>
+        <div class="header-stats">
+            <div class="stat-badge">💰 <span id="ui-balance">€ 0</span></div>
+            <button class="btn-logout" onclick="fazerLogout()">Sair do Jogo</button>
+        </div>
+    </header>
 
-    <div id="endScreen" class="screen" style="display: none;">
-        <h1 id="endTitle">Fim do Torneio</h1>
-        <button class="play-btn" onclick="location.reload()">Jogar Novamente</button>
-    </div>
+    <main class="content-area">
+        
+        <!-- ABA: LIGA (CLASSIFICAÇÃO) -->
+        <div id="tab-dashboard" class="tab-pane active">
+            <div class="grid-layout">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title" id="ui-league-title">Classificação Geral</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="league-table">
+                            <thead>
+                                <tr><th>#</th><th>Clube</th><th class="col-center">PTS</th><th class="col-center">J</th><th class="col-center">V</th><th class="col-center">E</th><th class="col-center">D</th><th class="col-center">GP</th><th class="col-center">GC</th><th class="col-center">SG</th></tr>
+                            </thead>
+                            <tbody id="ui-league-table">
+                                <!-- Preenchido pelo JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <canvas id="gameCanvas" style="display: none;"></canvas>
+        <!-- ABA: ELENCO -->
+        <div id="tab-squad" class="tab-pane">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Seu Plantel de Jogadores</h3>
+                    <span style="font-size: 13px; color: var(--text-muted);">Total de Atletas: <strong id="ui-squad-count">0</strong></span>
+                </div>
+                <div class="squad-grid" id="ui-squad-grid">
+                    <!-- Preenchido pelo JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
 </div>
 
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 850;
-    canvas.height = 480;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-    // --- SINTETIZADOR DE ÁUDIO NATIVO OTMIZADO (WEB AUDIO API) ---
-    let audioCtx = null;
-    let sharedNoiseBuffer = null;
-
-    function initAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-        // Pré-cacheia o buffer de ruído uma vez para evitar lag em tempo de jogo
-        if (audioCtx && !sharedNoiseBuffer) {
-            let bufferSize = audioCtx.sampleRate * 0.5; 
-            sharedNoiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            let data = sharedNoiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-        }
-    }
-
-    function playKickSound() {
-        if (!audioCtx) return;
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-    }
-
-    function playSaveSound() {
-        if (!audioCtx || !sharedNoiseBuffer) return;
-        // Impacto sordo (luvas)
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.08);
-
-        // Tapinha de ruído
-        let noise = audioCtx.createBufferSource();
-        noise.buffer = sharedNoiseBuffer;
-        let filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass'; filter.frequency.setValueAtTime(400, audioCtx.currentTime);
-        let noiseGain = audioCtx.createGain();
-        noiseGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
-        noise.connect(filter); filter.connect(noiseGain); noiseGain.connect(audioCtx.destination);
-        noise.start(); noise.stop(audioCtx.currentTime + 0.06);
-    }
-
-    function playPostSound() {
-        if (!audioCtx) return;
-        let freqs = [600, 850, 1100];
-        freqs.forEach(f => {
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-        });
-        let thud = audioCtx.createOscillator();
-        let thudGain = audioCtx.createGain();
-        thud.frequency.setValueAtTime(170, audioCtx.currentTime);
-        thud.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.12);
-        thudGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        thudGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-        thud.connect(thudGain); thudGain.connect(audioCtx.destination);
-        thud.start(); thud.stop(audioCtx.currentTime + 0.12);
-    }
-
-    function playCheerSound() {
-        if (!audioCtx || !sharedNoiseBuffer) return;
-        let noise = audioCtx.createBufferSource();
-        noise.buffer = sharedNoiseBuffer;
-        noise.loop = true;
-
-        let filter = audioCtx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(350, audioCtx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.2);
-        
-        let gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.15);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.0);
-        
-        noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-        noise.start(); noise.stop(audioCtx.currentTime + 2.0);
-    }
-
-    function playLamentSound() {
-        if (!audioCtx || !sharedNoiseBuffer) return;
-        let noise = audioCtx.createBufferSource();
-        noise.buffer = sharedNoiseBuffer;
-        noise.loop = true;
-
-        let filter = audioCtx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
-        filter.frequency.linearRampToValueAtTime(160, audioCtx.currentTime + 0.4);
-        
-        let gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-        
-        noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-        noise.start(); noise.stop(audioCtx.currentTime + 1.5);
-    }
-
-    // --- BANCO DE DADOS DO CAMPEONATO ---
-    let teams = [
-        { name: "LEÃO AZUL", p: 0, w: 0, l: 0, gd: 0, isPlayer: true },
-        { name: "DESCALÇO", p: 0, w: 0, l: 0, gd: 0 },
-        { name: "REAL MATISMO", p: 0, w: 0, l: 0, gd: 0 },
-        { name: "PENALTÊROS", p: 0, w: 0, l: 0, gd: 0 }
-    ];
-    let currentRound = 1;
-    let currentOpponent = null;
-
-    let gameState = 'START'; 
-    let turn = 'PLAYER'; 
-    let isLoopRunning = false;
-    
-    let matchData = {
-        playerGoals: 0, aiGoals: 0,
-        playerShots: 0, aiShots: 0,
-        playerHistory: [], aiHistory: [],
-        currentKickNumber: 1, suddenDeath: false
+    const firebaseConfig = {
+        apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
+        authDomain: "copa-ae771.firebaseapp.com",
+        projectId: "copa-ae771",
+        appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
     };
 
-    const goal = { x: 175, y: 100, width: 500, height: 170 };
-    const ballOrigin = { x: 425, y: 410 };
-    let ball = { x: 425, y: 410, radius: 14, targetX: 0, targetY: 0, speed: 18, progress: 0 };
-    let gk = { x: 425, y: 255, targetX: 425, targetY: 255, width: 45, height: 80, speed: 10, state: 'IDLE' };
-    let player = { x: 330, y: 440 };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    let arrowAngle = -0.6; let arrowDir = 0.03;
-    let targetCircle = { x: 425, y: 185, dirX: 4, dirY: 2.5 };
-    let powerBar = 0; let powerDir = 5;
-    let resultText = ''; let resultColor = '#fff';
+    let currentUID = null;
+    let saveGame = null;
 
-    const crowd = [];
-    for(let i=0; i<1000; i++) {
-        crowd.push({ x: Math.random()*canvas.width, y: 40+Math.random()*60, color: ['#3b82f6','#ef4444','#eab308','#10b981'][Math.floor(Math.random()*4)] });
-    }
-
-    function showTournament() {
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementById('gameCanvas').style.display = 'none';
-        document.getElementById('tournamentScreen').style.display = 'flex';
-        
-        if (currentRound === 1) currentOpponent = teams.find(t => t.name === "DESCALÇO");
-        else if (currentRound === 2) currentOpponent = teams.find(t => t.name === "REAL MATISMO");
-        else if (currentRound === 3) currentOpponent = teams.find(t => t.name === "PENALTÊROS");
-        else {
-            endChampionship();
-            return;
-        }
-
-        document.getElementById('nextMatchInfo').innerText = `RODADA ${currentRound} de 3: LEÃO AZUL vs ${currentOpponent.name}`;
-        updateTableUI();
-    }
-
-    function updateTableUI() {
-        teams.sort((a,b) => b.p - a.p || b.gd - a.gd);
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-        
-        teams.forEach((team, index) => {
-            const tr = document.createElement('tr');
-            if(team.isPlayer) tr.className = 'player-row';
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td class="team-name">${team.name}</td>
-                <td><strong>${team.p}</strong></td>
-                <td>${team.w}</td>
-                <td>${team.l}</td>
-                <td>${team.gd}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function startPenaltyMatch() {
-        document.getElementById('tournamentScreen').style.display = 'none';
-        canvas.style.display = 'block';
-        
-        matchData = {
-            playerGoals: 0, aiGoals: 0,
-            playerShots: 0, aiShots: 0,
-            playerHistory: [], aiHistory: [],
-            currentKickNumber: 1, suddenDeath: false
-        };
-        
-        setupPlayerTurn();
-        
-        if (!isLoopRunning) {
-            isLoopRunning = true;
-            gameLoop();
-        }
-    }
-
-    function setupPlayerTurn() {
-        turn = 'PLAYER';
-        gameState = 'AIMING_ARROW';
-        ball.x = ballOrigin.x; ball.y = ballOrigin.y; ball.progress = 0;
-        gk.x = 425; gk.y = 255; gk.targetX = 425; gk.targetY = 255; gk.state = 'IDLE';
-        targetCircle.x = 425; targetCircle.y = 185;
-    }
-
-    function setupAiTurn() {
-        turn = 'AI';
-        gameState = 'AI_SHOOTING';
-        ball.x = ballOrigin.x; ball.y = ballOrigin.y; ball.progress = 0;
-        gk.x = 425; gk.y = 255; gk.targetX = 425; gk.targetY = 255; gk.state = 'IDLE';
-        
-        setTimeout(() => {
-            if (gameState !== 'AI_SHOOTING') return;
-            const spots = [
-                {x: 200 + Math.random()*90, y: 120 + Math.random()*80},
-                {x: 550 + Math.random()*90, y: 120 + Math.random()*80},
-                {x: 425 + (Math.random()*40 - 20), y: 120}
-            ];
-            const chosen = spots[Math.floor(Math.random() * spots.length)];
-            ball.targetX = chosen.x; ball.targetY = chosen.y;
-            ball.speed = 14 + Math.random() * 9;
-            
-            playKickSound(); 
-            gameState = 'BALL_FLYING';
-
-            // Só escolhe um canto se o jogador se manteve parado/não tomou decisão
-            if(gk.state === 'IDLE') {
-                const moves = [250, 425, 600];
-                gk.targetX = moves[Math.floor(Math.random()*3)];
-                gk.targetY = 200; gk.state = 'DIVING';
-            }
-        }, 1500);
-    }
-
-    window.addEventListener('mousedown', (event) => {
-        if (canvas.style.display === 'none') return;
-        initAudio(); 
-        
-        if (turn === 'PLAYER') {
-            if (gameState === 'AIMING_ARROW') {
-                gameState = 'AIMING_TARGET';
-            } else if (gameState === 'AIMING_TARGET') {
-                gameState = 'AIMING_POWER';
-            } else if (gameState === 'AIMING_POWER') {
-                ball.targetX = targetCircle.x; ball.targetY = targetCircle.y;
-                ball.speed = 11 + (powerBar * 0.16);
-                
-                const aiMoves = [250, 425, 600];
-                gk.targetX = aiMoves[Math.floor(Math.random() * aiMoves.length)];
-                gk.targetY = 170 + Math.random() * 60;
-                gk.state = 'DIVING';
-                
-                playKickSound(); 
-                gameState = 'BALL_FLYING';
-            }
-        } else if (turn === 'AI' && gameState === 'AI_SHOOTING') {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = ((event.clientX - rect.left) / rect.width) * canvas.width;
-            if (mouseX < 340) { gk.targetX = 250; gk.targetY = 200; }
-            else if (mouseX > 510) { gk.targetX = 600; gk.targetY = 200; }
-            else { gk.targetX = 425; gk.targetY = 220; }
-            gk.state = 'DIVING';
+    // Monitora se o jogador está logado
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUID = user.uid;
+            await carregarSaveDoBanco();
+        } else {
+            // Se não estiver logado, manda de volta para a tela de fundação
+            window.location.href = "index.html"; 
         }
     });
 
-    function gameLoop() {
-        update();
-        render();
-        requestAnimationFrame(gameLoop);
-    }
-
-    function update() {
-        if (canvas.style.display === 'none') return;
-
-        if (gameState === 'AIMING_ARROW') {
-            arrowAngle += arrowDir;
-            if (arrowAngle > 0.65 || arrowAngle < -0.65) arrowDir *= -1;
-        }
-        if (gameState === 'AIMING_TARGET') {
-            targetCircle.x += targetCircle.dirX; targetCircle.y += targetCircle.dirY;
-            if(targetCircle.x < goal.x + 25 || targetCircle.x > goal.x + goal.width - 25) targetCircle.dirX *= -1;
-            if(targetCircle.y < goal.y + 25 || targetCircle.y > goal.y + goal.height - 25) targetCircle.dirY *= -1;
-        }
-        if (gameState === 'AIMING_POWER') {
-            powerBar += powerDir;
-            if (powerBar > 100 || powerBar < 0) powerDir *= -1;
-        }
-        if (gk.state === 'DIVING') {
-            gk.x += (gk.targetX - gk.x) * 0.18; gk.y += (gk.targetY - gk.y) * 0.18;
-        }
-
-        if (gameState === 'BALL_FLYING') {
-            ball.progress += 0.038;
-            ball.x = ballOrigin.x + (ball.targetX - ballOrigin.x) * ball.progress;
-            ball.y = ballOrigin.y + (ball.targetY - ballOrigin.y) * ball.progress;
-            ball.radius = 15 - (7 * ball.progress);
-
-            if (ball.progress >= 1) {
-                gameState = 'RESULT';
-                let distanceToGk = Math.hypot(ball.x - gk.x, ball.y - (gk.y - 25));
-                let saveDistance = ball.speed > 22 ? 45 : 75;
-
-                let isGoal = (ball.x >= goal.x && ball.x <= goal.x + goal.width && ball.y >= goal.y && ball.y <= goal.y + goal.height);
-
-                if (isGoal && distanceToGk >= saveDistance) {
-                    resultText = "GOOOOOL!"; resultColor = "#10b981";
-                    if (turn === 'PLAYER') { matchData.playerGoals++; matchData.playerHistory.push('GOAL'); }
-                    else { matchData.aiGoals++; matchData.aiHistory.push('GOAL'); }
-                    
-                    playCheerSound(); 
-                } else if (isGoal && distanceToGk < saveDistance) {
-                    resultText = "DEFENDEU!"; resultColor = "#facc15";
-                    if (turn === 'PLAYER') matchData.playerHistory.push('MISS');
-                    else matchData.aiHistory.push('MISS');
-                    
-                    playSaveSound();  
-                    playLamentSound(); 
-                } else {
-                    let hitPost = Math.random() < 0.35;
-                    if (hitPost) {
-                        resultText = "NA TRAVE!!!"; resultColor = "#ef4444";
-                        playPostSound(); 
-                    } else {
-                        resultText = "PARA FORA!"; resultColor = "#ef4444";
-                    }
-                    
-                    if (turn === 'PLAYER') matchData.playerHistory.push('MISS');
-                    else matchData.aiHistory.push('MISS');
-                    
-                    playLamentSound(); 
-                }
-
-                if(turn === 'PLAYER') matchData.playerShots++; else matchData.aiShots++;
-
-                setTimeout(checkMatchProgression, 2000);
-            }
-        }
-    }
-
-    function checkMatchProgression() {
-        if (matchData.playerShots === matchData.aiShots) {
-            let shots = matchData.playerShots;
-            
-            if (shots >= 5) {
-                if (matchData.playerGoals !== matchData.aiGoals) {
-                    endPenaltyMatch();
-                    return;
-                } else {
-                    matchData.suddenDeath = true; 
-                }
-            }
-            
-            if (matchData.suddenDeath && shots > 5) {
-                if (matchData.playerGoals !== matchData.aiGoals) {
-                    endPenaltyMatch();
-                    return;
-                }
-            }
-
-            matchData.currentKickNumber++;
-            setupPlayerTurn();
-        } else {
-            setupAiTurn();
-        }
-    }
-
-    function endPenaltyMatch() {
-        let pGoals = matchData.playerGoals;
-        let aGoals = matchData.aiGoals;
-        let playerWin = pGoals > aGoals;
-
-        let playerTeam = teams.find(t => t.isPlayer);
-        playerTeam.gd += (pGoals - aGoals);
-        if(playerWin) { playerTeam.p += 3; playerTeam.w += 1; } else { playerTeam.l += 1; }
-
-        let otherTeams = teams.filter(t => !t.isPlayer && t !== currentOpponent);
-        let g1 = Math.floor(Math.random()*4); let g2 = Math.floor(Math.random()*4);
-        if(g1 === g2) g1++; 
-        otherTeams[0].gd += (g1 - g2);
-        otherTeams[1].gd += (g2 - g1);
-        if(g1 > g2) { otherTeams[0].p += 3; otherTeams[0].w += 1; otherTeams[1].l += 1; } 
-        else { otherTeams[1].p += 3; otherTeams[1].w += 1; otherTeams[0].l += 1; }
-
-        currentOpponent.gd += (aGoals - pGoals);
-        if(!playerWin) { currentOpponent.p += 3; currentOpponent.w += 1; } else { currentOpponent.l += 1; }
-
-        currentRound++;
-        showTournament();
-    }
-
-    function render() {
-        if (canvas.style.display === 'none') return;
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        ctx.fillStyle = '#090d16'; ctx.fillRect(0, 0, canvas.width, 100);
-        ctx.fillStyle = '#111827'; ctx.fillRect(0, 40, canvas.width, 60);
-        crowd.forEach(p => { ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); });
-
-        ctx.fillStyle = '#f97316'; ctx.fillRect(0, 100, canvas.width, 25);
-        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Ubuntu';
-        ctx.fillText("FASE DE GRUPOS    -    PENALTY CHALLENGE PRO    -    RODADA " + currentRound, 40, 117);
-
-        let currentY = 125;
-        for (let i = 0; i < 8; i++) {
-            let stripeHeight = 15 + (i * 6);
-            ctx.fillStyle = (i % 2 === 0) ? '#15803d' : '#166534';
-            ctx.fillRect(0, currentY, canvas.width, stripeHeight);
-            currentY += stripeHeight;
-        }
-
-        ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 3;
-        ctx.strokeRect(70, 270, 710, 210);
-
-        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 7;
-        ctx.strokeRect(goal.x, goal.y, goal.width, goal.height);
-        ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
-        for(let x = goal.x; x < goal.x + goal.width; x += 14) {
-            ctx.beginPath(); ctx.moveTo(x, goal.y); ctx.lineTo(x, goal.y + goal.height); ctx.stroke();
-        }
-
-        let totalDots = Math.max(5, matchData.playerShots, matchData.aiShots);
-        for(let i=0; i<totalDots; i++) {
-            ctx.fillStyle = '#4b5563'; 
-            if(matchData.playerHistory[i] === 'GOAL') ctx.fillStyle = '#10b981'; 
-            if(matchData.playerHistory[i] === 'MISS') ctx.fillStyle = '#ef4444'; 
-            ctx.beginPath(); ctx.arc(goal.x + 30 + (i * 24), goal.y - 25, 8, 0, Math.PI*2); ctx.fill();
-
-            ctx.fillStyle = '#4b5563';
-            if(matchData.aiHistory[i] === 'GOAL') ctx.fillStyle = '#10b981';
-            if(matchData.aiHistory[i] === 'MISS') ctx.fillStyle = '#ef4444';
-            ctx.beginPath(); ctx.arc(goal.x + goal.width - 30 - (i * 24), goal.y - 25, 8, 0, Math.PI*2); ctx.fill();
-        }
-
-        if (turn === 'PLAYER' && gameState === 'AIMING_ARROW') {
-            ctx.save(); ctx.translate(ballOrigin.x, ballOrigin.y); ctx.rotate(arrowAngle);
-            ctx.fillStyle = '#eab308'; ctx.beginPath();
-            ctx.moveTo(-10, -25); ctx.lineTo(10, -25); ctx.lineTo(5, -110); ctx.lineTo(-5, -110);
-            ctx.closePath(); ctx.fill(); ctx.restore();
-        }
-        if (turn === 'PLAYER' && (gameState === 'AIMING_TARGET' || gameState === 'AIMING_POWER')) {
-            ctx.strokeStyle = '#eab308'; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 22, 0, Math.PI*2); ctx.stroke();
-            ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
-            ctx.beginPath(); ctx.arc(targetCircle.x, targetCircle.y, 14, 0, Math.PI*2); ctx.fill();
-        }
-
-        ctx.fillStyle = turn === 'PLAYER' ? '#06b6d4' : '#ec4899';
-        ctx.fillRect(gk.x - gk.width/2, gk.y - gk.height, gk.width, gk.height - 25);
-        ctx.fillStyle = '#111827'; ctx.fillRect(gk.x - gk.width/2, gk.y - 25, gk.width, 25);
-        ctx.fillStyle = '#fbcfe8'; ctx.beginPath(); ctx.arc(gk.x, gk.y - gk.height - 12, 12, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = '#ffffff'; 
-        ctx.fillRect(gk.x - gk.width - 8, gk.y - gk.height + 15, 15, 15);
-        ctx.fillRect(gk.x + gk.width - 7, gk.y - gk.height + 15, 15, 15);
-
-        if (turn === 'PLAYER') {
-            ctx.fillStyle = '#2563eb'; 
-            ctx.fillRect(player.x, player.y, 50, 40);
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 22px Ubuntu';
-            ctx.fillText("3", player.x + 18, player.y + 28);
-            ctx.fillStyle = '#000'; ctx.fillRect(player.x, player.y + 40, 50, 20);
-            ctx.fillStyle = '#fbcfe8'; ctx.fillRect(player.x + 8, player.y + 60, 10, 25);
-            ctx.fillRect(player.x + 32, player.y + 60, 10, 25);
-        }
-
-        if (gameState !== 'START') {
-            ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath();
-            ctx.arc(ball.x, ball.y + 6, ball.radius, 0, Math.PI*2); ctx.fill();
-            ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke(); 
-        }
-
-        if (gameState === 'AIMING_POWER') {
-            ctx.fillStyle = '#1e293b'; ctx.fillRect(35, 180, 25, 180);
-            let pColor = '#10b981';
-            if(powerBar > 65) pColor = '#facc15';
-            if(powerBar > 85) pColor = '#ef4444';
-            ctx.fillStyle = pColor; ctx.fillRect(35, 360, 25, -powerBar * 1.8);
-        }
-
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)'; ctx.fillRect(canvas.width - 240, canvas.height - 95, 215, 75);
-        ctx.lineWidth = 2; ctx.strokeStyle = '#eab308'; ctx.strokeRect(canvas.width - 240, canvas.height - 95, 215, 75);
-        ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu';
-        ctx.fillText("LEÃO AZUL (VOCÊ)", canvas.width - 225, canvas.height - 65);
-        ctx.fillText(currentOpponent ? currentOpponent.name : "RIVAL", canvas.width - 225, canvas.height - 35);
-        ctx.font = '20px Ubuntu'; ctx.fillStyle = '#facc15';
-        ctx.fillText(matchData.playerGoals, canvas.width - 55, canvas.height - 63);
-        ctx.fillText(matchData.aiGoals, canvas.width - 55, canvas.height - 33);
-
-        ctx.fillStyle = matchData.suddenDeath ? '#b91c1c' : (turn === 'PLAYER' ? '#1e3a8a' : '#c2410c');
-        ctx.fillRect(0, 0, canvas.width, 40);
-        ctx.fillStyle = '#fff'; ctx.font = '14px Ubuntu'; ctx.textAlign = 'center';
-        let statusMsg = matchData.suddenDeath ? "PÊNALTIS ALTERNADOS (MORTE SÚBITA)! " : `COBRANÇA Nº ${matchData.currentKickNumber} de 5 - `;
-        statusMsg += turn === 'PLAYER' ? "SUA VEZ DE BATER! CLIQUE" : "SUA VEZ DE DEFENDER! CLIQUE NOS CANTOS DO GOL";
-        ctx.fillText(statusMsg, canvas.width/2, 25); ctx.textAlign = 'left';
-
-        if (gameState === 'RESULT') {
-            ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.fillRect(0, 200, canvas.width, 90);
-            ctx.font = 'bold 42px Ubuntu'; ctx.fillStyle = resultColor; ctx.textAlign = 'center';
-            ctx.fillText(resultText, canvas.width/2, 260); ctx.textAlign = 'left';
-        }
-    }
-
-    function endChampionship() {
-        document.getElementById('gameCanvas').style.display = 'none';
-        document.getElementById('tournamentScreen').style.display = 'none';
+    async function carregarSaveDoBanco() {
+        const docSnap = await getDoc(doc(db, "sm_saves", currentUID));
         
-        teams.sort((a,b) => b.p - a.p || b.gd - a.gd);
-        let champion = teams[0];
+        if (docSnap.exists()) {
+            saveGame = docSnap.data();
+            
+            // Passo de Segurança: Verificar se a Liga já foi gerada neste Save.
+            // Se não foi gerada ainda, o sistema cria os 19 rivais da última divisão agora mesmo.
+            if (!saveGame.leagueData) {
+                document.getElementById('loader').innerText = "Sorteando chaves e gerando rivais da liga...";
+                saveGame.leagueData = gerarRivaisDaLiga(saveGame.clubName);
+                // Salva a liga gerada de volta no Firebase
+                await setDoc(doc(db, "sm_saves", currentUID), saveGame, { merge: true });
+            }
 
-        document.getElementById('endScreen').style.display = 'flex';
-        document.getElementById('endTitle').innerText = champion.isPlayer ? "🏆 PARABÉNS! VOCÊ É O CAMPEÃO DO GRUPO A! 🏆" : `FIM DE TORNEIO! O campeão foi o ${champion.name}`;
+            preencherInterface();
+            document.getElementById('loader').style.display = 'none';
+        } else {
+            alert("Nenhum clube encontrado! Crie o seu clube primeiro.");
+            window.location.href = "index.html";
+        }
+    }
+
+    // Função que cria os 19 times falsos para preencher a tabela com você
+    function gerarRivaisDaLiga(meuClubeNome) {
+        const nomesRivais = [
+            "Operário FC", "Desportiva", "Nacional", "Juventus", "Comercial", 
+            "XV de Novembro", "Tupi", "Caxias", "Ypiranga", "Campinense", 
+            "Treze", "Confiança", "Botafogo-B", "Tombense", "Volta Redonda", 
+            "Ferroviário", "Sampaio Corrêa", "Paysandu", "Remo"
+        ];
+        
+        let tabela = [];
+        
+        // Insere o seu time na tabela
+        tabela.push({ id: "my_team", nome: meuClubeNome, p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, isMe: true });
+        
+        // Insere os 19 rivais
+        for(let i=0; i<19; i++) {
+            tabela.push({ id: "cpu_"+i, nome: nomesRivais[i], p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, isMe: false });
+        }
+        
+        return tabela;
+    }
+
+    function preencherInterface() {
+        // Preenche Cabeçalho
+        document.getElementById('ui-club-name').innerText = saveGame.clubName;
+        document.getElementById('sidebar-club').innerText = saveGame.clubName;
+        document.getElementById('ui-club-league').innerText = `${saveGame.divisionName} - Treinador: ${saveGame.managerName}`;
+        document.getElementById('ui-league-title').innerText = `Classificação - ${saveGame.divisionName}`;
+        
+        // Formata Moeda (€ 500k)
+        let orcamento = saveGame.budget;
+        let strOrc = orcamento >= 1000000 ? (orcamento/1000000).toFixed(1) + "M" : (orcamento/1000).toFixed(0) + "k";
+        document.getElementById('ui-balance').innerText = `€ ${strOrc}`;
+
+        // Preenche Tabela
+        let htmlTabela = "";
+        saveGame.leagueData.forEach((time, index) => {
+            let classeLinha = time.isMe ? 'row-highlight' : '';
+            let zona = index < 4 ? 'zone-up' : (index > 15 ? 'zone-down' : '');
+            
+            htmlTabela += `
+            <tr class="${classeLinha}">
+                <td class="${zona}">${index + 1}</td>
+                <td>${time.isMe ? `<strong>${time.nome}</strong>` : time.nome}</td>
+                <td class="col-center" style="color:var(--warning); font-weight:bold;">${time.p}</td>
+                <td class="col-center">${time.j}</td>
+                <td class="col-center">${time.v}</td>
+                <td class="col-center">${time.e}</td>
+                <td class="col-center">${time.d}</td>
+                <td class="col-center">${time.gp}</td>
+                <td class="col-center">${time.gc}</td>
+                <td class="col-center" style="font-weight:bold;">${time.sg}</td>
+            </tr>`;
+        });
+        document.getElementById('ui-league-table').innerHTML = htmlTabela;
+
+        // Preenche Elenco
+        document.getElementById('ui-squad-count').innerText = saveGame.squad.length;
+        let htmlElenco = "";
+        
+        // Ordena para os Titulares aparecerem primeiro
+        let elencoOrdenado = saveGame.squad.sort((a,b) => (b.isTitular ? 1 : 0) - (a.isTitular ? 1 : 0));
+        
+        elencoOrdenado.forEach(jog => {
+            let statusCard = jog.isTitular ? '' : 'reserva';
+            let statusTexto = jog.isTitular ? 'Titular' : 'Reserva';
+            
+            htmlElenco += `
+            <div class="player-card ${statusCard}">
+                <div class="player-info">
+                    <h4>${jog.posicao} - ${jog.nome}</h4>
+                    <p>${jog.idade} anos | Status: <strong>${statusTexto}</strong></p>
+                </div>
+                <div class="player-ovr">${jog.ovr}</div>
+            </div>`;
+        });
+        document.getElementById('ui-squad-grid').innerHTML = htmlElenco;
+    }
+
+    // Funcionalidade das Abas e Logout
+    window.switchTab = function(tabId, el) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    window.fazerLogout = function() {
+        signOut(auth).then(() => { window.location.href = "index.html"; });
     }
 </script>
-
 </body>
 </html>
