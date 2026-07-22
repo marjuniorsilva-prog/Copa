@@ -3,39 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V-MAX PRO - Manager System</title>
+    <title>V-MAX PRO - Gestão Completa</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Oswald:wght@500;700&display=swap');
 
         :root {
-            --bg-base: #0f172a;
-            --bg-panel: #1e293b;
-            --bg-card: #334155;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --border: #475569;
+            --bg-base: #0f172a; --bg-panel: #1e293b; --bg-card: #334155;
+            --text-main: #f8fafc; --text-muted: #94a3b8;
+            --accent: #3b82f6; --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+            --border: #475569; --pitch-green: #2f855a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; flex-direction: row; }
-        
+        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-base); }
         ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
 
-        /* ======== ESTRUTURA GERAL ======== */
-        .sidebar { width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; }
-        .brand { padding: 25px 20px; border-bottom: 1px solid var(--border); }
-        .brand h1 { font-family: 'Oswald', sans-serif; font-size: 26px; color: var(--accent); letter-spacing: 1px; }
-        .brand span { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; }
+        /* ======== TELAS (AUTH E APP) ======== */
+        #auth-screen { position: absolute; inset: 0; background: var(--bg-base); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+        .auth-box { background: var(--bg-panel); padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .auth-box h1 { font-family: 'Oswald', sans-serif; color: var(--accent); text-align: center; margin-bottom: 20px; font-size: 32px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; text-transform: uppercase; }
+        .form-group input { width: 100%; padding: 12px; background: var(--bg-base); border: 1px solid var(--border); color: white; border-radius: 6px; font-size: 14px; }
+        .auth-buttons { display: flex; gap: 10px; margin-top: 20px; }
         
+        #app-screen { display: none; width: 100%; height: 100%; flex-direction: row; }
+
+        /* ======== SIDEBAR ======== */
+        .sidebar { width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+        .brand { padding: 25px 20px; border-bottom: 1px solid var(--border); }
+        .brand h1 { font-family: 'Oswald', sans-serif; font-size: 26px; color: var(--accent); }
         .nav-menu { flex-grow: 1; padding: 15px 0; overflow-y: auto; display: flex; flex-direction: column; }
-        .nav-item { padding: 12px 20px; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px; }
+        .nav-item { padding: 12px 20px; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px; }
         .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-main); }
         .nav-item.active { background: rgba(59, 130, 246, 0.15); color: var(--accent); border-left-color: var(--accent); }
         
@@ -43,210 +46,190 @@
         
         /* ======== HEADER ======== */
         .top-header { background: var(--bg-panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; flex-shrink: 0; }
-        .club-info h2 { font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-main); text-transform: uppercase; margin-bottom: 4px; }
-        .club-info p { font-size: 12px; color: var(--text-muted); font-weight: 600; }
-        .header-stats { display: flex; gap: 15px; flex-wrap: wrap; }
+        .club-info h2 { font-family: 'Oswald', sans-serif; font-size: 20px; text-transform: uppercase; margin-bottom: 4px; }
+        .header-stats { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
         .stat-badge { background: var(--bg-base); padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; border: 1px solid var(--border); }
-        
+        .btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-logout:hover { background: var(--danger); color: white; }
+
         /* ======== ÁREA DE CONTEÚDO ======== */
         .content-area { padding: 25px; overflow-y: auto; flex-grow: 1; }
         .tab-pane { display: none; animation: fadeIn 0.3s ease; }
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ======== PAINÉIS E GRIDS ======== */
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .panel { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border); padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .panel { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border); padding: 20px; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 15px; }
-        .panel-title { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        .panel-title { font-family: 'Oswald', sans-serif; font-size: 16px; text-transform: uppercase; }
 
-        /* ======== TABELA ======== */
-        .table-responsive { overflow-x: auto; }
-        .league-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 400px; }
-        .league-table th { text-align: left; padding: 10px; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid var(--border); }
-        .league-table td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-weight: 500; }
+        /* ======== TABELA LIGA (20 TIMES) ======== */
+        .table-responsive { overflow-x: auto; max-height: 500px; }
+        .league-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 500px; }
+        .league-table th { position: sticky; top: 0; background: var(--bg-panel); text-align: left; padding: 10px; color: var(--text-muted); border-bottom: 2px solid var(--border); z-index: 2; }
+        .league-table td { padding: 10px; border-bottom: 1px solid var(--border); }
         .league-table tr:hover { background: rgba(255,255,255,0.03); }
         .col-center { text-align: center; }
-        .row-highlight { background: rgba(59, 130, 246, 0.1); }
+        .row-highlight { background: rgba(59, 130, 246, 0.15); font-weight: bold; }
+        .zone-libertadores { border-left: 3px solid var(--success); }
+        .zone-rebaixamento { border-left: 3px solid var(--danger); }
 
-        /* ======== CARDS ELENCO ======== */
-        .squad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-        .player-card { background: var(--bg-card); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .player-info h4 { font-size: 14px; margin-bottom: 4px; color: #fff; }
-        .player-info p { font-size: 11px; color: var(--text-muted); }
-        .player-ovr { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--success); font-weight: 700; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 4px; }
+        /* ======== CAMPO TÁTICO & ELENCO ======== */
+        .tactics-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        
+        .pitch-wrapper { flex: 1; min-width: 300px; display: flex; justify-content: center; align-items: center; background: var(--bg-base); border-radius: 8px; padding: 20px; border: 1px solid var(--border); }
+        .pitch { width: 100%; max-width: 320px; height: 450px; background: var(--pitch-green); border: 2px solid white; position: relative; border-radius: 4px; }
+        .pitch::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: white; transform: translateY(-50%); }
+        .pitch::after { content: ''; position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); }
+        .pitch-area-top { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 60px; border: 2px solid white; border-top: none; }
+        .pitch-area-bottom { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 60px; border: 2px solid white; border-bottom: none; }
+        
+        .player-dot { width: 36px; height: 36px; background: var(--bg-panel); border: 2px solid var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 5; }
+        .player-dot:hover { transform: translate(-50%, -50%) scale(1.1); background: var(--accent); color: white; }
+        .player-dot.selected { border-color: var(--warning); background: var(--warning); color: #000; box-shadow: 0 0 10px var(--warning); }
+        .player-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; font-size: 9px; white-space: nowrap; pointer-events: none; }
+
+        .bench-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; }
+        .bench-player { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 12px; border-radius: 6px; border-left: 4px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .bench-player:hover { background: #475569; }
+        .bench-player.selected { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.1); }
+        
+        .swap-instructions { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent); padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; color: var(--accent); font-weight: 600; text-align: center; }
 
         /* ======== BOTÕES ======== */
-        .btn { border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; text-align: center; display: inline-block; width: 100%; }
+        .btn { border: none; padding: 12px 20px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; width: 100%; }
         .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: #2563eb; }
         .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #059669; }
-        .btn-danger { background: var(--danger); color: white; } .btn-danger:hover { background: #dc2626; }
-        .btn:disabled { background: var(--border); color: #94a3b8; cursor: not-allowed; }
 
-        /* ======== JOGO AO VIVO ======== */
-        .match-container { display: flex; flex-direction: column; background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; height: 100%; min-height: 500px; }
-        .scoreboard { background: linear-gradient(135deg, #1e3a8a, #0f172a); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); flex-wrap: wrap; gap: 10px; }
-        .team-score { text-align: center; flex: 1; min-width: 100px; }
-        .team-score h2 { font-family: 'Oswald', sans-serif; font-size: clamp(18px, 4vw, 24px); margin-bottom: 5px; }
-        .score-center { flex: 1; text-align: center; min-width: 120px; }
-        .score-numbers { font-family: 'Oswald', sans-serif; font-size: clamp(32px, 6vw, 48px); font-weight: 900; color: var(--warning); margin-bottom: 5px; line-height: 1; }
-        .time-box { background: var(--danger); color: white; padding: 4px 15px; border-radius: 20px; font-weight: 700; font-size: 14px; font-family: monospace; display: inline-block; }
+        #global-loader { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 20px; }
         
-        .match-body { display: flex; flex-grow: 1; flex-direction: row; }
-        .events-panel { flex: 2; padding: 15px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: var(--bg-base); max-height: 400px; }
-        .event-line { padding: 10px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; animation: slideIn 0.3s ease; border-left: 3px solid var(--accent); background: var(--bg-panel); line-height: 1.4; }
-        .event-line.goal { border-left-color: var(--success); background: rgba(16, 185, 129, 0.1); color: var(--success); font-weight: 700; }
-        .event-line.end { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.1); color: var(--warning); font-weight: 700; text-align: center; }
-        .event-time { font-family: monospace; font-weight: bold; margin-right: 8px; color: var(--text-muted); }
-        
-        .tactics-panel { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: var(--bg-panel); min-width: 250px; }
-        .stance-btn { background: var(--bg-card); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; transition: 0.2s; }
-        .stance-btn.active.attack { background: #166534; border-color: #22c55e; }
-        .stance-btn.active.neutral { background: #1e3a8a; border-color: var(--accent); }
-        .stance-btn.active.defend { background: #7f1d1d; border-color: var(--danger); }
-
-        #global-loader { position: fixed; inset: 0; background: var(--bg-base); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 20px; }
-
-        /* ======== RESPONSIVIDADE (MOBILE) ======== */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
             .brand { display: none; }
             .nav-menu { flex-direction: row; padding: 0; overflow-x: auto; }
-            .nav-item { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; padding: 15px; }
-            .nav-item.active { border-bottom-color: var(--accent); background: transparent; }
-            
-            .top-header { flex-direction: column; align-items: flex-start; gap: 15px; height: auto; }
+            .nav-item { border-left: none; border-bottom: 3px solid transparent; padding: 15px; white-space: nowrap; }
+            .nav-item.active { border-bottom-color: var(--accent); }
             .grid-layout { grid-template-columns: 1fr; }
-            .match-body { flex-direction: column; }
-            .events-panel { border-right: none; border-bottom: 1px solid var(--border); max-height: 250px; }
-            .tactics-panel { min-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<div id="global-loader">Sincronizando Banco de Dados...</div>
+<div id="global-loader">Processando...</div>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="brand">
+<!-- TELA DE LOGIN / REGISTRO -->
+<div id="auth-screen">
+    <div class="auth-box">
         <h1>V-MAX PRO</h1>
-        <span>Manager System</span>
-    </div>
-    <nav class="nav-menu">
-        <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Painel & Liga</div>
-        <div class="nav-item" onclick="switchTab('tactics', this)">👕 Elenco & Tática</div>
-        <div class="nav-item" style="color: var(--success);" onclick="switchTab('live-match', this)">⚽ Partida Ao Vivo</div>
-    </nav>
-</aside>
-
-<!-- MAIN CONTENT -->
-<div class="main-wrapper">
-    <header class="top-header">
-        <div class="club-info">
-            <h2 id="ui-club-name">Carregando...</h2>
-            <p id="ui-club-league">Aguarde...</p>
-        </div>
-        <div class="header-stats">
-            <div class="stat-badge">💰 <span id="ui-balance" style="color: var(--success);">€ 0</span></div>
-            <div class="stat-badge">👥 <span id="ui-payroll" style="color: var(--danger);">€ 0</span>/mês</div>
-        </div>
-    </header>
-
-    <main class="content-area">
+        <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Crie sua conta ou faça login para salvar seu progresso na nuvem.</p>
         
-        <!-- === ABA: DASHBOARD === -->
-        <div id="tab-dashboard" class="tab-pane active">
-            <div class="grid-layout">
-                
-                <!-- Tabela da Liga -->
-                <div class="panel" style="grid-column: span 2 / auto;">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Classificação da Liga</h3>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="league-table">
-                            <thead>
-                                <tr><th>#</th><th>Clube</th><th class="col-center">PTS</th><th class="col-center">J</th><th class="col-center">V</th><th class="col-center">E</th><th class="col-center">D</th><th class="col-center">GP</th><th class="col-center">GC</th><th class="col-center">SG</th></tr>
-                            </thead>
-                            <tbody id="ui-league-table">
-                                <!-- Tabela dinâmica gerada via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Próximo Jogo -->
-                <div class="panel">
-                    <div class="panel-header"><h3 class="panel-title">Calendário</h3></div>
-                    <div style="text-align: center; padding: 20px 0;">
-                        <h4 style="font-size: 18px; font-family: 'Oswald', sans-serif;" id="ui-next-match">Carregando Jogo...</h4>
-                        <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0 20px;">Próxima Rodada</p>
-                        <button class="btn btn-primary" onclick="switchTab('live-match', document.querySelectorAll('.nav-item')[2])">Jogar Partida ▶</button>
-                    </div>
-                </div>
-
-            </div>
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="auth-email" placeholder="tecnico@vmax.com">
         </div>
-
-        <!-- === ABA: ELENCO === -->
-        <div id="tab-tactics" class="tab-pane">
-            <div class="panel" style="margin-bottom: 20px;">
-                <div class="panel-header">
-                    <h3 class="panel-title">Seu Plantel</h3>
-                    <div style="font-weight: 600; color: var(--accent); font-size: 14px;" id="ui-formation">Tática: --</div>
-                </div>
-                <div class="squad-grid" id="ui-squad-grid">
-                    <!-- Jogadores injetados pelo Firebase -->
-                </div>
-            </div>
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="auth-password" placeholder="******">
         </div>
+        <div id="auth-error" style="color: var(--danger); font-size: 12px; text-align: center; margin-bottom: 10px; display: none;"></div>
+        
+        <div class="auth-buttons">
+            <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
+            <button class="btn btn-success" onclick="criarConta()">Criar Conta</button>
+        </div>
+    </div>
+</div>
 
-        <!-- === ABA: JOGO AO VIVO === -->
-        <div id="tab-live-match" class="tab-pane">
-            <div class="match-container">
-                <div class="scoreboard">
-                    <div class="team-score">
-                        <h2 id="match-home-name">V-MAX FC</h2>
-                        <span style="font-size: 12px; color: var(--text-muted);">Casa <span id="match-home-ovr"></span></span>
-                    </div>
-                    <div class="score-center">
-                        <div class="score-numbers"><span id="score-home">0</span> - <span id="score-away">0</span></div>
-                        <div class="time-box" id="match-clock">00:00</div>
-                    </div>
-                    <div class="team-score">
-                        <h2 id="match-away-name">Adversário</h2>
-                        <span style="font-size: 12px; color: var(--text-muted);">Fora <span id="match-away-ovr"></span></span>
-                    </div>
-                </div>
+<!-- TELA PRINCIPAL DO JOGO -->
+<div id="app-screen">
+    <aside class="sidebar">
+        <div class="brand">
+            <h1>V-MAX PRO</h1>
+            <span>Manager System</span>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Painel da Liga</div>
+            <div class="nav-item" onclick="switchTab('tactics', this)">👕 Tática e Elenco</div>
+        </nav>
+    </aside>
 
-                <div class="match-body">
-                    <div class="events-panel" id="match-events">
-                        <div class="event-line"><span class="event-time">00'</span> Equipes em campo. Faça suas instruções táticas e inicie a partida.</div>
-                    </div>
-                    
-                    <div class="tactics-panel">
-                        <div style="font-family: 'Oswald', sans-serif; color: var(--warning); border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 14px;">POSTURA TÁTICA EM CAMPO</div>
-                        <button class="stance-btn attack" onclick="mudarPostura('attack', this)"><span>Atacar</span> <span>⚔️</span></button>
-                        <button class="stance-btn neutral active" onclick="mudarPostura('neutral', this)"><span>Equilibrar</span> <span>⚖️</span></button>
-                        <button class="stance-btn defend" onclick="mudarPostura('defend', this)"><span>Retrancar</span> <span>🛡️</span></button>
-                        
-                        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
-                            <button class="btn btn-success" id="btn-start-match" onclick="iniciarPartida()">▶ Apito Inicial</button>
-                            <button class="btn btn-primary" id="btn-finish-match" style="display: none;" onclick="encerrarEAtualizarTabela()">Voltar ao Painel (Fim de Jogo)</button>
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="club-info">
+                <h2 id="ui-club-name">Meu Clube</h2>
+                <p id="ui-club-league">Série A - Temporada 1</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-badge">💰 <span id="ui-balance" style="color: var(--success);">€ 1.5M</span></div>
+                <button class="btn-logout" onclick="fazerLogout()">Sair da Conta</button>
+            </div>
+        </header>
+
+        <main class="content-area">
+            
+            <!-- === ABA: DASHBOARD / LIGA === -->
+            <div id="tab-dashboard" class="tab-pane active">
+                <div class="grid-layout">
+                    <div class="panel" style="grid-column: span 2 / auto;">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Campeonato Nacional (20 Times)</h3>
+                            <button class="btn btn-primary" style="width: auto; padding: 8px 15px;" onclick="simularRodadaMassa()">▶ Simular Rodada Completa</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="league-table">
+                                <thead>
+                                    <tr><th>#</th><th>Clube</th><th class="col-center">PTS</th><th class="col-center">J</th><th class="col-center">V</th><th class="col-center">E</th><th class="col-center">D</th><th class="col-center">SG</th></tr>
+                                </thead>
+                                <tbody id="ui-league-table">
+                                    <!-- Preenchido via JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </main>
+            <!-- === ABA: TÁTICA E ELENCO === -->
+            <div id="tab-tactics" class="tab-pane">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Prancheta Tática (4-3-3)</h3>
+                        <div style="font-size: 12px; color: var(--text-muted);">Para substituir, clique em um jogador no campo e depois em um no banco.</div>
+                    </div>
+                    
+                    <div class="swap-instructions" id="swap-msg">Nenhum jogador selecionado. Clique em um titular ou reserva.</div>
+
+                    <div class="tactics-container">
+                        <!-- CAMPO (ESQUERDA) -->
+                        <div class="pitch-wrapper">
+                            <div class="pitch" id="tactical-pitch">
+                                <div class="pitch-area-top"></div>
+                                <div class="pitch-area-bottom"></div>
+                                <!-- Jogadores injetados aqui via JS absoluto -->
+                            </div>
+                        </div>
+
+                        <!-- BANCO DE RESERVAS (DIREITA) -->
+                        <div class="bench-wrapper">
+                            <h4 style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px;">Banco de Reservas</h4>
+                            <div id="ui-bench-list">
+                                <!-- Reservas injetados aqui -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
 </div>
 
 <script type="module">
+    // IMPORTANTE: Para o Firebase Auth funcionar, você precisa habilitar "Email/Password" no console do Firebase > Authentication > Sign-in method
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDupdmlEYHgoCrYnBI0Py9hOWRFT1Ur_zk",
@@ -255,255 +238,270 @@
         appId: "1:1030169877544:web:66f6a79d398b8e50b0a91d"
     };
 
-    let app, db;
-    
-    // Estado do Jogo
-    let meuTime = {};
-    let advTime = {};
-    let meuElenco = [], atacantes = [], meias = [], zagueiros = [];
-    
-    // Tabela da Liga Dinâmica (Estado da Temporada)
-    let tabelaLiga = [
-        { id: "t_vmax", nome: "V-MAX FC", p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, isMe: true },
-        { id: "t_xvpiracicaba", nome: "XV de Piracicaba", p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, isMe: false }
-    ];
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Variáveis da Partida Ao Vivo
-    let relogio = 0, timerId = null, golCasa = 0, golFora = 0, postura = "neutral", jogoRolando = false, partidaConcluida = false;
+    // ESTADO DO JOGO LOCAL
+    let currentUser = null;
+    let saveGame = null;
+    let jogadorSelecionado = null; // Para o sistema de Swap (Troca)
 
-    async function inicializarERP() {
+    // DOM Elements
+    const screenAuth = document.getElementById('auth-screen');
+    const screenApp = document.getElementById('app-screen');
+    const loader = document.getElementById('global-loader');
+    const authError = document.getElementById('auth-error');
+    const pitch = document.getElementById('tactical-pitch');
+    const benchList = document.getElementById('ui-bench-list');
+    const swapMsg = document.getElementById('swap-msg');
+
+    // ==========================================
+    // 1. SISTEMA DE AUTENTICAÇÃO E SAVE STATE
+    // ==========================================
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            screenAuth.style.display = 'none';
+            screenApp.style.display = 'flex';
+            await carregarSaveDoUsuario(user.uid);
+        } else {
+            currentUser = null;
+            screenAuth.style.display = 'flex';
+            screenApp.style.display = 'none';
+        }
+    });
+
+    window.criarConta = async function() {
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) return mostrarErro("Preencha email e senha.");
+        
+        loader.style.display = 'flex';
         try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            
-            // 1. Busca Dados do Usuário
-            const timeRef = doc(db, "manager_times", "t_vmax");
-            const timeSnap = await getDoc(timeRef);
-            if (timeSnap.exists()) {
-                meuTime = timeSnap.data();
-                document.getElementById('ui-club-name').innerText = meuTime.nome;
-                document.getElementById('match-home-name').innerText = meuTime.nome;
-                document.getElementById('match-home-ovr').innerText = "(OVR " + meuTime.ovr_base + ")";
-                document.getElementById('ui-balance').innerText = formatMoeda(meuTime.orcamento);
-                document.getElementById('ui-formation').innerText = "Tática Base: " + meuTime.tatica;
-                tabelaLiga[0].nome = meuTime.nome;
-            }
-
-            // 2. Busca Adversário Fixo (Rodada 1)
-            const advRef = doc(db, "manager_times", "t_xvpiracicaba");
-            const advSnap = await getDoc(advRef);
-            if(advSnap.exists()) {
-                advTime = advSnap.data();
-                document.getElementById('ui-next-match').innerText = `${meuTime.nome} x ${advTime.nome}`;
-                document.getElementById('match-away-name').innerText = advTime.nome;
-                document.getElementById('match-away-ovr').innerText = "(OVR " + advTime.ovr_base + ")";
-                tabelaLiga[1].nome = advTime.nome;
-            }
-
-            // 3. Busca Elenco Real para Narrativa
-            const qJogadores = query(collection(db, "manager_jogadores"), where("time_id", "==", "t_vmax"));
-            const jogadoresSnap = await getDocs(qJogadores);
-            
-            let gridHTML = ""; let folha = 0;
-            jogadoresSnap.forEach((doc) => {
-                let jog = doc.data();
-                meuElenco.push(jog); folha += jog.salario_mensal;
-                
-                if(jog.posicao === 'ATA') atacantes.push(jog.nome);
-                else if(jog.posicao === 'MEI' || jog.posicao === 'VOL') meias.push(jog.nome);
-                else zagueiros.push(jog.nome);
-
-                gridHTML += `
-                <div class="player-card">
-                    <div class="player-info">
-                        <h4>${jog.posicao} - ${jog.nome}</h4>
-                        <p>Id: ${jog.idade} anos | ${formatMoeda(jog.salario_mensal)}/m</p>
-                    </div>
-                    <div class="player-ovr">${jog.ovr}</div>
-                </div>`;
-            });
-
-            document.getElementById('ui-squad-grid').innerHTML = gridHTML;
-            document.getElementById('ui-payroll').innerText = formatMoeda(folha);
-            
-            // Renderiza tabela zerada
-            renderizarTabelaHTML();
-
-            document.getElementById('global-loader').style.display = 'none';
+            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+            await criarSaveInicial(cred.user.uid);
+            loader.style.display = 'none';
         } catch (error) {
-            console.error(error);
-            document.getElementById('global-loader').innerHTML = "<span style='color:var(--danger);'>Erro ao carregar banco de dados.</span>";
+            loader.style.display = 'none';
+            mostrarErro(error.message);
         }
     }
 
-    // ========== NAVEGAÇÃO E UTILS ==========
-    window.switchTab = function(tabId, element) {
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-        element.classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
+    window.fazerLogin = async function() {
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) return mostrarErro("Preencha email e senha.");
+        
+        loader.style.display = 'flex';
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            loader.style.display = 'none';
+        } catch (error) {
+            loader.style.display = 'none';
+            mostrarErro("Erro de login. Verifique as credenciais.");
+        }
     }
 
-    function formatMoeda(num) {
-        if(num >= 1000000) return "€ " + (num/1000000).toFixed(2) + "M";
-        if(num >= 1000) return "€ " + (num/1000).toFixed(0) + "k";
-        return "€ " + num;
+    window.fazerLogout = function() {
+        signOut(auth);
     }
 
-    // ========== LÓGICA DA TABELA DA LIGA ==========
-    function renderizarTabelaHTML() {
-        // Ordena por Pontos, depois Saldo de Gols, depois Gols Pró
-        tabelaLiga.sort((a, b) => {
+    function mostrarErro(msg) {
+        authError.innerText = msg;
+        authError.style.display = 'block';
+    }
+
+    // ==========================================
+    // 2. LÓGICA DE DADOS (GERAÇÃO DE LIGA)
+    // ==========================================
+    async function criarSaveInicial(uid) {
+        // Quando cria a conta, gera uma liga completa e o elenco para o usuário
+        const timesNomes = ["V-MAX FC (Você)", "Flamengo", "Palmeiras", "São Paulo", "Corinthians", "Fluminense", "Grêmio", "Internacional", "Atlético-MG", "Cruzeiro", "Botafogo", "Vasco", "Athletico-PR", "Bahia", "Fortaleza", "Ceará", "Sport", "Vitória", "Goiás", "Coritiba"];
+        
+        let tabela = [];
+        timesNomes.forEach((nome, i) => {
+            tabela.push({ id: "t_"+i, nome: nome, p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, ovr: Math.floor(Math.random()*15)+70, isMe: i===0 });
+        });
+
+        // Gera 22 jogadores para o V-MAX FC
+        let elenco = [];
+        const posicoes = ["GOL", "GOL", "ZAG", "ZAG", "ZAG", "ZAG", "LAT", "LAT", "LAT", "LAT", "VOL", "VOL", "MEI", "MEI", "MEI", "ATA", "ATA", "ATA", "ATA", "ATA"];
+        posicoes.forEach((pos, i) => {
+            elenco.push({ id: "j_"+i, nome: "Jogador "+(i+1), posicao: pos, ovr: Math.floor(Math.random()*15)+65, isTitular: i < 11 });
+        });
+
+        const novoSave = { orcamento: 5000000, rodada: 1, liga: tabela, elenco: elenco };
+        await setDoc(doc(db, "manager_saves", uid), novoSave);
+    }
+
+    async function carregarSaveDoUsuario(uid) {
+        loader.style.display = 'flex';
+        const docSnap = await getDoc(doc(db, "manager_saves", uid));
+        if (docSnap.exists()) {
+            saveGame = docSnap.data();
+            renderizarTabela();
+            renderizarTatita();
+        } else {
+            await criarSaveInicial(uid); // Fallback se não existir
+            await carregarSaveDoUsuario(uid);
+        }
+        loader.style.display = 'none';
+    }
+
+    async function salvarProgresso() {
+        if(currentUser && saveGame) {
+            await setDoc(doc(db, "manager_saves", currentUser.uid), saveGame);
+        }
+    }
+
+    // ==========================================
+    // 3. UI: TABELA DA LIGA
+    // ==========================================
+    function renderizarTabela() {
+        // Ordena: Pontos > SG > Gols Pro
+        saveGame.liga.sort((a, b) => {
             if (b.p !== a.p) return b.p - a.p;
             if (b.sg !== a.sg) return b.sg - a.sg;
             return b.gp - a.gp;
         });
 
         let html = "";
-        tabelaLiga.forEach((time, index) => {
-            let rowClass = time.isMe ? 'row-highlight' : '';
-            let nomeFormatado = time.isMe ? `<strong>${time.nome}</strong>` : time.nome;
+        saveGame.liga.forEach((t, i) => {
+            let rowClass = t.isMe ? 'row-highlight' : '';
+            let zoneClass = i < 4 ? 'zone-libertadores' : (i > 15 ? 'zone-rebaixamento' : '');
             
             html += `
             <tr class="${rowClass}">
-                <td>${index + 1}</td>
-                <td>${nomeFormatado}</td>
-                <td class="col-center"><strong>${time.p}</strong></td>
-                <td class="col-center">${time.j}</td>
-                <td class="col-center">${time.v}</td>
-                <td class="col-center">${time.e}</td>
-                <td class="col-center">${time.d}</td>
-                <td class="col-center">${time.gp}</td>
-                <td class="col-center">${time.gc}</td>
-                <td class="col-center"><strong>${time.sg}</strong></td>
+                <td class="${zoneClass}">${i + 1}</td>
+                <td><strong>${t.nome}</strong></td>
+                <td class="col-center" style="color:var(--accent); font-weight:bold;">${t.p}</td>
+                <td class="col-center">${t.j}</td>
+                <td class="col-center">${t.v}</td>
+                <td class="col-center">${t.e}</td>
+                <td class="col-center">${t.d}</td>
+                <td class="col-center"><strong>${t.sg}</strong></td>
             </tr>`;
         });
         document.getElementById('ui-league-table').innerHTML = html;
+        document.getElementById('ui-balance').innerText = "€ " + (saveGame.orcamento/1000000).toFixed(1) + "M";
     }
 
-    window.encerrarEAtualizarTabela = function() {
-        if(!partidaConcluida) return;
+    window.simularRodadaMassa = async function() {
+        loader.style.display = 'flex';
+        document.getElementById('global-loader').innerHTML = "Simulando 10 partidas da rodada...";
 
-        // Recupera os índices dos times no array da tabela
-        let idxCasa = tabelaLiga.findIndex(t => t.id === "t_vmax");
-        let idxFora = tabelaLiga.findIndex(t => t.id === "t_xvpiracicaba");
+        setTimeout(async () => {
+            // Lógica de simulação de rodada completa
+            for (let i = 0; i < saveGame.liga.length; i += 2) {
+                let t1 = saveGame.liga[i];
+                let t2 = saveGame.liga[i+1];
+                
+                // Simulação simples baseada em OVR
+                let forca1 = t1.ovr + (Math.random() * 20);
+                let forca2 = t2.ovr + (Math.random() * 20);
+                
+                let gol1 = Math.floor(Math.random() * (forca1 > forca2 ? 4 : 2));
+                let gol2 = Math.floor(Math.random() * (forca2 > forca1 ? 4 : 2));
 
-        // Atualiza Jogos
-        tabelaLiga[idxCasa].j += 1;
-        tabelaLiga[idxFora].j += 1;
+                t1.j++; t2.j++;
+                t1.gp += gol1; t1.gc += gol2; t1.sg = t1.gp - t1.gc;
+                t2.gp += gol2; t2.gc += gol1; t2.sg = t2.gp - t2.gc;
 
-        // Atualiza Gols
-        tabelaLiga[idxCasa].gp += golCasa; tabelaLiga[idxCasa].gc += golFora;
-        tabelaLiga[idxFora].gp += golFora; tabelaLiga[idxFora].gc += golCasa;
-        
-        tabelaLiga[idxCasa].sg = tabelaLiga[idxCasa].gp - tabelaLiga[idxCasa].gc;
-        tabelaLiga[idxFora].sg = tabelaLiga[idxFora].gp - tabelaLiga[idxFora].gc;
-
-        // Atualiza Vitória/Empate/Derrota e Pontos
-        if (golCasa > golFora) {
-            tabelaLiga[idxCasa].v += 1; tabelaLiga[idxCasa].p += 3;
-            tabelaLiga[idxFora].d += 1;
-        } else if (golCasa < golFora) {
-            tabelaLiga[idxFora].v += 1; tabelaLiga[idxFora].p += 3;
-            tabelaLiga[idxCasa].d += 1;
-        } else {
-            tabelaLiga[idxCasa].e += 1; tabelaLiga[idxCasa].p += 1;
-            tabelaLiga[idxFora].e += 1; tabelaLiga[idxFora].p += 1;
-        }
-
-        renderizarTabelaHTML();
-        
-        // Reseta Painel de Partida
-        document.getElementById('ui-next-match').innerText = "Aguardando Sorteio da Próxima Rodada...";
-        document.querySelector('#tab-dashboard .btn-primary').style.display = 'none'; // Esconde botão de jogar no dashboard
-        
-        // Volta para o Dashboard
-        switchTab('dashboard', document.querySelectorAll('.nav-item')[0]);
-    }
-
-    // ========== MOTOR DE JOGO AO VIVO ==========
-    const elClock = document.getElementById('match-clock');
-    const elEvents = document.getElementById('match-events');
-    const elScoreH = document.getElementById('score-home');
-    const elScoreA = document.getElementById('score-away');
-    const btnStart = document.getElementById('btn-start-match');
-    const btnFinish = document.getElementById('btn-finish-match');
-
-    window.mudarPostura = function(novaPostura, btnElement) {
-        document.querySelectorAll('.stance-btn').forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
-        postura = novaPostura;
-        if(jogoRolando) narrarEvento("Alteração tática confirmada à beira do gramado.", "normal");
-    }
-
-    window.iniciarPartida = function() {
-        if(partidaConcluida) return;
-        
-        if (jogoRolando) {
-            clearInterval(timerId); jogoRolando = false;
-            btnStart.innerText = "▶ RETOMAR JOGO"; btnStart.classList.replace('btn-danger', 'btn-success');
-        } else {
-            jogoRolando = true;
-            btnStart.innerText = "⏸ PAUSAR JOGO"; btnStart.classList.replace('btn-success', 'btn-danger');
-            if(relogio === 0) narrarEvento("Começa o jogo! A bola está rolando.", "normal");
-            timerId = setInterval(gameLoop, 250); // 250ms por minuto virtual
-        }
-    }
-
-    function gameLoop() {
-        relogio++;
-        elClock.innerText = relogio.toString().padStart(2, '0') + ":00";
-        calcularMinuto();
-
-        if (relogio >= 90) {
-            clearInterval(timerId); jogoRolando = false; partidaConcluida = true;
-            narrarEvento("FIM DE JOGO! O árbitro encerra a partida.", "end");
-            btnStart.style.display = "none";
-            btnFinish.style.display = "block"; // Mostra botão para salvar e voltar
-        }
-    }
-
-    function calcularMinuto() {
-        if (Math.random() > 0.08) return; // 8% de chance de lance perigoso por minuto
-        
-        let ataqueCasa = Math.random();
-        let bonusAtaque = 0.5; // OVR Base
-        
-        let diffOvr = (meuTime.ovr_base || 65) - (advTime.ovr_base || 65);
-        bonusAtaque += (diffOvr * 0.02);
-        
-        if(postura === 'attack') bonusAtaque += 0.15; 
-        if(postura === 'defend') bonusAtaque -= 0.15; 
-        
-        if (ataqueCasa < bonusAtaque) {
-            // Ataque do Usuário
-            let jogNome = atacantes.length > 0 ? atacantes[Math.floor(Math.random() * atacantes.length)] : "O atacante";
-            if (Math.random() < 0.25) { 
-                golCasa++; elScoreH.innerText = golCasa;
-                narrarEvento(`GOOOOOOOL! <b>${jogNome}</b> acerta um lindo chute e abre o placar para o time da casa!`, "goal");
-            } else narrarEvento(`Uhhh! <b>${jogNome}</b> finaliza com perigo, mas o goleiro defende.`, "normal");
-        } else {
-            // Ataque da IA
-            let zagNome = zagueiros.length > 0 ? zagueiros[Math.floor(Math.random() * zagueiros.length)] : "O zagueiro";
-            if (Math.random() < 0.20) { 
-                golFora++; elScoreA.innerText = golFora;
-                narrarEvento(`GOL DO ADVERSÁRIO! Falha na zaga e a bola morre no fundo da rede.`, "goal");
-            } else {
-                if(postura === 'attack') narrarEvento(`Susto no contra-ataque! Passou muito perto.`, "normal");
-                else narrarEvento(`Pressão do adversário, mas <b>${zagNome}</b> corta o perigo de cabeça.`, "normal");
+                if (gol1 > gol2) { t1.v++; t1.p+=3; t2.d++; }
+                else if (gol2 > gol1) { t2.v++; t2.p+=3; t1.d++; }
+                else { t1.e++; t2.e++; t1.p+=1; t2.p+=1; }
             }
+
+            saveGame.rodada++;
+            renderizarTabela();
+            await salvarProgresso();
+            
+            document.getElementById('global-loader').innerHTML = "Processando...";
+            loader.style.display = 'none';
+        }, 1000);
+    }
+
+    // ==========================================
+    // 4. UI: SISTEMA DE TÁTICA (DRAG & DROP / SWAP)
+    // ==========================================
+    // Posições X e Y em % para o formato 4-3-3
+    const positions433 = [
+        { top: '85%', left: '50%' }, // GOL
+        { top: '65%', left: '20%' }, // LAT E
+        { top: '70%', left: '40%' }, // ZAG E
+        { top: '70%', left: '60%' }, // ZAG D
+        { top: '65%', left: '80%' }, // LAT D
+        { top: '45%', left: '50%' }, // VOL
+        { top: '35%', left: '30%' }, // MEI E
+        { top: '35%', left: '70%' }, // MEI D
+        { top: '15%', left: '20%' }, // ATA E
+        { top: '10%', left: '50%' }, // ATA C
+        { top: '15%', left: '80%' }  // ATA D
+    ];
+
+    function renderizarTatita() {
+        pitch.innerHTML = '<div class="pitch-area-top"></div><div class="pitch-area-bottom"></div>';
+        benchList.innerHTML = '';
+        
+        let titulares = saveGame.elenco.filter(j => j.isTitular);
+        let reservas = saveGame.elenco.filter(j => !j.isTitular);
+
+        // Renderiza Titulares no Campo
+        titulares.forEach((jog, index) => {
+            let posCoords = positions433[index] || { top: '50%', left: '50%' };
+            
+            let dot = document.createElement('div');
+            dot.className = `player-dot ${jogadorSelecionado && jogadorSelecionado.id === jog.id ? 'selected' : ''}`;
+            dot.style.top = posCoords.top;
+            dot.style.left = posCoords.left;
+            dot.innerHTML = jog.ovr + `<div class="player-label">${jog.posicao} - ${jog.nome.split(" ")[0]}</div>`;
+            dot.onclick = () => selecionarJogador(jog);
+            pitch.appendChild(dot);
+        });
+
+        // Renderiza Reservas no Banco
+        reservas.forEach(jog => {
+            let bRow = document.createElement('div');
+            bRow.className = `bench-player ${jogadorSelecionado && jogadorSelecionado.id === jog.id ? 'selected' : ''}`;
+            bRow.innerHTML = `<div><strong>${jog.posicao}</strong> - ${jog.nome}</div><span style="color:var(--success); font-weight:bold;">${jog.ovr}</span>`;
+            bRow.onclick = () => selecionarJogador(jog);
+            benchList.appendChild(bRow);
+        });
+    }
+
+    window.selecionarJogador = async function(jog) {
+        if (!jogadorSelecionado) {
+            // Primeiro clique (seleciona)
+            jogadorSelecionado = jog;
+            swapMsg.innerText = `Selecionado: ${jog.nome} (${jog.posicao}). Clique em outro jogador para trocar.`;
+            renderizarTatita();
+        } else {
+            // Segundo clique (faz a troca)
+            if (jogadorSelecionado.id !== jog.id) {
+                // Inverte os status de titularidade se um for titular e outro reserva
+                if (jogadorSelecionado.isTitular !== jog.isTitular) {
+                    let tempTitular = jogadorSelecionado.isTitular;
+                    jogadorSelecionado.isTitular = jog.isTitular;
+                    jog.isTitular = tempTitular;
+                }
+                swapMsg.innerText = `Troca realizada: ${jogadorSelecionado.nome} <-> ${jog.nome}. Suas táticas foram salvas.`;
+                await salvarProgresso();
+            } else {
+                swapMsg.innerText = "Seleção cancelada.";
+            }
+            jogadorSelecionado = null; // Reseta seleção
+            renderizarTatita();
         }
     }
 
-    function narrarEvento(texto, tipo) {
-        let div = document.createElement('div');
-        div.className = `event-line ${tipo}`;
-        div.innerHTML = `<span class="event-time">${relogio}'</span> ${texto}`;
-        elEvents.appendChild(div);
-        elEvents.scrollTop = elEvents.scrollHeight;
+    // UTILS NAVEGAÇÃO
+    window.switchTab = function(tabId, element) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
     }
-
-    window.onload = inicializarERP;
 </script>
 </body>
 </html>
